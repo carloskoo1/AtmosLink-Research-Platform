@@ -1,0 +1,128 @@
+/* ==========================================================
+   ATMOSLINK DESIGN SYSTEM v1.0
+   Scientific UI tokens
+   ========================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Brand */
+  --atl-primary-900: #07335d;
+  --atl-primary-800: #0a477a;
+  --atl-primary-700: #0d5b99;
+  --atl-primary-600: #0f6cbd;
+  --atl-primary-500: #1774c6;
+  --atl-primary-100: #d7eafa;
+  --atl-primary-050: #edf7fe;
+
+  /* Neutral */
+  --atl-neutral-950: #0b172a;
+  --atl-neutral-900: #13213a;
+  --atl-neutral-800: #26364f;
+  --atl-neutral-700: #3f5069;
+  --atl-neutral-600: #607089;
+  --atl-neutral-500: #7f8da1;
+  --atl-neutral-400: #a8b3c2;
+  --atl-neutral-300: #cbd4df;
+  --atl-neutral-200: #dde5ed;
+  --atl-neutral-100: #edf2f6;
+  --atl-neutral-050: #f7f9fb;
+  --atl-white: #ffffff;
+
+  /* Semantic */
+  --atl-success-700: #11743f;
+  --atl-success-600: #168b4b;
+  --atl-success-100: #dff5e8;
+
+  --atl-warning-700: #a85e00;
+  --atl-warning-600: #d07800;
+  --atl-warning-100: #fff0d5;
+
+  --atl-danger-700: #a92727;
+  --atl-danger-600: #c73535;
+  --atl-danger-100: #fde4e4;
+
+  --atl-info-700: #075f8f;
+  --atl-info-600: #0876ad;
+  --atl-info-100: #dff2fb;
+
+  /* Surfaces */
+  --atl-page: #f3f7fa;
+  --atl-surface: #ffffff;
+  --atl-surface-soft: #f8fafc;
+  --atl-surface-accent: #eef6fc;
+  --atl-border: #d9e2eb;
+  --atl-border-strong: #bdc9d6;
+
+  /* Text */
+  --atl-text-primary: #13213a;
+  --atl-text-secondary: #53647b;
+  --atl-text-muted: #748398;
+  --atl-text-inverse: #ffffff;
+
+  /* Typography */
+  --atl-font-sans:
+    Inter,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  --atl-font-mono:
+    "JetBrains Mono",
+    "Cascadia Code",
+    Consolas,
+    monospace;
+
+  --atl-text-xs: 0.75rem;
+  --atl-text-sm: 0.875rem;
+  --atl-text-md: 1rem;
+  --atl-text-lg: 1.125rem;
+  --atl-text-xl: 1.5rem;
+  --atl-text-2xl: 2rem;
+  --atl-text-3xl: 2.5rem;
+
+  --atl-weight-regular: 400;
+  --atl-weight-medium: 500;
+  --atl-weight-semibold: 600;
+  --atl-weight-bold: 700;
+  --atl-weight-extrabold: 800;
+
+  /* Spacing */
+  --atl-space-1: 0.25rem;
+  --atl-space-2: 0.5rem;
+  --atl-space-3: 0.75rem;
+  --atl-space-4: 1rem;
+  --atl-space-5: 1.25rem;
+  --atl-space-6: 1.5rem;
+  --atl-space-8: 2rem;
+  --atl-space-10: 2.5rem;
+  --atl-space-12: 3rem;
+
+  /* Geometry */
+  --atl-radius-sm: 0.5rem;
+  --atl-radius-md: 0.75rem;
+  --atl-radius-lg: 1rem;
+  --atl-radius-xl: 1.25rem;
+  --atl-radius-pill: 999px;
+
+  /* Elevation */
+  --atl-shadow-sm:
+    0 2px 8px rgba(19, 33, 58, 0.06);
+
+  --atl-shadow-md:
+    0 8px 24px rgba(19, 33, 58, 0.09);
+
+  --atl-shadow-lg:
+    0 18px 48px rgba(19, 33, 58, 0.12);
+
+  /* Layout */
+  --atl-sidebar-width: 248px;
+  --atl-topbar-height: 64px;
+  --atl-content-max: 1680px;
+
+  /* Transitions */
+  --atl-transition-fast: 140ms ease;
+  --atl-transition-normal: 220ms ease;
+}

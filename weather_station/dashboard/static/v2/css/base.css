@@ -1,0 +1,89 @@
+@import url("./tokens.css");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--atl-page);
+  color: var(--atl-text-primary);
+  font-family: var(--atl-font-sans);
+  font-size: 16px;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--atl-page);
+  color: var(--atl-text-primary);
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--atl-text-primary);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--atl-text-2xl);
+  font-weight: var(--atl-weight-bold);
+}
+
+h2 {
+  font-size: var(--atl-text-xl);
+  font-weight: var(--atl-weight-semibold);
+}
+
+h3 {
+  font-size: var(--atl-text-lg);
+  font-weight: var(--atl-weight-semibold);
+}
+
+.atl-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

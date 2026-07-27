@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>
+    {% block title %}
+    AtmosLink Research Platform
+    {% endblock %}
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='v2/css/base.css') }}"
+  >
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='v2/css/layout.css') }}"
+  >
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='v2/css/components.css') }}"
+  >
+
+  {% block styles %}{% endblock %}
+</head>
+
+<body>
+  <div class="atl-app">
+
+    <aside class="atl-sidebar">
+      <div>
+        <strong>AtmosLink</strong>
+        <div>Research Platform</div>
+      </div>
+
+      <nav aria-label="Navegación principal">
+        {% block navigation %}{% endblock %}
+      </nav>
+    </aside>
+
+    <header class="atl-topbar">
+      <div>
+        <strong>AtmosLink Research Platform</strong>
+      </div>
+
+      <div>
+        Field Campaign Baseline · v1.0.0
+      </div>
+    </header>
+
+    <main class="atl-main">
+      <div class="atl-main__inner">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+  </div>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
