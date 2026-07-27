@@ -687,6 +687,24 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/ui-v2")
+def ui_v2_dashboard():
+    """
+    Interfaz AtmosLink UI v2.
+
+    Esta ruta se mantiene en paralelo al dashboard operativo
+    principal y consume exclusivamente las API existentes.
+    """
+    return render_template("v2/dashboard.html")
+
+
+
+
+@app.route("/ui-v2-pro")
+def ui_v2_professional():
+    return render_template("v2/professional.html")
+
+
 @app.route("/api/v2/overview")
 def api_v2_overview():
     return jsonify(get_api_v2_overview())

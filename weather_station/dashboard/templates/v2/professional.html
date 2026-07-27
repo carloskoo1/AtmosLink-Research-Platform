@@ -1,0 +1,287 @@
+{% extends "v2/layout.html" %}
+
+{% block title %}AtmosLink Scientific Control Center{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='v2/css/professional.css') }}">
+{% endblock %}
+
+{% block navigation %}
+<div class="atl-brand atl-brand--pro">
+  <div class="atl-brand__mark" aria-hidden="true">A</div>
+  <div class="atl-brand__copy">
+    <span class="atl-brand__name">AtmosLink</span>
+    <span class="atl-brand__subtitle">Scientific Control Center</span>
+  </div>
+</div>
+
+<nav id="proNavigation"
+     class="atl-nav atl-nav--pro"
+     aria-label="Navegación principal">
+
+  <a class="atl-nav__item atl-nav__item--active"
+     href="#dashboard"
+     data-section="dashboard"
+     aria-current="page">
+    <span class="atl-nav__icon" aria-hidden="true">⌂</span>
+    <span class="atl-nav__label">Dashboard</span>
+  </a>
+
+  <a class="atl-nav__item"
+     href="#meteorology"
+     data-section="meteorology">
+    <span class="atl-nav__icon" aria-hidden="true">☁</span>
+    <span class="atl-nav__label">Meteorología</span>
+  </a>
+
+  <a class="atl-nav__item"
+     href="#corridor"
+     data-section="corridor">
+    <span class="atl-nav__icon" aria-hidden="true">↔</span>
+    <span class="atl-nav__label">Corredor atmosférico</span>
+  </a>
+
+  <a class="atl-nav__item"
+     href="#radio"
+     data-section="radio">
+    <span class="atl-nav__icon" aria-hidden="true">⌁</span>
+    <span class="atl-nav__label">Radioenlace</span>
+  </a>
+
+  <a class="atl-nav__item"
+     href="#quality"
+     data-section="quality">
+    <span class="atl-nav__icon" aria-hidden="true">✓</span>
+    <span class="atl-nav__label">Calidad científica</span>
+  </a>
+
+  <a class="atl-nav__item"
+     href="#alerts"
+     data-section="alerts">
+    <span class="atl-nav__icon" aria-hidden="true">!</span>
+    <span class="atl-nav__label">Alertas</span>
+  </a>
+
+  <a class="atl-nav__item"
+     href="#events"
+     data-section="events">
+    <span class="atl-nav__icon" aria-hidden="true">◷</span>
+    <span class="atl-nav__label">Timeline</span>
+  </a>
+
+  <a class="atl-nav__item atl-nav__item--external"
+     href="/"
+     title="Abrir el dashboard operativo anterior">
+    <span class="atl-nav__icon" aria-hidden="true">↗</span>
+    <span class="atl-nav__label">Dashboard operativo</span>
+  </a>
+</nav>
+
+<div class="atl-sidebar__footer atl-sidebar__footer--pro">
+  <strong>UI v2 Professional</strong>
+  <span>Frontend paralelo</span>
+  <span>Backend científico intacto</span>
+</div>
+{% endblock %}
+
+{% block topbar %}
+<div class="atl-topbar__title">
+  <button id="sidebarToggle"
+          class="atl-sidebar-toggle"
+          type="button"
+          aria-label="Contraer o expandir menú"
+          aria-expanded="true">
+    ☰
+  </button>
+
+  <div>
+    <strong>AtmosLink Research Platform</strong>
+    <span id="topbarStation">Cargando estación…</span>
+  </div>
+</div>
+
+<div class="atl-topbar__actions">
+  <span class="atl-live-dot" aria-hidden="true"></span>
+  <span id="connectionState">Conectando…</span>
+  <span class="atl-chip">PRO</span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="proDashboardRoot" class="atl-pro">
+  <div id="partialDataNotice" class="atl-notice" hidden></div>
+
+  <section id="dashboard"
+           class="atl-pro-hero atl-scroll-section"
+           data-nav-section="dashboard">
+    <div>
+      <div class="atl-eyebrow">HIGH-ANDEAN SCIENTIFIC OBSERVATORY</div>
+      <h1>AtmosLink Scientific Control Center</h1>
+      <p>
+        Supervisión operacional, meteorológica, radioeléctrica y de
+        consistencia científica para el corredor Cuñacales–San José.
+      </p>
+      <div class="atl-hero-meta">
+        <span id="heroStation">—</span>
+        <span id="heroRole">—</span>
+        <span id="heroVersion">—</span>
+      </div>
+    </div>
+
+    <div class="atl-health-score">
+      <span class="atl-health-score__label">Scientific Health</span>
+      <strong id="scientificHealthScore">—</strong>
+      <div class="atl-progress">
+        <div id="scientificHealthBar"
+             class="atl-progress__bar"
+             style="width:0%"></div>
+      </div>
+      <small id="scientificHealthLabel">Calculando…</small>
+    </div>
+  </section>
+
+  <section class="atl-kpi-grid" aria-label="Indicadores principales">
+    <article class="atl-kpi"><span>Plataforma</span><strong id="kpiPlatform">—</strong><small id="kpiPlatformDetail">—</small></article>
+    <article class="atl-kpi"><span>Adquisición local</span><strong id="kpiAcquisition">—</strong><small id="kpiAcquisitionDetail">—</small></article>
+    <article class="atl-kpi"><span>Fuentes científicas</span><strong id="kpiSources">—</strong><small id="kpiSourcesDetail">—</small></article>
+    <article class="atl-kpi"><span>Radioenlace</span><strong id="kpiRadio">—</strong><small id="kpiRadioDetail">—</small></article>
+  </section>
+
+  <section id="meteorology"
+           class="atl-section atl-scroll-section"
+           data-nav-section="meteorology">
+    <div class="atl-section__head">
+      <div>
+        <span class="atl-eyebrow">METEOROLOGÍA</span>
+        <h2>Observación meteorológica actual</h2>
+      </div>
+      <span id="weatherTimestamp" class="atl-chip">—</span>
+    </div>
+
+    <div class="atl-metric-grid">
+      <article class="atl-metric"><span class="atl-metric__icon">T</span><div><span>Temperatura</span><strong><span id="temperatureValue">—</span> °C</strong><small>Promedio local</small></div></article>
+      <article class="atl-metric"><span class="atl-metric__icon">H</span><div><span>Humedad relativa</span><strong><span id="humidityValue">—</span> %</strong><small>Promedio local</small></div></article>
+      <article class="atl-metric"><span class="atl-metric__icon">P</span><div><span>Presión</span><strong><span id="pressureValue">—</span> hPa</strong><small>Presión atmosférica local</small></div></article>
+      <article class="atl-metric"><span class="atl-metric__icon">D</span><div><span>Punto de rocío</span><strong><span id="dewPointValue">—</span> °C</strong><small>Calculado desde T y HR</small></div></article>
+      <article class="atl-metric"><span class="atl-metric__icon">R</span><div><span>Lluvia 1 hora</span><strong><span id="rainHourValue">—</span> mm</strong><small id="rainState">—</small></div></article>
+      <article class="atl-metric"><span class="atl-metric__icon">Σ</span><div><span>Lluvia acumulada</span><strong><span id="rainTotalValue">—</span> mm</strong><small>Desde inicio del registro</small></div></article>
+    </div>
+
+    <div class="atl-chart-grid">
+      <article class="atl-panel"><div class="atl-panel__head"><div><h3>Temperatura — últimas 24 h</h3><span>Serie local consolidada</span></div><span id="temperatureTrend">—</span></div><div id="temperatureChart" class="atl-chart"></div></article>
+      <article class="atl-panel"><div class="atl-panel__head"><div><h3>Humedad — últimas 24 h</h3><span>Serie local consolidada</span></div><span id="humidityTrend">—</span></div><div id="humidityChart" class="atl-chart"></div></article>
+      <article class="atl-panel"><div class="atl-panel__head"><div><h3>Presión — últimas 24 h</h3><span>Serie local consolidada</span></div><span id="pressureTrend">—</span></div><div id="pressureChart" class="atl-chart"></div></article>
+      <article class="atl-panel"><div class="atl-panel__head"><div><h3>Precipitación — últimas 24 h</h3><span>Acumulado horario</span></div><span id="rainTrend">—</span></div><div id="rainChart" class="atl-chart"></div></article>
+    </div>
+  </section>
+
+  <section id="corridor"
+           class="atl-section atl-scroll-section"
+           data-nav-section="corridor">
+    <div class="atl-section__head">
+      <div>
+        <span class="atl-eyebrow">CORREDOR ATMOSFÉRICO MODELADO</span>
+        <h2>Cuñacales → punto medio → San José</h2>
+        <p class="atl-section__description">
+          Perfil espacial estimado mediante datos reanalizados.
+          Solo Cuñacales dispone actualmente de observación meteorológica local.
+        </p>
+      </div>
+      <span id="corridorStatus" class="atl-chip">—</span>
+    </div>
+
+    <div class="atl-corridor-legend">
+      <span><i class="atl-legend-dot atl-legend-dot--observed"></i>Observación local</span>
+      <span><i class="atl-legend-dot atl-legend-dot--model"></i>Dato modelado</span>
+      <span id="corridorSourceLabel">Fuente: —</span>
+    </div>
+
+    <div class="atl-corridor">
+      <article class="atl-corridor-point atl-corridor-point--observed">
+        <span>AP</span><strong>Cuñacales</strong><em>Estación local instalada</em>
+        <small id="corridorApTemp">—</small><small id="corridorApPressure">—</small>
+      </article>
+      <div class="atl-corridor-link"><span id="corridorGradient1">—</span></div>
+      <article class="atl-corridor-point atl-corridor-point--model">
+        <span>MID</span><strong>Punto medio</strong><em>Estimación del modelo</em>
+        <small id="corridorMidTemp">—</small><small id="corridorMidPressure">—</small>
+      </article>
+      <div class="atl-corridor-link"><span id="corridorGradient2">—</span></div>
+      <article class="atl-corridor-point atl-corridor-point--model">
+        <span>SM</span><strong>San José</strong><em>Estimación del modelo</em>
+        <small id="corridorSmTemp">—</small><small id="corridorSmPressure">—</small>
+      </article>
+    </div>
+
+    <div class="atl-model-disclaimer">
+      <strong>Interpretación científica:</strong>
+      los valores del punto medio y San José no corresponden todavía a
+      sensores físicos instalados. Son estimaciones espaciales del modelo.
+    </div>
+
+    <div id="corridorTable" class="atl-table-wrap"></div>
+  </section>
+
+  <section class="atl-two-column">
+    <article id="quality"
+             class="atl-panel atl-scroll-section"
+             data-nav-section="quality">
+      <div class="atl-panel__head">
+        <div><span class="atl-eyebrow">CALIDAD CIENTÍFICA</span><h2>Disponibilidad por componente</h2></div>
+      </div>
+      <div id="qualityList" class="atl-quality-list"></div>
+    </article>
+
+    <article id="radio"
+             class="atl-panel atl-scroll-section"
+             data-nav-section="radio">
+      <div class="atl-panel__head">
+        <div><span class="atl-eyebrow">RADIOENLACE</span><h2>Estado Cambium RF</h2></div>
+        <span id="radioStatus" class="atl-chip">—</span>
+      </div>
+      <div class="atl-radio-grid">
+        <div><span>Rol</span><strong id="radioRole">—</strong></div>
+        <div><span>RSSI</span><strong id="radioRssi">—</strong></div>
+        <div><span>SNR DL</span><strong id="radioSnr">—</strong></div>
+        <div><span>MCS DL</span><strong id="radioMcs">—</strong></div>
+        <div><span>Tasa DL</span><strong id="radioDl">—</strong></div>
+        <div><span>Tasa UL</span><strong id="radioUl">—</strong></div>
+      </div>
+      <div id="radioNote" class="atl-note">—</div>
+    </article>
+  </section>
+
+  <section class="atl-two-column">
+    <article id="alerts"
+             class="atl-panel atl-scroll-section"
+             data-nav-section="alerts">
+      <div class="atl-panel__head">
+        <div><span class="atl-eyebrow">ALERTAS</span><h2>Incidencias activas</h2></div>
+        <span id="alertCount" class="atl-chip">0</span>
+      </div>
+      <div id="alertList" class="atl-alert-list"></div>
+    </article>
+
+    <article id="events"
+             class="atl-panel atl-scroll-section"
+             data-nav-section="events">
+      <div class="atl-panel__head">
+        <div><span class="atl-eyebrow">TIMELINE</span><h2>Eventos recientes</h2></div>
+      </div>
+      <div id="eventList" class="atl-event-list"></div>
+    </article>
+  </section>
+
+  <footer class="atl-pro-footer">
+    <span>Última observación: <strong id="lastObservation">—</strong></span>
+    <span>Última consulta: <strong id="lastRefresh">—</strong></span>
+    <span>Estado: <strong id="footerState">—</strong></span>
+  </footer>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module"
+        src="{{ url_for('static', filename='v2/js/professional.js') }}"></script>
+{% endblock %}
