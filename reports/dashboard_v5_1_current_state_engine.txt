@@ -1,0 +1,713 @@
+===== MONITOR 1-120 =====
+#!/usr/bin/env python3
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+import tempfile
+import time
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+
+from weather_station.events.event_logger import log_event
+
+
+RUNTIME_DIR = PROJECT_ROOT / "runtime"
+STATE_FILE = RUNTIME_DIR / "automatic_event_state.json"
+
+DEFAULT_BASE_URL = os.environ.get(
+    "ATMOSLINK_BASE_URL",
+    "http://127.0.0.1:5000",
+).rstrip("/")
+
+DEFAULT_STATION = os.environ.get(
+    "ATMOSLINK_STATION",
+    "CU01",
+)
+
+POLL_SECONDS = int(
+    os.environ.get(
+        "ATMOSLINK_EVENT_POLL_SECONDS",
+        "60",
+    )
+)
+
+LOCAL_MAX_AGE_SECONDS = int(
+    os.environ.get(
+        "ATMOSLINK_LOCAL_MAX_AGE_SECONDS",
+        "300",
+    )
+)
+
+ERA5_MAX_AGE_SECONDS = int(
+    os.environ.get(
+        "ATMOSLINK_ERA5_MAX_AGE_SECONDS",
+        "21600",
+    )
+)
+
+NASA_MAX_AGE_SECONDS = int(
+    os.environ.get(
+        "ATMOSLINK_NASA_MAX_AGE_SECONDS",
+        "172800",
+    )
+)
+
+
+FAILURE_CONFIRMATIONS = int(
+    os.environ.get(
+        "ATMOSLINK_FAILURE_CONFIRMATIONS",
+        "2",
+    )
+)
+
+DEGRADED_CONFIRMATIONS = int(
+    os.environ.get(
+        "ATMOSLINK_DEGRADED_CONFIRMATIONS",
+        "2",
+    )
+)
+
+STALE_CONFIRMATIONS = int(
+    os.environ.get(
+        "ATMOSLINK_STALE_CONFIRMATIONS",
+        "2",
+    )
+)
+
+MISSING_CONFIRMATIONS = int(
+    os.environ.get(
+        "ATMOSLINK_MISSING_CONFIRMATIONS",
+        "3",
+    )
+)
+
+
+def now_iso() -> str:
+    return datetime.now().astimezone().isoformat(
+        timespec="seconds"
+    )
+
+
+def load_state() -> dict[str, Any]:
+    if not STATE_FILE.exists():
+        return {
+            "components": {},
+            "updated_at": None,
+        }
+
+    try:
+        payload = json.loads(
+            STATE_FILE.read_text(encoding="utf-8")
+        )
+
+        if not isinstance(payload, dict):
+            return {
+                "components": {},
+                "updated_at": None,
+            }
+===== MONITOR 285-395 =====
+    if minutes < 60:
+        return f"{minutes} minutos"
+
+    hours = minutes // 60
+
+    if hours < 48:
+        return f"{hours} horas"
+
+    days = hours // 24
+
+    return f"{days} días"
+
+
+def normalize_health_status(
+    payload: dict[str, Any],
+) -> str:
+    candidates = (
+        payload.get("overall"),
+        payload.get("overall_status"),
+        payload.get("health"),
+        payload.get("status"),
+    )
+
+    for candidate in candidates:
+        if candidate is None:
+            continue
+
+        value = str(candidate).strip().upper()
+
+        if value in {
+            "HEALTHY",
+            "OK",
+            "SUCCESS",
+            "OPERATIONAL",
+            "UP",
+        }:
+            return "HEALTHY"
+
+        if value in {
+            "DEGRADED",
+            "WARNING",
+            "WARN",
+            "PARTIAL",
+        }:
+            return "DEGRADED"
+
+        if value in {
+            "ERROR",
+            "FAILED",
+            "FAILURE",
+            "CRITICAL",
+            "DOWN",
+            "UNHEALTHY",
+        }:
+            return "UNHEALTHY"
+
+    return "UNKNOWN"
+
+
+def required_confirmations(
+    status: str,
+) -> int:
+    normalized = status.upper()
+
+    if normalized in {
+        "UP",
+        "HEALTHY",
+        "FRESH",
+    }:
+        return 1
+
+    if normalized in {
+        "DOWN",
+        "UNHEALTHY",
+    }:
+        return max(
+            1,
+            FAILURE_CONFIRMATIONS,
+        )
+
+    if normalized == "DEGRADED":
+        return max(
+            1,
+            DEGRADED_CONFIRMATIONS,
+        )
+
+    if normalized == "STALE":
+        return max(
+            1,
+            STALE_CONFIRMATIONS,
+        )
+
+    if normalized in {
+        "MISSING",
+        "UNKNOWN",
+    }:
+        return max(
+            1,
+            MISSING_CONFIRMATIONS,
+        )
+
+    return 1
+
+
+def update_component_state(
+    *,
+    state: dict[str, Any],
+    component: str,
+    new_status: str,
+    category: str,
+    title_map: dict[str, str],
+===== MONITOR 530-700 =====
+                    confirmation_required
+                ),
+                "transition_count": (
+                    transition_count
+                ),
+                "last_transition_at": (
+                    last_transition_at
+                ),
+                "metadata": metadata,
+            }
+
+            return False
+
+        transition_count += 1
+
+        components[component] = {
+            "status": new_status,
+            "status_since": checked_at,
+            "checked_at": checked_at,
+            "last_observed_status": new_status,
+            "candidate_status": None,
+            "candidate_count": 0,
+            "candidate_since": None,
+            "required_confirmations": (
+                confirmation_required
+            ),
+            "transition_count": (
+                transition_count
+            ),
+            "last_transition_at": checked_at,
+            "metadata": metadata,
+        }
+
+    if new_status in {
+        "UP",
+        "HEALTHY",
+        "FRESH",
+    }:
+        severity = "SUCCESS"
+
+    elif new_status in {
+        "DEGRADED",
+        "STALE",
+        "UNKNOWN",
+        "MISSING",
+    }:
+        severity = "WARNING"
+
+    else:
+        severity = "ERROR"
+
+    title = title_map.get(
+        new_status,
+        f"{component}: {new_status}",
+    )
+
+    transition_description = description
+
+    if previous_status:
+        transition_description += (
+            f" Transición confirmada: "
+            f"{previous_status} → {new_status}. "
+            f"Confirmaciones: "
+            f"{confirmation_count}/"
+            f"{confirmation_required}."
+        )
+    else:
+        transition_description += (
+            f" Estado inicial detectado: "
+            f"{new_status}."
+        )
+
+    log_event(
+        category=category,
+        severity=severity,
+        station=station,
+        title=title,
+        description=transition_description,
+        author="system",
+        tags=[
+            "automatic-monitor",
+            "smart-state-engine",
+            "v5.2.4",
+            component.lower(),
+            new_status.lower(),
+        ],
+        metadata={
+            "component": component,
+            "previous_status": previous_status,
+            "current_status": new_status,
+            "confirmation_count": (
+                confirmation_count
+            ),
+            "confirmation_required": (
+                confirmation_required
+            ),
+            "transition_count": (
+                transition_count
+            ),
+            "confirmed_at": checked_at,
+            **metadata,
+        },
+        dedupe_key=(
+            f"automatic-monitor:"
+            f"{component}:"
+            f"{new_status}"
+        ),
+        dedupe_seconds=60,
+    )
+
+    return True
+
+
+def evaluate_freshness(
+    *,
+    state: dict[str, Any],
+    component: str,
+    timestamp_value: Any,
+    maximum_age_seconds: int,
+    category: str,
+    source_name: str,
+    station: str,
+) -> bool:
+    age_seconds = timestamp_age_seconds(
+        timestamp_value
+    )
+
+    if timestamp_value is None:
+        status = "MISSING"
+
+    elif age_seconds is None:
+        status = "UNKNOWN"
+
+    elif age_seconds <= maximum_age_seconds:
+        status = "FRESH"
+
+    else:
+        status = "STALE"
+
+    titles = {
+        "FRESH": (
+            f"{source_name} data freshness restored"
+        ),
+        "STALE": (
+            f"{source_name} data became stale"
+        ),
+        "MISSING": (
+            f"{source_name} timestamp is missing"
+        ),
+        "UNKNOWN": (
+            f"{source_name} timestamp could not be interpreted"
+        ),
+    }
+
+    description = (
+        f"Se evaluó la vigencia temporal de "
+        f"{source_name}. "
+        f"Edad estimada: {human_age(age_seconds)}. "
+        f"Umbral configurado: "
+        f"{human_age(float(maximum_age_seconds))}."
+    )
+
+    metadata = {
+        "source": source_name,
+        "timestamp": timestamp_value,
+        "age_seconds": (
+            round(age_seconds, 2)
+            if age_seconds is not None
+            else None
+        ),
+        "maximum_age_seconds": maximum_age_seconds,
+===== MONITOR 750-825 =====
+        update_component_state(
+            state=state,
+            component="DASHBOARD",
+            new_status=dashboard_status,
+            category="SYSTEM",
+            title_map={
+                "UP": (
+                    "AtmosLink dashboard communication restored"
+                ),
+                "DOWN": (
+                    "AtmosLink dashboard communication lost"
+                ),
+            },
+            description=(
+                "Se verificó la disponibilidad del endpoint "
+                "/api/health."
+            ),
+            metadata={
+                "base_url": base_url,
+                "error": dashboard_error,
+            },
+            station=station,
+        )
+    )
+
+    if health_payload is not None:
+        health_status = normalize_health_status(
+            health_payload
+        )
+
+        changes += int(
+            update_component_state(
+                state=state,
+                component="PLATFORM_HEALTH",
+                new_status=health_status,
+                category="SYSTEM",
+                title_map={
+                    "HEALTHY": (
+                        "AtmosLink platform health restored"
+                    ),
+                    "DEGRADED": (
+                        "AtmosLink platform health degraded"
+                    ),
+                    "UNHEALTHY": (
+                        "AtmosLink platform health failure detected"
+                    ),
+                    "UNKNOWN": (
+                        "AtmosLink platform health is unknown"
+                    ),
+                },
+                description=(
+                    "Se evaluó el estado global reportado "
+                    "por /api/health."
+                ),
+                metadata={
+                    "reported_payload": health_payload,
+                },
+                station=station,
+            )
+        )
+
+    try:
+        latest_payload = fetch_json(
+            f"{base_url}/api/latest"
+        )
+
+    except (
+        HTTPError,
+        URLError,
+        TimeoutError,
+        RuntimeError,
+        ValueError,
+        json.JSONDecodeError,
+        OSError,
+    ) as error:
+        changes += int(
+===== MONITOR 880-955 =====
+            )
+            or latest_payload.get(
+                "timestamp_local"
+            )
+            or latest_payload.get(
+                "local_timestamp"
+            )
+            or latest_payload.get(
+                "timestamp"
+            )
+        )
+
+        era5_timestamp = latest_payload.get(
+            "era5_timestamp_local"
+        )
+
+        nasa_timestamp = latest_payload.get(
+            "nasa_timestamp_local"
+        )
+
+        changes += int(
+            evaluate_freshness(
+                state=state,
+                component="LOCAL_DATA",
+                timestamp_value=local_timestamp,
+                maximum_age_seconds=(
+                    LOCAL_MAX_AGE_SECONDS
+                ),
+                category="SENSOR",
+                source_name=(
+                    "Local meteorological station"
+                ),
+                station=station,
+            )
+        )
+
+        changes += int(
+            evaluate_freshness(
+                state=state,
+                component="ERA5_DATA",
+                timestamp_value=era5_timestamp,
+                maximum_age_seconds=(
+                    ERA5_MAX_AGE_SECONDS
+                ),
+                category="ERA5",
+                source_name="ERA5-Land",
+                station=station,
+            )
+        )
+
+        changes += int(
+            evaluate_freshness(
+                state=state,
+                component="NASA_DATA",
+                timestamp_value=nasa_timestamp,
+                maximum_age_seconds=(
+                    NASA_MAX_AGE_SECONDS
+                ),
+                category="NASA",
+                source_name="NASA POWER",
+                station=station,
+            )
+        )
+
+    save_state(state)
+
+    print(
+        json.dumps(
+            {
+                "status": "ok",
+                "checked_at": now_iso(),
+                "station": station,
+                "base_url": base_url,
+                "changes_detected": changes,
+                "state_file": str(STATE_FILE),
+            },
+===== APP HEALTH =====
+@app.route("/api/health")
+def api_health():
+    """
+    Health-check ligero para systemd, Gunicorn y monitoreo remoto.
+
+    Comprueba:
+    - disponibilidad de SQLite;
+    - acceso de lectura a la base de datos;
+    - vigencia de la última observación;
+    - identidad de la estación y versión de la plataforma.
+    """
+    checked_at = datetime.now()
+    database_status = "error"
+    database_error = None
+    latest_data = {}
+    latest_error = None
+
+    try:
+        conn = get_connection()
+
+        try:
+            conn.execute("SELECT 1").fetchone()
+            database_status = "ok"
+        finally:
+            conn.close()
+
+    except Exception as exc:
+        database_error = str(exc)
+
+    try:
+        latest_endpoint = None
+
+        for rule in app.url_map.iter_rules():
+            if str(rule) == "/api/latest":
+                latest_endpoint = rule.endpoint
+                break
+
+        if latest_endpoint:
+            response = app.view_functions[latest_endpoint]()
+
+            if hasattr(response, "get_json"):
+                latest_data = response.get_json(silent=True) or {}
+            elif isinstance(response, dict):
+                latest_data = response
+
+    except Exception as exc:
+        latest_error = str(exc)
+
+    observation_age_seconds = latest_data.get(
+        "observation_age_seconds"
+    )
+
+    try:
+        observation_age_seconds = (
+            float(observation_age_seconds)
+            if observation_age_seconds is not None
+            else None
+        )
+    except (TypeError, ValueError):
+        observation_age_seconds = None
+
+    latest_observation = (
+        latest_data.get("weather_timestamp_local_clean")
+        or latest_data.get("timestamp_local")
+        or latest_data.get("weather_timestamp_local")
+    )
+
+    if database_status != "ok":
+        overall_status = "unhealthy"
+        http_status = 503
+
+    elif observation_age_seconds is None:
+        overall_status = "degraded"
+        http_status = 200
+
+    elif observation_age_seconds > 300:
+        overall_status = "degraded"
+        http_status = 200
+
+    else:
+        overall_status = "healthy"
+        http_status = 200
+
+    payload = {
+        "status": overall_status,
+        "service": "atmoslink-dashboard",
+        "platform": "AtmosLink Research Platform",
+        "version": "5.1.0",
+        "station_id": STATION_CONTEXT.get("station_id"),
+        "station_name": STATION_CONTEXT.get("station_name"),
+        "database": {
+            "status": database_status,
+            "path": str(DB_FILE),
+            "error": database_error,
+        },
+        "latest_observation": latest_observation,
+        "observation_age_seconds": observation_age_seconds,
+        "latest_error": latest_error,
+        "checked_at_local": checked_at.isoformat(
+            timespec="seconds"
+        ),
+    }
+
+    return jsonify(payload), http_status
+
+
+
+
+def register_dashboard_startup_event():
+    try:
+        log_event(
+            category="SYSTEM",
+            severity="SUCCESS",
+            station=STATION_CONTEXT.get("station_id"),
+            title="AtmosLink dashboard started",
+            description=(
+===== SYSTEMD VERSIONADO =====
+[Unit]
+Description=AtmosLink Automatic Operational Event Monitor
+After=network-online.target atmoslink-dashboard.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=carlos
+Group=carlos
+
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+
+Environment=PYTHONUNBUFFERED=1
+Environment=ATMOSLINK_STATION=CU01
+Environment=ATMOSLINK_BASE_URL=http://127.0.0.1:5000
+
+Environment=ATMOSLINK_EVENT_POLL_SECONDS=60
+Environment=ATMOSLINK_LOCAL_MAX_AGE_SECONDS=300
+Environment=ATMOSLINK_ERA5_MAX_AGE_SECONDS=21600
+Environment=ATMOSLINK_NASA_MAX_AGE_SECONDS=172800
+
+Environment=ATMOSLINK_FAILURE_CONFIRMATIONS=2
+Environment=ATMOSLINK_DEGRADED_CONFIRMATIONS=2
+Environment=ATMOSLINK_STALE_CONFIRMATIONS=2
+Environment=ATMOSLINK_MISSING_CONFIRMATIONS=3
+
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python3 /home/carlos/Proyectos/EstacionMeteorologica/scripts/monitor_operational_events.py
+
+Restart=always
+RestartSec=10
+
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

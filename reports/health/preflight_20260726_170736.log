@@ -1,0 +1,56 @@
+========================================================
+ AtmosLink Pre-Flight Check
+========================================================
+Fecha UTC: 2026-07-26T22:07:36+00:00
+Host: Controlador
+Proyecto: /home/carlos/Proyectos/EstacionMeteorologica
+========================================================
+
+[1] Servicios systemd
+✓ weather-logger.service: OK 
+✓ atmoslink-dashboard.service: OK 
+✓ atmoslink-scheduler.service: OK 
+
+[2] Puerto USB / ESP32
+✓ Dispositivo serial detectado: OK /dev/ttyUSB0
+
+[3] SQLite y tablas
+✓ SQLite existe: OK /home/carlos/Proyectos/EstacionMeteorologica/SQLite/weather_local.db
+✓ Tabla weather_local: OK 11585 filas
+✓ Tabla master_observations: OK 11042 filas
+✓ Tabla nasa_power_hourly: OK 984 filas
+✓ Tabla era5_land_hourly: OK 614 filas
+✓ Tabla radio_link_local: OK 18091 filas
+
+[4] Últimos datos
+✓ Último registro weather_local: OK 2026-07-06T00:12:05-05:00
+✓ Último registro master_observations: OK 2026-07-06 00:12:00-05:00
+✓ Último registro nasa_power_hourly: OK 2026-07-04T18:00:00-05:00
+✓ Último registro era5_land_hourly: OK 2026-06-29T23:00:00-05:00
+
+[5] Runtime
+✓ health_status.json: OK 
+✓ alerts.json: OK 
+✓ task_registry.json: OK 
+⚠ Alertas activas: WARNING 1
+
+[6] Internet
+✓ Conectividad IP: OK ping 8.8.8.8
+
+[7] Google Drive / rclone
+✓ rclone instalado: OK 
+✓ Remote rclone: OK atmoslink_drive:
+✓ Acceso Google Drive: OK atmoslink_drive:AtmosLink_Backups
+
+[8] Backups
+✓ Último backup local: OK atmoslink_backup_20260726_170501.zip (8973.1 KB)
+✓ backup.log: OK /home/carlos/Proyectos/EstacionMeteorologica/logs/backup.log
+
+[9] Disco
+✓ Espacio libre: OK 86.59%
+
+========================================================
+ Resultado general
+========================================================
+RESULTADO: SISTEMA LISTO PARA CAMPAÑA
+========================================================

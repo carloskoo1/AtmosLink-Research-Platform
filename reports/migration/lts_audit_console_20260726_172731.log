@@ -1,0 +1,50 @@
+==================================================================
+ AtmosLink 1.0 LTS — Auditoría de migración
+==================================================================
+
+[1] Contexto resuelto actualmente
+config_file: Config/station_cu01.yaml
+station_id: CU01
+station_name: Cerro Cuñacales
+radio_role: AP
+local_role: AP
+timezone: America/Lima
+deployment_mode: field
+serial_port: None
+serial_baudrate: None
+serial_timeout: None
+latitude: -6.6924
+longitude: -78.51418
+altitude_m: 2730
+database: SQLite/CU01/weather_local.db
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+
+[2] Variables ATMOSLINK de los servicios
+weather-logger.service: Environment=PATH=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin ATMOSLINK_STATION=CU01 PYTHONUNBUFFERED=1 ATMOSLINK_WIND_ENABLED=0 ATMOSLINK_WIND_PORT=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0 ATMOSLINK_WIND_BAUDRATE=9600 ATMOSLINK_WIND_SLAVE_ID=1 ATMOSLINK_WIND_TIMEOUT=2.0
+atmoslink-dashboard.service: Environment=ATMOSLINK_STATION=CU01 ATMOSLINK_WIND_ENABLED=0 PYTHONUNBUFFERED=1
+atmoslink-scheduler.service: Environment=PATH=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin ATMOSLINK_STATION=CU01 PYTHONUNBUFFERED=1
+
+[3] Bases SQLite
+SQLite/CU01/weather_local.db | 63942656 bytes | integridad=ok
+SQLite/SJ01/weather_local.db | 12288 bytes | integridad=ok
+SQLite/archive/propagation_physics_synthetic_2026-07-26.db | 1863680 bytes | integridad=ok
+SQLite/global_master.db | 21938176 bytes | integridad=ok
+SQLite/propagation_physics.db | 1863680 bytes | integridad=ok
+SQLite/propagation_physics_field.db | 1863680 bytes | integridad=ok
+SQLite/simulation/propagation_test_source.db | 667648 bytes | integridad=ok
+SQLite/weather_local.db | 24276992 bytes | integridad=ok
+SQLite/weather_local_sj01.db | 12288 bytes | integridad=ok
+
+[4] Hallazgos de código
+Rutas SQLite antiguas: 3
+Identificadores antiguos: 15
+Asignaciones fijas de bases: 1
+
+[5] Evaluación preliminar
+OK: station_manager resuelve CU01
+OK: base activa CU01 correcta
+
+Informe JSON:
+/home/carlos/Proyectos/EstacionMeteorologica/reports/migration/lts_audit_20260726_172732.json
+==================================================================

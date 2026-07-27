@@ -40,3 +40,4 @@ Werkzeug==3.1.8
 xarray==2026.4.0
 gunicorn==26.0.0
 itur==0.4.0
+pytest>=8.0

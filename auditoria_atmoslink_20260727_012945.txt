@@ -1,0 +1,1 @@
+bash: auditoria_atmoslink.sh: No existe el archivo o el directorio

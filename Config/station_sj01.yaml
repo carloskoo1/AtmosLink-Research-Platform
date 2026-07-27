@@ -3,20 +3,18 @@ station:
   name: Cerro San José
   role: SM
   timezone: America/Lima
-
 site:
   latitude: -6.76387
   longitude: -78.60154
   altitude_m: 3650
-
 radio_link:
   local_role: SM
   ap_ip: 192.168.1.2
   sm_ip: 192.168.1.3
   ssh_user: admin
-  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+  passfile: /home/carlos/epmp_monitor/config/.radio_pass
   interval_seconds: 60
   ssh_timeout_seconds: 15
-
+  enabled: true
 database:
   sqlite: SQLite/SJ01/weather_local.db

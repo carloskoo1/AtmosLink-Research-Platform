@@ -1,0 +1,1759 @@
+
+==================================================
+1. CONTEXTO GIT
+==================================================
+Rama: feature/scientific-pipeline-v1
+ M requirements.txt
+?? Results/propagation_validation/
+?? reports/
+?? weather_station/analysis/
+?? weather_station/campaign/
+?? weather_station/propagation/calibration.py
+?? weather_station/propagation/event_detection.py
+?? weather_station/propagation/physics.py
+?? weather_station/propagation/pipeline_schema.py
+?? weather_station/propagation/scientific_pipeline.py
+?? weather_station/propagation/source_mapping.py
+?? weather_station/propagation/statistics.py
+?? weather_station/propagation/validation.py
+
+==================================================
+2. VERIFICACIÓN DE LA BASE
+==================================================
+-rw-r--r-- 1 carlos carlos 62M jul 27 00:36 SQLite/CU01/weather_local.db
+SQLite: 3.45.1
+radio_link_local: 3938 filas
+master_observations: 35642 filas
+master_observations_enriched: 35641 filas
+
+==================================================
+3. DISTRIBUCIÓN DE SOURCE, NOTE Y ERROR
+==================================================
+
+SOURCE:
+{'value': 'local_ssh', 'n': 3938}
+
+NOTE:
+{'value': 'RADIO_UNAVAILABLE', 'n': 3938}
+
+ERROR:
+{'value': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out', 'n': 3439}
+{'value': 'ssh: connect to host 192.168.1.2 port 22: Network is unreachable', 'n': 491}
+{'value': 'ssh: connect to host 192.168.1.2 port 22: No route to host', 'n': 8}
+
+==================================================
+4. ÚLTIMOS 30 REGISTROS DE RADIO
+==================================================
+--------------------------------------------------------------------------------
+id: 3938
+timestamp_local: 2026-06-30T18:15:59-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3937
+timestamp_local: 2026-06-30T18:14:49-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3936
+timestamp_local: 2026-06-30T18:13:39-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3935
+timestamp_local: 2026-06-30T18:12:29-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3934
+timestamp_local: 2026-06-30T18:11:30-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3933
+timestamp_local: 2026-06-30T18:10:20-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3932
+timestamp_local: 2026-06-30T18:09:10-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3931
+timestamp_local: 2026-06-30T18:08:00-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3930
+timestamp_local: 2026-06-30T18:06:50-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3929
+timestamp_local: 2026-06-30T18:05:40-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3928
+timestamp_local: 2026-06-30T18:04:30-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3927
+timestamp_local: 2026-06-30T18:03:20-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3926
+timestamp_local: 2026-06-30T18:02:10-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3925
+timestamp_local: 2026-06-30T18:00:59-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3924
+timestamp_local: 2026-06-30T17:59:49-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3923
+timestamp_local: 2026-06-30T17:58:39-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3922
+timestamp_local: 2026-06-30T17:57:29-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3921
+timestamp_local: 2026-06-30T17:56:19-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3920
+timestamp_local: 2026-06-30T17:55:09-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3919
+timestamp_local: 2026-06-30T17:53:59-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3918
+timestamp_local: 2026-06-30T17:52:49-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3917
+timestamp_local: 2026-06-30T17:51:39-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3916
+timestamp_local: 2026-06-30T17:50:29-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3915
+timestamp_local: 2026-06-30T17:49:19-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3914
+timestamp_local: 2026-06-30T17:48:09-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3913
+timestamp_local: 2026-06-30T17:46:59-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3912
+timestamp_local: 2026-06-30T17:45:49-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3911
+timestamp_local: 2026-06-30T17:44:39-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3910
+timestamp_local: 2026-06-30T17:43:29-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+--------------------------------------------------------------------------------
+id: 3909
+timestamp_local: 2026-06-30T17:42:19-05:00
+source: local_ssh
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+mcs_dl: None
+mcs_ul: None
+snr_dl: None
+snr_ul: None
+rssi_c0p: None
+rssi_c0e: None
+rssi_c1p: None
+rssi_c1e: None
+dl_rate: None
+ul_rate: None
+sta_dl_rssi: None
+sta_ul_rssi: None
+note: RADIO_UNAVAILABLE
+error: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+
+==================================================
+5. CONTEO DE CAMPOS RF NO NULOS
+==================================================
+Total: 3938
+mcs_dl              :      0 (  0.000 %)
+mcs_ul              :      0 (  0.000 %)
+snr_dl              :      0 (  0.000 %)
+snr_ul              :      0 (  0.000 %)
+rssi_c0p            :      0 (  0.000 %)
+rssi_c0e            :      0 (  0.000 %)
+rssi_c1p            :      0 (  0.000 %)
+rssi_c1e            :      0 (  0.000 %)
+dl_rate             :      0 (  0.000 %)
+ul_rate             :      0 (  0.000 %)
+sta_dl_rssi         :      0 (  0.000 %)
+sta_ul_rssi         :      0 (  0.000 %)
+
+==================================================
+6. RANGOS TEMPORALES Y CONTINUIDAD
+==================================================
+Inicio: 2026-06-27T19:51:47+00:00
+Fin: 2026-06-30T23:15:59+00:00
+Timestamps distintos: 3938
+Filas: 3938
+
+Registros por día:
+2026-06-27 470
+2026-06-28 1294
+2026-06-29 1234
+2026-06-30 940
+
+==================================================
+7. ESQUEMA REAL DE RADIO_LINK_LOCAL
+==================================================
+(0, 'id', 'INTEGER', 0, None, 1)
+(1, 'timestamp_utc', 'TEXT', 1, None, 0)
+(2, 'timestamp_local', 'TEXT', 1, None, 0)
+(3, 'source', 'TEXT', 0, None, 0)
+(4, 'ap_ip', 'TEXT', 0, None, 0)
+(5, 'sm_ip', 'TEXT', 0, None, 0)
+(6, 'mcs_dl', 'REAL', 0, None, 0)
+(7, 'mcs_ul', 'REAL', 0, None, 0)
+(8, 'snr_dl', 'REAL', 0, None, 0)
+(9, 'snr_ul', 'REAL', 0, None, 0)
+(10, 'rssi_c0p', 'REAL', 0, None, 0)
+(11, 'rssi_c0e', 'REAL', 0, None, 0)
+(12, 'rssi_c1p', 'REAL', 0, None, 0)
+(13, 'rssi_c1e', 'REAL', 0, None, 0)
+(14, 'dl_rate', 'REAL', 0, None, 0)
+(15, 'ul_rate', 'REAL', 0, None, 0)
+(16, 'sta_dl_rssi', 'REAL', 0, None, 0)
+(17, 'sta_ul_rssi', 'REAL', 0, None, 0)
+(18, 'note', 'TEXT', 0, None, 0)
+(19, 'error', 'TEXT', 0, None, 0)
+(20, 'station_id', 'TEXT', 0, None, 0)
+(21, 'station_name', 'TEXT', 0, None, 0)
+(22, 'radio_role', 'TEXT', 0, None, 0)
+(23, 'local_role', 'TEXT', 0, None, 0)
+
+==================================================
+8. BÚSQUEDA DE CÓDIGO CAMBIUM
+==================================================
+weather_station/telemetry/cambium_local_collector.py:49:        CREATE TABLE IF NOT EXISTS radio_link_local (
+weather_station/telemetry/cambium_local_collector.py:61:            mcs_dl REAL,
+weather_station/telemetry/cambium_local_collector.py:63:            snr_dl REAL,
+weather_station/telemetry/cambium_local_collector.py:66:            rssi_c0p REAL,
+weather_station/telemetry/cambium_local_collector.py:74:            sta_dl_rssi REAL,
+weather_station/telemetry/cambium_local_collector.py:83:    existing_cols = [r[1] for r in cur.execute("PRAGMA table_info(radio_link_local)").fetchall()]
+weather_station/telemetry/cambium_local_collector.py:91:            cur.execute(f"ALTER TABLE radio_link_local ADD COLUMN {col} {col_type}")
+weather_station/telemetry/cambium_local_collector.py:104:        INSERT INTO radio_link_local (
+weather_station/telemetry/cambium_local_collector.py:180:    snr_dl = to_float(row.get("snr_dl"))
+weather_station/telemetry/cambium_local_collector.py:181:    rssi_dl = to_float(row.get("sta_dl_rssi"))
+weather_station/telemetry/cambium_local_collector.py:182:    mcs_dl = to_float(row.get("mcs_dl"))
+weather_station/telemetry/cambium_local_collector.py:185:    if snr_dl is not None and snr_dl < 15:
+weather_station/telemetry/cambium_local_collector.py:191:    if mcs_dl is not None and mcs_dl < 3:
+weather_station/telemetry/cambium_local_collector.py:205:        "mcs_dl": value_after_key(show_sta, "connectedSTADLMCS"),
+weather_station/telemetry/cambium_local_collector.py:207:        "snr_dl": value_after_key(show_sta, "connectedSTADLSNR"),
+weather_station/telemetry/cambium_local_collector.py:213:        "sta_dl_rssi": value_after_key(show_sta, "connectedSTADLRSSI"),
+weather_station/telemetry/cambium_local_collector.py:216:        "rssi_c0p": value_after_colon(show_rssi, "chain 0 RSSI primary"),
+weather_station/telemetry/cambium_local_collector.py:230:        INSERT INTO radio_link_local (
+weather_station/telemetry/cambium_local_collector.py:241:            mcs_dl,
+weather_station/telemetry/cambium_local_collector.py:243:            snr_dl,
+weather_station/telemetry/cambium_local_collector.py:246:            rssi_c0p,
+weather_station/telemetry/cambium_local_collector.py:254:            sta_dl_rssi,
+weather_station/telemetry/cambium_local_collector.py:272:        to_float(row["mcs_dl"]),
+weather_station/telemetry/cambium_local_collector.py:274:        to_float(row["snr_dl"]),
+weather_station/telemetry/cambium_local_collector.py:277:        to_float(row["rssi_c0p"]),
+weather_station/telemetry/cambium_local_collector.py:285:        to_float(row["sta_dl_rssi"]),
+weather_station/notifications/notification_engine.py:368:    row = get_latest_row("radio_link_local")
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:424:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:426:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:428:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:502:            radio_snr_dl,
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:504:            radio_sta_dl_rssi,
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:506:            radio_mcs_dl,
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:667:    if table_exists(conn, "radio_link_local"):
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:670:            FROM radio_link_local
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:423:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:425:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:427:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:501:            radio_snr_dl,
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:503:            radio_sta_dl_rssi,
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:505:            radio_mcs_dl,
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:666:    if table_exists(conn, "radio_link_local"):
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:669:            FROM radio_link_local
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:325:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:327:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:329:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:403:            radio_snr_dl,
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:405:            radio_sta_dl_rssi,
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:407:            radio_mcs_dl,
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:568:    if table_exists(conn, "radio_link_local"):
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:571:            FROM radio_link_local
+weather_station/dashboard/app.py.bak_events_20260724_000432:423:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+weather_station/dashboard/app.py.bak_events_20260724_000432:425:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+weather_station/dashboard/app.py.bak_events_20260724_000432:427:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+weather_station/dashboard/app.py.bak_events_20260724_000432:501:            radio_snr_dl,
+weather_station/dashboard/app.py.bak_events_20260724_000432:503:            radio_sta_dl_rssi,
+weather_station/dashboard/app.py.bak_events_20260724_000432:505:            radio_mcs_dl,
+weather_station/dashboard/app.py.bak_events_20260724_000432:666:    if table_exists(conn, "radio_link_local"):
+weather_station/dashboard/app.py.bak_events_20260724_000432:669:            FROM radio_link_local
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:424:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:426:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:428:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:502:            radio_snr_dl,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:504:            radio_sta_dl_rssi,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:506:            radio_mcs_dl,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:667:    if table_exists(conn, "radio_link_local"):
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:670:            FROM radio_link_local
+weather_station/dashboard/app.py:424:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+weather_station/dashboard/app.py:426:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+weather_station/dashboard/app.py:428:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+weather_station/dashboard/app.py:502:            radio_snr_dl,
+weather_station/dashboard/app.py:504:            radio_sta_dl_rssi,
+weather_station/dashboard/app.py:506:            radio_mcs_dl,
+weather_station/dashboard/app.py:667:    if table_exists(conn, "radio_link_local"):
+weather_station/dashboard/app.py:670:            FROM radio_link_local
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904:339:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904:1007:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904:1009:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904:1010:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_windrose_v1:291:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_windrose_v1:796:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_windrose_v1:798:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_windrose_v1:799:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:1508:      <small>Telemetría Cambium</small>
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:2174:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:2176:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:2189:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3242:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3244:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3245:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3274:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3278:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3279:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3281:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3804:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3806:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3807:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:4521:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:4917:        "El colector Cambium está desactivado en la configuración actual.",
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527:339:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527:1007:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527:1009:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527:1010:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:1508:      <small>Telemetría Cambium</small>
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:2174:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:2176:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:2189:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3242:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3244:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3245:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3274:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3278:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3279:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3281:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3804:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3806:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3807:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:4521:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:4917:        "El colector Cambium está desactivado en la configuración actual.",
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:1940:      <small>Telemetría Cambium</small>
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:2606:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:2608:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:2621:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3674:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3676:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3677:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3706:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3710:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3711:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3713:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:4236:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:4238:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:4239:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:4953:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:5349:        "El colector Cambium está desactivado en la configuración actual.",
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:1508:      <small>Telemetría Cambium</small>
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:2174:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:2176:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:2189:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3242:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3244:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3245:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3274:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3278:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3279:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3281:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3804:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3806:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3807:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:4521:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:4917:        "El colector Cambium está desactivado en la configuración actual.",
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:900:      <small>Telemetría Cambium</small>
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:1365:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:1367:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:1380:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2296:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2298:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2299:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2328:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2332:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2333:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2335:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2858:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2860:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2861:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:3575:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:1508:      <small>Telemetría Cambium</small>
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:2174:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:2176:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:2189:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3242:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3244:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3245:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3274:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3278:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3279:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3281:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3804:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3806:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3807:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:4521:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:4917:        "El colector Cambium está desactivado en la configuración actual.",
+weather_station/dashboard/templates/index.html.bak_windrose_scientific_v2:291:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_windrose_scientific_v2:820:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_windrose_scientific_v2:822:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_windrose_scientific_v2:823:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_1_20260723_164219:877:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_1_20260723_164219:2005:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_1_20260723_164219:2007:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_1_20260723_164219:2008:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1022:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1024:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1037:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1927:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1929:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1930:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1959:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1963:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1964:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1966:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:2489:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:2491:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:2492:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_20260723_162918:395:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_20260723_162918:1091:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_20260723_162918:1093:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_20260723_162918:1094:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:1185:      <small>Telemetría Cambium</small>
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:1662:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:1664:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:1677:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:2715:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:2717:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:2718:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:2747:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:2751:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:2752:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:2754:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:3277:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:3279:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:3280:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:3994:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:4390:        "El colector Cambium está desactivado en la configuración actual.",
+weather_station/dashboard/templates/index.html.bak_observatory_v4_2_20260723_165307:919:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_2_20260723_165307:2186:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_2_20260723_165307:2188:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_2_20260723_165307:2189:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_fix_station_table_20260723_163746:877:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_fix_station_table_20260723_163746:2005:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_fix_station_table_20260723_163746:2007:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_fix_station_table_20260723_163746:2008:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_fix_20260723_163522:395:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_fix_20260723_163522:1091:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_fix_20260723_163522:1093:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_observatory_v4_fix_20260723_163522:1094:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html:2249:        Telemetría Cambium
+weather_station/dashboard/templates/index.html:2359:      <small>Telemetría Cambium</small>
+weather_station/dashboard/templates/index.html:3025:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html:3027:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html:3040:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html:4093:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html:4095:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html:4096:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html:4125:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html:4129:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html:4130:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html:4132:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html:4655:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html:4657:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html:4658:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html:5372:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+weather_station/dashboard/templates/index.html:5768:        "El colector Cambium está desactivado en la configuración actual.",
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:510:.radio-cambium-panel {
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:1508:      <small>Telemetría Cambium</small>
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:2174:<div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:2176:<section id="radioCambiumPanel" class="radio-cambium-panel">
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:2189:        automáticamente cuando se reactive el colector Cambium.
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3242:    data.radio_snr_dl,
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3244:    data.radio_sta_dl_rssi,
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3245:    data.radio_mcs_dl,
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3274:    setText("radioSnrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3278:      data.radio_sta_dl_rssi ??
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3279:      data.radio_rssi_c0p
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3281:    setText("radioMcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3804:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3806:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:3807:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:4521:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+weather_station/dashboard/templates/index.html.bak_scientific_overview_v5_2_20260726_234427:4917:        "El colector Cambium está desactivado en la configuración actual.",
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_4_20260723_155946:291:  <div class="section-title">Radioenlace Cambium</div>
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_4_20260723_155946:833:  setText("snrDl", data.radio_snr_dl);
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_4_20260723_155946:835:  setText("rssiDl", data.radio_sta_dl_rssi);
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_4_20260723_155946:836:  setText("mcsDl", data.radio_mcs_dl);
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:424:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:426:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:428:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:502:            radio_snr_dl,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:504:            radio_sta_dl_rssi,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:506:            radio_mcs_dl,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:667:    if table_exists(conn, "radio_link_local"):
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:670:            FROM radio_link_local
+weather_station/dashboard/app.py.bak_windrose_api:325:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+weather_station/dashboard/app.py.bak_windrose_api:327:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+weather_station/dashboard/app.py.bak_windrose_api:329:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+weather_station/dashboard/app.py.bak_windrose_api:403:            radio_snr_dl,
+weather_station/dashboard/app.py.bak_windrose_api:405:            radio_sta_dl_rssi,
+weather_station/dashboard/app.py.bak_windrose_api:407:            radio_mcs_dl,
+weather_station/dashboard/app.py.bak_windrose_api:568:    if table_exists(conn, "radio_link_local"):
+weather_station/dashboard/app.py.bak_windrose_api:571:            FROM radio_link_local
+weather_station/campaign/inspection.py:11:- columnas candidatas para estación local, ERA5, NASA POWER y Cambium;
+weather_station/campaign/inspection.py:64:    "cambium": (
+weather_station/campaign/inspection.py:65:        "cambium",
+weather_station/status/station_status.py:93:    if table_exists(cur, "radio_link_local"):
+weather_station/status/station_status.py:94:        radio_count = cur.execute("SELECT COUNT(*) FROM radio_link_local").fetchone()[0]
+weather_station/sync/build_master_dataset.py:192:        "mcs_dl",
+weather_station/sync/build_master_dataset.py:194:        "snr_dl",
+weather_station/sync/build_master_dataset.py:196:        "rssi_c0p",
+weather_station/sync/build_master_dataset.py:202:        "sta_dl_rssi",
+weather_station/sync/build_master_dataset.py:218:        "mcs_dl": "radio_mcs_dl",
+weather_station/sync/build_master_dataset.py:220:        "snr_dl": "radio_snr_dl",
+weather_station/sync/build_master_dataset.py:222:        "rssi_c0p": "radio_rssi_c0p",
+weather_station/sync/build_master_dataset.py:228:        "sta_dl_rssi": "radio_sta_dl_rssi",
+weather_station/sync/build_master_dataset.py:411:    radio = read_table(conn, "radio_link_local")
+weather_station/sync/build_master_dataset.py:434:        "radio_mcs_dl",
+weather_station/sync/build_master_dataset.py:436:        "radio_snr_dl",
+weather_station/sync/build_master_dataset.py:438:        "radio_rssi_c0p",
+weather_station/sync/build_master_dataset.py:444:        "radio_sta_dl_rssi",
+weather_station/utils/preflight_check.py.bak_20260726_225242:128:        "radio_link_local",
+weather_station/utils/preflight_check.py:613:                FROM radio_link_local
+weather_station/utils/preflight_check.py:615:            ) if table_exists(conn, "radio_link_local") else None
+weather_station/propagation/source_mapping.py:53:        "radio_sta_dl_rssi",
+weather_station/propagation/source_mapping.py:55:        "radio_rssi_c0p",
+config/scheduler.yaml:32:    - weather_station.telemetry.cambium_local_collector
+Config/archive/station_legacy_20260726_174920.yaml:10:  passfile: /home/carlos/epmp_logs/.ap_pass
+Config/station_sj01.yaml:17:  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+Config/station.yaml:17:  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+Config/station_cu01.yaml:17:  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+scripts/create_propagation_test_data.py:75:    radio_mcs_dl              TEXT,
+scripts/create_propagation_test_data.py:77:    radio_snr_dl              TEXT,
+scripts/create_propagation_test_data.py:80:    radio_rssi_c0p            TEXT,
+scripts/create_propagation_test_data.py:88:    radio_sta_dl_rssi         TEXT,
+scripts/create_propagation_test_data.py:140:    radio_mcs_dl,
+scripts/create_propagation_test_data.py:142:    radio_snr_dl,
+scripts/create_propagation_test_data.py:145:    radio_rssi_c0p,
+scripts/create_propagation_test_data.py:153:    radio_sta_dl_rssi,
+scripts/create_propagation_test_data.py:422:        mcs_dl = mcs_from_snr(downlink_snr_db)
+scripts/create_propagation_test_data.py:479:                mcs_dl,
+./README.md:5:El sistema integra mediciones locales de una estación meteorológica basada en ESP32, datos externos de ERA5-Land y NASA POWER, telemetría de radioenlaces Cambium ePMP, monitoreo de salud del sistema, alertas por Telegram, dashboard científico y respaldo automático en Google Drive.
+./README.md:21:- Colector Cambium ePMP.
+./README.md:41:        └── Cambium Radio Telemetry
+./config/scheduler.yaml:32:    - weather_station.telemetry.cambium_local_collector
+./weather_station/telemetry/cambium_local_collector.py:49:        CREATE TABLE IF NOT EXISTS radio_link_local (
+./weather_station/telemetry/cambium_local_collector.py:61:            mcs_dl REAL,
+./weather_station/telemetry/cambium_local_collector.py:63:            snr_dl REAL,
+./weather_station/telemetry/cambium_local_collector.py:66:            rssi_c0p REAL,
+./weather_station/telemetry/cambium_local_collector.py:74:            sta_dl_rssi REAL,
+./weather_station/telemetry/cambium_local_collector.py:83:    existing_cols = [r[1] for r in cur.execute("PRAGMA table_info(radio_link_local)").fetchall()]
+./weather_station/telemetry/cambium_local_collector.py:91:            cur.execute(f"ALTER TABLE radio_link_local ADD COLUMN {col} {col_type}")
+./weather_station/telemetry/cambium_local_collector.py:104:        INSERT INTO radio_link_local (
+./weather_station/telemetry/cambium_local_collector.py:180:    snr_dl = to_float(row.get("snr_dl"))
+./weather_station/telemetry/cambium_local_collector.py:181:    rssi_dl = to_float(row.get("sta_dl_rssi"))
+./weather_station/telemetry/cambium_local_collector.py:182:    mcs_dl = to_float(row.get("mcs_dl"))
+./weather_station/telemetry/cambium_local_collector.py:185:    if snr_dl is not None and snr_dl < 15:
+./weather_station/telemetry/cambium_local_collector.py:191:    if mcs_dl is not None and mcs_dl < 3:
+./weather_station/telemetry/cambium_local_collector.py:205:        "mcs_dl": value_after_key(show_sta, "connectedSTADLMCS"),
+./weather_station/telemetry/cambium_local_collector.py:207:        "snr_dl": value_after_key(show_sta, "connectedSTADLSNR"),
+./weather_station/telemetry/cambium_local_collector.py:213:        "sta_dl_rssi": value_after_key(show_sta, "connectedSTADLRSSI"),
+./weather_station/telemetry/cambium_local_collector.py:216:        "rssi_c0p": value_after_colon(show_rssi, "chain 0 RSSI primary"),
+./weather_station/telemetry/cambium_local_collector.py:230:        INSERT INTO radio_link_local (
+./weather_station/telemetry/cambium_local_collector.py:241:            mcs_dl,
+./weather_station/telemetry/cambium_local_collector.py:243:            snr_dl,
+./weather_station/telemetry/cambium_local_collector.py:246:            rssi_c0p,
+./weather_station/telemetry/cambium_local_collector.py:254:            sta_dl_rssi,
+./weather_station/telemetry/cambium_local_collector.py:272:        to_float(row["mcs_dl"]),
+./weather_station/telemetry/cambium_local_collector.py:274:        to_float(row["snr_dl"]),
+./weather_station/telemetry/cambium_local_collector.py:277:        to_float(row["rssi_c0p"]),
+./weather_station/telemetry/cambium_local_collector.py:285:        to_float(row["sta_dl_rssi"]),
+./weather_station/notifications/notification_engine.py:368:    row = get_latest_row("radio_link_local")
+./weather_station/dashboard/app.py.bak_timeline_20260724_003209:424:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+./weather_station/dashboard/app.py.bak_timeline_20260724_003209:426:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+./weather_station/dashboard/app.py.bak_timeline_20260724_003209:428:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+./weather_station/dashboard/app.py.bak_timeline_20260724_003209:502:            radio_snr_dl,
+./weather_station/dashboard/app.py.bak_timeline_20260724_003209:504:            radio_sta_dl_rssi,
+./weather_station/dashboard/app.py.bak_timeline_20260724_003209:506:            radio_mcs_dl,
+./weather_station/dashboard/app.py.bak_timeline_20260724_003209:667:    if table_exists(conn, "radio_link_local"):
+./weather_station/dashboard/app.py.bak_timeline_20260724_003209:670:            FROM radio_link_local
+./weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:423:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+./weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:425:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+./weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:427:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+./weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:501:            radio_snr_dl,
+./weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:503:            radio_sta_dl_rssi,
+./weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:505:            radio_mcs_dl,
+./weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:666:    if table_exists(conn, "radio_link_local"):
+./weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:669:            FROM radio_link_local
+./weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:325:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+./weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:327:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+./weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:329:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+./weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:403:            radio_snr_dl,
+./weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:405:            radio_sta_dl_rssi,
+./weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:407:            radio_mcs_dl,
+./weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:568:    if table_exists(conn, "radio_link_local"):
+./weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:571:            FROM radio_link_local
+./weather_station/dashboard/app.py.bak_events_20260724_000432:423:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+./weather_station/dashboard/app.py.bak_events_20260724_000432:425:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+./weather_station/dashboard/app.py.bak_events_20260724_000432:427:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+./weather_station/dashboard/app.py.bak_events_20260724_000432:501:            radio_snr_dl,
+./weather_station/dashboard/app.py.bak_events_20260724_000432:503:            radio_sta_dl_rssi,
+./weather_station/dashboard/app.py.bak_events_20260724_000432:505:            radio_mcs_dl,
+./weather_station/dashboard/app.py.bak_events_20260724_000432:666:    if table_exists(conn, "radio_link_local"):
+./weather_station/dashboard/app.py.bak_events_20260724_000432:669:            FROM radio_link_local
+./weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:424:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+./weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:426:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+./weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:428:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+./weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:502:            radio_snr_dl,
+./weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:504:            radio_sta_dl_rssi,
+./weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:506:            radio_mcs_dl,
+./weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:667:    if table_exists(conn, "radio_link_local"):
+./weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:670:            FROM radio_link_local
+./weather_station/dashboard/app.py:424:        d["radio_mcs_dl"] = radio.get("radio_mcs_dl")
+./weather_station/dashboard/app.py:426:        d["radio_snr_dl"] = radio.get("radio_snr_dl")
+./weather_station/dashboard/app.py:428:        d["radio_sta_dl_rssi"] = radio.get("radio_sta_dl_rssi")
+./weather_station/dashboard/app.py:502:            radio_snr_dl,
+./weather_station/dashboard/app.py:504:            radio_sta_dl_rssi,
+./weather_station/dashboard/app.py:506:            radio_mcs_dl,
+./weather_station/dashboard/app.py:667:    if table_exists(conn, "radio_link_local"):
+./weather_station/dashboard/app.py:670:            FROM radio_link_local
+./weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904:339:  <div class="section-title">Radioenlace Cambium</div>
+./weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904:1007:  setText("snrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904:1009:  setText("rssiDl", data.radio_sta_dl_rssi);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904:1010:  setText("mcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_windrose_v1:291:  <div class="section-title">Radioenlace Cambium</div>
+./weather_station/dashboard/templates/index.html.bak_windrose_v1:796:  setText("snrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_windrose_v1:798:  setText("rssiDl", data.radio_sta_dl_rssi);
+./weather_station/dashboard/templates/index.html.bak_windrose_v1:799:  setText("mcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:510:.radio-cambium-panel {
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:1508:      <small>Telemetría Cambium</small>
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:2174:<div class="section-title">Radioenlace Cambium</div>
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:2176:<section id="radioCambiumPanel" class="radio-cambium-panel">
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:2189:        automáticamente cuando se reactive el colector Cambium.
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3242:    data.radio_snr_dl,
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3244:    data.radio_sta_dl_rssi,
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3245:    data.radio_mcs_dl,
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3274:    setText("radioSnrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3278:      data.radio_sta_dl_rssi ??
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3279:      data.radio_rssi_c0p
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3281:    setText("radioMcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3804:  setText("snrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3806:  setText("rssiDl", data.radio_sta_dl_rssi);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3807:  setText("mcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:4521:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+./weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:4917:        "El colector Cambium está desactivado en la configuración actual.",
+./weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527:339:  <div class="section-title">Radioenlace Cambium</div>
+./weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527:1007:  setText("snrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527:1009:  setText("rssiDl", data.radio_sta_dl_rssi);
+./weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527:1010:  setText("mcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:510:.radio-cambium-panel {
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:1508:      <small>Telemetría Cambium</small>
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:2174:<div class="section-title">Radioenlace Cambium</div>
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:2176:<section id="radioCambiumPanel" class="radio-cambium-panel">
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:2189:        automáticamente cuando se reactive el colector Cambium.
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3242:    data.radio_snr_dl,
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3244:    data.radio_sta_dl_rssi,
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3245:    data.radio_mcs_dl,
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3274:    setText("radioSnrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3278:      data.radio_sta_dl_rssi ??
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3279:      data.radio_rssi_c0p
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3281:    setText("radioMcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3804:  setText("snrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3806:  setText("rssiDl", data.radio_sta_dl_rssi);
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:3807:  setText("mcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:4521:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+./weather_station/dashboard/templates/index.html.bak_v5_2_20260726_233752:4917:        "El colector Cambium está desactivado en la configuración actual.",
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:510:.radio-cambium-panel {
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:1940:      <small>Telemetría Cambium</small>
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:2606:<div class="section-title">Radioenlace Cambium</div>
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:2608:<section id="radioCambiumPanel" class="radio-cambium-panel">
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:2621:        automáticamente cuando se reactive el colector Cambium.
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3674:    data.radio_snr_dl,
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3676:    data.radio_sta_dl_rssi,
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3677:    data.radio_mcs_dl,
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3706:    setText("radioSnrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3710:      data.radio_sta_dl_rssi ??
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3711:      data.radio_rssi_c0p
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:3713:    setText("radioMcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:4236:  setText("snrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:4238:  setText("rssiDl", data.radio_sta_dl_rssi);
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:4239:  setText("mcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:4953:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+./weather_station/dashboard/templates/index.html.bak_v5_3_20260726_235409:5349:        "El colector Cambium está desactivado en la configuración actual.",
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:510:.radio-cambium-panel {
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:1508:      <small>Telemetría Cambium</small>
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:2174:<div class="section-title">Radioenlace Cambium</div>
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:2176:<section id="radioCambiumPanel" class="radio-cambium-panel">
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:2189:        automáticamente cuando se reactive el colector Cambium.
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3242:    data.radio_snr_dl,
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3244:    data.radio_sta_dl_rssi,
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3245:    data.radio_mcs_dl,
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3274:    setText("radioSnrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3278:      data.radio_sta_dl_rssi ??
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3279:      data.radio_rssi_c0p
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3281:    setText("radioMcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3804:  setText("snrDl", data.radio_snr_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3806:  setText("rssiDl", data.radio_sta_dl_rssi);
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3807:  setText("mcsDl", data.radio_mcs_dl);
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:4521:      "Telemetría Cambium, adquisición RF y estado del radioenlace."
+./weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:4917:        "El colector Cambium está desactivado en la configuración actual.",
+./weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:510:.radio-cambium-panel {
+./weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:900:      <small>Telemetría Cambium</small>
+./weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:1365:<div class="section-title">Radioenlace Cambium</div>
+./weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:1367:<section id="radioCambiumPanel" class="radio-cambium-panel">
+./weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:1380:        automáticamente cuando se reactive el colector Cambium.
+
+==================================================
+9. ARCHIVOS RELACIONADOS CON RADIO
+==================================================
+./reports/scientific_engine/cambium_diagnostic_20260727_003640.txt
+./weather_station/telemetry/cambium_local_collector.py
+./weather_station/telemetry/__pycache__/cambium_local_collector.cpython-312.pyc
+
+==================================================
+10. CONFIGURACIONES RELACIONADAS
+==================================================
+
+DIRECTORIO: config
+config/telegram.yaml:3:  bot_token: ***REDACTADO***
+config/scheduler.yaml:26:  radio_collector:
+config/scheduler.yaml:32:    - weather_station.telemetry.cambium_local_collector
+config/telegram.example.yaml:3:  bot_token: ***REDACTADO***
+
+DIRECTORIO: Config
+Config/archive/station_legacy_20260726_174920.yaml:6:radio_link:
+Config/archive/station_legacy_20260726_174920.yaml:7:  ap_ip: 192.168.1.2
+Config/archive/station_legacy_20260726_174920.yaml:8:  sm_ip: 192.168.1.3
+Config/archive/station_legacy_20260726_174920.yaml:10:  passfile: /home/carlos/epmp_logs/.ap_pass
+Config/station_sj01.yaml:12:radio_link:
+Config/station_sj01.yaml:14:  ap_ip: 192.168.1.2
+Config/station_sj01.yaml:15:  sm_ip: 192.168.1.3
+Config/station_sj01.yaml:17:  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+Config/station.yaml:12:radio_link:
+Config/station.yaml:14:  ap_ip: 192.168.1.2
+Config/station.yaml:15:  sm_ip: 192.168.1.3
+Config/station.yaml:17:  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+Config/station_cu01.yaml:12:radio_link:
+Config/station_cu01.yaml:14:  ap_ip: 192.168.1.2
+Config/station_cu01.yaml:15:  sm_ip: 192.168.1.3
+Config/station_cu01.yaml:17:  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+Config/station_sj01_windows.yaml:18:radio_link:
+Config/station_sj01_windows.yaml:20:  ap_ip: 192.168.1.2
+Config/station_sj01_windows.yaml:21:  sm_ip: 192.168.1.3
+
+DIRECTORIO: deploy/systemd
+deploy/systemd/README.md:71:    curl -s http://127.0.0.1:5000/api/health | python3 -m json.tool
+deploy/systemd/install_dashboard_service.sh:62:    http://127.0.0.1:5000/api/health |
+deploy/systemd/check_dashboard_service.sh:50:    "${BASE_URL}/api/latest"
+deploy/systemd/check_dashboard_service.sh:54:    "${BASE_URL}/api/health"
+deploy/systemd/check_dashboard_service.sh:61:    "${BASE_URL}/api/health" |
+
+DIRECTORIO: /etc/systemd/system
+/etc/systemd/system/epmp-monitor.service:8:ExecStart=/home/carlos/epmp_monitor/bin/capture_agg_ap.sh
+/etc/systemd/system/atmoslink-radio.service:11:ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.telemetry.cambium_local_collector
+/etc/systemd/system/socat-ap-ssh.service:2:Description=Local SSH proxy to AP (127.0.0.1:2223 -> 192.168.1.2:22)
+/etc/systemd/system/socat-ap-ssh.service:7:ExecStart=/usr/bin/socat TCP-LISTEN:2223,fork,reuseaddr TCP:192.168.1.2:22
+/etc/systemd/system/socat-ap-http.service:2:Description=Local HTTP proxy to AP (127.0.0.1:8080 -> 192.168.1.2:80)
+/etc/systemd/system/socat-ap-http.service:7:ExecStart=/usr/bin/socat TCP-LISTEN:8080,fork,reuseaddr TCP:192.168.1.2:80
+/etc/systemd/system/multi-user.target.wants/epmp-monitor.service:8:ExecStart=/home/carlos/epmp_monitor/bin/capture_agg_ap.sh
+/etc/systemd/system/multi-user.target.wants/atmoslink-radio.service:11:ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.telemetry.cambium_local_collector
+/etc/systemd/system/multi-user.target.wants/socat-ap-ssh.service:2:Description=Local SSH proxy to AP (127.0.0.1:2223 -> 192.168.1.2:22)
+/etc/systemd/system/multi-user.target.wants/socat-ap-ssh.service:7:ExecStart=/usr/bin/socat TCP-LISTEN:2223,fork,reuseaddr TCP:192.168.1.2:22
+/etc/systemd/system/multi-user.target.wants/socat-ap-http.service:2:Description=Local HTTP proxy to AP (127.0.0.1:8080 -> 192.168.1.2:80)
+/etc/systemd/system/multi-user.target.wants/socat-ap-http.service:7:ExecStart=/usr/bin/socat TCP-LISTEN:8080,fork,reuseaddr TCP:192.168.1.2:80
+/etc/systemd/system/multi-user.target.wants/socat-ap-https.service:2:Description=Local HTTPS proxy to AP (127.0.0.1:4443 -> 192.168.1.2:443)
+/etc/systemd/system/multi-user.target.wants/socat-ap-https.service:7:ExecStart=/usr/bin/socat TCP-LISTEN:4443,fork,reuseaddr TCP:192.168.1.2:443
+/etc/systemd/system/multi-user.target.wants/ubuntu-advantage.service:20:ConditionPathExists=!/var/lib/ubuntu-advantage/private/machine-token.json
+/etc/systemd/system/multi-user.target.wants/ua-reboot-cmds.service:12:ConditionPathExists=/var/lib/ubuntu-advantage/private/machine-token.json
+/etc/systemd/system/getty.target.wants/getty@tty1.service:38:# the entered username.
+/etc/systemd/system/timers.target.wants/ua-timer.timer:6:ConditionPathExists=/var/lib/ubuntu-advantage/private/machine-token.json
+/etc/systemd/system/socat-ap-https.service:2:Description=Local HTTPS proxy to AP (127.0.0.1:4443 -> 192.168.1.2:443)
+/etc/systemd/system/socat-ap-https.service:7:ExecStart=/usr/bin/socat TCP-LISTEN:4443,fork,reuseaddr TCP:192.168.1.2:443
+
+==================================================
+11. SERVICIOS SYSTEMD RELACIONADOS
+==================================================
+atmoslink-dashboard.service                  enabled         enabled
+atmoslink-event-monitor.service              enabled         enabled
+atmoslink-inhibit-sleep.service              enabled         enabled
+atmoslink-radio.service                      enabled         enabled
+atmoslink-scheduler.service                  enabled         enabled
+epmp-monitor.service                         enabled         enabled
+weather-logger.service                       enabled         enabled
+
+==================================================
+12. ESTADO DE SERVICIOS RELACIONADOS
+==================================================
+
+SERVICE: weather-logger.service
+● weather-logger.service - Weather Station Logger
+     Loaded: loaded (/etc/systemd/system/weather-logger.service; enabled; preset: enabled)
+    Drop-In: /etc/systemd/system/weather-logger.service.d
+             └─override.conf
+     Active: active (running) since Thu 2026-07-23 16:09:04 -05; 3 days ago
+   Main PID: 290613 (python)
+      Tasks: 1 (limit: 9293)
+     Memory: 8.7M (peak: 9.5M)
+        CPU: 36.912s
+     CGroup: /system.slice/weather-logger.service
+             └─290613 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.logger.logger_weather
+
+jul 27 00:27:01 Controlador python[290613]: RX_VALIDO: 289080,14.60,14.59,14.62,76.75,76.61,76.98,742.79,10.56,12.74,0.00,0.00,3.63,0,13,1,1
+jul 27 00:27:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:27:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:27:01.599157', 't_s': 289080, 'temp_avg_C': 14.6, 'temp_min_C': 14.59, 'temp_max_C': 14.62, 'hum_avg_pct': 76.75, 'hum_min_pct': 76.61, 'hum_max_pct': 76.98, 'pres_avg_hPa': 742.79, 'dew_point_C': 10.56, 'vapor_pressure_hPa': 12.74, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 27 00:28:01 Controlador python[290613]: RX_VALIDO: 289140,14.58,14.56,14.59,77.07,77.01,77.16,742.79,10.60,12.78,0.00,0.00,3.63,0,13,1,1
+jul 27 00:28:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:28:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:28:01.598014', 't_s': 289140, 'temp_avg_C': 14.58, 'temp_min_C': 14.56, 'temp_max_C': 14.59, 'hum_avg_pct': 77.07, 'hum_min_pct': 77.01, 'hum_max_pct': 77.16, 'pres_avg_hPa': 742.79, 'dew_point_C': 10.6, 'vapor_pressure_hPa': 12.78, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 27 00:29:01 Controlador python[290613]: RX_VALIDO: 289200,14.55,14.55,14.56,77.04,76.97,77.17,742.78,10.57,12.75,0.00,0.00,3.63,0,13,1,1
+jul 27 00:29:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:29:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:29:01.597300', 't_s': 289200, 'temp_avg_C': 14.55, 'temp_min_C': 14.55, 'temp_max_C': 14.56, 'hum_avg_pct': 77.04, 'hum_min_pct': 76.97, 'hum_max_pct': 77.17, 'pres_avg_hPa': 742.78, 'dew_point_C': 10.57, 'vapor_pressure_hPa': 12.75, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 27 00:30:01 Controlador python[290613]: RX_VALIDO: 289260,14.54,14.53,14.55,77.43,77.22,77.72,742.77,10.64,12.81,0.00,0.00,3.63,0,13,1,1
+jul 27 00:30:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:30:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:30:01.596536', 't_s': 289260, 'temp_avg_C': 14.54, 'temp_min_C': 14.53, 'temp_max_C': 14.55, 'hum_avg_pct': 77.43, 'hum_min_pct': 77.22, 'hum_max_pct': 77.72, 'pres_avg_hPa': 742.77, 'dew_point_C': 10.64, 'vapor_pressure_hPa': 12.81, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 27 00:31:01 Controlador python[290613]: RX_VALIDO: 289320,14.49,14.47,14.52,77.81,77.64,78.17,742.76,10.67,12.83,0.00,0.00,3.63,0,13,1,1
+jul 27 00:31:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:31:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:31:01.596523', 't_s': 289320, 'temp_avg_C': 14.49, 'temp_min_C': 14.47, 'temp_max_C': 14.52, 'hum_avg_pct': 77.81, 'hum_min_pct': 77.64, 'hum_max_pct': 78.17, 'pres_avg_hPa': 742.76, 'dew_point_C': 10.67, 'vapor_pressure_hPa': 12.83, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 27 00:32:01 Controlador python[290613]: RX_VALIDO: 289380,14.44,14.42,14.46,78.06,77.95,78.21,742.75,10.66,12.83,0.00,0.00,3.63,0,13,1,1
+jul 27 00:32:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:32:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:32:01.594898', 't_s': 289380, 'temp_avg_C': 14.44, 'temp_min_C': 14.42, 'temp_max_C': 14.46, 'hum_avg_pct': 78.06, 'hum_min_pct': 77.95, 'hum_max_pct': 78.21, 'pres_avg_hPa': 742.75, 'dew_point_C': 10.66, 'vapor_pressure_hPa': 12.83, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 27 00:33:01 Controlador python[290613]: RX_VALIDO: 289440,14.41,14.41,14.42,78.22,78.18,78.24,742.73,10.67,12.83,0.00,0.00,3.63,0,13,1,1
+jul 27 00:33:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:33:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:33:01.593966', 't_s': 289440, 'temp_avg_C': 14.41, 'temp_min_C': 14.41, 'temp_max_C': 14.42, 'hum_avg_pct': 78.22, 'hum_min_pct': 78.18, 'hum_max_pct': 78.24, 'pres_avg_hPa': 742.73, 'dew_point_C': 10.67, 'vapor_pressure_hPa': 12.83, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 27 00:34:01 Controlador python[290613]: RX_VALIDO: 289500,14.39,14.38,14.40,78.17,78.08,78.28,742.72,10.64,12.81,0.00,0.00,3.63,0,13,1,1
+jul 27 00:34:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:34:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:34:01.593344', 't_s': 289500, 'temp_avg_C': 14.39, 'temp_min_C': 14.38, 'temp_max_C': 14.4, 'hum_avg_pct': 78.17, 'hum_min_pct': 78.08, 'hum_max_pct': 78.28, 'pres_avg_hPa': 742.72, 'dew_point_C': 10.64, 'vapor_pressure_hPa': 12.81, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 27 00:35:01 Controlador python[290613]: RX_VALIDO: 289560,14.35,14.34,14.37,78.20,78.13,78.28,742.71,10.60,12.78,0.00,0.00,3.63,0,13,1,1
+jul 27 00:35:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:35:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:35:01.592466', 't_s': 289560, 'temp_avg_C': 14.35, 'temp_min_C': 14.34, 'temp_max_C': 14.37, 'hum_avg_pct': 78.2, 'hum_min_pct': 78.13, 'hum_max_pct': 78.28, 'pres_avg_hPa': 742.71, 'dew_point_C': 10.6, 'vapor_pressure_hPa': 12.78, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 27 00:36:01 Controlador python[290613]: RX_VALIDO: 289620,14.35,14.34,14.35,78.05,77.99,78.11,742.71,10.57,12.75,0.00,0.00,3.63,0,13,1,1
+jul 27 00:36:01 Controlador python[290613]: GUARDADO: 2026-07-27T00:36:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-27T00:36:01.591702', 't_s': 289620, 'temp_avg_C': 14.35, 'temp_min_C': 14.34, 'temp_max_C': 14.35, 'hum_avg_pct': 78.05, 'hum_min_pct': 77.99, 'hum_max_pct': 78.11, 'pres_avg_hPa': 742.71, 'dew_point_C': 10.57, 'vapor_pressure_hPa': 12.75, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+
+SERVICE: atmoslink-scheduler.service
+● atmoslink-scheduler.service - AtmosLink Central Scheduler
+     Loaded: loaded (/etc/systemd/system/atmoslink-scheduler.service; enabled; preset: enabled)
+    Drop-In: /etc/systemd/system/atmoslink-scheduler.service.d
+             └─override.conf
+     Active: active (running) since Thu 2026-07-23 16:09:04 -05; 3 days ago
+   Main PID: 290619 (python)
+      Tasks: 1 (limit: 9293)
+     Memory: 190.5M (peak: 604.3M)
+        CPU: 12h 41min 46.910s
+     CGroup: /system.slice/atmoslink-scheduler.service
+             └─290619 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.scheduler.atmoslink_scheduler
+
+jul 23 16:09:04 Controlador systemd[1]: Started atmoslink-scheduler.service - AtmosLink Central Scheduler.
+
+SERVICE: atmoslink-event-monitor.service
+● atmoslink-event-monitor.service - AtmosLink Automatic Operational Event Monitor
+     Loaded: loaded (/etc/systemd/system/atmoslink-event-monitor.service; enabled; preset: enabled)
+     Active: active (running) since Sun 2026-07-26 23:30:14 -05; 1h 6min ago
+   Main PID: 1972614 (python3)
+      Tasks: 1 (limit: 9293)
+     Memory: 13.7M (peak: 14.2M)
+        CPU: 405ms
+     CGroup: /system.slice/atmoslink-event-monitor.service
+             └─1972614 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python3 /home/carlos/Proyectos/EstacionMeteorologica/scripts/monitor_operational_events.py
+
+jul 27 00:33:53 Controlador python3[1972614]:   "base_url": "http://127.0.0.1:5000",
+jul 27 00:33:53 Controlador python3[1972614]:   "changes_detected": 0,
+jul 27 00:33:53 Controlador python3[1972614]:   "state_file": "/home/carlos/Proyectos/EstacionMeteorologica/runtime/automatic_event_state.json"
+jul 27 00:33:53 Controlador python3[1972614]: }
+jul 27 00:34:54 Controlador python3[1972614]: {
+jul 27 00:34:54 Controlador python3[1972614]:   "status": "ok",
+jul 27 00:34:54 Controlador python3[1972614]:   "checked_at": "2026-07-27T00:34:54-05:00",
+jul 27 00:34:54 Controlador python3[1972614]:   "station": "CU01",
+jul 27 00:34:54 Controlador python3[1972614]:   "base_url": "http://127.0.0.1:5000",
+jul 27 00:34:54 Controlador python3[1972614]:   "changes_detected": 0,
+jul 27 00:34:54 Controlador python3[1972614]:   "state_file": "/home/carlos/Proyectos/EstacionMeteorologica/runtime/automatic_event_state.json"
+jul 27 00:34:54 Controlador python3[1972614]: }
+jul 27 00:35:54 Controlador python3[1972614]: {
+jul 27 00:35:54 Controlador python3[1972614]:   "status": "ok",
+jul 27 00:35:54 Controlador python3[1972614]:   "checked_at": "2026-07-27T00:35:54-05:00",
+jul 27 00:35:54 Controlador python3[1972614]:   "station": "CU01",
+jul 27 00:35:54 Controlador python3[1972614]:   "base_url": "http://127.0.0.1:5000",
+jul 27 00:35:54 Controlador python3[1972614]:   "changes_detected": 0,
+jul 27 00:35:54 Controlador python3[1972614]:   "state_file": "/home/carlos/Proyectos/EstacionMeteorologica/runtime/automatic_event_state.json"
+jul 27 00:35:54 Controlador python3[1972614]: }
+
+SERVICE: atmoslink-dashboard.service
+● atmoslink-dashboard.service - AtmosLink Scientific Dashboard
+     Loaded: loaded (/etc/systemd/system/atmoslink-dashboard.service; enabled; preset: enabled)
+    Drop-In: /etc/systemd/system/atmoslink-dashboard.service.d
+             └─override.conf
+     Active: active (running) since Sun 2026-07-26 23:54:58 -05; 41min ago
+   Main PID: 2046568 (gunicorn)
+      Tasks: 12 (limit: 9293)
+     Memory: 79.0M (peak: 81.1M)
+        CPU: 11min 52.449s
+     CGroup: /system.slice/atmoslink-dashboard.service
+             ├─2046568 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python3 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 --worker-class gthread --threads 4 --timeout 30 --graceful-timeout 30 --keep-alive 5 --access-logfile - --error-logfile - --capture-output weather_station.dashboard.app:app
+             ├─2046571 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python3 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 --worker-class gthread --threads 4 --timeout 30 --graceful-timeout 30 --keep-alive 5 --access-logfile - --error-logfile - --capture-output weather_station.dashboard.app:app
+             └─2046572 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python3 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 --worker-class gthread --threads 4 --timeout 30 --graceful-timeout 30 --keep-alive 5 --access-logfile - --error-logfile - --capture-output weather_station.dashboard.app:app
+
+jul 27 00:36:29 Controlador gunicorn[2046572]: 100.95.177.95 - - [27/Jul/2026:00:36:29 -0500] "GET /api/windrose?period=24h HTTP/1.1" 200 1514 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:29 Controlador gunicorn[2046572]: 127.0.0.1 - - [27/Jul/2026:00:36:29 -0500] "GET /api/stations/latest HTTP/1.1" 200 360 "http://localhost:5000/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:30 Controlador gunicorn[2046572]: 100.95.177.95 - - [27/Jul/2026:00:36:30 -0500] "GET /api/latest HTTP/1.1" 200 2754 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:31 Controlador gunicorn[2046571]: 100.95.177.95 - - [27/Jul/2026:00:36:31 -0500] "GET /api/history HTTP/1.1" 200 212052 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:31 Controlador gunicorn[2046572]: 100.95.177.95 - - [27/Jul/2026:00:36:31 -0500] "GET /api/core/status HTTP/1.1" 200 23153 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:31 Controlador gunicorn[2046572]: 100.95.177.95 - - [27/Jul/2026:00:36:31 -0500] "GET /api/latest HTTP/1.1" 200 2754 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:32 Controlador gunicorn[2046571]: 100.95.177.95 - - [27/Jul/2026:00:36:32 -0500] "GET /api/latest HTTP/1.1" 200 2754 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:33 Controlador gunicorn[2046572]: 127.0.0.1 - - [27/Jul/2026:00:36:33 -0500] "GET /api/latest HTTP/1.1" 200 2754 "http://localhost:5000/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:33 Controlador gunicorn[2046572]: 100.95.177.95 - - [27/Jul/2026:00:36:33 -0500] "GET /api/stations/latest HTTP/1.1" 200 360 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:34 Controlador gunicorn[2046572]: 127.0.0.1 - - [27/Jul/2026:00:36:34 -0500] "GET /api/stations/latest HTTP/1.1" 200 360 "http://localhost:5000/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:34 Controlador gunicorn[2046571]: 100.95.177.95 - - [27/Jul/2026:00:36:34 -0500] "GET /api/core/status HTTP/1.1" 200 23153 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:34 Controlador gunicorn[2046572]: 100.95.177.95 - - [27/Jul/2026:00:36:34 -0500] "GET /api/history HTTP/1.1" 200 212052 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:34 Controlador gunicorn[2046572]: 100.95.177.95 - - [27/Jul/2026:00:36:34 -0500] "GET /api/latest HTTP/1.1" 200 2754 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:36 Controlador gunicorn[2046572]: 127.0.0.1 - - [27/Jul/2026:00:36:36 -0500] "GET /api/core/status HTTP/1.1" 200 23153 "http://localhost:5000/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:37 Controlador gunicorn[2046571]: 100.95.177.95 - - [27/Jul/2026:00:36:37 -0500] "GET /api/latest HTTP/1.1" 200 2754 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:38 Controlador gunicorn[2046572]: 127.0.0.1 - - [27/Jul/2026:00:36:38 -0500] "GET /api/latest HTTP/1.1" 200 2754 "http://localhost:5000/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:38 Controlador gunicorn[2046572]: 100.95.177.95 - - [27/Jul/2026:00:36:38 -0500] "GET /api/stations/latest HTTP/1.1" 200 360 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:39 Controlador gunicorn[2046572]: 127.0.0.1 - - [27/Jul/2026:00:36:39 -0500] "GET /api/stations/latest HTTP/1.1" 200 360 "http://localhost:5000/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:39 Controlador gunicorn[2046572]: 100.95.177.95 - - [27/Jul/2026:00:36:39 -0500] "GET /api/core/status HTTP/1.1" 200 23153 "http://100.89.34.64:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:152.0) Gecko/20100101 Firefox/152.0"
+jul 27 00:36:40 Controlador gunicorn[2046572]: 127.0.0.1 - - [27/Jul/2026:00:36:40 -0500] "GET /api/history HTTP/1.1" 200 212052 "http://localhost:5000/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0"
+
+==================================================
+13. LOGS RECIENTES
+==================================================
+
+JOURNAL: atmoslink-scheduler.service
+
+JOURNAL: weather-logger.service
+jul 23 14:58:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:58:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:58:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 14:59:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:00:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:01:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:02:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:03:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:04:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:05:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:06:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:07:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:08:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:09:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:10:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:11:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:12:59 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:04 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:09 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:14 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:19 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:24 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:29 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:34 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:39 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:44 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:49 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 15:13:54 Controlador python[1335]: Error serial: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0'
+jul 23 19:57:05 Controlador python[290613]: GUARDADO: 2026-07-23T19:57:05-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-23T19:57:05.045401', 't_s': 13680, 'temp_avg_C': 15.88, 'temp_min_C': 15.86, 'temp_max_C': 15.9, 'hum_avg_pct': 75.52, 'hum_min_pct': 75.36, 'hum_max_pct': 75.61, 'pres_avg_hPa': 740.19, 'dew_point_C': 11.55, 'vapor_pressure_hPa': 13.61, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 23 20:29:05 Controlador python[290613]: GUARDADO: 2026-07-23T20:29:05-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-23T20:29:05.020403', 't_s': 15600, 'temp_avg_C': 15.86, 'temp_min_C': 15.85, 'temp_max_C': 15.87, 'hum_avg_pct': 75.8, 'hum_min_pct': 75.67, 'hum_max_pct': 75.91, 'pres_avg_hPa': 740.52, 'dew_point_C': 11.59, 'vapor_pressure_hPa': 13.65, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 23 22:14:05 Controlador python[290613]: GUARDADO: 2026-07-23T22:14:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-23T22:14:04.940137', 't_s': 21900, 'temp_avg_C': 14.81, 'temp_min_C': 14.79, 'temp_max_C': 14.82, 'hum_avg_pct': 79.66, 'hum_min_pct': 79.6, 'hum_max_pct': 79.78, 'pres_avg_hPa': 741.12, 'dew_point_C': 11.33, 'vapor_pressure_hPa': 13.41, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 23 22:55:04 Controlador python[290613]: GUARDADO: 2026-07-23T22:55:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-23T22:55:04.908401', 't_s': 24360, 'temp_avg_C': 15.08, 'temp_min_C': 15.07, 'temp_max_C': 15.09, 'hum_avg_pct': 80.51, 'hum_min_pct': 80.31, 'hum_max_pct': 80.62, 'pres_avg_hPa': 741.12, 'dew_point_C': 11.75, 'vapor_pressure_hPa': 13.79, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 01:32:04 Controlador python[290613]: GUARDADO: 2026-07-24T01:32:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T01:32:04.784017', 't_s': 33780, 'temp_avg_C': 14.23, 'temp_min_C': 14.22, 'temp_max_C': 14.25, 'hum_avg_pct': 82.23, 'hum_min_pct': 82.1, 'hum_max_pct': 82.31, 'pres_avg_hPa': 740.45, 'dew_point_C': 11.25, 'vapor_pressure_hPa': 13.34, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 03:18:04 Controlador python[290613]: RX_VALIDO: 40140,13.95,13.95,13.96,83.46,83.40,83.56,739.88,11.20,13.29,0.00,0.00,2.79,0,10,1,1
+jul 24 03:18:04 Controlador python[290613]: GUARDADO: 2026-07-24T03:18:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T03:18:04.700332', 't_s': 40140, 'temp_avg_C': 13.95, 'temp_min_C': 13.95, 'temp_max_C': 13.96, 'hum_avg_pct': 83.46, 'hum_min_pct': 83.4, 'hum_max_pct': 83.56, 'pres_avg_hPa': 739.88, 'dew_point_C': 11.2, 'vapor_pressure_hPa': 13.29, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 03:21:04 Controlador python[290613]: RX_VALIDO: 40320,13.95,13.94,13.95,83.44,83.41,83.49,739.86,11.18,13.28,0.00,0.00,2.79,0,10,1,1
+jul 24 03:21:04 Controlador python[290613]: GUARDADO: 2026-07-24T03:21:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T03:21:04.697957', 't_s': 40320, 'temp_avg_C': 13.95, 'temp_min_C': 13.94, 'temp_max_C': 13.95, 'hum_avg_pct': 83.44, 'hum_min_pct': 83.41, 'hum_max_pct': 83.49, 'pres_avg_hPa': 739.86, 'dew_point_C': 11.18, 'vapor_pressure_hPa': 13.28, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 03:22:04 Controlador python[290613]: RX_VALIDO: 40380,13.93,13.92,13.95,83.51,83.47,83.55,739.85,11.18,13.28,0.00,0.00,2.79,0,10,1,1
+jul 24 03:22:04 Controlador python[290613]: GUARDADO: 2026-07-24T03:22:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T03:22:04.697847', 't_s': 40380, 'temp_avg_C': 13.93, 'temp_min_C': 13.92, 'temp_max_C': 13.95, 'hum_avg_pct': 83.51, 'hum_min_pct': 83.47, 'hum_max_pct': 83.55, 'pres_avg_hPa': 739.85, 'dew_point_C': 11.18, 'vapor_pressure_hPa': 13.28, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 05:45:04 Controlador python[290613]: GUARDADO: 2026-07-24T05:45:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T05:45:04.580403', 't_s': 48960, 'temp_avg_C': 13.56, 'temp_min_C': 13.54, 'temp_max_C': 13.58, 'hum_avg_pct': 81.5, 'hum_min_pct': 81.43, 'hum_max_pct': 81.59, 'pres_avg_hPa': 740.43, 'dew_point_C': 10.45, 'vapor_pressure_hPa': 12.65, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 06:01:04 Controlador python[290613]: GUARDADO: 2026-07-24T06:01:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T06:01:04.567401', 't_s': 49920, 'temp_avg_C': 13.46, 'temp_min_C': 13.45, 'temp_max_C': 13.46, 'hum_avg_pct': 82.78, 'hum_min_pct': 82.75, 'hum_max_pct': 82.81, 'pres_avg_hPa': 740.66, 'dew_point_C': 10.59, 'vapor_pressure_hPa': 12.77, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 08:32:04 Controlador python[290613]: GUARDADO: 2026-07-24T08:32:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T08:32:04.440179', 't_s': 58980, 'temp_avg_C': 15.62, 'temp_min_C': 15.59, 'temp_max_C': 15.65, 'hum_avg_pct': 75.83, 'hum_min_pct': 75.6, 'hum_max_pct': 76.0, 'pres_avg_hPa': 742.11, 'dew_point_C': 11.36, 'vapor_pressure_hPa': 13.44, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 09:10:04 Controlador python[290613]: GUARDADO: 2026-07-24T09:10:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T09:10:04.409403', 't_s': 61260, 'temp_avg_C': 16.73, 'temp_min_C': 16.67, 'temp_max_C': 16.79, 'hum_avg_pct': 69.81, 'hum_min_pct': 69.68, 'hum_max_pct': 69.96, 'pres_avg_hPa': 742.09, 'dew_point_C': 11.19, 'vapor_pressure_hPa': 13.29, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 09:17:04 Controlador python[290613]: GUARDADO: 2026-07-24T09:17:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T09:17:04.403910', 't_s': 61680, 'temp_avg_C': 17.48, 'temp_min_C': 17.47, 'temp_max_C': 17.49, 'hum_avg_pct': 65.9, 'hum_min_pct': 65.46, 'hum_max_pct': 66.38, 'pres_avg_hPa': 742.14, 'dew_point_C': 11.03, 'vapor_pressure_hPa': 13.15, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 09:18:04 Controlador python[290613]: GUARDADO: 2026-07-24T09:18:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T09:18:04.403714', 't_s': 61740, 'temp_avg_C': 17.52, 'temp_min_C': 17.49, 'temp_max_C': 17.55, 'hum_avg_pct': 65.64, 'hum_min_pct': 65.26, 'hum_max_pct': 66.02, 'pres_avg_hPa': 742.16, 'dew_point_C': 11.01, 'vapor_pressure_hPa': 13.14, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 09:20:04 Controlador python[290613]: GUARDADO: 2026-07-24T09:20:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T09:20:04.401637', 't_s': 61860, 'temp_avg_C': 17.6, 'temp_min_C': 17.6, 'temp_max_C': 17.62, 'hum_avg_pct': 66.46, 'hum_min_pct': 66.35, 'hum_max_pct': 66.66, 'pres_avg_hPa': 742.15, 'dew_point_C': 11.28, 'vapor_pressure_hPa': 13.37, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 09:21:04 Controlador python[290613]: GUARDADO: 2026-07-24T09:21:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T09:21:04.401376', 't_s': 61920, 'temp_avg_C': 17.63, 'temp_min_C': 17.62, 'temp_max_C': 17.65, 'hum_avg_pct': 66.74, 'hum_min_pct': 66.48, 'hum_max_pct': 66.96, 'pres_avg_hPa': 742.16, 'dew_point_C': 11.37, 'vapor_pressure_hPa': 13.45, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 13:36:04 Controlador python[290613]: GUARDADO: 2026-07-24T13:36:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T13:36:04.240186', 't_s': 77220, 'temp_avg_C': 24.36, 'temp_min_C': 24.28, 'temp_max_C': 24.41, 'hum_avg_pct': 45.7, 'hum_min_pct': 45.17, 'hum_max_pct': 46.54, 'pres_avg_hPa': 739.61, 'dew_point_C': 11.88, 'vapor_pressure_hPa': 13.93, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 15:01:04 Controlador python[290613]: GUARDADO: 2026-07-24T15:01:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T15:01:04.194018', 't_s': 82320, 'temp_avg_C': 22.53, 'temp_min_C': 22.51, 'temp_max_C': 22.56, 'hum_avg_pct': 50.68, 'hum_min_pct': 50.3, 'hum_max_pct': 51.06, 'pres_avg_hPa': 738.72, 'dew_point_C': 11.78, 'vapor_pressure_hPa': 13.84, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 2.79, 'pulses_delta': 0, 'pulses_total': 10, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 18:00:04 Controlador python[290613]: GUARDADO: 2026-07-24T18:00:04-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T18:00:04.074030', 't_s': 93060, 'temp_avg_C': 15.85, 'temp_min_C': 15.82, 'temp_max_C': 15.89, 'hum_avg_pct': 78.8, 'hum_min_pct': 78.67, 'hum_max_pct': 78.98, 'pres_avg_hPa': 740.67, 'dew_point_C': 12.17, 'vapor_pressure_hPa': 14.18, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 24 21:10:03 Controlador python[290613]: GUARDADO: 2026-07-24T21:10:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-24T21:10:03.927403', 't_s': 104460, 'temp_avg_C': 14.21, 'temp_min_C': 14.19, 'temp_max_C': 14.23, 'hum_avg_pct': 84.31, 'hum_min_pct': 84.05, 'hum_max_pct': 84.6, 'pres_avg_hPa': 742.46, 'dew_point_C': 11.6, 'vapor_pressure_hPa': 13.65, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 02:56:03 Controlador python[290613]: GUARDADO: 2026-07-25T02:56:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T02:56:03.640382', 't_s': 125220, 'temp_avg_C': 13.31, 'temp_min_C': 13.29, 'temp_max_C': 13.33, 'hum_avg_pct': 85.77, 'hum_min_pct': 85.58, 'hum_max_pct': 86.02, 'pres_avg_hPa': 741.88, 'dew_point_C': 10.98, 'vapor_pressure_hPa': 13.1, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 05:03:03 Controlador python[290613]: GUARDADO: 2026-07-25T05:03:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T05:03:03.534017', 't_s': 132840, 'temp_avg_C': 13.17, 'temp_min_C': 13.15, 'temp_max_C': 13.18, 'hum_avg_pct': 87.24, 'hum_min_pct': 87.14, 'hum_max_pct': 87.37, 'pres_avg_hPa': 742.0, 'dew_point_C': 11.09, 'vapor_pressure_hPa': 13.2, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 07:04:03 Controlador python[290613]: RX_VALIDO: 140100,13.03,13.03,13.03,86.97,86.89,87.14,743.08,10.91,13.04,0.00,0.00,3.35,0,12,1,1
+jul 25 07:04:03 Controlador python[290613]: GUARDADO: 2026-07-25T07:04:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T07:04:03.431083', 't_s': 140100, 'temp_avg_C': 13.03, 'temp_min_C': 13.03, 'temp_max_C': 13.03, 'hum_avg_pct': 86.97, 'hum_min_pct': 86.89, 'hum_max_pct': 87.14, 'pres_avg_hPa': 743.08, 'dew_point_C': 10.91, 'vapor_pressure_hPa': 13.04, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 07:05:03 Controlador python[290613]: RX_VALIDO: 140160,13.05,13.03,13.06,86.83,86.77,86.90,743.09,10.90,13.03,0.00,0.00,3.35,0,12,1,1
+jul 25 07:05:03 Controlador python[290613]: GUARDADO: 2026-07-25T07:05:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T07:05:03.430208', 't_s': 140160, 'temp_avg_C': 13.05, 'temp_min_C': 13.03, 'temp_max_C': 13.06, 'hum_avg_pct': 86.83, 'hum_min_pct': 86.77, 'hum_max_pct': 86.9, 'pres_avg_hPa': 743.09, 'dew_point_C': 10.9, 'vapor_pressure_hPa': 13.03, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 07:08:03 Controlador python[290613]: RX_VALIDO: 140340,13.09,13.09,13.09,86.48,86.43,86.56,743.13,10.88,13.02,0.00,0.00,3.35,0,12,1,1
+jul 25 07:08:03 Controlador python[290613]: GUARDADO: 2026-07-25T07:08:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T07:08:03.428199', 't_s': 140340, 'temp_avg_C': 13.09, 'temp_min_C': 13.09, 'temp_max_C': 13.09, 'hum_avg_pct': 86.48, 'hum_min_pct': 86.43, 'hum_max_pct': 86.56, 'pres_avg_hPa': 743.13, 'dew_point_C': 10.88, 'vapor_pressure_hPa': 13.02, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 07:37:03 Controlador python[290613]: GUARDADO: 2026-07-25T07:37:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T07:37:03.403785', 't_s': 142080, 'temp_avg_C': 13.29, 'temp_min_C': 13.27, 'temp_max_C': 13.3, 'hum_avg_pct': 86.69, 'hum_min_pct': 86.61, 'hum_max_pct': 86.93, 'pres_avg_hPa': 743.4, 'dew_point_C': 11.11, 'vapor_pressure_hPa': 13.22, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 07:39:03 Controlador python[290613]: GUARDADO: 2026-07-25T07:39:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T07:39:03.401639', 't_s': 142200, 'temp_avg_C': 13.34, 'temp_min_C': 13.33, 'temp_max_C': 13.34, 'hum_avg_pct': 86.15, 'hum_min_pct': 86.07, 'hum_max_pct': 86.22, 'pres_avg_hPa': 743.44, 'dew_point_C': 11.07, 'vapor_pressure_hPa': 13.18, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 08:53:03 Controlador python[290613]: GUARDADO: 2026-07-25T08:53:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T08:53:03.340340', 't_s': 146640, 'temp_avg_C': 14.65, 'temp_min_C': 14.63, 'temp_max_C': 14.66, 'hum_avg_pct': 82.07, 'hum_min_pct': 81.47, 'hum_max_pct': 83.11, 'pres_avg_hPa': 743.98, 'dew_point_C': 11.62, 'vapor_pressure_hPa': 13.67, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 10:40:03 Controlador python[290613]: GUARDADO: 2026-07-25T10:40:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T10:40:03.256401', 't_s': 153060, 'temp_avg_C': 18.22, 'temp_min_C': 18.19, 'temp_max_C': 18.25, 'hum_avg_pct': 70.51, 'hum_min_pct': 69.75, 'hum_max_pct': 71.1, 'pres_avg_hPa': 743.9, 'dew_point_C': 12.76, 'vapor_pressure_hPa': 14.75, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 13:37:03 Controlador python[290613]: GUARDADO: 2026-07-25T13:37:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T13:37:03.133401', 't_s': 163680, 'temp_avg_C': 20.91, 'temp_min_C': 20.81, 'temp_max_C': 20.98, 'hum_avg_pct': 58.05, 'hum_min_pct': 57.69, 'hum_max_pct': 58.82, 'pres_avg_hPa': 741.87, 'dew_point_C': 12.34, 'vapor_pressure_hPa': 14.35, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.35, 'pulses_delta': 0, 'pulses_total': 12, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 15:19:03 Controlador python[290613]: GUARDADO: 2026-07-25T15:19:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T15:19:03.074038', 't_s': 169800, 'temp_avg_C': 21.61, 'temp_min_C': 21.56, 'temp_max_C': 21.66, 'hum_avg_pct': 53.21, 'hum_min_pct': 52.81, 'hum_max_pct': 53.63, 'pres_avg_hPa': 740.63, 'dew_point_C': 11.67, 'vapor_pressure_hPa': 13.73, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 15:46:03 Controlador python[290613]: GUARDADO: 2026-07-25T15:46:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T15:46:03.059401', 't_s': 171420, 'temp_avg_C': 23.62, 'temp_min_C': 23.52, 'temp_max_C': 23.7, 'hum_avg_pct': 47.56, 'hum_min_pct': 47.08, 'hum_max_pct': 47.91, 'pres_avg_hPa': 740.49, 'dew_point_C': 11.82, 'vapor_pressure_hPa': 13.87, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 16:17:03 Controlador python[290613]: GUARDADO: 2026-07-25T16:17:03-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T16:17:03.040103', 't_s': 173280, 'temp_avg_C': 19.62, 'temp_min_C': 19.61, 'temp_max_C': 19.63, 'hum_avg_pct': 60.97, 'hum_min_pct': 60.75, 'hum_max_pct': 61.09, 'pres_avg_hPa': 740.84, 'dew_point_C': 11.87, 'vapor_pressure_hPa': 13.91, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 19:14:02 Controlador python[290613]: GUARDADO: 2026-07-25T19:14:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T19:14:02.918403', 't_s': 183900, 'temp_avg_C': 15.18, 'temp_min_C': 15.18, 'temp_max_C': 15.19, 'hum_avg_pct': 76.03, 'hum_min_pct': 75.91, 'hum_max_pct': 76.18, 'pres_avg_hPa': 742.17, 'dew_point_C': 10.98, 'vapor_pressure_hPa': 13.11, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 20:57:02 Controlador python[290613]: GUARDADO: 2026-07-25T20:57:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T20:57:02.840392', 't_s': 190080, 'temp_avg_C': 14.33, 'temp_min_C': 14.31, 'temp_max_C': 14.35, 'hum_avg_pct': 80.66, 'hum_min_pct': 80.57, 'hum_max_pct': 80.73, 'pres_avg_hPa': 743.0, 'dew_point_C': 11.05, 'vapor_pressure_hPa': 13.16, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 21:27:02 Controlador python[290613]: GUARDADO: 2026-07-25T21:27:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T21:27:02.816401', 't_s': 191880, 'temp_avg_C': 14.5, 'temp_min_C': 14.49, 'temp_max_C': 14.5, 'hum_avg_pct': 79.92, 'hum_min_pct': 79.87, 'hum_max_pct': 79.98, 'pres_avg_hPa': 743.11, 'dew_point_C': 11.07, 'vapor_pressure_hPa': 13.18, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 25 23:00:02 Controlador python[290613]: GUARDADO: 2026-07-25T23:00:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-25T23:00:02.740342', 't_s': 197460, 'temp_avg_C': 13.89, 'temp_min_C': 13.88, 'temp_max_C': 13.91, 'hum_avg_pct': 82.05, 'hum_min_pct': 82.01, 'hum_max_pct': 82.11, 'pres_avg_hPa': 743.59, 'dew_point_C': 10.88, 'vapor_pressure_hPa': 13.02, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 01:01:02 Controlador python[290613]: GUARDADO: 2026-07-26T01:01:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T01:01:02.640348', 't_s': 204720, 'temp_avg_C': 13.7, 'temp_min_C': 13.7, 'temp_max_C': 13.71, 'hum_avg_pct': 82.36, 'hum_min_pct': 82.28, 'hum_max_pct': 82.44, 'pres_avg_hPa': 743.5, 'dew_point_C': 10.75, 'vapor_pressure_hPa': 12.91, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 01:02:02 Controlador python[290613]: GUARDADO: 2026-07-26T01:02:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T01:02:02.640199', 't_s': 204780, 'temp_avg_C': 13.71, 'temp_min_C': 13.69, 'temp_max_C': 13.71, 'hum_avg_pct': 81.43, 'hum_min_pct': 79.29, 'hum_max_pct': 82.45, 'pres_avg_hPa': 743.49, 'dew_point_C': 10.58, 'vapor_pressure_hPa': 12.76, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 02:42:02 Controlador python[290613]: GUARDADO: 2026-07-26T02:42:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T02:42:02.554013', 't_s': 210780, 'temp_avg_C': 10.86, 'temp_min_C': 10.84, 'temp_max_C': 10.88, 'hum_avg_pct': 74.94, 'hum_min_pct': 74.78, 'hum_max_pct': 75.13, 'pres_avg_hPa': 742.92, 'dew_point_C': 6.59, 'vapor_pressure_hPa': 9.74, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 03:31:02 Controlador python[290613]: GUARDADO: 2026-07-26T03:31:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T03:31:02.510403', 't_s': 213720, 'temp_avg_C': 11.76, 'temp_min_C': 11.76, 'temp_max_C': 11.77, 'hum_avg_pct': 74.93, 'hum_min_pct': 74.81, 'hum_max_pct': 74.98, 'pres_avg_hPa': 742.53, 'dew_point_C': 7.46, 'vapor_pressure_hPa': 10.34, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 05:24:02 Controlador python[290613]: GUARDADO: 2026-07-26T05:24:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T05:24:02.403856', 't_s': 220500, 'temp_avg_C': 10.57, 'temp_min_C': 10.56, 'temp_max_C': 10.58, 'hum_avg_pct': 74.79, 'hum_min_pct': 74.64, 'hum_max_pct': 74.92, 'pres_avg_hPa': 743.02, 'dew_point_C': 6.28, 'vapor_pressure_hPa': 9.53, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 05:26:02 Controlador python[290613]: GUARDADO: 2026-07-26T05:26:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T05:26:02.401853', 't_s': 220620, 'temp_avg_C': 10.58, 'temp_min_C': 10.57, 'temp_max_C': 10.58, 'hum_avg_pct': 74.71, 'hum_min_pct': 74.59, 'hum_max_pct': 74.85, 'pres_avg_hPa': 743.02, 'dew_point_C': 6.27, 'vapor_pressure_hPa': 9.53, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 05:27:02 Controlador python[290613]: GUARDADO: 2026-07-26T05:27:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T05:27:02.401503', 't_s': 220680, 'temp_avg_C': 10.59, 'temp_min_C': 10.58, 'temp_max_C': 10.59, 'hum_avg_pct': 74.85, 'hum_min_pct': 74.78, 'hum_max_pct': 74.91, 'pres_avg_hPa': 743.03, 'dew_point_C': 6.31, 'vapor_pressure_hPa': 9.55, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 06:03:02 Controlador python[290613]: GUARDADO: 2026-07-26T06:03:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T06:03:02.366403', 't_s': 222840, 'temp_avg_C': 9.8, 'temp_min_C': 9.77, 'temp_max_C': 9.83, 'hum_avg_pct': 76.15, 'hum_min_pct': 76.0, 'hum_max_pct': 76.29, 'pres_avg_hPa': 743.11, 'dew_point_C': 5.8, 'vapor_pressure_hPa': 9.22, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 07:42:02 Controlador python[290613]: GUARDADO: 2026-07-26T07:42:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T07:42:02.270401', 't_s': 228780, 'temp_avg_C': 9.56, 'temp_min_C': 9.56, 'temp_max_C': 9.56, 'hum_avg_pct': 77.81, 'hum_min_pct': 77.68, 'hum_max_pct': 77.92, 'pres_avg_hPa': 743.63, 'dew_point_C': 5.88, 'vapor_pressure_hPa': 9.27, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 08:14:02 Controlador python[290613]: GUARDADO: 2026-07-26T08:14:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T08:14:02.240393', 't_s': 230700, 'temp_avg_C': 11.26, 'temp_min_C': 11.26, 'temp_max_C': 11.27, 'hum_avg_pct': 74.43, 'hum_min_pct': 74.37, 'hum_max_pct': 74.5, 'pres_avg_hPa': 743.68, 'dew_point_C': 6.88, 'vapor_pressure_hPa': 9.94, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 10:51:02 Controlador python[290613]: RX_VALIDO: 240120,19.92,19.91,19.93,50.55,50.01,50.89,742.79,9.34,11.75,0.00,0.00,3.63,0,13,1,1
+jul 26 10:51:02 Controlador python[290613]: GUARDADO: 2026-07-26T10:51:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T10:51:02.112384', 't_s': 240120, 'temp_avg_C': 19.92, 'temp_min_C': 19.91, 'temp_max_C': 19.93, 'hum_avg_pct': 50.55, 'hum_min_pct': 50.01, 'hum_max_pct': 50.89, 'pres_avg_hPa': 742.79, 'dew_point_C': 9.34, 'vapor_pressure_hPa': 11.75, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 10:52:02 Controlador python[290613]: RX_VALIDO: 240180,19.97,19.94,20.01,50.42,50.05,50.78,742.73,9.35,11.76,0.00,0.00,3.63,0,13,1,1
+jul 26 10:52:02 Controlador python[290613]: GUARDADO: 2026-07-26T10:52:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T10:52:02.111753', 't_s': 240180, 'temp_avg_C': 19.97, 'temp_min_C': 19.94, 'temp_max_C': 20.01, 'hum_avg_pct': 50.42, 'hum_min_pct': 50.05, 'hum_max_pct': 50.78, 'pres_avg_hPa': 742.73, 'dew_point_C': 9.35, 'vapor_pressure_hPa': 11.76, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 10:54:02 Controlador python[290613]: RX_VALIDO: 240300,20.16,20.12,20.20,49.56,49.28,50.12,742.65,9.27,11.70,0.00,0.00,3.63,0,13,1,1
+jul 26 10:54:02 Controlador python[290613]: GUARDADO: 2026-07-26T10:54:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T10:54:02.110199', 't_s': 240300, 'temp_avg_C': 20.16, 'temp_min_C': 20.12, 'temp_max_C': 20.2, 'hum_avg_pct': 49.56, 'hum_min_pct': 49.28, 'hum_max_pct': 50.12, 'pres_avg_hPa': 742.65, 'dew_point_C': 9.27, 'vapor_pressure_hPa': 11.7, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 10:55:02 Controlador python[290613]: RX_VALIDO: 240360,20.28,20.21,20.33,49.38,49.13,49.78,742.67,9.32,11.74,0.00,0.00,3.63,0,13,1,1
+jul 26 10:55:02 Controlador python[290613]: GUARDADO: 2026-07-26T10:55:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T10:55:02.109978', 't_s': 240360, 'temp_avg_C': 20.28, 'temp_min_C': 20.21, 'temp_max_C': 20.33, 'hum_avg_pct': 49.38, 'hum_min_pct': 49.13, 'hum_max_pct': 49.78, 'pres_avg_hPa': 742.67, 'dew_point_C': 9.32, 'vapor_pressure_hPa': 11.74, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 12:49:02 Controlador python[290613]: GUARDADO: 2026-07-26T12:49:02-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T12:49:02.040148', 't_s': 247200, 'temp_avg_C': 24.38, 'temp_min_C': 24.33, 'temp_max_C': 24.41, 'hum_avg_pct': 38.55, 'hum_min_pct': 37.58, 'hum_max_pct': 39.37, 'pres_avg_hPa': 741.25, 'dew_point_C': 9.34, 'vapor_pressure_hPa': 11.76, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 14:54:01 Controlador python[290613]: GUARDADO: 2026-07-26T14:54:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T14:54:01.984403', 't_s': 254700, 'temp_avg_C': 25.83, 'temp_min_C': 25.71, 'temp_max_C': 25.94, 'hum_avg_pct': 35.53, 'hum_min_pct': 34.4, 'hum_max_pct': 36.85, 'pres_avg_hPa': 739.72, 'dew_point_C': 9.42, 'vapor_pressure_hPa': 11.83, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 14:56:01 Controlador python[290613]: GUARDADO: 2026-07-26T14:56:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T14:56:01.984010', 't_s': 254820, 'temp_avg_C': 26.25, 'temp_min_C': 26.18, 'temp_max_C': 26.28, 'hum_avg_pct': 34.12, 'hum_min_pct': 33.62, 'hum_max_pct': 34.75, 'pres_avg_hPa': 739.67, 'dew_point_C': 9.18, 'vapor_pressure_hPa': 11.64, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 16:54:01 Controlador python[290613]: GUARDADO: 2026-07-26T16:54:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T16:54:01.929401', 't_s': 261900, 'temp_avg_C': 25.1, 'temp_min_C': 25.07, 'temp_max_C': 25.12, 'hum_avg_pct': 44.24, 'hum_min_pct': 44.02, 'hum_max_pct': 44.59, 'pres_avg_hPa': 739.03, 'dew_point_C': 12.06, 'vapor_pressure_hPa': 14.1, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 19:17:01 Controlador python[290613]: GUARDADO: 2026-07-26T19:17:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T19:17:01.840347', 't_s': 270480, 'temp_avg_C': 17.17, 'temp_min_C': 17.13, 'temp_max_C': 17.21, 'hum_avg_pct': 64.74, 'hum_min_pct': 64.59, 'hum_max_pct': 64.88, 'pres_avg_hPa': 741.14, 'dew_point_C': 10.47, 'vapor_pressure_hPa': 12.67, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 22:03:01 Controlador python[290613]: GUARDADO: 2026-07-26T22:03:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T22:03:01.711403', 't_s': 280440, 'temp_avg_C': 15.63, 'temp_min_C': 15.62, 'temp_max_C': 15.63, 'hum_avg_pct': 73.34, 'hum_min_pct': 73.23, 'hum_max_pct': 73.46, 'pres_avg_hPa': 742.65, 'dew_point_C': 10.87, 'vapor_pressure_hPa': 13.01, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+jul 26 23:34:01 Controlador python[290613]: GUARDADO: 2026-07-26T23:34:01-05:00 {'station_id': 'CU01', 'timestamp': '2026-07-26T23:34:01.640128', 't_s': 285900, 'temp_avg_C': 15.21, 'temp_min_C': 15.2, 'temp_max_C': 15.21, 'hum_avg_pct': 75.31, 'hum_min_pct': 74.99, 'hum_max_pct': 75.58, 'pres_avg_hPa': 742.95, 'dew_point_C': 10.87, 'vapor_pressure_hPa': 13.01, 'rain_1min_mm': 0.0, 'rain_1h_mm': 0.0, 'rain_total_mm': 3.63, 'pulses_delta': 0, 'pulses_total': 13, 'bme_ok': 1, 'rain_ok': 1, 'firmware': 'V3_1_CLASSIC', 'station_name': 'Cerro Cuñacales', 'deployment_mode': 'field', 'wind_speed_ms': None, 'wind_direction_deg': None, 'wind_gust_ms': None, 'wind_ok': 0}
+
+==================================================
+14. PROCESOS ACTIVOS RELACIONADOS
+==================================================
+carlos      1317  0.0  0.0   7424  3716 ?        Ss   jul23   0:30 bash /home/carlos/epmp_monitor/bin/capture_agg_ap.sh
+root        3619  0.0  0.0  17264  7124 ?        Ss   jul23   0:00 /usr/bin/systemd-inhibit --what=sleep:idle:handle-lid-switch --who=AtmosLink --why=AtmosLink must run continuously in field deployment --mode=block /bin/sleep infinity
+carlos    290613  0.0  0.2  23592 16360 ?        Ss   jul23   0:36 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.logger.logger_weather
+carlos    290619  0.0  0.1  23008 15528 ?        Ss   jul23   1:48 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.scheduler.atmoslink_scheduler
+carlos   2046568  0.0  0.3 110452 26616 ?        Ssl  jul26   0:00 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python3 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 --worker-class gthread --threads 4 --timeout 30 --graceful-timeout 30 --keep-alive 5 --access-logfile - --error-logfile - --capture-output weather_station.dashboard.app:app
+carlos   2046571  9.3  0.5 342272 46808 ?        Sl   jul26   3:56 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python3 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 --worker-class gthread --threads 4 --timeout 30 --graceful-timeout 30 --keep-alive 5 --access-logfile - --error-logfile - --capture-output weather_station.dashboard.app:app
+carlos   2046572 19.1  0.5 342276 46612 ?        Sl   jul26   8:02 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python3 /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 --worker-class gthread --threads 4 --timeout 30 --graceful-timeout 30 --keep-alive 5 --access-logfile - --error-logfile - --capture-output weather_station.dashboard.app:app
+carlos   2171372  0.0  0.0   6028  2332 pts/0    S+   00:36   0:00 tee reports/scientific_engine/cambium_diagnostic_20260727_003640.txt
+
+==================================================
+15. COMPROBACIÓN DE CONECTIVIDAD BÁSICA
+==================================================
+IPs encontradas:
+AP: 192.168.1.2 SM: 192.168.1.3
+
+PING 192.168.1.2
+PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
+64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.471 ms
+64 bytes from 192.168.1.2: icmp_seq=2 ttl=64 time=0.501 ms
+
+--- 192.168.1.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1032ms
+rtt min/avg/max/mdev = 0.471/0.486/0.501/0.015 ms
+HTTP HEAD 192.168.1.2
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 307 Temporary Redirect
+Location: https://192.168.1.2:443
+X-Robots-Tag: noindex, nofollow
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Security-Policy: default-src 'self' *.cambiumnetworks.com *.bugsplat.com http: https: ws: wss: data: blob:; form-action 'self' http: https: ws: wss: data: blob:; img-src 'self' http: https: ws: wss: data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: ws: wss: data: blob:
+Cache-Control: no-cache, max-age=0, must-revalidate, post-check=0, pre-check=0
+Date: Wed, 06 May 2026 02:35:56 GMT
+Server: Cambium HTTP Server
+
+HTTPS HEAD 192.168.1.2
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  9256    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Content-Type: text/html
+Accept-Ranges: bytes
+ETag: "51863313"
+Last-Modified: Tue, 28 Apr 2026 13:18:42 GMT
+X-Robots-Tag: noindex, nofollow
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Security-Policy: default-src 'self' *.cambiumnetworks.com *.bugsplat.com http: https: ws: wss: data: blob:; form-action 'self' http: https: ws: wss: data: blob:; img-src 'self' http: https: ws: wss: data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: ws: wss: data: blob:
+Cache-Control: no-cache, max-age=0, must-revalidate, post-check=0, pre-check=0
+Content-Length: 9256
+Date: Wed, 06 May 2026 02:35:57 GMT
+Server: Cambium HTTP Server
+
+
+PING 192.168.1.3
+PING 192.168.1.3 (192.168.1.3) 56(84) bytes of data.
+
+--- 192.168.1.3 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1041ms
+
+HTTP HEAD 192.168.1.3
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+curl: (7) Failed to connect to 192.168.1.3 port 80 after 38 ms: Couldn't connect to server
+HTTPS HEAD 192.168.1.3
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:03 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:03 --:--:--     0
+curl: (7) Failed to connect to 192.168.1.3 port 443 after 3064 ms: Couldn't connect to server
+
+==================================================
+16. DIAGNÓSTICO FINAL AUTOMÁTICO
+==================================================
+Filas totales: 3938
+Filas con alguna métrica RF: 0
+Filas con error informado: 3938
+Filas con nota informada: 3938
+
+DIAGNÓSTICO: el proceso está insertando filas, pero no está extrayendo ninguna métrica RF.
+La falla es anterior al emparejamiento con master_observations.
+
+==================================================
+FASE 2B-1 FINALIZADA
+==================================================

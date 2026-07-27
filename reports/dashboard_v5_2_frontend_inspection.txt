@@ -1,0 +1,845 @@
+==================================================
+ATMOSLINK DASHBOARD V5.2 - FRONTEND INSPECTION
+Generated: 2026-07-26T23:37:32-05:00
+Branch: feature/dashboard-v5.1-state-model
+==================================================
+
+===== DASHBOARD FILE TREE =====
+weather_station/dashboard/app.py
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344
+weather_station/dashboard/app.py.bak_events_20260724_000432
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206
+weather_station/dashboard/app.py.bak_timeline_20260724_003209
+weather_station/dashboard/app.py.bak_windrose_api
+weather_station/dashboard/control_center.py
+weather_station/dashboard/__init__.py
+weather_station/dashboard/__pycache__/app.cpython-312.pyc
+weather_station/dashboard/__pycache__/control_center.cpython-312.pyc
+weather_station/dashboard/__pycache__/__init__.cpython-312.pyc
+weather_station/dashboard/templates/control_center.html
+weather_station/dashboard/templates/index.html
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_4_20260723_155946
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344
+weather_station/dashboard/templates/index.html.bak_fix_station_table_20260723_163746
+weather_station/dashboard/templates/index.html.bak_observatory_v4_1_20260723_164219
+weather_station/dashboard/templates/index.html.bak_observatory_v4_20260723_162918
+weather_station/dashboard/templates/index.html.bak_observatory_v4_2_20260723_165307
+weather_station/dashboard/templates/index.html.bak_observatory_v4_fix_20260723_163522
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338
+weather_station/dashboard/templates/index.html.bak_windrose_scientific_v2
+weather_station/dashboard/templates/index.html.bak_windrose_v1
+
+===== INDEX.HTML SIZE =====
+6168 weather_station/dashboard/templates/index.html
+146151 weather_station/dashboard/templates/index.html
+
+===== INDEX.HTML HEAD =====
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AtmosLink Scientific Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --card: #1f2937;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --ok: #22c55e;
+      --bad: #ef4444;
+      --accent: #38bdf8;
+      --warning: #f59e0b;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: var(--panel);
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    main {
+      padding: 24px;
+    }
+
+    .status-ok {
+      color: var(--ok);
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin: 28px 0 14px 0;
+      color: var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .value {
+      font-size: 30px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .unit {
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .warning { color: var(--warning); }
+
+    .chart-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      margin-bottom: 22px;
+    }
+
+    .chart-title {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th {
+      text-align: left;
+      padding: 8px;
+      color: var(--accent);
+      border-bottom: 1px solid #374151;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 8px;
+      border-top: 1px solid #374151;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      padding: 20px;
+    }
+  
+  .scientific-substate {
+    margin-top: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+
+  .state-neutral {
+    color: #94a3b8 !important;
+  }
+
+  .state-current {
+    color: #22c55e !important;
+  }
+
+  .state-delayed {
+    color: #f59e0b !important;
+  }
+
+  .state-stale,
+  .state-error {
+    color: #ef4444 !important;
+  }
+
+  .state-rain {
+    color: #38bdf8 !important;
+  }
+
+
+  .observation-state-main {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+
+  .observation-state-age {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.70rem;
+    font-weight: 600;
+    opacity: 0.90;
+  }
+
+  .station-wind-neutral {
+    color: #94a3b8;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .station-wind-error {
+    color: #ef4444;
+    font-weight: 700;
+  }
+
+  .online-system-state {
+    text-align: right;
+    line-height: 1.2;
+  }
+
+  .online-main {
+    color: #22c55e;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  .online-station {
+    margin-top: 2px;
+    color: #cbd5e1;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  .online-time {
+    margin-top: 1px;
+    color: #94a3b8;
+    font-size: 0.64rem;
+    font-weight: 600;
+
+===== HTML STRUCTURAL MARKERS =====
+1422:<header>
+1429:  <div class="online-station">CU01</div>
+1434:<main>
+1435:<section
+1564:<section id="scientificExecutivePanel" style="margin:22px 0;">
+1570:    <div class="card">
+1575:    <div class="card">
+1580:    <div class="card">
+1585:    <div class="card">
+1590:    <div class="card">
+1595:    <div class="card">
+1597:      <div id="execScientificStatus" class="value" style="color:#22c55e;">OK</div>
+1601:  <div class="card" style="margin-top:12px; border-left:4px solid #00c8ff;">
+1611:<section id="scientificStatusV5" class="scientific-status-v5">
+1613:  <div class="scientific-status-header">
+1615:      <div class="scientific-status-kicker">
+1619:      <div class="scientific-status-title">
+1623:      <div class="scientific-status-subtitle">
+1631:      class="scientific-global-badge status-neutral"
+1637:  <div class="scientific-status-grid">
+1695:          <strong id="scientificHealthValue">--</strong>
+1699:          <div id="scientificHealthBar"></div>
+1800:<section id="observatoryV4" class="observatory-v4">
+1826:      <div class="v4-status-list">
+1827:        <div class="v4-status-row">
+1829:          <span id="v4Bme" class="v4-status-chip v4-neutral">--</span>
+1832:        <div class="v4-status-row">
+1834:          <span id="v4Rain" class="v4-status-chip v4-neutral">--</span>
+1837:        <div class="v4-status-row">
+1839:          <span id="v4Wind" class="v4-status-chip v4-neutral">--</span>
+1842:        <div class="v4-status-row">
+1844:          <span id="v4Acquisition" class="v4-status-chip v4-neutral">--</span>
+1847:        <div class="v4-status-row">
+1849:          <span id="v4Internet" class="v4-status-chip v4-neutral">--</span>
+1852:        <div class="v4-status-row">
+1854:          <span id="v4Sqlite" class="v4-status-chip v4-neutral">--</span>
+1865:          <strong id="v4HealthScore">--</strong>
+1868:          <div id="v4HealthBar" class="v4-progress-fill"></div>
+1909:          <strong id="v4QcStatus">--</strong>
+1936:      <div class="v4-status-list">
+1937:        <div class="v4-status-row">
+1939:          <span id="v4Scheduler" class="v4-status-chip v4-neutral">--</span>
+1942:        <div class="v4-status-row">
+1944:          <span id="v4Logger" class="v4-status-chip v4-neutral">--</span>
+1947:        <div class="v4-status-row">
+1949:          <span id="v4Era5" class="v4-status-chip v4-neutral">--</span>
+1952:        <div class="v4-status-row">
+1954:          <span id="v4Nasa" class="v4-status-chip v4-neutral">--</span>
+1957:        <div class="v4-status-row">
+1959:          <span id="v4Telegram" class="v4-status-chip v4-neutral">--</span>
+1962:        <div class="v4-status-row">
+1964:          <span id="v4Backup" class="v4-status-chip v4-neutral">--</span>
+1967:        <div class="v4-status-row">
+1969:          <span id="v4Radio" class="v4-status-chip v4-neutral">--</span>
+2039:        <strong id="v4Station">--</strong>
+2046:<section
+2053:    <div class="card">
+2058:    <div class="card"><div class="label">Registros master</div><div class="value" id="masterRecords">--</div></div>
+2059:    <div class="card"><div class="label">ERA5 emparejados</div><div class="value" id="era5Matched">--</div></div>
+2060:    <div class="card"><div class="label">NASA emparejados</div><div class="value" id="nasaMatched">--</div></div>
+2061:    <div class="card"><div class="label">Radioenlace</div><div class="value" id="radioMatched">--</div></div>
+2066:  <div class="card">
+2081:      <tbody id="stationsTable"></tbody>
+2088:<section
+2095:    <div class="card"><div class="label">Temperatura local</div><div class="value"><span id="temp">--</span> <span class="unit">°C</span></div></div>
+2096:    <div class="card"><div class="label">Humedad relativa local</div><div class="value"><span id="hum">--</span> <span class="unit">%</span></div></div>
+2097:    <div class="card"><div class="label">Presión local</div><div class="value"><span id="pres">--</span> <span class="unit">hPa</span></div></div>
+2098:    <div class="card"><div class="label">Punto de rocío local</div><div class="value"><span id="dew">--</span> <span class="unit">°C</span></div></div>
+2099:    <div class="card"><div class="label">Presión de vapor local</div><div class="value"><span id="vapor">--</span> <span class="unit">hPa</span></div></div>
+2100:    <div class="card">
+2108:    <div class="card">
+2115:    <div class="card"><div class="label">BME280</div><div class="value" id="bme">--</div></div>
+2116:    <div class="card"><div class="label">Pluviómetro</div><div class="value" id="rainok">--</div></div>
+2121:    <div class="card"><div class="label">Velocidad del viento</div><div class="value"><span id="windSpeed">--</span> <span class="unit">m/s</span></div></div>
+2122:    <div class="card"><div class="label">Dirección del viento</div><div class="value"><span id="windDirection">--</span> <span class="unit">°</span></div></div>
+2123:    <div class="card"><div class="label">Ráfaga máxima</div><div class="value"><span id="windGust">--</span> <span class="unit">m/s</span></div></div>
+2124:    <div class="card">
+2132:  <div class="card" style="margin-bottom:12px;">
+2140:    <div class="card"><div class="label">ERA5 temperatura</div><div class="value"><span id="era5Temp">--</span> <span class="unit">°C</span></div></div>
+2141:    <div class="card"><div class="label">ERA5 humedad relativa</div><div class="value"><span id="era5Rh">--</span> <span class="unit">%</span></div></div>
+2142:    <div class="card"><div class="label">ERA5 punto de rocío</div><div class="value"><span id="era5Dew">--</span> <span class="unit">°C</span></div></div>
+2143:    <div class="card"><div class="label">ERA5 lluvia</div><div class="value"><span id="era5Rain">--</span> <span class="unit">mm</span></div></div>
+2144:    <div class="card"><div class="label">ERA5 presión</div><div class="value"><span id="era5Press">--</span> <span class="unit">hPa</span></div></div>
+2145:    <div class="card"><div class="label">ERA5 viento</div><div class="value"><span id="era5Wind">--</span> <span class="unit">m/s</span></div></div>
+2149:  <div class="card" style="margin-bottom:12px;">
+2157:    <div class="card"><div class="label">NASA temperatura</div><div class="value"><span id="nasaTemp">--</span> <span class="unit">°C</span></div></div>
+2158:    <div class="card"><div class="label">NASA punto de rocío</div><div class="value"><span id="nasaDew">--</span> <span class="unit">°C</span></div></div>
+2159:    <div class="card"><div class="label">NASA humedad relativa</div><div class="value"><span id="nasaRh">--</span> <span class="unit">%</span></div></div>
+2160:    <div class="card"><div class="label">NASA lluvia</div><div class="value"><span id="nasaRain">--</span> <span class="unit">mm</span></div></div>
+2161:    <div class="card"><div class="label">NASA presión</div><div class="value"><span id="nasaPress">--</span> <span class="unit">hPa</span></div></div>
+2162:    <div class="card"><div class="label">NASA viento 10 m</div><div class="value"><span id="nasaWind">--</span> <span class="unit">m/s</span></div></div>
+2169:<section
+2176:<section id="radioCambiumPanel" class="radio-cambium-panel">
+2204:      <div class="card">
+2212:      <div class="card">
+2220:      <div class="card">
+2228:      <div class="card">
+2233:      <div class="card">
+2241:      <div class="card">
+2254:    <div class="card">
+2259:    <div class="card">
+2264:    <div class="card">
+2270:    <div class="card">
+2290:<section
+2297:<div id="corridorScientificContext" class="card" style="margin-top:10px; border-left:4px solid #00c8ff;">
+2305:  <div class="card" style="margin-bottom:12px;">
+2315:  <div class="card">
+2317:    <div class="value" id="corridorStatus">--</div>
+2339:  <div class="chart-card">
+2358:      <div class="card">
+2362:      <div class="card">
+2366:      <div class="card">
+2370:      <div class="card">
+2382:<section
+2388:  <div class="card">
+2390:    <div class="value" id="comparisonStatus">--</div>
+2431:  <div class="chart-card"><div class="chart-title">Temperatura: tramo emparejado Local vs ERA5 vs NASA POWER</div><canvas id="tempCompareChart"></canvas></div>
+2432:  <div class="chart-card"><div class="chart-title">Humedad relativa: tramo emparejado Local vs ERA5 vs NASA POWER</div><canvas id="humidityCompareChart"></canvas></div>
+2433:  <div class="chart-card"><div class="chart-title">Presión: tramo emparejado Local vs ERA5 vs NASA POWER</div><canvas id="pressureCompareChart"></canvas></div>
+2434:  <div class="chart-card"><div class="chart-title">Precipitación: tramo emparejado Local vs ERA5 vs NASA POWER</div><canvas id="rainCompareChart"></canvas></div>
+2435:  <div class="chart-card"><div class="chart-title">Viento: Local vs NASA POWER</div><canvas id="windChart"></canvas></div>
+2436:  <div class="chart-card">
+2465:      <div class="card"><div class="label">Muestras</div><div class="value" id="windRoseSamples">--</div></div>
+2466:      <div class="card"><div class="label">Dirección predominante</div><div class="value" id="windRoseDominant">--</div></div>
+2467:      <div class="card"><div class="label">Frecuencia predominante</div><div class="value" id="windRoseFrequency">--</div></div>
+2468:      <div class="card"><div class="label">Velocidad media</div><div class="value" id="windRoseAvg">--</div></div>
+2469:      <div class="card"><div class="label">Velocidad máxima</div><div class="value" id="windRoseMax">--</div></div>
+2480:    <div class="card">
+2485:    <div class="card">
+2487:      <div class="value" id="reliabilityStatus">--</div>
+2490:    <div class="card">
+2495:    <div class="card">
+2497:      <div class="value" id="discardedEstimate">--</div>
+2503:    <div class="card">
+2508:    <div class="card">
+2510:      <div class="value" id="scientificStatus">--</div>
+2513:    <div class="card">
+2518:    <div class="card">
+2527:<section
+2550:    <div class="card timeline-summary-card">
+2557:    <div class="card timeline-summary-card">
+2564:    <div class="card timeline-summary-card">
+2571:    <div class="card timeline-summary-card">
+2649:<section
+2656:    <div class="card">
+2658:      <div class="value" id="statusSQLite">--</div>
+2661:    <div class="card">
+2663:      <div class="value" id="statusScheduler">--</div>
+2666:    <div class="card">
+2668:      <div class="value" id="statusAlerts">--</div>
+2671:    <div class="card">
+2673:      <div class="value" id="statusInternet">--</div>
+2678:  <div class="card">
+2696:    <div class="card">
+2698:      <div class="value" id="qcStatus">--</div>
+2701:    <div class="card">
+2706:    <div class="card">
+2711:    <div class="card">
+2718:  <div class="card">
+2742:<footer class="scientific-footer-v5">
+2877:        <td class="${statusClass}">${stationStatus}</td>
+4241:      <td class="${colorClass}">${status}</td>
+4971:        class="timeline-event status-${statusClass}"
+5553:<section
+5555:  class="scientific-timeline-card"
+5617:      <strong id="scientific-timeline-status">
+6161:<footer id="atmoslinkScientificFooter" style="margin:28px 0 16px 0;">
+6162:  <div class="card" style="border-left:4px solid #00c8ff;">
+
+===== CSS BLOCKS AND VARIABLES =====
+9:  <style>
+10:    :root {
+11:      --bg: #0f172a;
+12:      --panel: #111827;
+13:      --card: #1f2937;
+14:      --text: #f9fafb;
+15:      --muted: #9ca3af;
+16:      --ok: #22c55e;
+17:      --bad: #ef4444;
+18:      --accent: #38bdf8;
+19:      --warning: #f59e0b;
+53:    .status-ok {
+72:    .card {
+187:  .station-wind-neutral {
+193:  .station-wind-error {
+970:.timeline-event.status-ok::before {
+974:.timeline-event.status-warning::before {
+978:.timeline-event.status-error::before {
+1019:.timeline-event.status-ok .timeline-event-state {
+1024:.timeline-event.status-warning .timeline-event-state {
+1029:.timeline-event.status-error .timeline-event-state {
+1340:.status-ok {
+1345:.status-warning {
+1350:.status-error {
+1355:.status-neutral {
+1370:.footer-brand strong,
+1371:.footer-brand span {
+1375:.footer-brand strong {
+1380:.footer-brand span {
+1386:.footer-metadata {
+1412:  .footer-metadata {
+1417:</style>
+2805:        `HTTP ${response.status} al consultar estaciones`
+2869:        <td>${valueOrDash(st.station_id)}</td>
+3350:  return (tasks[name] || {}).status || "unknown";
+3355:    (tasks[name] || {}).status || ""
+3380:    const health = core.health || {};
+3399:    const station = core.station || {};
+3449:      (checks.internet || {}).status || "unknown";
+3460:      (checks.sqlite || {}).status || "unknown";
+3505:      scientificHealth.status
+3511:      reliability.status
+3517:      reliability.status
+3523:      agreement.status
+3528:      String(qc.status || "--").toUpperCase()
+3614:      agreement.status || "warning"
+3683:      `${station.station_id || latest.station_id || "--"} · ` +
+3684:      `${station.station_name || latest.station_name || "--"}`
+3934:    corridorStatus.textContent = (corridor.status || "--").toUpperCase();
+3936:    if (corridor.status === "ok") {
+3938:    } else if (corridor.status === "warning") {
+3940:    } else if (corridor.status === "critical") {
+4019:      agreement.status ||
+4023:    if (agreement.status === "ok") {
+4025:    } else if (agreement.status === "warning") {
+4027:    } else if (agreement.status === "critical") {
+4039:    comparisonStatus.textContent = (comparison.status || "--").toUpperCase();
+4041:    if (comparison.status === "ok") {
+4043:    } else if (comparison.status === "warning") {
+4045:    } else if (comparison.status === "critical") {
+4121:    reliabilityStatus.textContent = (reliability.status || "--").toUpperCase();
+4123:    if (reliability.status === "ok") {
+4125:    } else if (reliability.status === "warning") {
+4127:    } else if (reliability.status === "critical") {
+4142:    scientificStatus.textContent = (scientific.status || "--").toUpperCase();
+4144:    if (scientific.status === "ok") {
+4146:    } else if (scientific.status === "warning") {
+4148:    } else if (scientific.status === "critical") {
+4155:  const healthChecks = (data.health || {}).checks || {};
+4181:  setSystemStatus("statusSQLite", (healthChecks.sqlite || {}).status);
+4182:  setSystemStatus("statusInternet", (healthChecks.internet || {}).status);
+4183:  setSystemStatus("statusScheduler", (registryTasks.sync_master_dataset || {}).status);
+4184:  setSystemStatus("statusAlerts", (registryTasks.notification_engine || {}).status);
+4218:  setText("qcStatus", qc.status || "--");
+4223:  const health = data.health || {};
+4231:    const status = task.status || "--";
+4756:    status: event.status || "unknown",
+4764:  const health = core.health || {};
+4777:      `Estación ${latest.station_id || "CU01"} · ` +
+4847:      task.status === "disabled" ||
+4865:      status: task.status || "unknown",
+4911:  if (radioTask.status === "disabled") {
+4967:      timelineStatus(event.status);
+4999:          ${timelineStateLabel(event.status)}
+5033:      (((core.health || {}).checks || {})
+5063:      (core.health || {}).overall_status ||
+5091:        (core.health || {}).updated_at ||
+5414:        `status-${level.status}`;
+5644:<style>
+5867:</style>
+6011:    if (event.station) {
+6013:        createBadge("Estación: " + event.station)
+6069:          "HTTP " + response.status
+
+===== JAVASCRIPT API REFERENCES =====
+2801:    const response = await fetch("/api/stations/latest");
+3369:      fetch("/api/latest"),
+3370:      fetch("/api/core/status")
+3739:  const r = await fetch("/api/latest");
+3914:  const r = await fetch("/api/core/status");
+4277:  const r = await fetch(`/api/windrose?period=${period}`);
+4362:  const r = await fetch("/api/history");
+4412:setInterval(updateStationsLatest, 5000);
+4413:setInterval(updateLatest, 5000);
+4414:setInterval(updateCoreStatus, 10000);
+4415:setInterval(updateObservatoryV4, 10000);
+4416:setInterval(updateCharts, 15000);
+4417:setInterval(updateWindRose, 60000);
+4437:    const latestResponse = await fetch("/api/latest");
+4445:    console.error("No se pudo leer /api/latest:", error);
+4449:    const historyResponse = await fetch("/api/history");
+4485:    console.error("No se pudo leer /api/history:", error);
+4491:  setInterval(updateScientificExecutivePanelClean, 60000);
+4650:  "DOMContentLoaded",
+5010:        fetch("/api/latest"),
+5011:        fetch("/api/core/status")
+5160:  "DOMContentLoaded",
+5164:setInterval(
+5326:        fetch("/api/latest"),
+5327:        fetch("/api/core/status")
+5537:  "DOMContentLoaded",
+5541:setInterval(
+6057:      const response = await fetch(
+6058:        "/api/events?" + params.toString(),
+6153:  window.setInterval(
+
+===== JAVASCRIPT STATUS REFERENCES =====
+162:  .state-stale,
+501:#v4QcCritical {
+1751:          <strong id="scientificQcCritical">--</strong>
+1914:          <strong id="v4QcCritical">--</strong>
+2703:      <div class="value" id="qcCritical">--</div>
+2936:    "state-stale",
+2953:    STALE: "DESACTUALIZADO",
+2961:    STALE: "state-stale",
+2985:    "STALE"
+3034:    STALE: "DESACTUALIZADO",
+3041:    STALE: "state-stale",
+3065:  } else if (value === "STALE" || value === "PENDING") {
+3108:    "healthy",
+3136:    "critical",
+3137:    "stale",
+3193:    critical: "CRÍTICA"
+3338:  if (status === "critical" || safe < 70) {
+3407:      overall === "HEALTHY"
+3532:      "v4QcCritical",
+3533:      qc.critical ?? "--"
+3655:      overall === "HEALTHY"
+3706:      const firstAlert = alertItems[0];
+3712:        firstAlert.title ||
+3718:        firstAlert.message || "--"
+3940:    } else if (corridor.status === "critical") {
+4027:    } else if (agreement.status === "critical") {
+4045:    } else if (comparison.status === "critical") {
+4127:    } else if (reliability.status === "critical") {
+4148:    } else if (scientific.status === "critical") {
+4172:    } else if (normalized === "critical" || normalized === "failed" || normalized === "error" || normalized === "timeout") {
+4173:      el.textContent = "CRITICAL";
+4201:        if (sev === "critical") colorClass = "bad";
+4219:  setText("qcCritical", qc.critical ?? "--");
+4693:    "healthy",
+4712:    "critical",
+4713:    "stale",
+4729:    healthy: "SALUDABLE",
+4738:    critical: "CRÍTICO",
+4739:    stale: "DESACTUALIZADO"
+5073:        overall === "HEALTHY"
+5511:      "scientificQcCritical",
+5512:      qc.critical ?? "--"
+5596:        id="scientific-timeline-refresh"
+5878:  const refreshElement =
+5880:      "scientific-timeline-refresh"
+6039:    refreshElement.disabled = true;
+6137:      refreshElement.disabled = false;
+6141:  refreshElement.addEventListener(
+
+===== STATIC ASSETS =====
+
+===== FLASK TEMPLATE ROUTE =====
+682-    return payload
+683-
+684-
+685-@app.route("/")
+686-def index():
+687:    return render_template("index.html")
+688-
+689-
+690-@app.route("/api/v2/overview")
+691-def api_v2_overview():
+692-    return jsonify(get_api_v2_overview())
+693-
+694-
+695-@app.route("/api/latest")
+696-def api_latest():
+697-    return jsonify(get_latest())
+698-
+699-
+700-@app.route("/api/history")
+701-def api_history():
+702-    return jsonify(get_history())
+
+===== HEALTH ENDPOINT =====
+
+===== STATION METADATA REFERENCES =====
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:650:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:652:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:654:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:656:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:662:            payload["local"][d.get("source_station_id")] = d
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:720:                station_id = STATION_CONTEXT.get("station_id", "CU01")
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:723:                    "source_station_id": station_id,
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:724:                    "station_id": station_id,
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:725:                    "station_name": STATION_CONTEXT.get("station_name", "Cerro Cuñacales"),
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:748:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:750:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:752:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:754:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:1058:        "station_id": STATION_CONTEXT.get("station_id"),
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:1059:        "station_name": STATION_CONTEXT.get("station_name"),
+weather_station/dashboard/app.py.bak_timeline_20260724_003209:1083:            station=STATION_CONTEXT.get("station_id"),
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:649:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:651:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:653:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:655:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:661:            payload["local"][d.get("source_station_id")] = d
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:719:                station_id = STATION_CONTEXT.get("station_id", "CU01")
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:722:                    "source_station_id": station_id,
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:723:                    "station_id": station_id,
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:724:                    "station_name": STATION_CONTEXT.get("station_name", "Cerro Cuñacales"),
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:747:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:749:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:751:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_health_v5_1_20260723_180206:753:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:551:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:553:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:555:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:557:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:563:            payload["local"][d.get("source_station_id")] = d
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:621:                station_id = STATION_CONTEXT.get("station_id", "CU01")
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:624:                    "source_station_id": station_id,
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:625:                    "station_id": station_id,
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:626:                    "station_name": STATION_CONTEXT.get("station_name", "Cerro Cuñacales"),
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:649:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:651:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:653:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v3_4_20260723_155946:655:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_events_20260724_000432:649:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_events_20260724_000432:651:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_events_20260724_000432:653:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_events_20260724_000432:655:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_events_20260724_000432:661:            payload["local"][d.get("source_station_id")] = d
+weather_station/dashboard/app.py.bak_events_20260724_000432:719:                station_id = STATION_CONTEXT.get("station_id", "CU01")
+weather_station/dashboard/app.py.bak_events_20260724_000432:722:                    "source_station_id": station_id,
+weather_station/dashboard/app.py.bak_events_20260724_000432:723:                    "station_id": station_id,
+weather_station/dashboard/app.py.bak_events_20260724_000432:724:                    "station_name": STATION_CONTEXT.get("station_name", "Cerro Cuñacales"),
+weather_station/dashboard/app.py.bak_events_20260724_000432:747:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_events_20260724_000432:749:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_events_20260724_000432:751:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_events_20260724_000432:753:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_events_20260724_000432:1012:        "station_id": STATION_CONTEXT.get("station_id"),
+weather_station/dashboard/app.py.bak_events_20260724_000432:1013:        "station_name": STATION_CONTEXT.get("station_name"),
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:650:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:652:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:654:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:656:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:662:            payload["local"][d.get("source_station_id")] = d
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:720:                station_id = STATION_CONTEXT.get("station_id", "CU01")
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:723:                    "source_station_id": station_id,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:724:                    "station_id": station_id,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:725:                    "station_name": STATION_CONTEXT.get("station_name", "Cerro Cuñacales"),
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:748:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:750:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:752:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:754:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:1058:        "station_id": STATION_CONTEXT.get("station_id"),
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:1059:        "station_name": STATION_CONTEXT.get("station_name"),
+weather_station/dashboard/app.py.bak_dashboard_v5_1_1_20260726_232826:1083:            station=STATION_CONTEXT.get("station_id"),
+weather_station/dashboard/app.py:650:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py:652:                GROUP BY source_station_id
+weather_station/dashboard/app.py:654:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py:656:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py:662:            payload["local"][d.get("source_station_id")] = d
+weather_station/dashboard/app.py:720:                station_id = STATION_CONTEXT.get("station_id", "CU01")
+weather_station/dashboard/app.py:723:                    "source_station_id": station_id,
+weather_station/dashboard/app.py:724:                    "station_id": station_id,
+weather_station/dashboard/app.py:725:                    "station_name": STATION_CONTEXT.get("station_name", "Cerro Cuñacales"),
+weather_station/dashboard/app.py:748:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py:750:                GROUP BY source_station_id
+weather_station/dashboard/app.py:752:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py:754:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py:1084:        "station_id": STATION_CONTEXT.get("station_id"),
+weather_station/dashboard/app.py:1085:        "station_name": STATION_CONTEXT.get("station_name"),
+weather_station/dashboard/app.py:1109:            station=STATION_CONTEXT.get("station_id"),
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_6_20260723_161904:754:      <td>${st.source_station_id || st.station_id || "--"}</td>
+weather_station/dashboard/templates/index.html.bak_windrose_v1:669:      <td>${st.source_station_id || st.station_id || "--"}</td>
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:1429:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:2753:    <span>Estación CU01 · Cerro Cuñacales</span>
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:2869:        <td>${valueOrDash(st.station_id)}</td>
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3683:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:3684:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html.bak_dashboard_v5_1_20260726_231344:4777:      `Estación ${latest.station_id || "CU01"} · ` +
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_5_20260723_161527:754:      <td>${st.source_station_id || st.station_id || "--"}</td>
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:1429:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:2753:    <span>Estación CU01 · Cerro Cuñacales</span>
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:2869:        <td>${valueOrDash(st.station_id)}</td>
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3683:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:3684:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html.bak_v5_fix_counts_footer_20260723_173749:4777:      `Estación ${latest.station_id || "CU01"} · ` +
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:821:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:1923:        <td>${valueOrDash(st.station_id)}</td>
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2737:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html.bak_v5_phase2_timeline_20260723_172758:2738:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:1429:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:2753:    <span>Estación CU01 · Cerro Cuñacales</span>
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:2869:        <td>${valueOrDash(st.station_id)}</td>
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3683:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:3684:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html.bak_timeline_20260724_003627:4777:      `Estación ${latest.station_id || "CU01"} · ` +
+weather_station/dashboard/templates/index.html.bak_windrose_scientific_v2:693:      <td>${st.source_station_id || st.station_id || "--"}</td>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_1_20260723_164219:484:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_1_20260723_164219:1302:      <td>${st.source_station_id || st.station_id || "--"}</td>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_1_20260723_164219:1893:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html.bak_observatory_v4_1_20260723_164219:1894:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:615:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:1554:        <td>${valueOrDash(st.station_id)}</td>
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:2368:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html.bak_v5_phase1_20260723_171454:2369:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html.bak_observatory_v4_20260723_162918:235:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_20260723_162918:820:      <td>${st.source_station_id || st.station_id || "--"}</td>
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:1106:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:2342:        <td>${valueOrDash(st.station_id)}</td>
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:3156:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:3157:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html.bak_v5_phase3_scientific_status_20260723_173338:4250:      `Estación ${latest.station_id || "CU01"} · ` +
+weather_station/dashboard/templates/index.html.bak_observatory_v4_2_20260723_165307:521:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_2_20260723_165307:1373:        <td>${valueOrDash(st.station_id)}</td>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_2_20260723_165307:2065:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html.bak_observatory_v4_2_20260723_165307:2066:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html.bak_fix_station_table_20260723_163746:484:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_fix_station_table_20260723_163746:1302:      <td>${st.source_station_id || st.station_id || "--"}</td>
+weather_station/dashboard/templates/index.html.bak_fix_station_table_20260723_163746:1893:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html.bak_fix_station_table_20260723_163746:1894:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html.bak_observatory_v4_fix_20260723_163522:235:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html.bak_observatory_v4_fix_20260723_163522:820:      <td>${st.source_station_id || st.station_id || "--"}</td>
+weather_station/dashboard/templates/index.html:1429:  <div class="online-station">CU01</div>
+weather_station/dashboard/templates/index.html:2753:    <span>Estación CU01 · Cerro Cuñacales</span>
+weather_station/dashboard/templates/index.html:2869:        <td>${valueOrDash(st.station_id)}</td>
+weather_station/dashboard/templates/index.html:3683:      `${station.station_id || latest.station_id || "--"} · ` +
+weather_station/dashboard/templates/index.html:3684:      `${station.station_name || latest.station_name || "--"}`
+weather_station/dashboard/templates/index.html:4777:      `Estación ${latest.station_id || "CU01"} · ` +
+weather_station/dashboard/templates/index.html.bak_dashboard_v3_4_20260723_155946:706:      <td>${st.source_station_id || st.station_id || "--"}</td>
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:650:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:652:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:654:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:656:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:662:            payload["local"][d.get("source_station_id")] = d
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:720:                station_id = STATION_CONTEXT.get("station_id", "CU01")
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:723:                    "source_station_id": station_id,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:724:                    "station_id": station_id,
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:725:                    "station_name": STATION_CONTEXT.get("station_name", "Cerro Cuñacales"),
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:748:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:750:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:752:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:754:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:1058:        "station_id": STATION_CONTEXT.get("station_id"),
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:1059:        "station_name": STATION_CONTEXT.get("station_name"),
+weather_station/dashboard/app.py.bak_dashboard_v5_1_20260726_231344:1083:            station=STATION_CONTEXT.get("station_id"),
+weather_station/dashboard/app.py.bak_windrose_api:551:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_windrose_api:553:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_windrose_api:555:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_windrose_api:557:            ORDER BY so.source_station_id
+weather_station/dashboard/app.py.bak_windrose_api:563:            payload["local"][d.get("source_station_id")] = d
+weather_station/dashboard/app.py.bak_windrose_api:621:                station_id = STATION_CONTEXT.get("station_id", "CU01")
+weather_station/dashboard/app.py.bak_windrose_api:624:                    "source_station_id": station_id,
+weather_station/dashboard/app.py.bak_windrose_api:625:                    "station_id": station_id,
+weather_station/dashboard/app.py.bak_windrose_api:626:                    "station_name": STATION_CONTEXT.get("station_name", "Cerro Cuñacales"),
+weather_station/dashboard/app.py.bak_windrose_api:649:                SELECT source_station_id, MAX(timestamp_local) AS max_timestamp
+weather_station/dashboard/app.py.bak_windrose_api:651:                GROUP BY source_station_id
+weather_station/dashboard/app.py.bak_windrose_api:653:            ON so.source_station_id = latest.source_station_id
+weather_station/dashboard/app.py.bak_windrose_api:655:            ORDER BY so.source_station_id
+Config/archive/station_legacy_20260726_174920.yaml:3:  name: Cerro Cuñacales Weather and Radio Link Station
+Config/station_sj01.yaml:8:  latitude: -6.76387
+Config/station_sj01.yaml:9:  longitude: -78.60154
+Config/station_sj01.yaml:10:  altitude_m: 3650
+Config/platform.yaml:9:  CUNACALES_01: CU01
+Config/platform.yaml:10:  CUÑACALES_01: CU01
+Config/platform.yaml:15:  CU01:
+Config/platform.yaml:16:    station_id: CU01
+Config/platform.yaml:17:    station_name: Cerro Cuñacales
+Config/platform.yaml:20:    config_file: Config/station_cu01.yaml
+Config/platform.yaml:21:    database: SQLite/CU01/weather_local.db
+Config/platform.yaml:22:    backup_directory: Backups/CU01
+Config/platform.yaml:26:    station_id: SJ01
+Config/platform.yaml:27:    station_name: Cerro San José - Hualgayoc
+Config/station.yaml:2:  id: CU01
+Config/station.yaml:3:  name: Cerro Cuñacales
+Config/station.yaml:8:  latitude: -6.69240
+Config/station.yaml:9:  longitude: -78.51418
+Config/station.yaml:10:  altitude_m: 2730
+Config/station.yaml:22:  sqlite: SQLite/CU01/weather_local.db
+Config/station_cu01.yaml:2:  id: CU01
+Config/station_cu01.yaml:3:  name: Cerro Cuñacales
+Config/station_cu01.yaml:8:  latitude: -6.69240
+Config/station_cu01.yaml:9:  longitude: -78.51418
+Config/station_cu01.yaml:10:  altitude_m: 2730
+Config/station_cu01.yaml:22:  sqlite: SQLite/CU01/weather_local.db
+Config/station_sj01_windows.yaml:9:  latitude: -6.76387
+Config/station_sj01_windows.yaml:10:  longitude: -78.60154
+Config/station_sj01_windows.yaml:11:  altitude_m: 3650

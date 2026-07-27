@@ -1,0 +1,1293 @@
+{
+  "generated_at_utc": "2026-07-26T22:27:31.477816+00:00",
+  "base_dir": "/home/carlos/Proyectos/EstacionMeteorologica",
+  "station_context": {
+    "config_file": "Config/station_cu01.yaml",
+    "station_id": "CU01",
+    "station_name": "Cerro Cuñacales",
+    "radio_role": "AP",
+    "local_role": "AP",
+    "timezone": "America/Lima",
+    "deployment_mode": "field",
+    "serial_port": null,
+    "serial_baudrate": null,
+    "serial_timeout": null,
+    "latitude": -6.6924,
+    "longitude": -78.51418,
+    "altitude_m": 2730,
+    "database": "SQLite/CU01/weather_local.db",
+    "ap_ip": "192.168.1.2",
+    "sm_ip": "192.168.1.3"
+  },
+  "expected_stations": {
+    "CU01": {
+      "database": "SQLite/CU01/weather_local.db",
+      "config_file": "Config/station_cu01.yaml"
+    },
+    "SJ01": {
+      "database": "SQLite/SJ01/weather_local.db",
+      "config_file": "Config/station_sj01.yaml"
+    }
+  },
+  "environment": {
+    "process": {
+      "ATMOSLINK_STATION": null,
+      "ATMOSLINK_MODE": null,
+      "ATMOSLINK_CONFIG": null
+    },
+    "services": {
+      "weather-logger.service": {
+        "returncode": 0,
+        "environment": "Environment=PATH=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin ATMOSLINK_STATION=CU01 PYTHONUNBUFFERED=1 ATMOSLINK_WIND_ENABLED=0 ATMOSLINK_WIND_PORT=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0 ATMOSLINK_WIND_BAUDRATE=9600 ATMOSLINK_WIND_SLAVE_ID=1 ATMOSLINK_WIND_TIMEOUT=2.0"
+      },
+      "atmoslink-dashboard.service": {
+        "returncode": 0,
+        "environment": "Environment=ATMOSLINK_STATION=CU01 ATMOSLINK_WIND_ENABLED=0 PYTHONUNBUFFERED=1"
+      },
+      "atmoslink-scheduler.service": {
+        "returncode": 0,
+        "environment": "Environment=PATH=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin ATMOSLINK_STATION=CU01 PYTHONUNBUFFERED=1"
+      }
+    }
+  },
+  "services": {
+    "weather-logger.service": {
+      "active": {
+        "returncode": 0,
+        "value": "active"
+      },
+      "enabled": {
+        "returncode": 0,
+        "value": "enabled"
+      },
+      "details": "NRestarts=0\nExecMainStartTimestamp=Thu 2026-07-23 16:09:04 -05"
+    },
+    "atmoslink-dashboard.service": {
+      "active": {
+        "returncode": 0,
+        "value": "active"
+      },
+      "enabled": {
+        "returncode": 0,
+        "value": "enabled"
+      },
+      "details": "NRestarts=0\nExecMainStartTimestamp=Sat 2026-07-25 18:57:07 -05"
+    },
+    "atmoslink-scheduler.service": {
+      "active": {
+        "returncode": 0,
+        "value": "active"
+      },
+      "enabled": {
+        "returncode": 0,
+        "value": "enabled"
+      },
+      "details": "NRestarts=0\nExecMainStartTimestamp=Thu 2026-07-23 16:09:04 -05"
+    }
+  },
+  "databases": [
+    {
+      "path": "SQLite/CU01/weather_local.db",
+      "exists": true,
+      "size_bytes": 63942656,
+      "modified_at": "2026-07-26T22:27:21.996688+00:00",
+      "integrity_check": "ok",
+      "tables": [
+        "era5_land_hourly",
+        "master_observations",
+        "master_observations_enriched",
+        "master_quality_report",
+        "nasa_power_hourly",
+        "radio_link_local",
+        "sqlite_sequence",
+        "station_observations",
+        "weather_local"
+      ],
+      "table_counts": {
+        "era5_land_hourly": 1679,
+        "master_observations": 35210,
+        "master_observations_enriched": 35210,
+        "master_quality_report": 749,
+        "nasa_power_hourly": 2424,
+        "radio_link_local": 3938,
+        "sqlite_sequence": 5,
+        "station_observations": 37078,
+        "weather_local": 37078
+      },
+      "weather_local_columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "timestamp_utc",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "timestamp_local",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "t_s",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "temp_avg_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "temp_min_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "temp_max_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "hum_avg_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "hum_min_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "hum_max_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "pres_avg_hPa",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 11,
+          "name": "dew_point_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 12,
+          "name": "vapor_pressure_hPa",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 13,
+          "name": "rain_1min_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 14,
+          "name": "rain_1h_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 15,
+          "name": "rain_total_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 16,
+          "name": "pulses_delta",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 17,
+          "name": "pulses_total",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 18,
+          "name": "bme_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 19,
+          "name": "rain_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 20,
+          "name": "station_id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 21,
+          "name": "station_name",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 22,
+          "name": "radio_role",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 23,
+          "name": "wind_speed_ms",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 24,
+          "name": "wind_direction_deg",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 25,
+          "name": "wind_gust_ms",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 26,
+          "name": "wind_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "latest_weather_row": {
+        "id": 37078,
+        "timestamp_utc": "2026-07-26T22:27:01+00:00",
+        "timestamp_local": "2026-07-26T17:27:01-05:00",
+        "t_s": 263880,
+        "temp_avg_C": 22.76,
+        "temp_min_C": 22.75,
+        "temp_max_C": 22.77,
+        "hum_avg_pct": 48.88,
+        "hum_min_pct": 48.62,
+        "hum_max_pct": 49.07,
+        "pres_avg_hPa": 739.22,
+        "dew_point_C": 11.44,
+        "vapor_pressure_hPa": 13.53,
+        "rain_1min_mm": 0.0,
+        "rain_1h_mm": 0.0,
+        "rain_total_mm": 3.63,
+        "pulses_delta": 0,
+        "pulses_total": 13,
+        "bme_ok": 1,
+        "rain_ok": 1,
+        "station_id": "CU01",
+        "station_name": "Cerro Cuñacales",
+        "radio_role": "AP",
+        "wind_speed_ms": null,
+        "wind_direction_deg": null,
+        "wind_gust_ms": null,
+        "wind_ok": 0
+      }
+    },
+    {
+      "path": "SQLite/SJ01/weather_local.db",
+      "exists": true,
+      "size_bytes": 12288,
+      "modified_at": "2026-07-03T01:28:31.019848+00:00",
+      "integrity_check": "ok",
+      "tables": [
+        "sqlite_sequence",
+        "weather_local"
+      ],
+      "table_counts": {
+        "sqlite_sequence": 0,
+        "weather_local": 0
+      },
+      "weather_local_columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "timestamp_utc",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "timestamp_local",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "station_id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "station_name",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "radio_role",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "t_s",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "temp_avg_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "temp_min_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "temp_max_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "hum_avg_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 11,
+          "name": "hum_min_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 12,
+          "name": "hum_max_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 13,
+          "name": "pres_avg_hPa",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 14,
+          "name": "dew_point_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 15,
+          "name": "vapor_pressure_hPa",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 16,
+          "name": "rain_1min_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 17,
+          "name": "rain_1h_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 18,
+          "name": "rain_total_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 19,
+          "name": "pulses_delta",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 20,
+          "name": "pulses_total",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 21,
+          "name": "bme_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 22,
+          "name": "rain_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        }
+      ]
+    },
+    {
+      "path": "SQLite/archive/propagation_physics_synthetic_2026-07-26.db",
+      "exists": true,
+      "size_bytes": 1863680,
+      "modified_at": "2026-07-26T21:54:41.447347+00:00",
+      "integrity_check": "ok",
+      "tables": [
+        "propagation_calibrated_observations",
+        "propagation_calibration_runs",
+        "propagation_link_registry",
+        "propagation_observations",
+        "propagation_rain_calibrated_observations",
+        "propagation_rain_calibration_runs",
+        "propagation_rain_event_cv_events",
+        "propagation_rain_event_cv_folds",
+        "propagation_rain_event_cv_predictions",
+        "propagation_rain_event_cv_runs",
+        "propagation_schema_metadata",
+        "sqlite_sequence"
+      ],
+      "table_counts": {
+        "propagation_calibrated_observations": 1440,
+        "propagation_calibration_runs": 1,
+        "propagation_link_registry": 1,
+        "propagation_observations": 1440,
+        "propagation_rain_calibrated_observations": 1440,
+        "propagation_rain_calibration_runs": 1,
+        "propagation_rain_event_cv_events": 3,
+        "propagation_rain_event_cv_folds": 3,
+        "propagation_rain_event_cv_predictions": 82,
+        "propagation_rain_event_cv_runs": 1,
+        "propagation_schema_metadata": 1,
+        "sqlite_sequence": 9
+      }
+    },
+    {
+      "path": "SQLite/global_master.db",
+      "exists": true,
+      "size_bytes": 21938176,
+      "modified_at": "2026-07-26T22:27:02.314431+00:00",
+      "integrity_check": "ok",
+      "tables": [
+        "global_master_observations"
+      ],
+      "table_counts": {
+        "global_master_observations": 35210
+      }
+    },
+    {
+      "path": "SQLite/propagation_physics.db",
+      "exists": true,
+      "size_bytes": 1863680,
+      "modified_at": "2026-07-26T20:27:55.219475+00:00",
+      "integrity_check": "ok",
+      "tables": [
+        "propagation_calibrated_observations",
+        "propagation_calibration_runs",
+        "propagation_link_registry",
+        "propagation_observations",
+        "propagation_rain_calibrated_observations",
+        "propagation_rain_calibration_runs",
+        "propagation_rain_event_cv_events",
+        "propagation_rain_event_cv_folds",
+        "propagation_rain_event_cv_predictions",
+        "propagation_rain_event_cv_runs",
+        "propagation_schema_metadata",
+        "sqlite_sequence"
+      ],
+      "table_counts": {
+        "propagation_calibrated_observations": 1440,
+        "propagation_calibration_runs": 1,
+        "propagation_link_registry": 1,
+        "propagation_observations": 1440,
+        "propagation_rain_calibrated_observations": 1440,
+        "propagation_rain_calibration_runs": 1,
+        "propagation_rain_event_cv_events": 3,
+        "propagation_rain_event_cv_folds": 3,
+        "propagation_rain_event_cv_predictions": 82,
+        "propagation_rain_event_cv_runs": 1,
+        "propagation_schema_metadata": 1,
+        "sqlite_sequence": 9
+      }
+    },
+    {
+      "path": "SQLite/propagation_physics_field.db",
+      "exists": true,
+      "size_bytes": 1863680,
+      "modified_at": "2026-07-26T21:54:50.235281+00:00",
+      "integrity_check": "ok",
+      "tables": [
+        "propagation_calibrated_observations",
+        "propagation_calibration_runs",
+        "propagation_link_registry",
+        "propagation_observations",
+        "propagation_rain_calibrated_observations",
+        "propagation_rain_calibration_runs",
+        "propagation_rain_event_cv_events",
+        "propagation_rain_event_cv_folds",
+        "propagation_rain_event_cv_predictions",
+        "propagation_rain_event_cv_runs",
+        "propagation_schema_metadata",
+        "sqlite_sequence"
+      ],
+      "table_counts": {
+        "propagation_calibrated_observations": 1440,
+        "propagation_calibration_runs": 1,
+        "propagation_link_registry": 1,
+        "propagation_observations": 1440,
+        "propagation_rain_calibrated_observations": 1440,
+        "propagation_rain_calibration_runs": 1,
+        "propagation_rain_event_cv_events": 3,
+        "propagation_rain_event_cv_folds": 3,
+        "propagation_rain_event_cv_predictions": 82,
+        "propagation_rain_event_cv_runs": 1,
+        "propagation_schema_metadata": 1,
+        "sqlite_sequence": 9
+      }
+    },
+    {
+      "path": "SQLite/simulation/propagation_test_source.db",
+      "exists": true,
+      "size_bytes": 667648,
+      "modified_at": "2026-07-26T18:48:32.853963+00:00",
+      "integrity_check": "ok",
+      "tables": [
+        "master_observations"
+      ],
+      "table_counts": {
+        "master_observations": 1440
+      }
+    },
+    {
+      "path": "SQLite/weather_local.db",
+      "exists": true,
+      "size_bytes": 24276992,
+      "modified_at": "2026-07-23T20:26:02.895399+00:00",
+      "integrity_check": "ok",
+      "tables": [
+        "era5_land_hourly",
+        "master_observations",
+        "master_observations_enriched",
+        "master_quality_report",
+        "nasa_power_hourly",
+        "radio_link_local",
+        "sqlite_sequence",
+        "station_observations",
+        "weather_local"
+      ],
+      "table_counts": {
+        "era5_land_hourly": 614,
+        "master_observations": 11042,
+        "master_observations_enriched": 11042,
+        "master_quality_report": 15,
+        "nasa_power_hourly": 984,
+        "radio_link_local": 18091,
+        "sqlite_sequence": 5,
+        "station_observations": 11585,
+        "weather_local": 11585
+      },
+      "weather_local_columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "timestamp_utc",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "timestamp_local",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "t_s",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "temp_avg_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "temp_min_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "temp_max_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "hum_avg_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "hum_min_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "hum_max_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "pres_avg_hPa",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 11,
+          "name": "dew_point_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 12,
+          "name": "vapor_pressure_hPa",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 13,
+          "name": "rain_1min_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 14,
+          "name": "rain_1h_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 15,
+          "name": "rain_total_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 16,
+          "name": "pulses_delta",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 17,
+          "name": "pulses_total",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 18,
+          "name": "bme_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 19,
+          "name": "rain_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 20,
+          "name": "station_id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 21,
+          "name": "station_name",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 22,
+          "name": "radio_role",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 23,
+          "name": "wind_speed_ms",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 24,
+          "name": "wind_direction_deg",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 25,
+          "name": "wind_gust_ms",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 26,
+          "name": "wind_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "latest_weather_row": {
+        "id": 11585,
+        "timestamp_utc": "2026-07-06T05:12:05+00:00",
+        "timestamp_local": "2026-07-06T00:12:05-05:00",
+        "t_s": 900,
+        "temp_avg_C": 24.17,
+        "temp_min_C": 24.17,
+        "temp_max_C": 24.17,
+        "hum_avg_pct": 74.6,
+        "hum_min_pct": 74.57,
+        "hum_max_pct": 74.63,
+        "pres_avg_hPa": 1011.91,
+        "dew_point_C": 19.36,
+        "vapor_pressure_hPa": 22.48,
+        "rain_1min_mm": 0.0,
+        "rain_1h_mm": 0.0,
+        "rain_total_mm": 0.0,
+        "pulses_delta": 0,
+        "pulses_total": 0,
+        "bme_ok": 1,
+        "rain_ok": 1,
+        "station_id": "CUNACALES_01",
+        "station_name": "Cerro Cuñacales Weather and Radio Link Station",
+        "radio_role": "UNKNOWN",
+        "wind_speed_ms": null,
+        "wind_direction_deg": null,
+        "wind_gust_ms": null,
+        "wind_ok": null
+      }
+    },
+    {
+      "path": "SQLite/weather_local_sj01.db",
+      "exists": true,
+      "size_bytes": 12288,
+      "modified_at": "2026-07-02T23:44:25.714671+00:00",
+      "integrity_check": "ok",
+      "tables": [
+        "sqlite_sequence",
+        "weather_local"
+      ],
+      "table_counts": {
+        "sqlite_sequence": 0,
+        "weather_local": 0
+      },
+      "weather_local_columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "timestamp_utc",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "timestamp_local",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "station_id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "station_name",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "radio_role",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "t_s",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "temp_avg_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "temp_min_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "temp_max_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "hum_avg_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 11,
+          "name": "hum_min_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 12,
+          "name": "hum_max_pct",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 13,
+          "name": "pres_avg_hPa",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 14,
+          "name": "dew_point_C",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 15,
+          "name": "vapor_pressure_hPa",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 16,
+          "name": "rain_1min_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 17,
+          "name": "rain_1h_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 18,
+          "name": "rain_total_mm",
+          "type": "REAL",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 19,
+          "name": "pulses_delta",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 20,
+          "name": "pulses_total",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 21,
+          "name": "bme_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 22,
+          "name": "rain_ok",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        }
+      ]
+    }
+  ],
+  "source_findings": {
+    "legacy_database_path": [
+      {
+        "file": "weather_station/config/config.py",
+        "line": 5,
+        "text": "DB_FILE = \"SQLite/weather_local.db\""
+      },
+      {
+        "file": "scripts/audit_lts_migration.py",
+        "line": 39,
+        "text": "LEGACY_DATABASE_PATH = \"SQLite/weather_local.db\""
+      },
+      {
+        "file": "Config/station.yaml",
+        "line": 15,
+        "text": "sqlite: SQLite/weather_local.db"
+      }
+    ],
+    "legacy_station_identifiers": [
+      {
+        "identifier": "CUNACALES_01",
+        "file": "weather_station/config/settings.py",
+        "line": 18,
+        "text": "\"CUNACALES_01\": \"CU01\","
+      },
+      {
+        "identifier": "CUÑACALES_01",
+        "file": "weather_station/config/settings.py",
+        "line": 19,
+        "text": "\"CUÑACALES_01\": \"CU01\","
+      },
+      {
+        "identifier": "SANJOSE_01",
+        "file": "weather_station/config/settings.py",
+        "line": 22,
+        "text": "\"SANJOSE_01\": \"SJ01\","
+      },
+      {
+        "identifier": "SAN_JOSE_01",
+        "file": "weather_station/config/settings.py",
+        "line": 23,
+        "text": "\"SAN_JOSE_01\": \"SJ01\","
+      },
+      {
+        "identifier": "CUNACALES_01",
+        "file": "weather_station/config/settings.py",
+        "line": 42,
+        "text": "CUNACALES_01 -> CU01"
+      },
+      {
+        "identifier": "SANJOSE_01",
+        "file": "weather_station/config/settings.py",
+        "line": 43,
+        "text": "SANJOSE_01 -> SJ01"
+      },
+      {
+        "identifier": "CUNACALES_01",
+        "file": "scripts/audit_lts_migration.py",
+        "line": 33,
+        "text": "\"CUNACALES_01\","
+      },
+      {
+        "identifier": "CUÑACALES_01",
+        "file": "scripts/audit_lts_migration.py",
+        "line": 34,
+        "text": "\"CUÑACALES_01\","
+      },
+      {
+        "identifier": "SANJOSE_01",
+        "file": "scripts/audit_lts_migration.py",
+        "line": 35,
+        "text": "\"SANJOSE_01\","
+      },
+      {
+        "identifier": "SAN_JOSE_01",
+        "file": "scripts/audit_lts_migration.py",
+        "line": 36,
+        "text": "\"SAN_JOSE_01\","
+      },
+      {
+        "identifier": "CUNACALES_01",
+        "file": "Config/platform.yaml",
+        "line": 9,
+        "text": "CUNACALES_01: CU01"
+      },
+      {
+        "identifier": "CUÑACALES_01",
+        "file": "Config/platform.yaml",
+        "line": 10,
+        "text": "CUÑACALES_01: CU01"
+      },
+      {
+        "identifier": "SANJOSE_01",
+        "file": "Config/platform.yaml",
+        "line": 11,
+        "text": "SANJOSE_01: SJ01"
+      },
+      {
+        "identifier": "SAN_JOSE_01",
+        "file": "Config/platform.yaml",
+        "line": 12,
+        "text": "SAN_JOSE_01: SJ01"
+      },
+      {
+        "identifier": "CUNACALES_01",
+        "file": "Config/station.yaml",
+        "line": 2,
+        "text": "id: CUNACALES_01"
+      }
+    ],
+    "fixed_database_assignments": [
+      {
+        "file": "weather_station/config/config.py",
+        "line": 5,
+        "text": "DB_FILE = \"SQLite/weather_local.db\""
+      }
+    ]
+  }
+}

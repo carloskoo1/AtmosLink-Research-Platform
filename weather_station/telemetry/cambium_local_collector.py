@@ -175,26 +175,54 @@ def value_after_colon(text, key):
 
 
 def classify_note(row):
-    note = "ok"
+    """
+    Clasifica el estado operativo del radioenlace.
 
-    snr_dl = to_float(row.get("snr_dl"))
-    rssi_dl = to_float(row.get("sta_dl_rssi"))
-    mcs_dl = to_float(row.get("mcs_dl"))
-    dl_rate = to_float(row.get("dl_rate"))
+    SM_NOT_ASSOCIATED:
+        El AP responde por SSH, pero no existen métricas de una estación
+        suscriptora asociada.
+
+    LINK_OPERATIONAL:
+        Existen métricas RF válidas y no se detectan umbrales críticos.
+    """
+
+    link_fields = (
+        "mcs_dl",
+        "mcs_ul",
+        "snr_dl",
+        "snr_ul",
+        "sta_dl_rssi",
+        "sta_ul_rssi",
+        "dl_rate",
+        "ul_rate",
+    )
+
+    parsed_values = {
+        key: to_float(row.get(key))
+        for key in link_fields
+    }
+
+    if all(value is None for value in parsed_values.values()):
+        return "SM_NOT_ASSOCIATED"
+
+    snr_dl = parsed_values["snr_dl"]
+    rssi_dl = parsed_values["sta_dl_rssi"]
+    mcs_dl = parsed_values["mcs_dl"]
+    dl_rate = parsed_values["dl_rate"]
 
     if snr_dl is not None and snr_dl < 15:
-        note = "LOW_SNR"
+        return "LOW_SNR"
 
     if rssi_dl is not None and rssi_dl < -75:
-        note = "LOW_RSSI"
+        return "LOW_RSSI"
 
     if mcs_dl is not None and mcs_dl < 3:
-        note = "LOW_MCS"
+        return "LOW_MCS"
 
     if dl_rate is not None and dl_rate < 20:
-        note = "LOW_RATE"
+        return "LOW_RATE"
 
-    return note
+    return "LINK_OPERATIONAL"
 
 
 def collect_once():

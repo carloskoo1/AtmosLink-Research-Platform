@@ -3,20 +3,18 @@ station:
   name: Cerro Cuñacales
   role: AP
   timezone: America/Lima
-
 site:
-  latitude: -6.69240
+  latitude: -6.6924
   longitude: -78.51418
   altitude_m: 2730
-
 radio_link:
   local_role: AP
   ap_ip: 192.168.1.2
   sm_ip: 192.168.1.3
   ssh_user: admin
-  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+  passfile: /home/carlos/epmp_monitor/config/.radio_pass
   interval_seconds: 60
   ssh_timeout_seconds: 15
-
+  enabled: true
 database:
   sqlite: SQLite/CU01/weather_local.db

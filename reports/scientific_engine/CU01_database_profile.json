@@ -1,0 +1,2931 @@
+{
+  "database_path": "SQLite/CU01/weather_local.db",
+  "database_size_bytes": 64454656,
+  "sqlite_version": "3.45.1",
+  "table_count": 8,
+  "tables": [
+    {
+      "name": "era5_land_hourly",
+      "row_count": 1679,
+      "columns": [
+        {
+          "name": "id",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": true,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        },
+        {
+          "name": "timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp",
+            "local"
+          ]
+        },
+        {
+          "name": "site_tag",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "lat",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "lon",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "temp_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "dewpoint_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "precip_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "press_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "wind_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        }
+      ],
+      "timestamp_column": "timestamp_utc",
+      "timestamp_min": "2026-06-20T05:00:00+00:00",
+      "timestamp_max": "2026-07-20T04:00:00+00:00",
+      "detected_sources": [
+        "local",
+        "era5"
+      ]
+    },
+    {
+      "name": "master_observations",
+      "row_count": 35634,
+      "columns": [
+        {
+          "name": "bucket_minute",
+          "declared_type": "TIMESTAMP",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "station_id",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "station_name",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "radio_role",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "weather_timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        },
+        {
+          "name": "weather_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp",
+            "local"
+          ]
+        },
+        {
+          "name": "local_temp_avg_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_temp_min_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_temp_max_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_hum_avg_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_hum_min_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_hum_max_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_press_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_dew_point_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_vapor_pressure_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_rain_1min_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_rain_1h_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_rain_total_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_pulses_delta",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_pulses_total",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_wind_speed_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 18159,
+          "null_percentage": 50.95975753493855,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_wind_direction_deg",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 18159,
+          "null_percentage": 50.95975753493855,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_wind_gust_ms",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_wind_ok",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 12342,
+          "null_percentage": 34.63546051523825,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_bme_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_rain_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "radio_station_id",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_station_name",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_role_from_radio",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_local_role",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "timestamp",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "timestamp",
+            "local",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_mcs_dl",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_mcs_ul",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_snr_dl",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_snr_ul",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_rssi_c0p",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_rssi_c0e",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_rssi_c1p",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_rssi_c1e",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_dl_rate",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_ul_rate",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_sta_dl_rssi",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_sta_ul_rssi",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_note",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_error",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "bucket_hour",
+          "declared_type": "TIMESTAMP",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "era5_timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "timestamp",
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "timestamp",
+            "local",
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_site_tag",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_lat",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_lon",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_temp_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_dewpoint_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_rh_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_precip_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_press_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_wind_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "nasa_timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "timestamp",
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "timestamp",
+            "local",
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_site_tag",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_lat",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_lon",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_temp_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_dewpoint_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_rh_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_precip_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_press_kpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_press_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_wind10m_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_source",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_downloaded_at_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "master_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp",
+            "local"
+          ]
+        },
+        {
+          "name": "master_timestamp_hour",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        }
+      ],
+      "timestamp_column": "weather_timestamp_utc",
+      "timestamp_min": "2026-06-26T02:30:57+00:00",
+      "timestamp_max": "2026-07-27T05:28:01+00:00",
+      "detected_sources": [
+        "local",
+        "cambium",
+        "era5",
+        "nasa"
+      ]
+    },
+    {
+      "name": "master_observations_enriched",
+      "row_count": 35634,
+      "columns": [
+        {
+          "name": "bucket_minute",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "station_id",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "station_name",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "radio_role",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "weather_timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        },
+        {
+          "name": "weather_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp",
+            "local"
+          ]
+        },
+        {
+          "name": "local_temp_avg_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_temp_min_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_temp_max_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_hum_avg_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_hum_min_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_hum_max_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_press_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_dew_point_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_vapor_pressure_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_rain_1min_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_rain_1h_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_rain_total_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_pulses_delta",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_pulses_total",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_wind_speed_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 18159,
+          "null_percentage": 50.95975753493855,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_wind_direction_deg",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 18159,
+          "null_percentage": 50.95975753493855,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_wind_gust_ms",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_wind_ok",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 12342,
+          "null_percentage": 34.63546051523825,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_bme_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "local_rain_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "radio_station_id",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_station_name",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_role_from_radio",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_local_role",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "timestamp",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "timestamp",
+            "local",
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_mcs_dl",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_mcs_ul",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_snr_dl",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_snr_ul",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_rssi_c0p",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_rssi_c0e",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_rssi_c1p",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_rssi_c1e",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_dl_rate",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_ul_rate",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_sta_dl_rssi",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_sta_ul_rssi",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_note",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "radio_error",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 35634,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "bucket_hour",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "era5_timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "timestamp",
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "timestamp",
+            "local",
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_site_tag",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_lat",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_lon",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_temp_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_dewpoint_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_rh_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_precip_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_press_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "era5_wind_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 11819,
+          "null_percentage": 33.16776112701353,
+          "detected_roles": [
+            "era5"
+          ]
+        },
+        {
+          "name": "nasa_timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "timestamp",
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "timestamp",
+            "local",
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_site_tag",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_lat",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_lon",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_temp_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_dewpoint_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_rh_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_precip_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_press_kpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_press_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_wind10m_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_source",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "nasa_downloaded_at_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3209,
+          "null_percentage": 9.005444238648481,
+          "detected_roles": [
+            "nasa"
+          ]
+        },
+        {
+          "name": "master_timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp",
+            "local"
+          ]
+        },
+        {
+          "name": "master_timestamp_hour",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        },
+        {
+          "name": "derived_saturation_vapor_pressure_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "derived_actual_vapor_pressure_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "derived_dew_point_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "derived_vpd_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "derived_heat_index_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "derived_wind_chill_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 18159,
+          "null_percentage": 50.95975753493855,
+          "detected_roles": []
+        },
+        {
+          "name": "derived_air_density_kg_m3",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        }
+      ],
+      "timestamp_column": "weather_timestamp_utc",
+      "timestamp_min": "2026-06-26T02:30:57+00:00",
+      "timestamp_max": "2026-07-27T05:28:01+00:00",
+      "detected_sources": [
+        "local",
+        "cambium",
+        "era5",
+        "nasa"
+      ]
+    },
+    {
+      "name": "master_quality_report",
+      "row_count": 749,
+      "columns": [
+        {
+          "name": "station_id",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "timestamp",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        },
+        {
+          "name": "issue_type",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "severity",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "message",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        }
+      ],
+      "timestamp_column": "timestamp",
+      "timestamp_min": "2026-06-26 04:33:00-05:00",
+      "timestamp_max": "2026-07-23 15:45:00-05:00",
+      "detected_sources": [
+        "local"
+      ]
+    },
+    {
+      "name": "nasa_power_hourly",
+      "row_count": 2424,
+      "columns": [
+        {
+          "name": "id",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": true,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        },
+        {
+          "name": "timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp",
+            "local"
+          ]
+        },
+        {
+          "name": "site_tag",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "lat",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "lon",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "temp_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "dewpoint_c",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "rh_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "precip_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "press_kpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "press_hpa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "wind10m_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "source",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "downloaded_at_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        }
+      ],
+      "timestamp_column": "timestamp_utc",
+      "timestamp_min": "2026-06-16T00:00:00+00:00",
+      "timestamp_max": "2026-07-24T23:00:00+00:00",
+      "detected_sources": [
+        "local",
+        "nasa"
+      ]
+    },
+    {
+      "name": "radio_link_local",
+      "row_count": 3938,
+      "columns": [
+        {
+          "name": "id",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": true,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        },
+        {
+          "name": "timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp",
+            "local"
+          ]
+        },
+        {
+          "name": "source",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "ap_ip",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "sm_ip",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "mcs_dl",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "mcs_ul",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "snr_dl",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "snr_ul",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "rssi_c0p",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "rssi_c0e",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "rssi_c1p",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "rssi_c1e",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "dl_rate",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": []
+        },
+        {
+          "name": "ul_rate",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": []
+        },
+        {
+          "name": "sta_dl_rssi",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "sta_ul_rssi",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "note",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "error",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "station_id",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "station_name",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "radio_role",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "local_role",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 3938,
+          "null_percentage": 100.0,
+          "detected_roles": [
+            "local"
+          ]
+        }
+      ],
+      "timestamp_column": "timestamp_utc",
+      "timestamp_min": "2026-06-27T19:51:47+00:00",
+      "timestamp_max": "2026-06-30T23:15:59+00:00",
+      "detected_sources": [
+        "local",
+        "cambium"
+      ]
+    },
+    {
+      "name": "station_observations",
+      "row_count": 37501,
+      "columns": [
+        {
+          "name": "central_id",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": true,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "source_station_id",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "source_local_id",
+          "declared_type": "INTEGER",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "source_db",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        },
+        {
+          "name": "timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp",
+            "local"
+          ]
+        },
+        {
+          "name": "station_id",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "station_name",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "radio_role",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "t_s",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "temp_avg_C",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "temp_min_C",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "temp_max_C",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "hum_avg_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "hum_min_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "hum_max_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "pres_avg_hPa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "dew_point_C",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "vapor_pressure_hPa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "rain_1min_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "rain_1h_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "rain_total_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "pulses_delta",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "pulses_total",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "bme_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "rain_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "wind_speed_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 20026,
+          "null_percentage": 53.401242633529776,
+          "detected_roles": []
+        },
+        {
+          "name": "wind_direction_deg",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 20026,
+          "null_percentage": 53.401242633529776,
+          "detected_roles": []
+        },
+        {
+          "name": "wind_gust_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 37501,
+          "null_percentage": 100.0,
+          "detected_roles": []
+        },
+        {
+          "name": "wind_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 14207,
+          "null_percentage": 37.88432308471774,
+          "detected_roles": []
+        }
+      ],
+      "timestamp_column": "timestamp_utc",
+      "timestamp_min": "2026-06-26T02:30:57+00:00",
+      "timestamp_max": "2026-07-27T05:30:01+00:00",
+      "detected_sources": [
+        "local",
+        "cambium"
+      ]
+    },
+    {
+      "name": "weather_local",
+      "row_count": 37501,
+      "columns": [
+        {
+          "name": "id",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": true,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "timestamp_utc",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp"
+          ]
+        },
+        {
+          "name": "timestamp_local",
+          "declared_type": "TEXT",
+          "not_null": true,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "timestamp",
+            "local"
+          ]
+        },
+        {
+          "name": "t_s",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "temp_avg_C",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "temp_min_C",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "temp_max_C",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "hum_avg_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "hum_min_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "hum_max_pct",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "pres_avg_hPa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "dew_point_C",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": []
+        },
+        {
+          "name": "vapor_pressure_hPa",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 282,
+          "null_percentage": 0.7519799472014079,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "rain_1min_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "rain_1h_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "rain_total_mm",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "pulses_delta",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "pulses_total",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "bme_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": []
+        },
+        {
+          "name": "rain_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "station_id",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "station_name",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "local"
+          ]
+        },
+        {
+          "name": "radio_role",
+          "declared_type": "TEXT",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 0,
+          "null_percentage": 0.0,
+          "detected_roles": [
+            "cambium"
+          ]
+        },
+        {
+          "name": "wind_speed_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 20026,
+          "null_percentage": 53.401242633529776,
+          "detected_roles": []
+        },
+        {
+          "name": "wind_direction_deg",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 20026,
+          "null_percentage": 53.401242633529776,
+          "detected_roles": []
+        },
+        {
+          "name": "wind_gust_ms",
+          "declared_type": "REAL",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 37501,
+          "null_percentage": 100.0,
+          "detected_roles": []
+        },
+        {
+          "name": "wind_ok",
+          "declared_type": "INTEGER",
+          "not_null": false,
+          "primary_key": false,
+          "null_count": 14207,
+          "null_percentage": 37.88432308471774,
+          "detected_roles": []
+        }
+      ],
+      "timestamp_column": "timestamp_utc",
+      "timestamp_min": "2026-06-26T02:30:57+00:00",
+      "timestamp_max": "2026-07-27T05:30:01+00:00",
+      "detected_sources": [
+        "local",
+        "cambium"
+      ]
+    }
+  ]
+}

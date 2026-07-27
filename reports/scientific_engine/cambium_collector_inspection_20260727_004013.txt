@@ -1,0 +1,1611 @@
+
+==================================================
+1. ARCHIVO PRINCIPAL DEL COLECTOR
+==================================================
+Archivo: weather_station/telemetry/cambium_local_collector.py
+Líneas: 329
+Bytes: 8191
+
+==================================================
+2. IMPORTS, CONSTANTES Y CONFIGURACIÓN
+==================================================
+1:import subprocess
+2:import sqlite3
+3:import time
+4:from datetime import datetime, timezone
+5:from pathlib import Path
+7:from weather_station.config.settings import load_config
+8:from weather_station.config.station_manager import get_station_context
+10:CONFIG = load_config()
+11:STATION_CONTEXT = get_station_context()
+13:STATION_ID = STATION_CONTEXT["station_id"]
+14:STATION_NAME = STATION_CONTEXT["station_name"]
+15:RADIO_ROLE = STATION_CONTEXT["radio_role"]
+16:LOCAL_ROLE = STATION_CONTEXT["local_role"]
+18:AP_IP = STATION_CONTEXT["ap_ip"]
+19:SM_IP = STATION_CONTEXT["sm_ip"]
+20:SSH_USER = CONFIG["radio_link"]["ssh_user"]
+21:PASSFILE = CONFIG["radio_link"]["passfile"]
+22:DB_FILE = CONFIG["database"]["sqlite"]
+24:INTERVAL_SECONDS = CONFIG.get("radio_link", {}).get("interval_seconds", 60)
+25:SSH_TIMEOUT = CONFIG.get("radio_link", {}).get("ssh_timeout_seconds", 15)
+28:def now_times():
+35:def to_float(v):
+42:def init_db():
+97:def save_status(note, error=""):
+138:def run_ssh(cmd):
+162:def value_after_key(text, key):
+170:def value_after_colon(text, key):
+177:def classify_note(row):
+200:def collect_once():
+298:def run_daemon():
+
+==================================================
+3. CÓDIGO COMPLETO DEL COLECTOR
+==================================================
+     1	import subprocess
+     2	import sqlite3
+     3	import time
+     4	from datetime import datetime, timezone
+     5	from pathlib import Path
+     6	
+     7	from weather_station.config.settings import load_config
+     8	from weather_station.config.station_manager import get_station_context
+     9	
+    10	CONFIG = load_config()
+    11	STATION_CONTEXT = get_station_context()
+    12	
+    13	STATION_ID = STATION_CONTEXT["station_id"]
+    14	STATION_NAME = STATION_CONTEXT["station_name"]
+    15	RADIO_ROLE = STATION_CONTEXT["radio_role"]
+    16	LOCAL_ROLE = STATION_CONTEXT["local_role"]
+    17	
+    18	AP_IP = STATION_CONTEXT["ap_ip"]
+    19	SM_IP = STATION_CONTEXT["sm_ip"]
+    20	SSH_USER = CONFIG["radio_link"]["ssh_user"]
+    21	PASSFILE = CONFIG["radio_link"]["passfile"]
+    22	DB_FILE = CONFIG["database"]["sqlite"]
+    23	
+    24	INTERVAL_SECONDS = CONFIG.get("radio_link", {}).get("interval_seconds", 60)
+    25	SSH_TIMEOUT = CONFIG.get("radio_link", {}).get("ssh_timeout_seconds", 15)
+    26	
+    27	
+    28	def now_times():
+    29	    return (
+    30	        datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    31	        datetime.now().astimezone().isoformat(timespec="seconds"),
+    32	    )
+    33	
+    34	
+    35	def to_float(v):
+    36	    try:
+    37	        return float(v)
+    38	    except (TypeError, ValueError):
+    39	        return None
+    40	
+    41	
+    42	def init_db():
+    43	    Path(DB_FILE).parent.mkdir(parents=True, exist_ok=True)
+    44	
+    45	    conn = sqlite3.connect(DB_FILE)
+    46	    cur = conn.cursor()
+    47	
+    48	    cur.execute("""
+    49	        CREATE TABLE IF NOT EXISTS radio_link_local (
+    50	            id INTEGER PRIMARY KEY AUTOINCREMENT,
+    51	            timestamp_utc TEXT NOT NULL,
+    52	            timestamp_local TEXT NOT NULL,
+    53	            station_id TEXT,
+    54	            station_name TEXT,
+    55	            radio_role TEXT,
+    56	            local_role TEXT,
+    57	            source TEXT,
+    58	            ap_ip TEXT,
+    59	            sm_ip TEXT,
+    60	
+    61	            mcs_dl REAL,
+    62	            mcs_ul REAL,
+    63	            snr_dl REAL,
+    64	            snr_ul REAL,
+    65	
+    66	            rssi_c0p REAL,
+    67	            rssi_c0e REAL,
+    68	            rssi_c1p REAL,
+    69	            rssi_c1e REAL,
+    70	
+    71	            dl_rate REAL,
+    72	            ul_rate REAL,
+    73	
+    74	            sta_dl_rssi REAL,
+    75	            sta_ul_rssi REAL,
+    76	
+    77	            note TEXT,
+    78	            error TEXT
+    79	        )
+    80	    """)
+    81	
+    82	    # Migración ligera para bases existentes
+    83	    existing_cols = [r[1] for r in cur.execute("PRAGMA table_info(radio_link_local)").fetchall()]
+    84	    for col, col_type in [
+    85	        ("station_id", "TEXT"),
+    86	        ("station_name", "TEXT"),
+    87	        ("radio_role", "TEXT"),
+    88	        ("local_role", "TEXT"),
+    89	    ]:
+    90	        if col not in existing_cols:
+    91	            cur.execute(f"ALTER TABLE radio_link_local ADD COLUMN {col} {col_type}")
+    92	
+    93	    conn.commit()
+    94	    conn.close()
+    95	
+    96	
+    97	def save_status(note, error=""):
+    98	    timestamp_utc, timestamp_local = now_times()
+    99	
+   100	    conn = sqlite3.connect(DB_FILE)
+   101	    cur = conn.cursor()
+   102	
+   103	    cur.execute("""
+   104	        INSERT INTO radio_link_local (
+   105	            timestamp_utc,
+   106	            timestamp_local,
+   107	            station_id,
+   108	            station_name,
+   109	            radio_role,
+   110	            local_role,
+   111	            source,
+   112	            ap_ip,
+   113	            sm_ip,
+   114	            note,
+   115	            error
+   116	        )
+   117	        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+   118	    """, (
+   119	        timestamp_utc,
+   120	        timestamp_local,
+   121	        STATION_ID,
+   122	        STATION_NAME,
+   123	        RADIO_ROLE,
+   124	        LOCAL_ROLE,
+   125	        "local_ssh",
+   126	        AP_IP,
+   127	        SM_IP,
+   128	        note,
+   129	        error[:300] if error else "",
+   130	    ))
+   131	
+   132	    conn.commit()
+   133	    conn.close()
+   134	
+   135	    print(f"RADIO STATUS: {timestamp_local} note={note} error={error}")
+   136	
+   137	
+   138	def run_ssh(cmd):
+   139	    command = [
+   140	        "sshpass", "-f", PASSFILE,
+   141	        "ssh",
+   142	        "-o", "StrictHostKeyChecking=no",
+   143	        "-o", "UserKnownHostsFile=/dev/null",
+   144	        "-o", f"ConnectTimeout={SSH_TIMEOUT}",
+   145	        f"{SSH_USER}@{AP_IP}",
+   146	        cmd,
+   147	    ]
+   148	
+   149	    result = subprocess.run(
+   150	        command,
+   151	        capture_output=True,
+   152	        text=True,
+   153	        timeout=SSH_TIMEOUT + 5
+   154	    )
+   155	
+   156	    if result.returncode != 0:
+   157	        raise RuntimeError(result.stderr.strip())
+   158	
+   159	    return result.stdout
+   160	
+   161	
+   162	def value_after_key(text, key):
+   163	    for line in text.splitlines():
+   164	        parts = line.strip().split()
+   165	        if len(parts) >= 2 and parts[0] == key:
+   166	            return parts[1]
+   167	    return None
+   168	
+   169	
+   170	def value_after_colon(text, key):
+   171	    for line in text.splitlines():
+   172	        if key in line and ":" in line:
+   173	            return line.split(":", 1)[1].strip()
+   174	    return None
+   175	
+   176	
+   177	def classify_note(row):
+   178	    note = "ok"
+   179	
+   180	    snr_dl = to_float(row.get("snr_dl"))
+   181	    rssi_dl = to_float(row.get("sta_dl_rssi"))
+   182	    mcs_dl = to_float(row.get("mcs_dl"))
+   183	    dl_rate = to_float(row.get("dl_rate"))
+   184	
+   185	    if snr_dl is not None and snr_dl < 15:
+   186	        note = "LOW_SNR"
+   187	
+   188	    if rssi_dl is not None and rssi_dl < -75:
+   189	        note = "LOW_RSSI"
+   190	
+   191	    if mcs_dl is not None and mcs_dl < 3:
+   192	        note = "LOW_MCS"
+   193	
+   194	    if dl_rate is not None and dl_rate < 20:
+   195	        note = "LOW_RATE"
+   196	
+   197	    return note
+   198	
+   199	
+   200	def collect_once():
+   201	    show_sta = run_ssh("show sta")
+   202	    show_rssi = run_ssh("show rssi")
+   203	
+   204	    row = {
+   205	        "mcs_dl": value_after_key(show_sta, "connectedSTADLMCS"),
+   206	        "mcs_ul": value_after_key(show_sta, "connectedSTAULMCS"),
+   207	        "snr_dl": value_after_key(show_sta, "connectedSTADLSNR"),
+   208	        "snr_ul": value_after_key(show_sta, "connectedSTAULSNR"),
+   209	
+   210	        "dl_rate": value_after_key(show_sta, "connectedSTADLRateMbps"),
+   211	        "ul_rate": value_after_key(show_sta, "connectedSTAULRateMbps"),
+   212	
+   213	        "sta_dl_rssi": value_after_key(show_sta, "connectedSTADLRSSI"),
+   214	        "sta_ul_rssi": value_after_key(show_sta, "connectedSTAULRSSI"),
+   215	
+   216	        "rssi_c0p": value_after_colon(show_rssi, "chain 0 RSSI primary"),
+   217	        "rssi_c0e": value_after_colon(show_rssi, "chain 0 RSSI extension"),
+   218	        "rssi_c1p": value_after_colon(show_rssi, "chain 1 RSSI primary"),
+   219	        "rssi_c1e": value_after_colon(show_rssi, "chain 1 RSSI extension"),
+   220	    }
+   221	
+   222	    note = classify_note(row)
+   223	
+   224	    timestamp_utc, timestamp_local = now_times()
+   225	
+   226	    conn = sqlite3.connect(DB_FILE)
+   227	    cur = conn.cursor()
+   228	
+   229	    cur.execute("""
+   230	        INSERT INTO radio_link_local (
+   231	            timestamp_utc,
+   232	            timestamp_local,
+   233	            station_id,
+   234	            station_name,
+   235	            radio_role,
+   236	            local_role,
+   237	            source,
+   238	            ap_ip,
+   239	            sm_ip,
+   240	
+   241	            mcs_dl,
+   242	            mcs_ul,
+   243	            snr_dl,
+   244	            snr_ul,
+   245	
+   246	            rssi_c0p,
+   247	            rssi_c0e,
+   248	            rssi_c1p,
+   249	            rssi_c1e,
+   250	
+   251	            dl_rate,
+   252	            ul_rate,
+   253	
+   254	            sta_dl_rssi,
+   255	            sta_ul_rssi,
+   256	
+   257	            note,
+   258	            error
+   259	        )
+   260	        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+   261	    """, (
+   262	        timestamp_utc,
+   263	        timestamp_local,
+   264	        STATION_ID,
+   265	        STATION_NAME,
+   266	        RADIO_ROLE,
+   267	        LOCAL_ROLE,
+   268	        "local_ssh",
+   269	        AP_IP,
+   270	        SM_IP,
+   271	
+   272	        to_float(row["mcs_dl"]),
+   273	        to_float(row["mcs_ul"]),
+   274	        to_float(row["snr_dl"]),
+   275	        to_float(row["snr_ul"]),
+   276	
+   277	        to_float(row["rssi_c0p"]),
+   278	        to_float(row["rssi_c0e"]),
+   279	        to_float(row["rssi_c1p"]),
+   280	        to_float(row["rssi_c1e"]),
+   281	
+   282	        to_float(row["dl_rate"]),
+   283	        to_float(row["ul_rate"]),
+   284	
+   285	        to_float(row["sta_dl_rssi"]),
+   286	        to_float(row["sta_ul_rssi"]),
+   287	
+   288	        note,
+   289	        "",
+   290	    ))
+   291	
+   292	    conn.commit()
+   293	    conn.close()
+   294	
+   295	    print(f"GUARDADO RADIO: {timestamp_local} note={note} row={row}")
+   296	
+   297	
+   298	def run_daemon():
+   299	    init_db()
+   300	
+   301	    print("AtmosLink RadioLink Collector iniciado")
+   302	    print(f"Config: {CONFIG.get('_config_file', 'unknown')}")
+   303	    print(f"Station: {STATION_ID} | {STATION_NAME}")
+   304	    print(f"Role: {RADIO_ROLE} | Local role: {LOCAL_ROLE}")
+   305	    print(f"AP: {AP_IP}")
+   306	    print(f"SM: {SM_IP}")
+   307	    print(f"Intervalo: {INTERVAL_SECONDS} s")
+   308	
+   309	    while True:
+   310	        try:
+   311	            collect_once()
+   312	
+   313	        except KeyboardInterrupt:
+   314	            print("RadioLink Collector detenido por usuario")
+   315	            break
+   316	
+   317	        except Exception as e:
+   318	            err = str(e)
+   319	            print(f"RADIO ERROR: {err}")
+   320	            try:
+   321	                save_status("RADIO_UNAVAILABLE", err)
+   322	            except Exception as db_err:
+   323	                print(f"ERROR GUARDANDO ESTADO RADIO: {db_err}")
+   324	
+   325	        time.sleep(INTERVAL_SECONDS)
+   326	
+   327	
+   328	if __name__ == "__main__":
+   329	    run_daemon()
+
+==================================================
+4. FUNCIONES RELACIONADAS CON HTTP, SSH Y PARSER
+==================================================
+1:import subprocess
+7:from weather_station.config.settings import load_config
+8:from weather_station.config.station_manager import get_station_context
+11:STATION_CONTEXT = get_station_context()
+13:STATION_ID = STATION_CONTEXT["station_id"]
+14:STATION_NAME = STATION_CONTEXT["station_name"]
+15:RADIO_ROLE = STATION_CONTEXT["radio_role"]
+16:LOCAL_ROLE = STATION_CONTEXT["local_role"]
+18:AP_IP = STATION_CONTEXT["ap_ip"]
+19:SM_IP = STATION_CONTEXT["sm_ip"]
+20:SSH_USER = CONFIG["radio_link"]["ssh_user"]
+25:SSH_TIMEOUT = CONFIG.get("radio_link", {}).get("ssh_timeout_seconds", 15)
+53:            station_id TEXT,
+54:            station_name TEXT,
+58:            ap_ip TEXT,
+59:            sm_ip TEXT,
+61:            mcs_dl REAL,
+62:            mcs_ul REAL,
+63:            snr_dl REAL,
+64:            snr_ul REAL,
+66:            rssi_c0p REAL,
+67:            rssi_c0e REAL,
+68:            rssi_c1p REAL,
+69:            rssi_c1e REAL,
+71:            dl_rate REAL,
+72:            ul_rate REAL,
+74:            sta_dl_rssi REAL,
+75:            sta_ul_rssi REAL,
+85:        ("station_id", "TEXT"),
+86:        ("station_name", "TEXT"),
+107:            station_id,
+108:            station_name,
+112:            ap_ip,
+113:            sm_ip,
+121:        STATION_ID,
+122:        STATION_NAME,
+125:        "local_ssh",
+126:        AP_IP,
+127:        SM_IP,
+138:def run_ssh(cmd):
+140:        "sshpass", "-f", PASSFILE,
+141:        "ssh",
+144:        "-o", f"ConnectTimeout={SSH_TIMEOUT}",
+145:        f"{SSH_USER}@{AP_IP}",
+149:    result = subprocess.run(
+153:        timeout=SSH_TIMEOUT + 5
+180:    snr_dl = to_float(row.get("snr_dl"))
+181:    rssi_dl = to_float(row.get("sta_dl_rssi"))
+182:    mcs_dl = to_float(row.get("mcs_dl"))
+183:    dl_rate = to_float(row.get("dl_rate"))
+185:    if snr_dl is not None and snr_dl < 15:
+186:        note = "LOW_SNR"
+188:    if rssi_dl is not None and rssi_dl < -75:
+189:        note = "LOW_RSSI"
+191:    if mcs_dl is not None and mcs_dl < 3:
+192:        note = "LOW_MCS"
+194:    if dl_rate is not None and dl_rate < 20:
+195:        note = "LOW_RATE"
+201:    show_sta = run_ssh("show sta")
+202:    show_rssi = run_ssh("show rssi")
+205:        "mcs_dl": value_after_key(show_sta, "connectedSTADLMCS"),
+206:        "mcs_ul": value_after_key(show_sta, "connectedSTAULMCS"),
+207:        "snr_dl": value_after_key(show_sta, "connectedSTADLSNR"),
+208:        "snr_ul": value_after_key(show_sta, "connectedSTAULSNR"),
+210:        "dl_rate": value_after_key(show_sta, "connectedSTADLRateMbps"),
+211:        "ul_rate": value_after_key(show_sta, "connectedSTAULRateMbps"),
+213:        "sta_dl_rssi": value_after_key(show_sta, "connectedSTADLRSSI"),
+214:        "sta_ul_rssi": value_after_key(show_sta, "connectedSTAULRSSI"),
+216:        "rssi_c0p": value_after_colon(show_rssi, "chain 0 RSSI primary"),
+217:        "rssi_c0e": value_after_colon(show_rssi, "chain 0 RSSI extension"),
+218:        "rssi_c1p": value_after_colon(show_rssi, "chain 1 RSSI primary"),
+219:        "rssi_c1e": value_after_colon(show_rssi, "chain 1 RSSI extension"),
+233:            station_id,
+234:            station_name,
+238:            ap_ip,
+239:            sm_ip,
+241:            mcs_dl,
+242:            mcs_ul,
+243:            snr_dl,
+244:            snr_ul,
+246:            rssi_c0p,
+247:            rssi_c0e,
+248:            rssi_c1p,
+249:            rssi_c1e,
+251:            dl_rate,
+252:            ul_rate,
+254:            sta_dl_rssi,
+255:            sta_ul_rssi,
+264:        STATION_ID,
+265:        STATION_NAME,
+268:        "local_ssh",
+269:        AP_IP,
+270:        SM_IP,
+272:        to_float(row["mcs_dl"]),
+273:        to_float(row["mcs_ul"]),
+274:        to_float(row["snr_dl"]),
+275:        to_float(row["snr_ul"]),
+277:        to_float(row["rssi_c0p"]),
+278:        to_float(row["rssi_c0e"]),
+279:        to_float(row["rssi_c1p"]),
+280:        to_float(row["rssi_c1e"]),
+282:        to_float(row["dl_rate"]),
+283:        to_float(row["ul_rate"]),
+285:        to_float(row["sta_dl_rssi"]),
+286:        to_float(row["sta_ul_rssi"]),
+303:    print(f"Station: {STATION_ID} | {STATION_NAME}")
+305:    print(f"AP: {AP_IP}")
+306:    print(f"SM: {SM_IP}")
+
+==================================================
+5. INSERCIÓN EN SQLITE
+==================================================
+2:import sqlite3
+22:DB_FILE = CONFIG["database"]["sqlite"]
+38:    except (TypeError, ValueError):
+45:    conn = sqlite3.connect(DB_FILE)
+48:    cur.execute("""
+49:        CREATE TABLE IF NOT EXISTS radio_link_local (
+77:            note TEXT,
+78:            error TEXT
+83:    existing_cols = [r[1] for r in cur.execute("PRAGMA table_info(radio_link_local)").fetchall()]
+91:            cur.execute(f"ALTER TABLE radio_link_local ADD COLUMN {col} {col_type}")
+93:    conn.commit()
+97:def save_status(note, error=""):
+100:    conn = sqlite3.connect(DB_FILE)
+103:    cur.execute("""
+104:        INSERT INTO radio_link_local (
+114:            note,
+115:            error
+128:        note,
+129:        error[:300] if error else "",
+132:    conn.commit()
+135:    print(f"RADIO STATUS: {timestamp_local} note={note} error={error}")
+157:        raise RuntimeError(result.stderr.strip())
+177:def classify_note(row):
+178:    note = "ok"
+186:        note = "LOW_SNR"
+189:        note = "LOW_RSSI"
+192:        note = "LOW_MCS"
+195:        note = "LOW_RATE"
+197:    return note
+222:    note = classify_note(row)
+226:    conn = sqlite3.connect(DB_FILE)
+229:    cur.execute("""
+230:        INSERT INTO radio_link_local (
+257:            note,
+258:            error
+288:        note,
+292:    conn.commit()
+295:    print(f"GUARDADO RADIO: {timestamp_local} note={note} row={row}")
+319:            print(f"RADIO ERROR: {err}")
+323:                print(f"ERROR GUARDANDO ESTADO RADIO: {db_err}")
+
+==================================================
+6. CONFIGURACIÓN DEL SCHEDULER
+==================================================
+     1	scheduler:
+     2	  loop_sleep_seconds: 5
+     3	  task_timeout_seconds: 300
+     4	tasks:
+     5	  sync_master_dataset:
+     6	    enabled: true
+     7	    interval_seconds: 60
+     8	    command:
+     9	    - python3
+    10	    - -m
+    11	    - weather_station.sync.build_master_dataset
+    12	  telegram_alert_sender:
+    13	    enabled: true
+    14	    interval_seconds: 60
+    15	    command:
+    16	    - python3
+    17	    - -m
+    18	    - weather_station.notifications.telegram_alert_sender
+    19	  weather_logger:
+    20	    enabled: false
+    21	    interval_seconds: 60
+    22	    command:
+    23	    - python3
+    24	    - -m
+    25	    - weather_station.logger.logger_weather
+    26	  radio_collector:
+    27	    enabled: false
+    28	    interval_seconds: 60
+    29	    command:
+    30	    - python3
+    31	    - -m
+    32	    - weather_station.telemetry.cambium_local_collector
+    33	  era5_downloader:
+    34	    enabled: true
+    35	    interval_seconds: 86400
+    36	    command:
+    37	    - python3
+    38	    - -m
+    39	    - weather_station.weather_sources.era5_incremental_downloader
+    40	    - --backfill-days
+    41	    - '10'
+    42	    - --safety-lag-days
+    43	    - '7'
+    44	    - --max-days
+    45	    - '3'
+    46	  nasa_power_downloader:
+    47	    enabled: true
+    48	    interval_seconds: 86400
+    49	    command:
+    50	    - python3
+    51	    - -m
+    52	    - weather_station.weather_sources.nasa_power_downloader
+    53	  daily_backup:
+    54	    enabled: true
+    55	    interval_seconds: 21600
+    56	    command:
+    57	    - python3
+    58	    - -m
+    59	    - weather_station.backup.local_backup
+    60	  health_monitor:
+    61	    enabled: true
+    62	    interval_seconds: 60
+    63	    command:
+    64	    - python3
+    65	    - -m
+    66	    - weather_station.health.health_monitor
+    67	  notification_engine:
+    68	    enabled: true
+    69	    interval_seconds: 60
+    70	    command:
+    71	    - python3
+    72	    - -m
+    73	    - weather_station.notifications.notification_engine
+    74	  remote_backup:
+    75	    enabled: true
+    76	    interval_seconds: 900
+    77	    command:
+    78	    - python3
+    79	    - -m
+    80	    - weather_station.backup.remote_backup
+    81	  station_sync:
+    82	    enabled: true
+    83	    interval_seconds: 300
+    84	    command:
+    85	    - python3
+    86	    - -m
+    87	    - weather_station.sync.station_sync
+    88	  enrich_master_dataset:
+    89	    enabled: true
+    90	    interval_seconds: 300
+    91	    command:
+    92	    - python3
+    93	    - -m
+    94	    - weather_station.analytics.enrich_master_dataset
+    95	  master_quality_check:
+    96	    enabled: true
+    97	    interval_seconds: 300
+    98	    command:
+    99	    - python3
+   100	    - -m
+   101	    - weather_station.qc.master_quality_check
+   102	  qc_summary:
+   103	    enabled: true
+   104	    interval_seconds: 300
+   105	    command:
+   106	    - python3
+   107	    - -m
+   108	    - weather_station.qc.qc_summary
+   109	  scientific_health_score:
+   110	    enabled: true
+   111	    interval_seconds: 300
+   112	    command:
+   113	    - python3
+   114	    - -m
+   115	    - weather_station.analytics.scientific_health_score
+   116	  scientific_reliability:
+   117	    enabled: true
+   118	    interval_seconds: 300
+   119	    command:
+   120	    - python3
+   121	    - -m
+   122	    - weather_station.analytics.scientific_reliability
+   123	  build_station_observations:
+   124	    enabled: true
+   125	    interval_seconds: 300
+   126	    command:
+   127	    - python3
+   128	    - -m
+   129	    - weather_station.sync.build_station_observations
+   130	  scientific_comparison:
+   131	    enabled: true
+   132	    interval_seconds: 300
+   133	    command:
+   134	    - python3
+   135	    - -m
+   136	    - weather_station.analytics.scientific_comparison
+   137	  scientific_agreement_index:
+   138	    enabled: true
+   139	    interval_seconds: 300
+   140	    command:
+   141	    - python3
+   142	    - -m
+   143	    - weather_station.analytics.scientific_agreement_index
+   144	  atmospheric_corridor:
+   145	    enabled: true
+   146	    interval_seconds: 300
+   147	    command:
+   148	    - python3
+   149	    - -m
+   150	    - weather_station.analytics.atmospheric_corridor
+
+==================================================
+7. CONFIGURACIÓN DE LA ESTACIÓN
+==================================================
+
+ARCHIVO: Config/station.yaml
+     1	station:
+     2	  id: CU01
+     3	  name: Cerro Cuñacales
+     4	  role: AP
+     5	  timezone: America/Lima
+     6	
+     7	site:
+     8	  latitude: -6.69240
+     9	  longitude: -78.51418
+    10	  altitude_m: 2730
+    11	
+    12	radio_link:
+    13	  local_role: AP
+    14	  ap_ip: 192.168.1.2
+    15	  sm_ip: 192.168.1.3
+    16	  ssh_user: admin
+    17	  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+    18	  interval_seconds: 60
+    19	  ssh_timeout_seconds: 15
+    20	
+    21	database:
+    22	  sqlite: SQLite/CU01/weather_local.db
+
+ARCHIVO: Config/station_cu01.yaml
+     1	station:
+     2	  id: CU01
+     3	  name: Cerro Cuñacales
+     4	  role: AP
+     5	  timezone: America/Lima
+     6	
+     7	site:
+     8	  latitude: -6.69240
+     9	  longitude: -78.51418
+    10	  altitude_m: 2730
+    11	
+    12	radio_link:
+    13	  local_role: AP
+    14	  ap_ip: 192.168.1.2
+    15	  sm_ip: 192.168.1.3
+    16	  ssh_user: admin
+    17	  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+    18	  interval_seconds: 60
+    19	  ssh_timeout_seconds: 15
+    20	
+    21	database:
+    22	  sqlite: SQLite/CU01/weather_local.db
+
+ARCHIVO: Config/station_sj01.yaml
+     1	station:
+     2	  id: SJ01
+     3	  name: Cerro San José
+     4	  role: SM
+     5	  timezone: America/Lima
+     6	
+     7	site:
+     8	  latitude: -6.76387
+     9	  longitude: -78.60154
+    10	  altitude_m: 3650
+    11	
+    12	radio_link:
+    13	  local_role: SM
+    14	  ap_ip: 192.168.1.2
+    15	  sm_ip: 192.168.1.3
+    16	  ssh_user: admin
+    17	  passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+    18	  interval_seconds: 60
+    19	  ssh_timeout_seconds: 15
+    20	
+    21	database:
+    22	  sqlite: SQLite/SJ01/weather_local.db
+
+==================================================
+8. SERVICIO ATMOSLINK-RADIO
+==================================================
+# /etc/systemd/system/atmoslink-radio.service
+[Unit]
+Description=AtmosLink Radio Link Local Telemetry Collector
+After=network-online.target weather-logger.service
+Wants=network-online.target
+Requires=weather-logger.service
+
+[Service]
+Type=simple
+User=carlos
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.telemetry.cambium_local_collector
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+==================================================
+9. ESTADO DEL SERVICIO
+==================================================
+○ atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector
+     Loaded: loaded (/etc/systemd/system/atmoslink-radio.service; enabled; preset: enabled)
+     Active: inactive (dead) since Thu 2026-07-23 15:26:42 -05; 3 days ago
+   Duration: 49min 16.220s
+   Main PID: 1930 (code=killed, signal=TERM)
+        CPU: 2.304s
+
+jul 23 14:37:26 Controlador systemd[1]: Started atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector.
+jul 23 15:08:30 Controlador python[1930]: AtmosLink RadioLink Collector iniciado
+jul 23 15:08:30 Controlador python[1930]: Config: Config/station.yaml
+jul 23 15:08:30 Controlador python[1930]: Station: CUNACALES_01 | Cerro Cuñacales Weather and Radio Link Station
+jul 23 15:08:30 Controlador python[1930]: Role: UNKNOWN | Local role: UNKNOWN
+jul 23 15:08:30 Controlador python[1930]: AP: 192.168.1.2
+jul 23 15:08:30 Controlador python[1930]: SM: 192.168.1.3
+jul 23 15:08:30 Controlador python[1930]: Intervalo: 60 s
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:37:28-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:38:30-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:39:32-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:40:34-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:41:36-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:42:38-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:43:40-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:44:42-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:45:44-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:46:45-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:47:47-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:48:49-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:49:51-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 23 15:08:30 Controlador python[1930]: RADIO STATUS: 2026-07-23T14:50:54-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 23 15:08:30 Controlador python[1930]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 23 15:08:30 Controlador python[1930]: RADIO STATUS: 2026-07-23T14:51:57-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:52:59-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:54:01-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:55:05-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:56:07-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:57:09-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:58:11-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:59:13-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:00:15-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:01:17-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:02:19-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:03:20-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:04:22-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:05:24-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:06:26-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:07:28-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:26:42 Controlador systemd[1]: Stopping atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector...
+jul 23 15:26:42 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:08:30-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-81', 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:26:42 Controlador systemd[1]: atmoslink-radio.service: Deactivated successfully.
+jul 23 15:26:42 Controlador systemd[1]: Stopped atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector.
+jul 23 15:26:42 Controlador systemd[1]: atmoslink-radio.service: Consumed 2.304s CPU time, 9.2M memory peak, 0B memory swap peak.
+
+==================================================
+10. LOGS DEL COLECTOR
+==================================================
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:03:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:04:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:05:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:06:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:07:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:08:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:09:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:10:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:11:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:12:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:13:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:14:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:15:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:16:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:17:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:18:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:19:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:20:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:21:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:22:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 16:23:44 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:23:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:24:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:25:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:26:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:27:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:28:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:29:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:30:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:31:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:32:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:33:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:34:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:35:44-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:36:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:37:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:38:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:39:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:40:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:41:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:42:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:43:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:44:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:45:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:46:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:47:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:48:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:49:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:50:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:51:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:52:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:53:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:54:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:55:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:56:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:57:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:58:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T16:59:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T17:00:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO STATUS: 2026-07-22T17:01:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:02:45 Controlador python[153048]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:32:00 Controlador systemd[1]: Stopping atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector...
+jul 22 17:32:00 Controlador python[153048]: RADIO STATUS: 2026-07-22T17:02:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 17:32:00 Controlador systemd[1]: atmoslink-radio.service: Deactivated successfully.
+jul 22 17:32:00 Controlador systemd[1]: Stopped atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector.
+jul 22 17:32:00 Controlador systemd[1]: atmoslink-radio.service: Consumed 2.532s CPU time.
+jul 22 17:32:00 Controlador systemd[1]: Started atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector.
+jul 22 18:10:07 Controlador python[807539]: AtmosLink RadioLink Collector iniciado
+jul 22 18:10:07 Controlador python[807539]: Config: Config/station.yaml
+jul 22 18:10:07 Controlador python[807539]: Station: CUNACALES_01 | Cerro Cuñacales Weather and Radio Link Station
+jul 22 18:10:07 Controlador python[807539]: Role: UNKNOWN | Local role: UNKNOWN
+jul 22 18:10:07 Controlador python[807539]: AP: 192.168.1.2
+jul 22 18:10:07 Controlador python[807539]: SM: 192.168.1.3
+jul 22 18:10:07 Controlador python[807539]: Intervalo: 60 s
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:32:10-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:33:20-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:34:30-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:35:40-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:36:50-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:38:00-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:39:05-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:40:05-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:41:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:42:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:43:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:44:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:45:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:46:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:47:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:48:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:49:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:50:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:51:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:52:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:53:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:54:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:55:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:56:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:57:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:58:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T17:59:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:00:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:01:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:02:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:03:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:04:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:05:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:06:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:07:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:08:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:09:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:10:07 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:10:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:11:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:12:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:13:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:14:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:15:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:16:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:17:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:18:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:19:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:20:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:21:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:22:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:23:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:24:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:25:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:26:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:27:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:28:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:29:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:30:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:31:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:32:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:33:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:34:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:35:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:36:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:37:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:38:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:39:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:40:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:41:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:42:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:43:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:44:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:45:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:46:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:47:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:48:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Network is unreachable
+jul 22 18:49:18 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:49:18-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: Connection timed out
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:50:21-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:51:24-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:52:27-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:53:30-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:54:33-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:55:37-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:56:40-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:57:43-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:58:46-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T18:59:49-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:00:52-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:01:55-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:02:58-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:04:01-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:05:04-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:06:04-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:07:05-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:08:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:09:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:10:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:11:10-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:12:10-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:13:13-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:14:16-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:15:20-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:16:23-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:17:26-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:18:29-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:19:32-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:20:35-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:21:39-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:22:42-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:23:45-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:24:48-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:25:51-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:26:54-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:27:58-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:29:01-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:30:04-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:31:04-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 19:32:06 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:32:06-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:33:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:34:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:35:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:36:10-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:37:10-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:38:11-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:39:13-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:40:14-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:41:14-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:42:17-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:43:21-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:44:25-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:45:28-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:46:31-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:47:34-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:48:37-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:49:40-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:50:43-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:51:46-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:52:49-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:53:53-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:54:56-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:55:59-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:57:02-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:58:04-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T19:59:05-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:00:07-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:01:08-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:02:10-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:03:10-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:04:11-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:05:13-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:06:13-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:07:14-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:08:17-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:09:20-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:10:23-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:11:27-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:12:31-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:13:34-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:14:37 Controlador python[807539]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:22:51 Controlador python[807539]: RADIO STATUS: 2026-07-22T20:14:37-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 22 20:22:51 Controlador systemd[1]: Stopping atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector...
+jul 22 20:22:51 Controlador systemd[1]: atmoslink-radio.service: Deactivated successfully.
+jul 22 20:22:51 Controlador systemd[1]: Stopped atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector.
+jul 22 20:22:51 Controlador systemd[1]: atmoslink-radio.service: Consumed 2.058s CPU time, 8.9M memory peak, 3.4M memory swap peak.
+-- Boot 8635249c425a47f181a3327fec0b42c8 --
+jul 23 14:37:26 Controlador systemd[1]: Started atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector.
+jul 23 15:08:30 Controlador python[1930]: AtmosLink RadioLink Collector iniciado
+jul 23 15:08:30 Controlador python[1930]: Config: Config/station.yaml
+jul 23 15:08:30 Controlador python[1930]: Station: CUNACALES_01 | Cerro Cuñacales Weather and Radio Link Station
+jul 23 15:08:30 Controlador python[1930]: Role: UNKNOWN | Local role: UNKNOWN
+jul 23 15:08:30 Controlador python[1930]: AP: 192.168.1.2
+jul 23 15:08:30 Controlador python[1930]: SM: 192.168.1.3
+jul 23 15:08:30 Controlador python[1930]: Intervalo: 60 s
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:37:28-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:38:30-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:39:32-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:40:34-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:41:36-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:42:38-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:43:40-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-79', 'rssi_c0e': None, 'rssi_c1p': '-73', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:44:42-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:45:44-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:46:45-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:47:47-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:48:49-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:49:51-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 23 15:08:30 Controlador python[1930]: RADIO STATUS: 2026-07-23T14:50:54-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 23 15:08:30 Controlador python[1930]: RADIO ERROR: ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 23 15:08:30 Controlador python[1930]: RADIO STATUS: 2026-07-23T14:51:57-05:00 note=RADIO_UNAVAILABLE error=ssh: connect to host 192.168.1.2 port 22: No route to host
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:52:59-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:54:01-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:55:05-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:56:07-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:57:09-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:58:11-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T14:59:13-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:00:15-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:01:17-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:02:19-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:03:20-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:04:22-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:05:24-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:06:26-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:08:30 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:07:28-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': None, 'rssi_c0e': None, 'rssi_c1p': '-91', 'rssi_c1e': None}
+jul 23 15:26:42 Controlador systemd[1]: Stopping atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector...
+jul 23 15:26:42 Controlador python[1930]: GUARDADO RADIO: 2026-07-23T15:08:30-05:00 note=ok row={'mcs_dl': None, 'mcs_ul': None, 'snr_dl': None, 'snr_ul': None, 'dl_rate': None, 'ul_rate': None, 'sta_dl_rssi': None, 'sta_ul_rssi': None, 'rssi_c0p': '-81', 'rssi_c0e': None, 'rssi_c1p': None, 'rssi_c1e': None}
+jul 23 15:26:42 Controlador systemd[1]: atmoslink-radio.service: Deactivated successfully.
+jul 23 15:26:42 Controlador systemd[1]: Stopped atmoslink-radio.service - AtmosLink Radio Link Local Telemetry Collector.
+jul 23 15:26:42 Controlador systemd[1]: atmoslink-radio.service: Consumed 2.304s CPU time, 9.2M memory peak, 0B memory swap peak.
+
+==================================================
+11. NOTE Y ERROR REALES DE SQLITE
+==================================================
+
+VALORES DISTINTOS DE NOTE:
+
+{'note': 'RADIO_UNAVAILABLE', 'n': 3938, 'first_seen': '2026-06-27T14:51:47-05:00', 'last_seen': '2026-06-30T18:15:59-05:00'}
+
+VALORES DISTINTOS DE ERROR:
+
+{'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out', 'n': 3439, 'first_seen': '2026-06-27T14:52:57-05:00', 'last_seen': '2026-06-30T18:15:59-05:00'}
+{'error': 'ssh: connect to host 192.168.1.2 port 22: Network is unreachable', 'n': 491, 'first_seen': '2026-06-27T14:51:47-05:00', 'last_seen': '2026-06-28T15:33:03-05:00'}
+{'error': 'ssh: connect to host 192.168.1.2 port 22: No route to host', 'n': 8, 'first_seen': '2026-06-28T00:17:53-05:00', 'last_seen': '2026-06-28T16:25:57-05:00'}
+
+ÚLTIMOS 20 REGISTROS:
+
+{'id': 3938, 'timestamp_local': '2026-06-30T18:15:59-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3937, 'timestamp_local': '2026-06-30T18:14:49-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3936, 'timestamp_local': '2026-06-30T18:13:39-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3935, 'timestamp_local': '2026-06-30T18:12:29-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3934, 'timestamp_local': '2026-06-30T18:11:30-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3933, 'timestamp_local': '2026-06-30T18:10:20-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3932, 'timestamp_local': '2026-06-30T18:09:10-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3931, 'timestamp_local': '2026-06-30T18:08:00-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3930, 'timestamp_local': '2026-06-30T18:06:50-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3929, 'timestamp_local': '2026-06-30T18:05:40-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3928, 'timestamp_local': '2026-06-30T18:04:30-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3927, 'timestamp_local': '2026-06-30T18:03:20-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3926, 'timestamp_local': '2026-06-30T18:02:10-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3925, 'timestamp_local': '2026-06-30T18:00:59-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3924, 'timestamp_local': '2026-06-30T17:59:49-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3923, 'timestamp_local': '2026-06-30T17:58:39-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3922, 'timestamp_local': '2026-06-30T17:57:29-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3921, 'timestamp_local': '2026-06-30T17:56:19-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3920, 'timestamp_local': '2026-06-30T17:55:09-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+{'id': 3919, 'timestamp_local': '2026-06-30T17:53:59-05:00', 'source': 'local_ssh', 'ap_ip': '192.168.1.2', 'sm_ip': '192.168.1.3', 'note': 'RADIO_UNAVAILABLE', 'error': 'ssh: connect to host 192.168.1.2 port 22: Connection timed out'}
+
+==================================================
+12. EXISTENCIA Y PERMISOS DEL PASSFILE
+==================================================
+
+Configuración: Config/station.yaml
+enabled: None
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+username: None
+passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+passfile_exists: False
+
+Configuración: Config/station_cu01.yaml
+enabled: None
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+username: None
+passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+passfile_exists: False
+
+Configuración: Config/station_sj01.yaml
+enabled: None
+ap_ip: 192.168.1.2
+sm_ip: 192.168.1.3
+username: None
+passfile: /home/carlos/epmp_monitor/config/.epmp_pass
+passfile_exists: False
+
+==================================================
+13. COMPILACIÓN E IMPORTACIÓN
+==================================================
+py_compile: OK
+Importación: OK
+Módulo: weather_station.telemetry.cambium_local_collector
+Símbolos públicos:
+ - Path
+ - classify_note
+ - collect_once
+ - datetime
+ - get_station_context
+ - init_db
+ - load_config
+ - now_times
+ - run_daemon
+ - run_ssh
+ - save_status
+ - timezone
+ - to_float
+ - value_after_colon
+ - value_after_key
+
+==================================================
+14. SERVICIO EPM-MONITOR LEGADO
+==================================================
+● epmp-monitor.service - Monitor ePMP AP
+     Loaded: loaded (/etc/systemd/system/epmp-monitor.service; enabled; preset: enabled)
+     Active: active (running) since Thu 2026-07-23 14:37:23 -05; 3 days ago
+   Main PID: 1317 (bash)
+      Tasks: 2 (limit: 9293)
+     Memory: 3.1M (peak: 14.1M)
+        CPU: 11min 43.276s
+     CGroup: /system.slice/epmp-monitor.service
+             ├─   1317 bash /home/carlos/epmp_monitor/bin/capture_agg_ap.sh
+             └─2180280 sleep 60
+
+jul 23 14:37:23 Controlador systemd[1]: Started epmp-monitor.service - Monitor ePMP AP.
+
+SCRIPT LEGADO:
+
+     1	#!/usr/bin/env bash
+     2	set -u
+     3	
+     4	source /home/carlos/epmp_monitor/config/epmp.conf
+     5	
+     6	PASSWORD= ***REDACTADO*** "$PASS_FILE")"
+     7	
+     8	TODAY="$(date +%F)"
+     9	CSV_FILE="$DATA_DIR/agg_ap_${TODAY}.csv"
+    10	ERR_FILE="$LOG_DIR/agg_ap_${TODAY}.err.log"
+    11	RAW_FILE="$LOG_DIR/raw_show_sta_${TODAY}.log"
+    12	
+    13	mkdir -p "$DATA_DIR" "$LOG_DIR"
+    14	
+    15	if [[ ! -f "$CSV_FILE" ]]; then
+    16	    echo "ts,role,ip,peer_ip,dl_mcs,ul_mcs,dl_snr_db,ul_snr_db,dl_rssi_dbm,ul_rssi_dbm,dl_rate,note" > "$CSV_FILE"
+    17	fi
+    18	
+    19	run_show_sta() {
+    20	    sshpass -p "$PASSWORD" ssh $SSH_OPTS "${RADIO_USER}@${AP_IP}" "show sta" 2>>"$ERR_FILE"
+    21	}
+    22	
+    23	extract_first_value() {
+    24	    local text="$1"
+    25	    local key="$2"
+    26	    echo "$text" | awk -v k="$key" '
+    27	        index($0,k)>0 {
+    28	            for(i=1;i<=NF;i++){
+    29	                if($i==k && (i+1)<=NF){
+    30	                    print $(i+1)
+    31	                    exit
+    32	                }
+    33	            }
+    34	        }'
+    35	}
+    36	
+    37	normalize_value() {
+    38	    local v="${1:-}"
+    39	    v="$(echo "$v" | tr -d '\r' | xargs 2>/dev/null || true)"
+    40	    echo "$v"
+    41	}
+    42	
+    43	sanitize_csv_field() {
+    44	    local v="${1:-}"
+    45	    v="$(echo "$v" | tr -d '\r\n' | tr ',' ';')"
+    46	    echo "$v"
+    47	}
+    48	
+    49	while true; do
+    50	    TS="$(date --iso-8601=seconds)"
+    51	
+    52	    RAW="$(run_show_sta || true)"
+    53	
+    54	    echo "===== $TS =====" >> "$RAW_FILE"
+    55	    echo "$RAW" >> "$RAW_FILE"
+    56	    echo >> "$RAW_FILE"
+    57	
+    58	    if [[ -z "$(echo "$RAW" | xargs 2>/dev/null || true)" ]]; then
+    59	        printf "%s,%s,%s,,,,,,,,,,%s\n" \
+    60	        "$TS" "AP" "$AP_IP" "empty_show_sta" >> "$CSV_FILE"
+    61	        sleep "$INTERVAL_SECONDS"
+    62	        continue
+    63	    fi
+    64	
+    65	    PEER_IP="$(extract_first_value "$RAW" "connectedSTAIP")"
+    66	    DL_MCS="$(extract_first_value "$RAW" "connectedSTADLMCS")"
+    67	    UL_MCS="$(extract_first_value "$RAW" "connectedSTAULMCS")"
+    68	    DL_SNR="$(extract_first_value "$RAW" "connectedSTADLSNR")"
+    69	    UL_SNR="$(extract_first_value "$RAW" "connectedSTAULSNR")"
+    70	    DL_RSSI="$(extract_first_value "$RAW" "connectedSTADLRSSI")"
+    71	    UL_RSSI="$(extract_first_value "$RAW" "connectedSTAULRSSI")"
+    72	    DL_RATE="$(extract_first_value "$RAW" "connectedSTADLRateMbps")"
+    73	
+    74	    PEER_IP="$(sanitize_csv_field "$(normalize_value "$PEER_IP")")"
+    75	    DL_MCS="$(sanitize_csv_field "$(normalize_value "$DL_MCS")")"
+    76	    UL_MCS="$(sanitize_csv_field "$(normalize_value "$UL_MCS")")"
+    77	    DL_SNR="$(sanitize_csv_field "$(normalize_value "$DL_SNR")")"
+    78	    UL_SNR="$(sanitize_csv_field "$(normalize_value "$UL_SNR")")"
+    79	    DL_RSSI="$(sanitize_csv_field "$(normalize_value "$DL_RSSI")")"
+    80	    UL_RSSI="$(sanitize_csv_field "$(normalize_value "$UL_RSSI")")"
+    81	    DL_RATE="$(sanitize_csv_field "$(normalize_value "$DL_RATE")")"
+    82	
+    83	    NOTE="ok"
+    84	    # ALERTAS
+    85	if [[ ! -z "$DL_SNR" && "$DL_SNR" -lt 15 ]]; then
+    86	    NOTE="LOW_SNR"
+    87	fi
+    88	
+    89	if [[ ! -z "$DL_RSSI" && "$DL_RSSI" -lt -75 ]]; then
+    90	    NOTE="LOW_RSSI"
+    91	fi
+    92	
+    93	if [[ ! -z "$DL_MCS" && "$DL_MCS" -lt 3 ]]; then
+    94	    NOTE="LOW_MCS"
+    95	fi
+    96	
+    97	if [[ ! -z "$DL_RATE" && "$DL_RATE" -lt 20 ]]; then
+    98	    NOTE="LOW_RATE"
+    99	fi
+   100	
+   101	    printf "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n" \
+   102	    "$TS" "AP" "$AP_IP" "$PEER_IP" "$DL_MCS" "$UL_MCS" \
+   103	    "$DL_SNR" "$UL_SNR" "$DL_RSSI" "$UL_RSSI" "$DL_RATE" "$NOTE" >> "$CSV_FILE"
+   104	
+   105	    sleep "$INTERVAL_SECONDS"
+   106	done
+
+==================================================
+15. ARCHIVOS DE SALIDA DEL MONITOR LEGADO
+==================================================
+2026-07-27 00:40:07.4152188940 1098274 /home/carlos/epmp_monitor/logs/pipeline.log
+2026-07-27 00:40:07.1512157780 7331904 /home/carlos/epmp_monitor/logs/ia.log
+2026-07-27 00:40:06.8762125330 51689 /home/carlos/epmp_monitor/reportes/dataset_operador.csv
+2026-07-27 00:40:04.5601851970 364898 /home/carlos/epmp_monitor/logs/db_predictivo.log
+2026-07-27 00:40:03.4971726510 288524 /home/carlos/epmp_monitor/logs/db.log
+2026-07-27 00:40:02.5371613200 6466332 /home/carlos/epmp_monitor/logs/predictivo.log
+2026-07-27 00:40:02.5281612140 67772 /home/carlos/epmp_monitor/reportes/dataset_predictivo.csv
+2026-07-27 00:40:01.9091539080 8747571 /home/carlos/epmp_monitor/logs/modelo.log
+2026-07-27 00:40:01.8981537780 48831 /home/carlos/epmp_monitor/reportes/dataset_avanzado.csv
+2026-07-27 00:39:38.3848754850 254825 /home/carlos/epmp_monitor/data/agg_ap_2026-07-23.csv
+2026-07-27 00:39:38.2988744650 1077020 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-07-23.log
+2026-07-27 00:39:38.2088733970 392618 /home/carlos/epmp_monitor/logs/agg_ap_2026-07-23.err.log
+2026-07-22 20:21:59.1648148950 28040 /home/carlos/epmp_monitor/data/agg_ap_2026-07-22.csv
+2026-07-22 20:21:59.1608148480 17200 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-07-22.log
+2026-07-22 20:21:59.1598148360 27712 /home/carlos/epmp_monitor/logs/agg_ap_2026-07-22.err.log
+2026-07-21 13:56:22.2120060080 872130 /home/carlos/epmp_monitor/data/agg_ap_2026-07-10.csv
+2026-07-21 13:56:22.2080059580 536640 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-07-10.log
+2026-07-21 13:56:22.2070059450 859456 /home/carlos/epmp_monitor/logs/agg_ap_2026-07-10.err.log
+2026-07-09 10:55:09.9438064530 308060 /home/carlos/epmp_monitor/data/agg_ap_2026-07-05.csv
+2026-07-09 10:55:09.9388063930 189520 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-07-05.log
+2026-07-09 10:55:09.9368063690 303952 /home/carlos/epmp_monitor/logs/agg_ap_2026-07-05.err.log
+2026-07-05 15:45:05.9218035800 392950 /home/carlos/epmp_monitor/data/agg_ap_2026-06-30.csv
+2026-07-05 15:45:05.9178035340 241760 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-06-30.log
+2026-07-05 15:45:05.9158035100 386818 /home/carlos/epmp_monitor/logs/agg_ap_2026-06-30.err.log
+2026-06-30 18:10:47.5450851720 225185 /home/carlos/epmp_monitor/data/agg_ap_2026-06-28.csv
+2026-06-30 18:10:47.5400851130 138520 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-06-28.log
+2026-06-30 18:10:47.5380850890 222608 /home/carlos/epmp_monitor/logs/agg_ap_2026-06-28.err.log
+2026-06-28 00:11:37.0955695670 31355 /home/carlos/epmp_monitor/data/agg_ap_2026-06-27.csv
+2026-06-28 00:11:37.0875694670 19240 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-06-27.log
+2026-06-28 00:11:37.0865694540 30788 /home/carlos/epmp_monitor/logs/agg_ap_2026-06-27.err.log
+2026-06-27 14:50:36.1332763590 147965 /home/carlos/epmp_monitor/data/agg_ap_2026-06-25.csv
+2026-06-27 14:50:36.1302763230 91000 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-06-25.log
+2026-06-27 14:50:36.1282762990 145774 /home/carlos/epmp_monitor/logs/agg_ap_2026-06-25.err.log
+2026-06-03 02:38:04.4804160330 28365 /home/carlos/epmp_monitor/data/agg_ap_2026-06-02.csv
+2026-06-03 02:38:04.4764159820 17400 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-06-02.log
+2026-06-03 02:38:04.4744159570 28512 /home/carlos/epmp_monitor/logs/agg_ap_2026-06-02.err.log
+2026-05-03 03:41:02.5379005520 104222 /home/carlos/epmp_monitor/data/agg_ap_2026-05-02.csv
+2026-05-03 03:41:02.5339005000 53560 /home/carlos/epmp_monitor/logs/raw_show_sta_2026-05-02.log
+2026-05-03 03:41:02.5329004870 84804 /home/carlos/epmp_monitor/logs/agg_ap_2026-05-02.err.log
+2026-05-02 05:26:07.6792701530 10672 /home/carlos/epmp_monitor/logs/auto_csv_pipeline.log
+2026-05-02 05:25:37.0828867500 144 /home/carlos/epmp_monitor/logs/merge.log
+2026-05-02 05:25:07.2745132250 6912 /home/carlos/epmp_monitor/logs/ia_operador.log
+2026-05-02 05:25:05.1424865090 272 /home/carlos/epmp_monitor/logs/db_writer.log
+2026-05-02 05:25:04.9394839650 344 /home/carlos/epmp_monitor/logs/db_writer_predictivo.log
+2026-05-02 05:25:03.9664717720 6096 /home/carlos/epmp_monitor/logs/estado_predictivo.log
+2026-05-02 05:25:03.9204711950 6608 /home/carlos/epmp_monitor/logs/modelo_avanzado.log
+2026-05-02 04:30:51.7444307290 1327 /home/carlos/epmp_monitor/dashboard_noc.json
+2026-05-02 02:18:45.3556904880 24973 /home/carlos/epmp_monitor/reportes/dataset_modelo_epmp.csv
+2026-05-02 02:10:01.2158248870 0 /home/carlos/epmp_monitor/logs/alert.log
+
+==================================================
+FASE 2B-2 FINALIZADA
+==================================================

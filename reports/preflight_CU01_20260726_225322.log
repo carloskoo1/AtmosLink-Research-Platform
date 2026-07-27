@@ -1,0 +1,111 @@
+========================================================================
+ AtmosLink Research Platform — Preflight científico
+ Versión: 1.0-lts
+========================================================================
+ Estación          : CU01
+ Nombre            : Cerro Cuñacales
+ Despliegue        : field
+ Rol radio         : AP
+ Configuración     : Config/station_cu01.yaml
+ Base activa       : SQLite/CU01/weather_local.db
+ Fecha UTC         : 2026-07-27T03:53:22+00:00
+ Selector entorno  : DEFAULT_CU01
+ Plataforma config : 1.0.0-lts
+
+========================================================================
+[1] Contexto de estación
+========================================================================
+[OK] Identificador canónico           CU01
+[OK] Archivo de configuración         Config/station_cu01.yaml
+[OK] Base asignada a estación         SQLite/CU01/weather_local.db
+[OK] Resolución de alias              CU01
+
+========================================================================
+[2] Servicios systemd
+========================================================================
+[OK] weather-logger.service           PID=290613; reinicios=0; inicio=Thu 2026-07-23 16:09:04 -05
+[OK] atmoslink-dashboard.service      PID=1040765; reinicios=0; inicio=Sat 2026-07-25 18:57:07 -05
+[OK] atmoslink-scheduler.service      PID=290619; reinicios=0; inicio=Thu 2026-07-23 16:09:04 -05
+
+========================================================================
+[3] Adquisición serial y sensores
+========================================================================
+[OK] Dispositivo serial detectado     /dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0
+[OK] Dispositivo serial detectado     /dev/ttyUSB0
+[PENDIENTE] Anemómetro RS-485                deshabilitado; instalación de campo pendiente
+
+========================================================================
+[4] Base SQLite productiva
+========================================================================
+[OK] Archivo SQLite                   /home/carlos/Proyectos/EstacionMeteorologica/SQLite/CU01/weather_local.db (61.36 MiB)
+[OK] Integridad SQLite                ok
+[OK] Tabla weather_local              37404 registros
+[OK] Tabla master_observations        35538 registros
+[OK] Tabla station_observations       37401 registros
+
+========================================================================
+[5] Frescura y estado científico de los datos
+========================================================================
+[OK] Observación meteorológica local  2026-07-27T03:53:01+00:00; hace 22 s
+[OK] Conjunto maestro                 2026-07-27T03:52:01+00:00; hace 1 min
+[INFO] ERA5-Land                        2026-07-20T04:00:00+00:00; hace 6 d 23 h; latencia científica permitida
+[INFO] NASA POWER                       2026-07-24T23:00:00+00:00; hace 2 d 4 h; latencia científica permitida
+[PENDIENTE] Telemetría del radioenlace       campaña no desplegada; último dato: 2026-06-30T23:15:59+00:00 (hace 26 d 4 h)
+[INFO] Última muestra local             2026-07-26T22:53:01-05:00; T=15.39 °C; HR=73.59 %; P=742.93 hPa; lluvia=0.0 mm
+[OK] Sensor BME280                    lectura válida
+[OK] Pluviómetro                      lectura válida
+[PENDIENTE] Sensor de viento                 sin lectura activa en la estación actual
+
+========================================================================
+[6] Archivos de ejecución
+========================================================================
+[OK] Directorio runtime               /home/carlos/Proyectos/EstacionMeteorologica/runtime
+[OK] backup_status.json               hace 3 min
+
+========================================================================
+[7] Conectividad de red
+========================================================================
+[OK] Salida a Internet                1.1.1.1:53
+
+========================================================================
+[8] Google Drive y rclone
+========================================================================
+[OK] rclone                           instalado
+[OK] Remote rclone                    atmoslink_drive:
+[OK] Ruta remota de estación          atmoslink_drive:AtmosLink_Backups/CU01/field; 3 elementos
+
+========================================================================
+[9] Backups locales y remotos
+========================================================================
+[OK] Último backup local              backup_CU01_20260726_222244.zip; 8.47 MiB; hace 30 min
+[OK] Estación del backup remoto       CU01
+[OK] Carga remota                     backup_CU01_20260726_222244.zip
+[OK] Verificación remota              verified=true
+[OK] Directorio remoto                atmoslink_drive:AtmosLink_Backups/CU01/field
+[OK] Antigüedad del backup remoto     hace 3 min
+[OK] Registro de backups              /home/carlos/Proyectos/EstacionMeteorologica/logs/backup.log
+
+========================================================================
+[10] Capacidad de almacenamiento
+========================================================================
+[OK] Espacio libre                    libre=404.71 GiB; 86.60%
+
+========================================================================
+[11] Estado de campaña
+========================================================================
+[OK] Adquisición meteorológica        ACTIVA
+[PENDIENTE] Radioenlace                      PENDIENTE DE DESPLIEGUE EN CAMPO
+[PENDIENTE] Anemómetro                       PENDIENTE / DESHABILITADO
+[INFO] Fuentes de referencia            ERA5-Land y NASA POWER con latencia propia
+
+========================================================================
+RESULTADO GENERAL
+========================================================================
+OK           : 33
+Advertencias : 0
+Pendientes   : 5
+Errores      : 0
+------------------------------------------------------------------------
+RESULTADO: SISTEMA LISTO PARA CAMPAÑA METEOROLÓGICA
+ESTADO: adquisición local operativa; radio y viento sujetos al despliegue programado.
+========================================================================

@@ -1,3 +1,4 @@
+import fcntl
 import json
 import shutil
 import socket
@@ -12,6 +13,7 @@ from weather_station.config.station_manager import get_station_context
 BASE_DIR = Path(__file__).resolve().parents[2]
 LOGS_DIR = BASE_DIR / "logs"
 RUNTIME_DIR = BASE_DIR / "runtime"
+BACKUP_LOCK = RUNTIME_DIR / "remote_backup.lock"
 BACKUP_LOG = LOGS_DIR / "backup.log"
 
 REMOTE_NAME = "atmoslink_drive"
@@ -239,7 +241,39 @@ def write_runtime_status(
     )
 
 
+def acquire_backup_lock():
+    """Obtiene un bloqueo exclusivo para impedir backups simultáneos."""
+    RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+
+    lock_file = BACKUP_LOCK.open("a+", encoding="utf-8")
+
+    try:
+        fcntl.flock(
+            lock_file.fileno(),
+            fcntl.LOCK_EX | fcntl.LOCK_NB,
+        )
+    except BlockingIOError:
+        lock_file.close()
+        return None
+
+    lock_file.seek(0)
+    lock_file.truncate()
+    lock_file.write(str(__import__("os").getpid()))
+    lock_file.flush()
+
+    return lock_file
+
+
 def main() -> int:
+    lock_file = acquire_backup_lock()
+
+    if lock_file is None:
+        log(
+            "Backup remoto omitido: "
+            "ya existe otra ejecución activa"
+        )
+        return 0
+
     ctx = get_station_context()
 
     station_id = str(ctx["station_id"])
@@ -263,20 +297,20 @@ def main() -> int:
                 f"No existe el remoto rclone {REMOTE_NAME}:"
             )
 
+        log(
+            "Generando backup local consistente antes de la subida remota"
+        )
+
+        if not create_local_backup():
+            raise RuntimeError(
+                "No se pudo crear el backup local consistente"
+            )
+
         backup_path = get_latest_local_backup(station_id)
 
         if backup_path is None:
-            log("No existe backup local. Se generará uno.")
-            if not create_local_backup():
-                raise RuntimeError(
-                    "No se pudo crear el backup local"
-                )
-
-            backup_path = get_latest_local_backup(station_id)
-
-        if backup_path is None:
             raise RuntimeError(
-                "No se encontró backup local después de generarlo"
+                "No se encontró el backup local recién generado"
             )
 
         uploaded, remote_directory = upload_backup(

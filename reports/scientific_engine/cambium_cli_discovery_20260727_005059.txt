@@ -1,0 +1,883 @@
+==================================================
+ATMOSLINK — FASE 2B-4
+DESCUBRIMIENTO CONTROLADO DEL CLI CAMBIUM
+==================================================
+Fecha: 2026-07-27T00:50:59-05:00
+
+==================================================
+1. CONECTIVIDAD Y ENTORNO REMOTO
+==================================================
+PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
+64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.473 ms
+64 bytes from 192.168.1.2: icmp_seq=2 ttl=64 time=0.508 ms
+
+--- 192.168.1.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1062ms
+rtt min/avg/max/mdev = 0.473/0.490/0.508/0.017 ms
+TCP/22: abierto
+
+==================================================
+2. COMANDO VACÍO / BANNER
+COMANDO: 
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+
+  ********************************************
+  *        ePMP command line interface       *
+  ********************************************
+	
+Connected sessions:
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+Cunacales>[J
+##############################################################
+New user admin is connected (192.168.1.50)
+##############################################################
+
+RETORNO PIPELINE: 0
+
+==================================================
+3. HELP
+COMANDO: help
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "help": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+4. SIGNO DE INTERROGACIÓN
+COMANDO: ?
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "?": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+5. SHOW
+COMANDO: show
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+6. SHOW HELP
+COMANDO: show help
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+Syntax error on line stdin:1 "show help": Unknown command
+
+RETORNO PIPELINE: 0
+
+==================================================
+7. SHOW ?
+COMANDO: show ?
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "show ?": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+8. HELP SHOW
+COMANDO: help show
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "help show": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+9. SHOW STA ACTUAL
+COMANDO: show sta
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+10. SHOW STATION
+COMANDO: show station
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "show station": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+11. SHOW STATIONS
+COMANDO: show stations
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "show stations": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+12. SHOW SUBSCRIBERS
+COMANDO: show subscribers
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+Syntax error on line stdin:1 "show subscribers": Unknown command
+
+RETORNO PIPELINE: 0
+
+==================================================
+13. SHOW ASSOCIATIONS
+COMANDO: show associations
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "show associations": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+14. SHOW WIRELESS
+COMANDO: show wireless
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+ FrameSkipDueToCCACounter                  0
+ cambiumStatsResetTimer                    0000:00:03:15
+ classificationHighQueueDropPacketCount    0
+ classificationHighQueueGetPacketCount     0
+ classificationHighQueuePutPacketCount     0
+ classificationLowQueueDropPacketCount     0
+ classificationLowQueueGetPacketCount      0
+ classificationLowQueuePutPacketCount      0
+ classificationTotalQueueDropPacketCount   0
+ classificationTotalQueueGetPacketCount    0
+ classificationTotalQueuePutPacketCount    0
+ classificationVoiceQueueDropPacketCount   0
+ classificationVoiceQueueGetPacketCount    0
+ classificationVoiceQueuePutPacketCount    0
+ dlWLanBroadcastPacketCount                0
+ dlWLanCapacityDroppedPacketCount          0
+ dlWLanErrorDroppedPacketCount             0
+ dlWLanHEMCS00S1UnicastPackets             0
+ dlWLanHEMCS00S2UnicastPackets             0
+ dlWLanHEMCS01S1UnicastPackets             0
+ dlWLanHEMCS01S2UnicastPackets             0
+ dlWLanHEMCS02S1UnicastPackets             0
+ dlWLanHEMCS02S2UnicastPackets             0
+ dlWLanHEMCS03S1UnicastPackets             0
+ dlWLanHEMCS03S2UnicastPackets             0
+ dlWLanHEMCS04S1UnicastPackets             0
+ dlWLanHEMCS04S2UnicastPackets             0
+ dlWLanHEMCS05S1UnicastPackets             0
+ dlWLanHEMCS05S2UnicastPackets             0
+ dlWLanHEMCS06S1UnicastPackets             0
+ dlWLanHEMCS06S2UnicastPackets             0
+ dlWLanHEMCS07S1UnicastPackets             0
+ dlWLanHEMCS07S2UnicastPackets             0
+ dlWLanHEMCS08S1UnicastPackets             0
+ dlWLanHEMCS08S2UnicastPackets             0
+ dlWLanHEMCS09S1UnicastPackets             0
+ dlWLanHEMCS09S2UnicastPackets             0
+ dlWLanHEMCS0S1MulticastPackets            0
+ dlWLanHEMCS0S1Packets                     0
+ dlWLanHEMCS0S2MulticastPackets            0
+ dlWLanHEMCS0S2Packets                     0
+ dlWLanHEMCS10S1MulticastPackets           0
+ dlWLanHEMCS10S1Packets                    0
+ dlWLanHEMCS10S1UnicastPackets             0
+ dlWLanHEMCS10S2MulticastPackets           0
+ dlWLanHEMCS10S2Packets                    0
+ dlWLanHEMCS10S2UnicastPackets             0
+ dlWLanHEMCS11S1MulticastPackets           0
+ dlWLanHEMCS11S1Packets                    0
+ dlWLanHEMCS11S1UnicastPackets             0
+ dlWLanHEMCS11S2MulticastPackets           0
+ dlWLanHEMCS11S2Packets                    0
+ dlWLanHEMCS11S2UnicastPackets             0
+ dlWLanHEMCS1S1MulticastPackets            0
+ dlWLanHEMCS1S1Packets                     0
+ dlWLanHEMCS1S2MulticastPackets            0
+ dlWLanHEMCS1S2Packets                     0
+ dlWLanHEMCS2S1MulticastPackets            0
+ dlWLanHEMCS2S1Packets                     0
+ dlWLanHEMCS2S2MulticastPackets            0
+ dlWLanHEMCS2S2Packets                     0
+ dlWLanHEMCS3S1MulticastPackets            0
+ dlWLanHEMCS3S1Packets                     0
+ dlWLanHEMCS3S2MulticastPackets            0
+ dlWLanHEMCS3S2Packets                     0
+ dlWLanHEMCS4S1MulticastPackets            0
+ dlWLanHEMCS4S1Packets                     0
+ dlWLanHEMCS4S2MulticastPackets            0
+ dlWLanHEMCS4S2Packets                     0
+ dlWLanHEMCS5S1MulticastPackets            0
+ dlWLanHEMCS5S1Packets                     0
+ dlWLanHEMCS5S2MulticastPackets            0
+ dlWLanHEMCS5S2Packets                     0
+ dlWLanHEMCS6S1MulticastPackets            0
+ dlWLanHEMCS6S1Packets                     0
+ dlWLanHEMCS6S2MulticastPackets            0
+ dlWLanHEMCS6S2Packets                     0
+ dlWLanHEMCS7S1MulticastPackets            0
+ dlWLanHEMCS7S1Packets                     0
+ dlWLanHEMCS7S2MulticastPackets            0
+ dlWLanHEMCS7S2Packets                     0
+ dlWLanHEMCS8S1MulticastPackets            0
+ dlWLanHEMCS8S1Packets                     0
+ dlWLanHEMCS8S2MulticastPackets            0
+ dlWLanHEMCS8S2Packets                     0
+ dlWLanHEMCS9S1MulticastPackets            0
+ dlWLanHEMCS9S1Packets                     0
+ dlWLanHEMCS9S2MulticastPackets            0
+ dlWLanHEMCS9S2Packets                     0
+ dlWLanKbitCount                           0
+ dlWLanMultiBroadcastKbitCount             0
+ dlWLanMulticastPacketCount                0
+ dlWLanRetransMpduPacketCount              0
+ dlWLanRetransPacketCount                  0
+ dlWLanTotalAvailableFrameTimePerSecond    0
+ dlWLanTotalAvailableFrameTimePercentage   0
+ dlWLanTotalOverheadFrameTimePerSecond     0
+ dlWLanTotalPacketCount                    0
+ dlWLanTotalUsedFrameTimePerSecond         0
+ dlWLanUnicastPacketCount                  0
+ ePMP2000ErrorsSmartAntennaInterface       0
+ ePMP2000MapMissCounter                    0
+ ePMP2000PatternSkipCounter                0
+ muWLanKbitCount                           0
+ sysDFSDetectedCount                       0
+ sysNetworkEntryAttempt                    0
+ sysNetworkEntryAuthenticationFailure      0
+ sysNetworkEntrySuccess                    0
+ ulWLanBroadcastPacketCount                0
+ ulWLanCapacityDroppedPacketCount          0
+ ulWLanErrorDroppedPacketCount             0
+ ulWLanHEMCS00S1UnicastPackets             0
+ ulWLanHEMCS00S2UnicastPackets             0
+ ulWLanHEMCS01S1UnicastPackets             0
+ ulWLanHEMCS01S2UnicastPackets             0
+ ulWLanHEMCS02S1UnicastPackets             0
+ ulWLanHEMCS02S2UnicastPackets             0
+ ulWLanHEMCS03S1UnicastPackets             0
+ ulWLanHEMCS03S2UnicastPackets             0
+ ulWLanHEMCS04S1UnicastPackets             0
+ ulWLanHEMCS04S2UnicastPackets             0
+ ulWLanHEMCS05S1UnicastPackets             0
+ ulWLanHEMCS05S2UnicastPackets             0
+ ulWLanHEMCS06S1UnicastPackets             0
+ ulWLanHEMCS06S2UnicastPackets             0
+ ulWLanHEMCS07S1UnicastPackets             0
+ ulWLanHEMCS07S2UnicastPackets             0
+ ulWLanHEMCS08S1UnicastPackets             0
+ ulWLanHEMCS08S2UnicastPackets             0
+ ulWLanHEMCS09S1UnicastPackets             0
+ ulWLanHEMCS09S2UnicastPackets             0
+ ulWLanHEMCS0S1MulticastPackets            0
+ ulWLanHEMCS0S1Packets                     0
+ ulWLanHEMCS0S2MulticastPackets            0
+ ulWLanHEMCS0S2Packets                     0
+ ulWLanHEMCS10S1MulticastPackets           0
+ ulWLanHEMCS10S1Packets                    0
+ ulWLanHEMCS10S1UnicastPackets             0
+ ulWLanHEMCS10S2MulticastPackets           0
+ ulWLanHEMCS10S2Packets                    0
+ ulWLanHEMCS10S2UnicastPackets             0
+ ulWLanHEMCS11S1MulticastPackets           0
+ ulWLanHEMCS11S1Packets                    0
+ ulWLanHEMCS11S1UnicastPackets             0
+ ulWLanHEMCS11S2MulticastPackets           0
+ ulWLanHEMCS11S2Packets                    0
+ ulWLanHEMCS11S2UnicastPackets             0
+ ulWLanHEMCS1S1MulticastPackets            0
+ ulWLanHEMCS1S1Packets                     0
+ ulWLanHEMCS1S2MulticastPackets            0
+ ulWLanHEMCS1S2Packets                     0
+ ulWLanHEMCS2S1MulticastPackets            0
+ ulWLanHEMCS2S1Packets                     0
+ ulWLanHEMCS2S2MulticastPackets            0
+ ulWLanHEMCS2S2Packets                     0
+ ulWLanHEMCS3S1MulticastPackets            0
+ ulWLanHEMCS3S1Packets                     0
+ ulWLanHEMCS3S2MulticastPackets            0
+ ulWLanHEMCS3S2Packets                     0
+ ulWLanHEMCS4S1MulticastPackets            0
+ ulWLanHEMCS4S1Packets                     0
+ ulWLanHEMCS4S2MulticastPackets            0
+ ulWLanHEMCS4S2Packets                     0
+ ulWLanHEMCS5S1MulticastPackets            0
+ ulWLanHEMCS5S1Packets                     0
+ ulWLanHEMCS5S2MulticastPackets            0
+ ulWLanHEMCS5S2Packets                     0
+ ulWLanHEMCS6S1MulticastPackets            0
+ ulWLanHEMCS6S1Packets                     0
+ ulWLanHEMCS6S2MulticastPackets            0
+ ulWLanHEMCS6S2Packets                     0
+ ulWLanHEMCS7S1MulticastPackets            0
+ ulWLanHEMCS7S1Packets                     0
+ ulWLanHEMCS7S2MulticastPackets            0
+ ulWLanHEMCS7S2Packets                     0
+ ulWLanHEMCS8S1MulticastPackets            0
+ ulWLanHEMCS8S1Packets                     0
+ ulWLanHEMCS8S2MulticastPackets            0
+ ulWLanHEMCS8S2Packets                     0
+ ulWLanHEMCS9S1MulticastPackets            0
+ ulWLanHEMCS9S1Packets                     0
+ ulWLanHEMCS9S2MulticastPackets            0
+ ulWLanHEMCS9S2Packets                     0
+ ulWLanKbitCount                           0
+ ulWLanMultiBroadcastKbitCount             0
+ ulWLanMulticastPacketCount                0
+ ulWLanTotalAvailableFrameTimePerSecond    0
+ ulWLanTotalAvailableFrameTimePercentage   0
+ ulWLanTotalOverheadFrameTimePerSecond     0
+ ulWLanTotalPacketCount                    0
+ ulWLanTotalUsedFrameTimePerSecond         0
+ ulWLanUnicastPacketCount                  0
+ wLanSessionDroppedCount                   0
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+15. SHOW STATUS
+COMANDO: show status
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "show status": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+16. SHOW SYSTEM
+COMANDO: show system
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "show system": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+17. SHOW INTERFACES
+COMANDO: show interfaces
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "show interfaces": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+18. SHOW STATISTICS
+COMANDO: show statistics
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "show statistics": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+19. SHOW CONFIGURATION
+COMANDO: show configuration
+==================================================
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+Syntax error on line stdin:1 "show configuration": Unknown command
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+
+RETORNO PIPELINE: 0
+
+==================================================
+20. PRUEBA CON PSEUDO-TTY
+==================================================
+
+----- ssh -tt: show sta -----
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+Connection to 192.168.1.2 closed.
+
+----- ssh -tt: show station -----
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+Connection to 192.168.1.2 closed.
+
+----- ssh -tt: show wireless -----
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+ FrameSkipDueToCCACounter                  0
+ cambiumStatsResetTimer                    0000:00:06:52
+ classificationHighQueueDropPacketCount    0
+ classificationHighQueueGetPacketCount     0
+ classificationHighQueuePutPacketCount     0
+ classificationLowQueueDropPacketCount     0
+ classificationLowQueueGetPacketCount      0
+ classificationLowQueuePutPacketCount      0
+ classificationTotalQueueDropPacketCount   0
+ classificationTotalQueueGetPacketCount    0
+ classificationTotalQueuePutPacketCount    0
+ classificationVoiceQueueDropPacketCount   0
+ classificationVoiceQueueGetPacketCount    0
+ classificationVoiceQueuePutPacketCount    0
+ dlWLanBroadcastPacketCount                0
+ dlWLanCapacityDroppedPacketCount          0
+ dlWLanErrorDroppedPacketCount             0
+ dlWLanHEMCS00S1UnicastPackets             0
+ dlWLanHEMCS00S2UnicastPackets             0
+ dlWLanHEMCS01S1UnicastPackets             0
+ dlWLanHEMCS01S2UnicastPackets             0
+ dlWLanHEMCS02S1UnicastPackets             0
+ dlWLanHEMCS02S2UnicastPackets             0
+ dlWLanHEMCS03S1UnicastPackets             0
+ dlWLanHEMCS03S2UnicastPackets             0
+ dlWLanHEMCS04S1UnicastPackets             0
+ dlWLanHEMCS04S2UnicastPackets             0
+ dlWLanHEMCS05S1UnicastPackets             0
+ dlWLanHEMCS05S2UnicastPackets             0
+ dlWLanHEMCS06S1UnicastPackets             0
+ dlWLanHEMCS06S2UnicastPackets             0
+ dlWLanHEMCS07S1UnicastPackets             0
+ dlWLanHEMCS07S2UnicastPackets             0
+ dlWLanHEMCS08S1UnicastPackets             0
+ dlWLanHEMCS08S2UnicastPackets             0
+ dlWLanHEMCS09S1UnicastPackets             0
+ dlWLanHEMCS09S2UnicastPackets             0
+ dlWLanHEMCS0S1MulticastPackets            0
+ dlWLanHEMCS0S1Packets                     0
+ dlWLanHEMCS0S2MulticastPackets            0
+ dlWLanHEMCS0S2Packets                     0
+ dlWLanHEMCS10S1MulticastPackets           0
+ dlWLanHEMCS10S1Packets                    0
+ dlWLanHEMCS10S1UnicastPackets             0
+ dlWLanHEMCS10S2MulticastPackets           0
+ dlWLanHEMCS10S2Packets                    0
+ dlWLanHEMCS10S2UnicastPackets             0
+ dlWLanHEMCS11S1MulticastPackets           0
+ dlWLanHEMCS11S1Packets                    0
+ dlWLanHEMCS11S1UnicastPackets             0
+ dlWLanHEMCS11S2MulticastPackets           0
+ dlWLanHEMCS11S2Packets                    0
+ dlWLanHEMCS11S2UnicastPackets             0
+ dlWLanHEMCS1S1MulticastPackets            0
+ dlWLanHEMCS1S1Packets                     0
+ dlWLanHEMCS1S2MulticastPackets            0
+ dlWLanHEMCS1S2Packets                     0
+ dlWLanHEMCS2S1MulticastPackets            0
+ dlWLanHEMCS2S1Packets                     0
+ dlWLanHEMCS2S2MulticastPackets            0
+ dlWLanHEMCS2S2Packets                     0
+ dlWLanHEMCS3S1MulticastPackets            0
+ dlWLanHEMCS3S1Packets                     0
+ dlWLanHEMCS3S2MulticastPackets            0
+ dlWLanHEMCS3S2Packets                     0
+ dlWLanHEMCS4S1MulticastPackets            0
+ dlWLanHEMCS4S1Packets                     0
+ dlWLanHEMCS4S2MulticastPackets            0
+ dlWLanHEMCS4S2Packets                     0
+ dlWLanHEMCS5S1MulticastPackets            0
+ dlWLanHEMCS5S1Packets                     0
+ dlWLanHEMCS5S2MulticastPackets            0
+ dlWLanHEMCS5S2Packets                     0
+ dlWLanHEMCS6S1MulticastPackets            0
+ dlWLanHEMCS6S1Packets                     0
+ dlWLanHEMCS6S2MulticastPackets            0
+ dlWLanHEMCS6S2Packets                     0
+ dlWLanHEMCS7S1MulticastPackets            0
+ dlWLanHEMCS7S1Packets                     0
+ dlWLanHEMCS7S2MulticastPackets            0
+ dlWLanHEMCS7S2Packets                     0
+ dlWLanHEMCS8S1MulticastPackets            0
+ dlWLanHEMCS8S1Packets                     0
+ dlWLanHEMCS8S2MulticastPackets            0
+ dlWLanHEMCS8S2Packets                     0
+ dlWLanHEMCS9S1MulticastPackets            0
+ dlWLanHEMCS9S1Packets                     0
+ dlWLanHEMCS9S2MulticastPackets            0
+ dlWLanHEMCS9S2Packets                     0
+ dlWLanKbitCount                           0
+ dlWLanMultiBroadcastKbitCount             0
+ dlWLanMulticastPacketCount                0
+ dlWLanRetransMpduPacketCount              0
+ dlWLanRetransPacketCount                  0
+ dlWLanTotalAvailableFrameTimePerSecond    0
+ dlWLanTotalAvailableFrameTimePercentage   0
+ dlWLanTotalOverheadFrameTimePerSecond     0
+ dlWLanTotalPacketCount                    0
+ dlWLanTotalUsedFrameTimePerSecond         0
+ dlWLanUnicastPacketCount                  0
+ ePMP2000ErrorsSmartAntennaInterface       0
+ ePMP2000MapMissCounter                    0
+ ePMP2000PatternSkipCounter                0
+ muWLanKbitCount                           0
+ sysDFSDetectedCount                       0
+ sysNetworkEntryAttempt                    0
+ sysNetworkEntryAuthenticationFailure      0
+ sysNetworkEntrySuccess                    0
+ ulWLanBroadcastPacketCount                0
+ ulWLanCapacityDroppedPacketCount          0
+ ulWLanErrorDroppedPacketCount             0
+ ulWLanHEMCS00S1UnicastPackets             0
+ ulWLanHEMCS00S2UnicastPackets             0
+ ulWLanHEMCS01S1UnicastPackets             0
+ ulWLanHEMCS01S2UnicastPackets             0
+ ulWLanHEMCS02S1UnicastPackets             0
+ ulWLanHEMCS02S2UnicastPackets             0
+ ulWLanHEMCS03S1UnicastPackets             0
+ ulWLanHEMCS03S2UnicastPackets             0
+ ulWLanHEMCS04S1UnicastPackets             0
+ ulWLanHEMCS04S2UnicastPackets             0
+ ulWLanHEMCS05S1UnicastPackets             0
+ ulWLanHEMCS05S2UnicastPackets             0
+ ulWLanHEMCS06S1UnicastPackets             0
+ ulWLanHEMCS06S2UnicastPackets             0
+ ulWLanHEMCS07S1UnicastPackets             0
+ ulWLanHEMCS07S2UnicastPackets             0
+ ulWLanHEMCS08S1UnicastPackets             0
+ ulWLanHEMCS08S2UnicastPackets             0
+ ulWLanHEMCS09S1UnicastPackets             0
+ ulWLanHEMCS09S2UnicastPackets             0
+ ulWLanHEMCS0S1MulticastPackets            0
+ ulWLanHEMCS0S1Packets                     0
+ ulWLanHEMCS0S2MulticastPackets            0
+ ulWLanHEMCS0S2Packets                     0
+ ulWLanHEMCS10S1MulticastPackets           0
+ ulWLanHEMCS10S1Packets                    0
+ ulWLanHEMCS10S1UnicastPackets             0
+ ulWLanHEMCS10S2MulticastPackets           0
+ ulWLanHEMCS10S2Packets                    0
+ ulWLanHEMCS10S2UnicastPackets             0
+ ulWLanHEMCS11S1MulticastPackets           0
+ ulWLanHEMCS11S1Packets                    0
+ ulWLanHEMCS11S1UnicastPackets             0
+ ulWLanHEMCS11S2MulticastPackets           0
+ ulWLanHEMCS11S2Packets                    0
+ ulWLanHEMCS11S2UnicastPackets             0
+ ulWLanHEMCS1S1MulticastPackets            0
+ ulWLanHEMCS1S1Packets                     0
+ ulWLanHEMCS1S2MulticastPackets            0
+ ulWLanHEMCS1S2Packets                     0
+ ulWLanHEMCS2S1MulticastPackets            0
+ ulWLanHEMCS2S1Packets                     0
+ ulWLanHEMCS2S2MulticastPackets            0
+ ulWLanHEMCS2S2Packets                     0
+ ulWLanHEMCS3S1MulticastPackets            0
+ ulWLanHEMCS3S1Packets                     0
+ ulWLanHEMCS3S2MulticastPackets            0
+ ulWLanHEMCS3S2Packets                     0
+ ulWLanHEMCS4S1MulticastPackets            0
+ ulWLanHEMCS4S1Packets                     0
+ ulWLanHEMCS4S2MulticastPackets            0
+ ulWLanHEMCS4S2Packets                     0
+ ulWLanHEMCS5S1MulticastPackets            0
+ ulWLanHEMCS5S1Packets                     0
+ ulWLanHEMCS5S2MulticastPackets            0
+ ulWLanHEMCS5S2Packets                     0
+ ulWLanHEMCS6S1MulticastPackets            0
+ ulWLanHEMCS6S1Packets                     0
+ ulWLanHEMCS6S2MulticastPackets            0
+ ulWLanHEMCS6S2Packets                     0
+ ulWLanHEMCS7S1MulticastPackets            0
+ ulWLanHEMCS7S1Packets                     0
+ ulWLanHEMCS7S2MulticastPackets            0
+ ulWLanHEMCS7S2Packets                     0
+ ulWLanHEMCS8S1MulticastPackets            0
+ ulWLanHEMCS8S1Packets                     0
+ ulWLanHEMCS8S2MulticastPackets            0
+ ulWLanHEMCS8S2Packets                     0
+ ulWLanHEMCS9S1MulticastPackets            0
+ ulWLanHEMCS9S1Packets                     0
+ ulWLanHEMCS9S2MulticastPackets            0
+ ulWLanHEMCS9S2Packets                     0
+ ulWLanKbitCount                           0
+ ulWLanMultiBroadcastKbitCount             0
+ ulWLanMulticastPacketCount                0
+ ulWLanTotalAvailableFrameTimePerSecond    0
+ ulWLanTotalAvailableFrameTimePercentage   0
+ ulWLanTotalOverheadFrameTimePerSecond     0
+ ulWLanTotalPacketCount                    0
+ ulWLanTotalUsedFrameTimePerSecond         0
+ ulWLanUnicastPacketCount                  0
+ wLanSessionDroppedCount                   0
+Connection to 192.168.1.2 closed.
+
+----- ssh -tt: show statistics -----
+Warning: Permanently added '192.168.1.2' (ED25519) to the list of known hosts.
+Connected sessions:
+User:                         Started [seconds ago]:   Last activity:   IP:
+admin (current)               0                        0                192.168.1.50
+
+Connection to 192.168.1.2 closed.
+
+==================================================
+21. SESIÓN INTERACTIVA AUTOMATIZADA
+==================================================
+expect no está instalado; se omite esta prueba.
+
+==================================================
+22. BÚSQUEDA AUTOMÁTICA DE VARIABLES RF
+==================================================
+8:===== COMMAND: show station =====
+11:Syntax error on line stdin:1 "show station": Unknown command
+16:===== COMMAND: show stations =====
+19:Syntax error on line stdin:1 "show stations": Unknown command
+24:===== COMMAND: show subscribers =====
+30:Syntax error on line stdin:1 "show subscribers": Unknown command
+32:===== COMMAND: show associations =====
+35:Syntax error on line stdin:1 "show associations": Unknown command
+57: dlWLanBroadcastPacketCount                0
+58: dlWLanCapacityDroppedPacketCount          0
+59: dlWLanErrorDroppedPacketCount             0
+60: dlWLanHEMCS00S1UnicastPackets             0
+61: dlWLanHEMCS00S2UnicastPackets             0
+62: dlWLanHEMCS01S1UnicastPackets             0
+63: dlWLanHEMCS01S2UnicastPackets             0
+64: dlWLanHEMCS02S1UnicastPackets             0
+65: dlWLanHEMCS02S2UnicastPackets             0
+66: dlWLanHEMCS03S1UnicastPackets             0
+67: dlWLanHEMCS03S2UnicastPackets             0
+68: dlWLanHEMCS04S1UnicastPackets             0
+69: dlWLanHEMCS04S2UnicastPackets             0
+70: dlWLanHEMCS05S1UnicastPackets             0
+71: dlWLanHEMCS05S2UnicastPackets             0
+72: dlWLanHEMCS06S1UnicastPackets             0
+73: dlWLanHEMCS06S2UnicastPackets             0
+74: dlWLanHEMCS07S1UnicastPackets             0
+75: dlWLanHEMCS07S2UnicastPackets             0
+76: dlWLanHEMCS08S1UnicastPackets             0
+77: dlWLanHEMCS08S2UnicastPackets             0
+78: dlWLanHEMCS09S1UnicastPackets             0
+79: dlWLanHEMCS09S2UnicastPackets             0
+80: dlWLanHEMCS0S1MulticastPackets            0
+81: dlWLanHEMCS0S1Packets                     0
+82: dlWLanHEMCS0S2MulticastPackets            0
+83: dlWLanHEMCS0S2Packets                     0
+84: dlWLanHEMCS10S1MulticastPackets           0
+85: dlWLanHEMCS10S1Packets                    0
+86: dlWLanHEMCS10S1UnicastPackets             0
+87: dlWLanHEMCS10S2MulticastPackets           0
+88: dlWLanHEMCS10S2Packets                    0
+89: dlWLanHEMCS10S2UnicastPackets             0
+90: dlWLanHEMCS11S1MulticastPackets           0
+91: dlWLanHEMCS11S1Packets                    0
+92: dlWLanHEMCS11S1UnicastPackets             0
+93: dlWLanHEMCS11S2MulticastPackets           0
+94: dlWLanHEMCS11S2Packets                    0
+95: dlWLanHEMCS11S2UnicastPackets             0
+96: dlWLanHEMCS1S1MulticastPackets            0
+97: dlWLanHEMCS1S1Packets                     0
+98: dlWLanHEMCS1S2MulticastPackets            0
+99: dlWLanHEMCS1S2Packets                     0
+100: dlWLanHEMCS2S1MulticastPackets            0
+101: dlWLanHEMCS2S1Packets                     0
+102: dlWLanHEMCS2S2MulticastPackets            0
+103: dlWLanHEMCS2S2Packets                     0
+104: dlWLanHEMCS3S1MulticastPackets            0
+105: dlWLanHEMCS3S1Packets                     0
+106: dlWLanHEMCS3S2MulticastPackets            0
+107: dlWLanHEMCS3S2Packets                     0
+108: dlWLanHEMCS4S1MulticastPackets            0
+109: dlWLanHEMCS4S1Packets                     0
+110: dlWLanHEMCS4S2MulticastPackets            0
+111: dlWLanHEMCS4S2Packets                     0
+112: dlWLanHEMCS5S1MulticastPackets            0
+113: dlWLanHEMCS5S1Packets                     0
+114: dlWLanHEMCS5S2MulticastPackets            0
+115: dlWLanHEMCS5S2Packets                     0
+116: dlWLanHEMCS6S1MulticastPackets            0
+117: dlWLanHEMCS6S1Packets                     0
+118: dlWLanHEMCS6S2MulticastPackets            0
+119: dlWLanHEMCS6S2Packets                     0
+120: dlWLanHEMCS7S1MulticastPackets            0
+121: dlWLanHEMCS7S1Packets                     0
+122: dlWLanHEMCS7S2MulticastPackets            0
+123: dlWLanHEMCS7S2Packets                     0
+124: dlWLanHEMCS8S1MulticastPackets            0
+125: dlWLanHEMCS8S1Packets                     0
+126: dlWLanHEMCS8S2MulticastPackets            0
+127: dlWLanHEMCS8S2Packets                     0
+128: dlWLanHEMCS9S1MulticastPackets            0
+129: dlWLanHEMCS9S1Packets                     0
+130: dlWLanHEMCS9S2MulticastPackets            0
+131: dlWLanHEMCS9S2Packets                     0
+132: dlWLanKbitCount                           0
+133: dlWLanMultiBroadcastKbitCount             0
+134: dlWLanMulticastPacketCount                0
+135: dlWLanRetransMpduPacketCount              0
+136: dlWLanRetransPacketCount                  0
+137: dlWLanTotalAvailableFrameTimePerSecond    0
+138: dlWLanTotalAvailableFrameTimePercentage   0
+139: dlWLanTotalOverheadFrameTimePerSecond     0
+140: dlWLanTotalPacketCount                    0
+141: dlWLanTotalUsedFrameTimePerSecond         0
+142: dlWLanUnicastPacketCount                  0
+151: ulWLanBroadcastPacketCount                0
+152: ulWLanCapacityDroppedPacketCount          0
+153: ulWLanErrorDroppedPacketCount             0
+154: ulWLanHEMCS00S1UnicastPackets             0
+155: ulWLanHEMCS00S2UnicastPackets             0
+156: ulWLanHEMCS01S1UnicastPackets             0
+157: ulWLanHEMCS01S2UnicastPackets             0
+158: ulWLanHEMCS02S1UnicastPackets             0
+159: ulWLanHEMCS02S2UnicastPackets             0
+160: ulWLanHEMCS03S1UnicastPackets             0
+161: ulWLanHEMCS03S2UnicastPackets             0
+162: ulWLanHEMCS04S1UnicastPackets             0
+163: ulWLanHEMCS04S2UnicastPackets             0
+164: ulWLanHEMCS05S1UnicastPackets             0
+165: ulWLanHEMCS05S2UnicastPackets             0
+166: ulWLanHEMCS06S1UnicastPackets             0
+167: ulWLanHEMCS06S2UnicastPackets             0
+168: ulWLanHEMCS07S1UnicastPackets             0
+169: ulWLanHEMCS07S2UnicastPackets             0
+170: ulWLanHEMCS08S1UnicastPackets             0
+171: ulWLanHEMCS08S2UnicastPackets             0
+172: ulWLanHEMCS09S1UnicastPackets             0
+173: ulWLanHEMCS09S2UnicastPackets             0
+174: ulWLanHEMCS0S1MulticastPackets            0
+175: ulWLanHEMCS0S1Packets                     0
+176: ulWLanHEMCS0S2MulticastPackets            0
+177: ulWLanHEMCS0S2Packets                     0
+178: ulWLanHEMCS10S1MulticastPackets           0
+179: ulWLanHEMCS10S1Packets                    0
+180: ulWLanHEMCS10S1UnicastPackets             0
+181: ulWLanHEMCS10S2MulticastPackets           0
+182: ulWLanHEMCS10S2Packets                    0
+183: ulWLanHEMCS10S2UnicastPackets             0
+184: ulWLanHEMCS11S1MulticastPackets           0
+185: ulWLanHEMCS11S1Packets                    0
+186: ulWLanHEMCS11S1UnicastPackets             0
+187: ulWLanHEMCS11S2MulticastPackets           0
+188: ulWLanHEMCS11S2Packets                    0
+189: ulWLanHEMCS11S2UnicastPackets             0
+190: ulWLanHEMCS1S1MulticastPackets            0
+191: ulWLanHEMCS1S1Packets                     0
+192: ulWLanHEMCS1S2MulticastPackets            0
+193: ulWLanHEMCS1S2Packets                     0
+194: ulWLanHEMCS2S1MulticastPackets            0
+195: ulWLanHEMCS2S1Packets                     0
+196: ulWLanHEMCS2S2MulticastPackets            0
+197: ulWLanHEMCS2S2Packets                     0
+198: ulWLanHEMCS3S1MulticastPackets            0
+199: ulWLanHEMCS3S1Packets                     0
+200: ulWLanHEMCS3S2MulticastPackets            0
+201: ulWLanHEMCS3S2Packets                     0
+202: ulWLanHEMCS4S1MulticastPackets            0
+203: ulWLanHEMCS4S1Packets                     0
+204: ulWLanHEMCS4S2MulticastPackets            0
+205: ulWLanHEMCS4S2Packets                     0
+206: ulWLanHEMCS5S1MulticastPackets            0
+207: ulWLanHEMCS5S1Packets                     0
+208: ulWLanHEMCS5S2MulticastPackets            0
+209: ulWLanHEMCS5S2Packets                     0
+210: ulWLanHEMCS6S1MulticastPackets            0
+211: ulWLanHEMCS6S1Packets                     0
+212: ulWLanHEMCS6S2MulticastPackets            0
+213: ulWLanHEMCS6S2Packets                     0
+214: ulWLanHEMCS7S1MulticastPackets            0
+215: ulWLanHEMCS7S1Packets                     0
+216: ulWLanHEMCS7S2MulticastPackets            0
+217: ulWLanHEMCS7S2Packets                     0
+218: ulWLanHEMCS8S1MulticastPackets            0
+219: ulWLanHEMCS8S1Packets                     0
+220: ulWLanHEMCS8S2MulticastPackets            0
+221: ulWLanHEMCS8S2Packets                     0
+222: ulWLanHEMCS9S1MulticastPackets            0
+223: ulWLanHEMCS9S1Packets                     0
+224: ulWLanHEMCS9S2MulticastPackets            0
+225: ulWLanHEMCS9S2Packets                     0
+226: ulWLanKbitCount                           0
+227: ulWLanMultiBroadcastKbitCount             0
+228: ulWLanMulticastPacketCount                0
+229: ulWLanTotalAvailableFrameTimePerSecond    0
+230: ulWLanTotalAvailableFrameTimePercentage   0
+231: ulWLanTotalOverheadFrameTimePerSecond     0
+232: ulWLanTotalPacketCount                    0
+233: ulWLanTotalUsedFrameTimePerSecond         0
+234: ulWLanUnicastPacketCount                  0
+
+==================================================
+23. RESUMEN AUTOMÁTICO
+==================================================
+Longitud total explorada: 12184 caracteres
+RSSI            : 0 coincidencias
+SNR             : 0 coincidencias
+MCS             : 0 coincidencias
+RATE            : 0 coincidencias
+CONNECTED_STA   : 0 coincidencias
+SUBSCRIBER      : 2 coincidencias
+
+Interpretación:
+- Hay telemetría RF, pero utiliza nombres o formato distintos.
+
+==================================================
+FASE 2B-4 FINALIZADA
+==================================================
