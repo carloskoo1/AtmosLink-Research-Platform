@@ -88,7 +88,8 @@ def get_latest_row(table_name, order_column="id"):
     if not DB_FILE.exists():
         return None
 
-    conn = sqlite3.connect(DB_FILE)
+    conn = sqlite3.connect(DB_FILE, timeout=60)
+    conn.execute("PRAGMA busy_timeout=60000")
     conn.row_factory = sqlite3.Row
 
     if not table_exists(conn, table_name):

@@ -1,0 +1,234 @@
+/*
+ * AtmosLink UI v3.1
+ * Scientific comparison layer
+ */
+
+.scientific-v31 {
+    margin-top: 18px;
+    background: #ffffff;
+    border: 1px solid #dbe4ed;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(24, 44, 68, 0.08);
+    overflow: hidden;
+}
+
+.scientific-v31-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #e5ebf1;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.scientific-v31-header h3 {
+    margin: 4px 0 4px;
+    font-size: 17px;
+    color: #172638;
+}
+
+.scientific-v31-header p {
+    margin: 0;
+    color: #708295;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.scientific-v31-title-tag {
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.09em;
+    color: #1769aa;
+    background: #e7f2fb;
+    border: 1px solid #cfe4f4;
+    border-radius: 999px;
+    padding: 6px 9px;
+    white-space: nowrap;
+}
+
+.scientific-v31-statusbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 11px 20px;
+    background: #f7f9fc;
+    border-bottom: 1px solid #e6ecf2;
+}
+
+.scientific-source-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 5px 8px;
+    border-radius: 999px;
+    border: 1px solid #dbe4ed;
+    background: #ffffff;
+    color: #687b8e;
+}
+
+.scientific-source-state::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #a8b2bc;
+}
+
+.scientific-source-state.ok {
+    color: #187653;
+    background: #e7f5ee;
+    border-color: #cde9dc;
+}
+
+.scientific-source-state.ok::before {
+    background: #22865f;
+}
+
+.scientific-source-state.pending {
+    color: #996b15;
+    background: #fff4dd;
+    border-color: #f0deb5;
+}
+
+.scientific-source-state.pending::before {
+    background: #c28a20;
+}
+
+.scientific-table-wrap {
+    overflow-x: auto;
+}
+
+.scientific-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.scientific-table th,
+.scientific-table td {
+    padding: 12px 14px;
+    text-align: right;
+    border-bottom: 1px solid #edf1f5;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+
+.scientific-table th {
+    background: #fbfcfd;
+    color: #687c90;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 850;
+}
+
+.scientific-table th:first-child,
+.scientific-table td:first-child {
+    text-align: left;
+}
+
+.scientific-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.scientific-variable {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.scientific-variable strong {
+    color: #25384a;
+    font-size: 11px;
+}
+
+.scientific-variable small {
+    color: #8796a5;
+    font-size: 9px;
+}
+
+.scientific-local {
+    font-weight: 800;
+    color: #172638;
+}
+
+.scientific-model {
+    color: #425c75;
+}
+
+.scientific-delta {
+    font-weight: 750;
+}
+
+.scientific-delta.good {
+    color: #1b805a;
+}
+
+.scientific-delta.medium {
+    color: #a36d12;
+}
+
+.scientific-delta.high {
+    color: #a74343;
+}
+
+.scientific-na {
+    color: #a4afba;
+}
+
+.scientific-note {
+    padding: 12px 20px;
+    background: #fbfcfd;
+    color: #7b8b9b;
+    font-size: 9px;
+    border-top: 1px solid #edf1f5;
+    line-height: 1.5;
+}
+
+.sensor-state-ok {
+    color: #1b805a !important;
+}
+
+.sensor-state-ok::after {
+    content: "OK";
+}
+
+.sensor-state-ok-value {
+    display: none !important;
+}
+
+.v31-version {
+    color: #6f8498;
+    font-size: 9px;
+    margin-top: 3px;
+}
+
+@media (max-width: 800px) {
+    .scientific-v31-header {
+        flex-direction: column;
+    }
+}
+
+/* =========================================================
+   AtmosLink v3.1.1
+   Corrección de estado de sensores y semántica científica
+   ========================================================= */
+
+.sensor-state-ok::after {
+    content: none !important;
+}
+
+.scientific-delta,
+.scientific-delta.good,
+.scientific-delta.medium,
+.scientific-delta.high {
+    color: #425c75 !important;
+}
+
+.scientific-v31-title-tag {
+    color: #1769aa;
+    background: #e7f2fb;
+    border-color: #cfe4f4;
+}

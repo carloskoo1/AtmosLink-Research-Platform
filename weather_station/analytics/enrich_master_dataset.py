@@ -24,7 +24,8 @@ def enrich_master_dataset():
     if not DB_FILE.exists():
         raise FileNotFoundError(f"No existe la base de datos: {DB_FILE}")
 
-    conn = sqlite3.connect(DB_FILE)
+    conn = sqlite3.connect(DB_FILE, timeout=60)
+    conn.execute("PRAGMA busy_timeout=60000")
 
     if not table_exists(conn, "master_observations"):
         conn.close()

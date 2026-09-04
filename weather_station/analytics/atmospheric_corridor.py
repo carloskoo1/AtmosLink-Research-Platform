@@ -188,7 +188,8 @@ def build_atmospheric_corridor():
         payload["message"] = "Base de datos no encontrada."
         return payload
 
-    conn = sqlite3.connect(DB_FILE)
+    conn = sqlite3.connect(DB_FILE, timeout=60)
+    conn.execute("PRAGMA busy_timeout=60000")
     conn.row_factory = sqlite3.Row
 
     valid_sources = 0

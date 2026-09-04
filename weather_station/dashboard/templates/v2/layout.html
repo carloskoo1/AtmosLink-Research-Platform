@@ -2,9 +2,15 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="AtmosLink Research Platform scientific monitoring interface"
   >
 
   <title>
@@ -29,30 +35,47 @@
   >
 
   {% block styles %}{% endblock %}
+  <link rel="icon"
+        type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b4f82'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Arial,sans-serif' font-size='38' font-weight='700' fill='white'%3EA%3C/text%3E%3C/svg%3E">
 </head>
 
 <body>
   <div class="atl-app">
 
     <aside class="atl-sidebar">
-      <div>
-        <strong>AtmosLink</strong>
-        <div>Research Platform</div>
-      </div>
-
       <nav aria-label="Navegación principal">
         {% block navigation %}{% endblock %}
       </nav>
     </aside>
 
     <header class="atl-topbar">
-      <div>
-        <strong>AtmosLink Research Platform</strong>
+      {% block topbar %}
+
+      <div class="atl-topbar__context">
+        <div class="atl-topbar__title">
+          AtmosLink Research Platform
+        </div>
+
+        <div
+          id="topbarStation"
+          class="atl-topbar__subtitle"
+        >
+          Cargando estación…
+        </div>
       </div>
 
-      <div>
-        Field Campaign Baseline · v1.0.0
+      <div class="atl-topbar__actions">
+        <span class="atl-live">
+          Plataforma conectada
+        </span>
+
+        <span class="atl-chip">
+          UI v2
+        </span>
       </div>
+
+      {% endblock %}
     </header>
 
     <main class="atl-main">

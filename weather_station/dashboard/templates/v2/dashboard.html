@@ -1,0 +1,575 @@
+{% extends "v2/layout.html" %}
+
+{% block title %}
+Dashboard Ejecutivo | AtmosLink
+{% endblock %}
+
+{% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='v2/css/dashboard.css') }}"
+>
+{% endblock %}
+
+{% block navigation %}
+<div class="atl-brand">
+  <div class="atl-brand__mark">A</div>
+
+  <div>
+    <span class="atl-brand__name">
+      AtmosLink
+    </span>
+
+    <span class="atl-brand__subtitle">
+      Research Platform
+    </span>
+  </div>
+</div>
+
+<div class="atl-nav">
+  <a
+    class="atl-nav__item atl-nav__item--active"
+    href="/ui-v2"
+    aria-current="page"
+  >
+    <span class="atl-nav__icon">▣</span>
+    Dashboard
+  </a>
+
+  <span class="atl-nav__item atl-nav__item--disabled">
+    <span class="atl-nav__icon">◉</span>
+    Observatorio
+  </span>
+
+  <span class="atl-nav__item atl-nav__item--disabled">
+    <span class="atl-nav__icon">☁</span>
+    Meteorología
+  </span>
+
+  <span class="atl-nav__item atl-nav__item--disabled">
+    <span class="atl-nav__icon">⌁</span>
+    Radioenlace
+  </span>
+
+  <span class="atl-nav__item atl-nav__item--disabled">
+    <span class="atl-nav__icon">⌁</span>
+    Analítica
+  </span>
+
+  <span class="atl-nav__item atl-nav__item--disabled">
+    <span class="atl-nav__icon">◷</span>
+    Timeline
+  </span>
+
+  <span class="atl-nav__item atl-nav__item--disabled">
+    <span class="atl-nav__icon">⚙</span>
+    Sistema
+  </span>
+</div>
+
+<div class="atl-sidebar__footer">
+  UI v2 · Desarrollo paralelo<br>
+  Backend científico sin modificaciones
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="dashboardRoot">
+
+  <section class="atl-hero">
+    <div>
+      <div class="atl-hero__kicker">
+        AtmosLink Research Platform
+      </div>
+
+      <h1 class="atl-hero__title">
+        High-Andean Scientific Observatory
+      </h1>
+
+      <p class="atl-hero__description">
+        Supervisión meteorológica, integración ERA5-Land y NASA POWER,
+        control de calidad científica y seguimiento operativo del
+        radioenlace rural altoandino.
+      </p>
+    </div>
+
+    <div class="atl-hero__meta">
+      <div>
+        <div class="atl-hero__meta-label">
+          Estación activa
+        </div>
+
+        <div
+          id="heroStation"
+          class="atl-hero__meta-value"
+        >
+          Cargando…
+        </div>
+      </div>
+
+      <div>
+        <div class="atl-hero__meta-label">
+          Rol de radio
+        </div>
+
+        <div
+          id="heroRole"
+          class="atl-hero__meta-value"
+        >
+          —
+        </div>
+      </div>
+
+      <div>
+        <div class="atl-hero__meta-label">
+          Backend
+        </div>
+
+        <div
+          id="heroVersion"
+          class="atl-hero__meta-value"
+        >
+          —
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div
+    id="partialDataNotice"
+    class="atl-alert atl-alert--warning atl-section"
+    hidden
+  ></div>
+
+  <section class="atl-section">
+    <div class="atl-section__header">
+      <div>
+        <h2 class="atl-section__title">
+          Estado operacional
+        </h2>
+
+        <p class="atl-section__subtitle">
+          Estado consolidado de plataforma, adquisición y fuentes científicas.
+        </p>
+      </div>
+    </div>
+
+    <div class="atl-status-grid">
+
+      <article class="atl-status-card">
+        <div class="atl-status-card__header">
+          <span class="atl-status-card__label">
+            Plataforma
+          </span>
+
+          <span
+            id="platformStatus"
+            class="atl-status atl-status--info"
+          >
+            CONSULTANDO
+          </span>
+        </div>
+
+        <p
+          id="platformStatusDetail"
+          class="atl-status-card__detail"
+        >
+          Consultando estado del servicio…
+        </p>
+      </article>
+
+      <article class="atl-status-card">
+        <div class="atl-status-card__header">
+          <span class="atl-status-card__label">
+            Adquisición local
+          </span>
+
+          <span
+            id="observationStatus"
+            class="atl-status atl-status--info"
+          >
+            CONSULTANDO
+          </span>
+        </div>
+
+        <p
+          id="observationStatusDetail"
+          class="atl-status-card__detail"
+        >
+          Calculando antigüedad de la observación…
+        </p>
+      </article>
+
+      <article class="atl-status-card">
+        <div class="atl-status-card__header">
+          <span class="atl-status-card__label">
+            Fuentes científicas
+          </span>
+
+          <span
+            id="scientificStatus"
+            class="atl-status atl-status--info"
+          >
+            CONSULTANDO
+          </span>
+        </div>
+
+        <p
+          id="scientificStatusDetail"
+          class="atl-status-card__detail"
+        >
+          Verificando ERA5-Land y NASA POWER…
+        </p>
+      </article>
+
+      <article class="atl-status-card">
+        <div class="atl-status-card__header">
+          <span class="atl-status-card__label">
+            Radioenlace
+          </span>
+
+          <span
+            id="radioStatus"
+            class="atl-status atl-status--info"
+          >
+            CONSULTANDO
+          </span>
+        </div>
+
+        <p
+          id="radioStatusDetail"
+          class="atl-status-card__detail"
+        >
+          Consultando telemetría RF…
+        </p>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="atl-section">
+    <div class="atl-section__header">
+      <div>
+        <h2 class="atl-section__title">
+          Observación meteorológica actual
+        </h2>
+
+        <p class="atl-section__subtitle">
+          Última muestra local consolidada en la base científica.
+        </p>
+      </div>
+
+      <span class="atl-chip">
+        Actualización: 10 s
+      </span>
+    </div>
+
+    <div class="atl-metric-grid">
+
+      <article class="atl-metric-card">
+        <span class="atl-metric-card__label">
+          Temperatura
+        </span>
+
+        <span class="atl-metric-card__value">
+          <span id="metricTemperature">—</span>
+          <span class="atl-metric-card__unit">°C</span>
+        </span>
+
+        <span class="atl-metric-card__detail">
+          Promedio local
+        </span>
+      </article>
+
+      <article class="atl-metric-card">
+        <span class="atl-metric-card__label">
+          Humedad relativa
+        </span>
+
+        <span class="atl-metric-card__value">
+          <span id="metricHumidity">—</span>
+          <span class="atl-metric-card__unit">%</span>
+        </span>
+
+        <span class="atl-metric-card__detail">
+          Promedio local
+        </span>
+      </article>
+
+      <article class="atl-metric-card">
+        <span class="atl-metric-card__label">
+          Presión
+        </span>
+
+        <span class="atl-metric-card__value">
+          <span id="metricPressure">—</span>
+          <span class="atl-metric-card__unit">hPa</span>
+        </span>
+
+        <span class="atl-metric-card__detail">
+          Presión atmosférica local
+        </span>
+      </article>
+
+      <article class="atl-metric-card">
+        <span class="atl-metric-card__label">
+          Punto de rocío
+        </span>
+
+        <span class="atl-metric-card__value">
+          <span id="metricDewPoint">—</span>
+          <span class="atl-metric-card__unit">°C</span>
+        </span>
+
+        <span class="atl-metric-card__detail">
+          Calculado desde T y HR
+        </span>
+      </article>
+
+      <article class="atl-metric-card">
+        <span class="atl-metric-card__label">
+          Lluvia 1 hora
+        </span>
+
+        <span class="atl-metric-card__value">
+          <span id="metricRainHour">—</span>
+          <span class="atl-metric-card__unit">mm</span>
+        </span>
+
+        <span
+          id="metricRainState"
+          class="atl-metric-card__detail"
+        >
+          —
+        </span>
+      </article>
+
+      <article class="atl-metric-card">
+        <span class="atl-metric-card__label">
+          Lluvia acumulada
+        </span>
+
+        <span class="atl-metric-card__value">
+          <span id="metricRainTotal">—</span>
+          <span class="atl-metric-card__unit">mm</span>
+        </span>
+
+        <span class="atl-metric-card__detail">
+          Desde inicio del registro
+        </span>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="atl-section atl-dashboard-columns">
+
+    <article class="atl-panel">
+      <div class="atl-panel__header">
+        <div>
+          <h2 class="atl-panel__title">
+            Fuentes de datos
+          </h2>
+
+          <p class="atl-panel__subtitle">
+            Disponibilidad y temporalidad de las fuentes integradas.
+          </p>
+        </div>
+      </div>
+
+      <div class="atl-source-list">
+
+        <div class="atl-source">
+          <div class="atl-source__name">
+            Estación local
+          </div>
+
+          <div>
+            <div
+              id="sourceLocalTime"
+              class="atl-source__time"
+            >
+              —
+            </div>
+
+            <small id="sourceLocalAge">—</small>
+          </div>
+
+          <span
+            id="sourceLocalStatus"
+            class="atl-status atl-status--info"
+          >
+            —
+          </span>
+        </div>
+
+        <div class="atl-source">
+          <div class="atl-source__name">
+            ERA5-Land
+          </div>
+
+          <div>
+            <div
+              id="sourceEra5Time"
+              class="atl-source__time"
+            >
+              —
+            </div>
+
+            <small id="sourceEra5Age">—</small>
+          </div>
+
+          <span
+            id="sourceEra5Status"
+            class="atl-status atl-status--info"
+          >
+            —
+          </span>
+        </div>
+
+        <div class="atl-source">
+          <div class="atl-source__name">
+            NASA POWER
+          </div>
+
+          <div>
+            <div
+              id="sourceNasaTime"
+              class="atl-source__time"
+            >
+              —
+            </div>
+
+            <small id="sourceNasaAge">—</small>
+          </div>
+
+          <span
+            id="sourceNasaStatus"
+            class="atl-status atl-status--info"
+          >
+            —
+          </span>
+        </div>
+
+        <div class="atl-source">
+          <div class="atl-source__name">
+            Cambium RF
+          </div>
+
+          <div>
+            <div
+              id="sourceRadioTime"
+              class="atl-source__time"
+            >
+              —
+            </div>
+
+            <small id="sourceRadioAge">—</small>
+          </div>
+
+          <span
+            id="sourceRadioStatus"
+            class="atl-status atl-status--info"
+          >
+            —
+          </span>
+        </div>
+
+      </div>
+    </article>
+
+    <article class="atl-panel">
+      <div class="atl-panel__header">
+        <div>
+          <h2 class="atl-panel__title">
+            Alertas activas
+          </h2>
+
+          <p class="atl-panel__subtitle">
+            Incidencias detectadas por el núcleo científico.
+          </p>
+        </div>
+
+        <span class="atl-chip">
+          <span id="alertCount">0</span>&nbsp;alertas
+        </span>
+      </div>
+
+      <div
+        id="alertList"
+        class="atl-alert-list"
+      >
+        <div class="atl-empty">
+          Consultando alertas…
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="atl-section">
+    <article class="atl-panel">
+      <div class="atl-panel__header">
+        <div>
+          <h2 class="atl-panel__title">
+            Estaciones científicas
+          </h2>
+
+          <p class="atl-panel__subtitle">
+            Último estado disponible por estación registrada.
+          </p>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table class="atl-station-table">
+          <thead>
+            <tr>
+              <th>Estación</th>
+              <th>Estado</th>
+              <th>Temperatura</th>
+              <th>Humedad</th>
+              <th>Último registro</th>
+            </tr>
+          </thead>
+
+          <tbody id="stationTableBody">
+            <tr>
+              <td colspan="5">
+                Consultando estaciones…
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+
+  <footer class="atl-dashboard-footer">
+    <span>
+      Última observación:
+      <strong id="lastObservation">—</strong>
+    </span>
+
+    <span>
+      Última consulta:
+      <strong id="dashboardUpdatedAt">—</strong>
+    </span>
+
+    <span>
+      Estado:
+      <strong id="dashboardConnectionState">
+        CONECTANDO
+      </strong>
+    </span>
+  </footer>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script
+  type="module"
+  src="{{ url_for('static', filename='v2/js/dashboard.js') }}"
+></script>
+{% endblock %}

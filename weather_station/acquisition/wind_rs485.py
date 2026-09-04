@@ -135,7 +135,22 @@ def read_wind(
 
         time.sleep(0.2)
 
-        response = ser.read(64)
+        # Leer la respuesta Modbus RTU según la longitud indicada
+        # por su propia cabecera. La respuesta del anemómetro es
+        # mucho menor que 64 bytes; leer 64 obligaba a esperar hasta
+        # agotar el timeout y hacía imposible el muestreo real a 1 Hz.
+        header = ser.read(3)
+
+        if len(header) != 3:
+            response = b""
+        else:
+            byte_count = header[2]
+            body = ser.read(byte_count + 2)
+
+            if len(body) != byte_count + 2:
+                response = b""
+            else:
+                response = header + body
 
     if not response:
         return {

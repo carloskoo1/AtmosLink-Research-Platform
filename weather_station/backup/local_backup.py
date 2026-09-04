@@ -66,9 +66,19 @@ def main():
     if config_file.exists():
         shutil.copy2(config_file, work_dir / config_file.name)
 
-    export_file = Path("Data") / "exports" / "master_observations.csv"
-    if export_file.exists():
-        shutil.copy2(export_file, work_dir / "master_observations.csv")
+    export_dir = Path("Data") / "exports"
+    export_names = (
+        "master_observations.csv",
+        "master_observations_multistation.csv",
+        "scientific_campaign_observations.csv",
+        "scientific_campaign_6g_integrated.csv",
+        "active_throughput_6g.csv",
+    )
+
+    for export_name in export_names:
+        export_file = export_dir / export_name
+        if export_file.exists():
+            shutil.copy2(export_file, work_dir / export_name)
 
     with zipfile.ZipFile(zip_file, "w", compression=zipfile.ZIP_DEFLATED) as zf:
         for file in work_dir.rglob("*"):

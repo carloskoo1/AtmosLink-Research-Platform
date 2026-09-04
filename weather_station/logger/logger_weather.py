@@ -1,7 +1,9 @@
 import logging
 import os
 import time
+import threading
 from pathlib import Path
+from collections import deque
 
 import serial
 from serial import SerialException
@@ -70,6 +72,14 @@ SERIAL_CONTROL_PREFIXES = (
 
 EXPECTED_WEATHER_FIELDS = 17
 
+# ATMOSLINK_PRESS_T_DIAGNOSTIC_CAPTURE
+SERIAL_DIAGNOSTIC_LOG = (
+    Path(__file__).resolve().parents[2]
+    / "logs"
+    / "bme_diagnostic_raw.log"
+)
+
+
 
 VALID_RANGES = {
     "temp_avg_C": (-30, 60),
@@ -124,12 +134,54 @@ def warn_serial_once(reason, interval_seconds=300):
         _SERIAL_WARNING_STATE["timestamp"] = now
 
 
+def capture_serial_diagnostic(line):
+    """
+    Conserva las líneas DBG emitidas por el firmware diagnóstico.
+
+    Estas líneas NO son observaciones meteorológicas y NO deben
+    introducirse en SQLite. Se guardan aparte para QA/QC del BME280.
+    """
+    clean = line.strip()
+
+    if not clean.startswith("INFO,DBG_"):
+        return
+
+    try:
+        SERIAL_DIAGNOSTIC_LOG.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        timestamp_utc = time.strftime(
+            "%Y-%m-%dT%H:%M:%SZ",
+            time.gmtime(),
+        )
+
+        with SERIAL_DIAGNOSTIC_LOG.open(
+            "a",
+            encoding="utf-8",
+        ) as fh:
+            fh.write(
+                f"{timestamp_utc},{clean}\n"
+            )
+
+    except Exception as exc:
+        logging.warning(
+            "No se pudo guardar diagnóstico serial BME: %s",
+            exc,
+        )
+
+
 def is_serial_control_line(line):
     """
     Identifica mensajes informativos del firmware y mensajes de
     arranque del ESP32 que no representan observaciones científicas.
     """
     clean = line.strip()
+
+    # PRESS-T: las líneas DBG se conservan antes de descartarlas
+    # del flujo científico normal.
+    capture_serial_diagnostic(clean)
 
     if not clean:
         return True
@@ -160,6 +212,22 @@ def is_weather_candidate(line):
         return False, "la trama no comienza con valores numéricos"
 
     return True, "ok"
+
+
+
+WIND_SAMPLE_INTERVAL_SECONDS = float(
+    os.getenv("ATMOSLINK_WIND_SAMPLE_INTERVAL", "2.0")
+)
+
+WIND_GUST_WINDOW_SECONDS = float(
+    os.getenv("ATMOSLINK_WIND_GUST_WINDOW", "60.0")
+)
+
+_WIND_SAMPLE_LOCK = threading.Lock()
+_WIND_SAMPLES = deque(maxlen=300)
+_WIND_SAMPLER_STARTED = False
+_WIND_LAST_ATTEMPT_OK = False
+_WIND_LAST_ERROR = None
 
 
 def empty_wind_fields():
@@ -222,10 +290,346 @@ def get_wind_availability():
     return True, "anemómetro disponible"
 
 
+def _purge_old_wind_samples(now_monotonic):
+    cutoff = now_monotonic - WIND_GUST_WINDOW_SECONDS
+
+    while _WIND_SAMPLES and _WIND_SAMPLES[0]["monotonic"] < cutoff:
+        _WIND_SAMPLES.popleft()
+
+
+def _wind_sampler_loop():
+    """
+    Consulta continuamente el anemómetro RS485.
+
+    La velocidad máxima de las muestras válidas de los últimos
+    WIND_GUST_WINDOW_SECONDS se utiliza como ráfaga.
+    """
+    global _WIND_LAST_ATTEMPT_OK
+    global _WIND_LAST_ERROR
+
+    while True:
+        cycle_start = time.monotonic()
+
+        available, reason = get_wind_availability()
+
+        if not available:
+            with _WIND_SAMPLE_LOCK:
+                _WIND_LAST_ATTEMPT_OK = False
+                _WIND_LAST_ERROR = reason
+                _purge_old_wind_samples(time.monotonic())
+
+            if WIND_REQUESTED:
+                warn_wind_once(reason)
+
+        else:
+            try:
+                reading = read_wind(
+                    port=WIND_PORT,
+                    baudrate=WIND_BAUDRATE,
+                    slave_id=WIND_SLAVE_ID,
+                    timeout=WIND_TIMEOUT,
+                )
+
+                now_monotonic = time.monotonic()
+                reading_ok = reading.get("wind_ok") == 1
+                speed = reading.get("wind_speed_ms")
+                direction = reading.get("wind_direction_deg")
+
+                with _WIND_SAMPLE_LOCK:
+                    _WIND_LAST_ATTEMPT_OK = reading_ok
+                    _WIND_LAST_ERROR = reading.get("wind_error")
+                    _purge_old_wind_samples(now_monotonic)
+
+                    if reading_ok and speed is not None:
+                        _WIND_SAMPLES.append(
+                            {
+                                "monotonic": now_monotonic,
+                                "wind_speed_ms": float(speed),
+                                "wind_direction_deg": direction,
+                            }
+                        )
+
+                if reading_ok:
+                    _WIND_WARNING_STATE["reason"] = None
+                    _WIND_WARNING_STATE["timestamp"] = 0.0
+                else:
+                    warn_wind_once(
+                        "lectura de viento no válida: "
+                        f"{reading.get('wind_error')}"
+                    )
+
+            except Exception as exc:
+                with _WIND_SAMPLE_LOCK:
+                    _WIND_LAST_ATTEMPT_OK = False
+                    _WIND_LAST_ERROR = str(exc)
+                    _purge_old_wind_samples(time.monotonic())
+
+                warn_wind_once(
+                    f"error leyendo viento RS485: {exc}"
+                )
+
+        elapsed = time.monotonic() - cycle_start
+        remaining = WIND_SAMPLE_INTERVAL_SECONDS - elapsed
+        time.sleep(max(0.2, remaining))
+
+
+def start_wind_sampler():
+    """
+    Inicia una sola hebra de muestreo del anemómetro.
+    """
+    global _WIND_SAMPLER_STARTED
+
+    if not WIND_REQUESTED:
+        return
+
+    if _WIND_SAMPLER_STARTED:
+        return
+
+    sampler = threading.Thread(
+        target=_wind_sampler_loop,
+        name="atmoslink-wind-sampler",
+        daemon=True,
+    )
+    sampler.start()
+
+    _WIND_SAMPLER_STARTED = True
+
+    print(
+        "Muestreador de viento iniciado: "
+        f"cada {WIND_SAMPLE_INTERVAL_SECONDS:.1f} s | "
+        f"ventana de ráfaga "
+        f"{WIND_GUST_WINDOW_SECONDS:.0f} s"
+    )
+
+
+def _purge_old_wind_samples(now_monotonic):
+    cutoff = now_monotonic - WIND_GUST_WINDOW_SECONDS
+
+    while _WIND_SAMPLES and _WIND_SAMPLES[0]["monotonic"] < cutoff:
+        _WIND_SAMPLES.popleft()
+
+
+def _wind_sampler_loop():
+    """
+    Consulta continuamente el anemómetro RS485.
+
+    La velocidad máxima de las muestras válidas de los últimos
+    WIND_GUST_WINDOW_SECONDS se utiliza como ráfaga.
+    """
+    global _WIND_LAST_ATTEMPT_OK
+    global _WIND_LAST_ERROR
+
+    while True:
+        cycle_start = time.monotonic()
+
+        available, reason = get_wind_availability()
+
+        if not available:
+            with _WIND_SAMPLE_LOCK:
+                _WIND_LAST_ATTEMPT_OK = False
+                _WIND_LAST_ERROR = reason
+                _purge_old_wind_samples(time.monotonic())
+
+            if WIND_REQUESTED:
+                warn_wind_once(reason)
+
+        else:
+            try:
+                reading = read_wind(
+                    port=WIND_PORT,
+                    baudrate=WIND_BAUDRATE,
+                    slave_id=WIND_SLAVE_ID,
+                    timeout=WIND_TIMEOUT,
+                )
+
+                now_monotonic = time.monotonic()
+                reading_ok = reading.get("wind_ok") == 1
+                speed = reading.get("wind_speed_ms")
+                direction = reading.get("wind_direction_deg")
+
+                with _WIND_SAMPLE_LOCK:
+                    _WIND_LAST_ATTEMPT_OK = reading_ok
+                    _WIND_LAST_ERROR = reading.get("wind_error")
+                    _purge_old_wind_samples(now_monotonic)
+
+                    if reading_ok and speed is not None:
+                        _WIND_SAMPLES.append(
+                            {
+                                "monotonic": now_monotonic,
+                                "wind_speed_ms": float(speed),
+                                "wind_direction_deg": direction,
+                            }
+                        )
+
+                if reading_ok:
+                    _WIND_WARNING_STATE["reason"] = None
+                    _WIND_WARNING_STATE["timestamp"] = 0.0
+                else:
+                    warn_wind_once(
+                        "lectura de viento no válida: "
+                        f"{reading.get('wind_error')}"
+                    )
+
+            except Exception as exc:
+                with _WIND_SAMPLE_LOCK:
+                    _WIND_LAST_ATTEMPT_OK = False
+                    _WIND_LAST_ERROR = str(exc)
+                    _purge_old_wind_samples(time.monotonic())
+
+                warn_wind_once(
+                    f"error leyendo viento RS485: {exc}"
+                )
+
+        elapsed = time.monotonic() - cycle_start
+        remaining = WIND_SAMPLE_INTERVAL_SECONDS - elapsed
+        time.sleep(max(0.2, remaining))
+
+
+def start_wind_sampler():
+    """
+    Inicia una sola hebra de muestreo del anemómetro.
+    """
+    global _WIND_SAMPLER_STARTED
+
+    if not WIND_REQUESTED:
+        return
+
+    if _WIND_SAMPLER_STARTED:
+        return
+
+    sampler = threading.Thread(
+        target=_wind_sampler_loop,
+        name="atmoslink-wind-sampler",
+        daemon=True,
+    )
+    sampler.start()
+
+    _WIND_SAMPLER_STARTED = True
+
+    print(
+        "Muestreador de viento iniciado: "
+        f"cada {WIND_SAMPLE_INTERVAL_SECONDS:.1f} s | "
+        f"ventana de ráfaga "
+        f"{WIND_GUST_WINDOW_SECONDS:.0f} s"
+    )
+
+
+def _purge_old_wind_samples(now_monotonic):
+    cutoff = now_monotonic - WIND_GUST_WINDOW_SECONDS
+
+    while _WIND_SAMPLES and _WIND_SAMPLES[0]["monotonic"] < cutoff:
+        _WIND_SAMPLES.popleft()
+
+
+def _wind_sampler_loop():
+    """
+    Consulta continuamente el anemómetro RS485.
+
+    La velocidad máxima de las muestras válidas de los últimos
+    WIND_GUST_WINDOW_SECONDS se utiliza como ráfaga.
+    """
+    global _WIND_LAST_ATTEMPT_OK
+    global _WIND_LAST_ERROR
+
+    while True:
+        cycle_start = time.monotonic()
+
+        available, reason = get_wind_availability()
+
+        if not available:
+            with _WIND_SAMPLE_LOCK:
+                _WIND_LAST_ATTEMPT_OK = False
+                _WIND_LAST_ERROR = reason
+                _purge_old_wind_samples(time.monotonic())
+
+            if WIND_REQUESTED:
+                warn_wind_once(reason)
+
+        else:
+            try:
+                reading = read_wind(
+                    port=WIND_PORT,
+                    baudrate=WIND_BAUDRATE,
+                    slave_id=WIND_SLAVE_ID,
+                    timeout=WIND_TIMEOUT,
+                )
+
+                now_monotonic = time.monotonic()
+                reading_ok = reading.get("wind_ok") == 1
+                speed = reading.get("wind_speed_ms")
+                direction = reading.get("wind_direction_deg")
+
+                with _WIND_SAMPLE_LOCK:
+                    _WIND_LAST_ATTEMPT_OK = reading_ok
+                    _WIND_LAST_ERROR = reading.get("wind_error")
+                    _purge_old_wind_samples(now_monotonic)
+
+                    if reading_ok and speed is not None:
+                        _WIND_SAMPLES.append(
+                            {
+                                "monotonic": now_monotonic,
+                                "wind_speed_ms": float(speed),
+                                "wind_direction_deg": direction,
+                            }
+                        )
+
+                if reading_ok:
+                    _WIND_WARNING_STATE["reason"] = None
+                    _WIND_WARNING_STATE["timestamp"] = 0.0
+                else:
+                    warn_wind_once(
+                        "lectura de viento no válida: "
+                        f"{reading.get('wind_error')}"
+                    )
+
+            except Exception as exc:
+                with _WIND_SAMPLE_LOCK:
+                    _WIND_LAST_ATTEMPT_OK = False
+                    _WIND_LAST_ERROR = str(exc)
+                    _purge_old_wind_samples(time.monotonic())
+
+                warn_wind_once(
+                    f"error leyendo viento RS485: {exc}"
+                )
+
+        elapsed = time.monotonic() - cycle_start
+        remaining = WIND_SAMPLE_INTERVAL_SECONDS - elapsed
+        time.sleep(max(0.2, remaining))
+
+
+def start_wind_sampler():
+    """
+    Inicia una sola hebra de muestreo del anemómetro.
+    """
+    global _WIND_SAMPLER_STARTED
+
+    if not WIND_REQUESTED:
+        return
+
+    if _WIND_SAMPLER_STARTED:
+        return
+
+    sampler = threading.Thread(
+        target=_wind_sampler_loop,
+        name="atmoslink-wind-sampler",
+        daemon=True,
+    )
+    sampler.start()
+
+    _WIND_SAMPLER_STARTED = True
+
+    print(
+        "Muestreador de viento iniciado: "
+        f"cada {WIND_SAMPLE_INTERVAL_SECONDS:.1f} s | "
+        f"ventana de ráfaga "
+        f"{WIND_GUST_WINDOW_SECONDS:.0f} s"
+    )
+
+
 def get_wind_fields():
     """
-    Obtiene los datos del anemómetro si está disponible.
-    Si no está disponible, el logger continúa sin viento.
+    Devuelve la última medición válida y la máxima velocidad
+    observada dentro de la ventana configurada.
     """
     available, reason = get_wind_availability()
 
@@ -235,33 +639,79 @@ def get_wind_fields():
 
         return empty_wind_fields()
 
-    try:
-        reading = read_wind(
-            port=WIND_PORT,
-            baudrate=WIND_BAUDRATE,
-            slave_id=WIND_SLAVE_ID,
-            timeout=WIND_TIMEOUT,
+    now_monotonic = time.monotonic()
+
+    with _WIND_SAMPLE_LOCK:
+        _purge_old_wind_samples(now_monotonic)
+        samples = list(_WIND_SAMPLES)
+        last_attempt_ok = _WIND_LAST_ATTEMPT_OK
+        last_error = _WIND_LAST_ERROR
+
+    if not samples:
+        warn_wind_once(
+            "muestreador activo, pero todavía no existen "
+            "muestras válidas"
+        )
+        return empty_wind_fields()
+
+    latest = samples[-1]
+
+    # Ráfaga meteorológica:
+    # máximo de la media móvil de 3 muestras consecutivas,
+    # con muestreo nominal de 1 Hz.
+    #
+    # Se valida además la continuidad temporal para impedir
+    # que una media de 3 muestras atraviese huecos de adquisición.
+    gust_candidates = []
+
+    if len(samples) >= 3:
+        for idx in range(2, len(samples)):
+            s0 = samples[idx - 2]
+            s1 = samples[idx - 1]
+            s2 = samples[idx]
+
+            dt01 = s1["monotonic"] - s0["monotonic"]
+            dt12 = s2["monotonic"] - s1["monotonic"]
+
+            # Para muestreo nominal de 1 Hz aceptamos únicamente
+            # muestras temporalmente continuas.
+            if (
+                0.5 <= dt01 <= 1.6
+                and 0.5 <= dt12 <= 1.6
+            ):
+                mean_3s = (
+                    s0["wind_speed_ms"]
+                    + s1["wind_speed_ms"]
+                    + s2["wind_speed_ms"]
+                ) / 3.0
+
+                gust_candidates.append(mean_3s)
+
+    gust = max(gust_candidates) if gust_candidates else None
+
+    if not last_attempt_ok:
+        logging.warning(
+            "La última consulta de viento falló (%s), pero se "
+            "conservan %s muestras válidas dentro de la ventana.",
+            last_error,
+            len(samples),
         )
 
-        if reading.get("wind_ok") != 1:
-            warn_wind_once(
-                f"lectura de viento no válida: "
-                f"{reading.get('wind_error')}"
-            )
-        else:
-            _WIND_WARNING_STATE["reason"] = None
-            _WIND_WARNING_STATE["timestamp"] = 0.0
-
-        return {
-            "wind_speed_ms": reading.get("wind_speed_ms"),
-            "wind_direction_deg": reading.get("wind_direction_deg"),
-            "wind_gust_ms": reading.get("wind_gust_ms"),
-            "wind_ok": reading.get("wind_ok", 0),
-        }
-
-    except Exception as exc:
-        warn_wind_once(f"error leyendo viento RS485: {exc}")
-        return empty_wind_fields()
+    return {
+        "wind_speed_ms": round(
+            latest["wind_speed_ms"],
+            2,
+        ),
+        "wind_direction_deg": latest[
+            "wind_direction_deg"
+        ],
+        "wind_gust_ms": (
+            round(gust, 2)
+            if gust is not None
+            else None
+        ),
+        "wind_ok": 1,
+    }
 
 
 def enrich_station_metadata(row):
@@ -381,6 +831,8 @@ def run_logger():
         )
         print(f"Baudrate viento: {WIND_BAUDRATE}")
         print(f"Slave ID viento: {WIND_SLAVE_ID}")
+
+        start_wind_sampler()
 
     logging.info(
         "Logger iniciado | estación=%s | puerto_clima=%s",

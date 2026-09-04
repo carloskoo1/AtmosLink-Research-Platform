@@ -7,6 +7,7 @@ import os
 
 from weather_station.config.station_manager import get_station_context
 from weather_station.events.event_logger import log_event, list_events, event_statistics
+from weather_station.dashboard.multistation_api import multistation_api
 
 
 BASE_DIR = Path(__file__).resolve().parents[2]
@@ -25,6 +26,7 @@ SCIENTIFIC_AGREEMENT_FILE = RUNTIME_DIR / "scientific_agreement_index.json"
 ATMOSPHERIC_CORRIDOR_FILE = RUNTIME_DIR / "atmospheric_corridor.json"
 
 app = Flask(__name__)
+app.register_blueprint(multistation_api)
 
 
 def load_json(path):
@@ -151,9 +153,6 @@ def scientific_wind_state(
     """
     requested = wind_installation_requested()
 
-    if not requested:
-        return "NOT_INSTALLED"
-
     has_measurement = any(
         value is not None
         for value in (
@@ -163,10 +162,16 @@ def scientific_wind_state(
         )
     )
 
+    # Una medición físicamente válida tiene prioridad sobre la
+    # configuración histórica de instalación. Esto permite reconocer
+    # automáticamente el anemómetro de cada estación.
     if wind_ok in (1, 1.0, True) and has_measurement:
         if age_seconds is not None and age_seconds > 300:
             return "STALE"
         return "OK"
+
+    if not requested and not has_measurement:
+        return "NOT_INSTALLED"
 
     if not has_measurement:
         return "NO_DATA"
@@ -200,10 +205,10 @@ def scientific_observation_state(age_seconds):
     if age_seconds is None:
         return "NO_DATA"
 
-    if age_seconds < 120:
+    if age_seconds <= 420:
         return "CURRENT"
 
-    if age_seconds <= 300:
+    if age_seconds <= 900:
         return "DELAYED"
 
     return "STALE"
@@ -395,7 +400,28 @@ def get_latest():
         "anemometer": d["wind_state"],
         "era5": "OK" if latest_era5 is not None else "ERROR",
         "nasa_power": "OK" if latest_nasa is not None else "ERROR",
-        "radio_link": "OK" if latest_radio is not None else "PENDING",
+        "radio_link": (
+            "OK"
+            if latest_radio is not None
+            and any(
+                dict(latest_radio).get(field) is not None
+                for field in (
+                    "radio_mcs_dl",
+                    "radio_mcs_ul",
+                    "radio_snr_dl",
+                    "radio_snr_ul",
+                    "radio_sta_dl_rssi",
+                    "radio_sta_ul_rssi",
+                    "radio_dl_rate",
+                    "radio_ul_rate",
+                )
+            )
+            else (
+                "NO_TELEMETRY"
+                if latest_radio is not None
+                else "PENDING"
+            )
+        ),
     }
 
     if latest_nasa is not None:
@@ -803,35 +829,99 @@ def wind_sector_16(deg):
     return idx, labels[idx]
 
 
-def get_windrose(period="24h"):
+def get_windrose(
+    period="24h",
+    station_id="CU01",
+    selected_date=None,
+):
+    """
+    Calcula una rosa de vientos local de 16 sectores.
+
+    La fuente central station_observations permite consultar
+    CU01 y SJ01 sin acceder directamente al equipo remoto.
+    """
     conn = get_connection()
 
+    labels = [
+        "N", "NNE", "NE", "ENE",
+        "E", "ESE", "SE", "SSE",
+        "S", "SSW", "SW", "WSW",
+        "W", "WNW", "NW", "NNW",
+    ]
+
     try:
-        if not table_exists(conn, "weather_local"):
-            return {}
+        if not table_exists(
+            conn,
+            "station_observations",
+        ):
+            return {
+                "status": "not_available",
+                "station_id": station_id,
+                "period": period,
+                "reason": (
+                    "No existe la tabla central "
+                    "station_observations."
+                ),
+                "samples": 0,
+                "sectors": [],
+            }
 
         where = """
-            wind_speed_ms IS NOT NULL
+            station_id = ?
+            AND wind_speed_ms IS NOT NULL
             AND wind_direction_deg IS NOT NULL
             AND wind_ok = 1
         """
 
-        if period == "24h":
-            where += " AND datetime(timestamp_local) >= datetime('now', 'localtime', '-24 hours')"
-        elif period == "7d":
-            where += " AND datetime(timestamp_local) >= datetime('now', 'localtime', '-7 days')"
-        elif period == "30d":
-            where += " AND datetime(timestamp_local) >= datetime('now', 'localtime', '-30 days')"
+        parameters = [station_id]
 
-        rows = conn.execute(f"""
-            SELECT timestamp_local, wind_speed_ms, wind_direction_deg
-            FROM weather_local
+        if selected_date:
+            where += """
+                AND substr(timestamp_local, 1, 10) = ?
+            """
+            parameters.append(selected_date)
+
+        elif period == "24h":
+            where += """
+                AND datetime(timestamp_local)
+                    >= datetime(
+                        'now',
+                        'localtime',
+                        '-24 hours'
+                    )
+            """
+        elif period == "7d":
+            where += """
+                AND datetime(timestamp_local)
+                    >= datetime(
+                        'now',
+                        'localtime',
+                        '-7 days'
+                    )
+            """
+        elif period == "30d":
+            where += """
+                AND datetime(timestamp_local)
+                    >= datetime(
+                        'now',
+                        'localtime',
+                        '-30 days'
+                    )
+            """
+
+        rows = conn.execute(
+            f"""
+            SELECT
+                timestamp_local,
+                wind_speed_ms,
+                wind_direction_deg,
+                wind_gust_ms
+            FROM station_observations
             WHERE {where}
             ORDER BY timestamp_local ASC
-        """).fetchall()
-
-        labels = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
-                  "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+            """,
+            parameters,
+        ).fetchall()
 
         sectors = {
             label: {
@@ -846,29 +936,41 @@ def get_windrose(period="24h"):
         }
 
         total = 0
+        calm_samples = 0
         speed_sum = 0.0
         speed_max = None
+        gust_max = None
+        first_timestamp = None
+        last_timestamp = None
 
         for row in rows:
-            speed = row["wind_speed_ms"]
-            deg = row["wind_direction_deg"]
+            try:
+                speed = float(row["wind_speed_ms"])
+                direction = (
+                    float(row["wind_direction_deg"])
+                    % 360.0
+                )
+            except (TypeError, ValueError):
+                continue
 
-            sector = wind_sector_16(deg)
+            sector = wind_sector_16(direction)
+
             if sector is None:
                 continue
 
-            _, label = sector
+            gust = row["wind_gust_ms"]
 
-            try:
-                speed = float(speed)
-            except Exception:
-                continue
+            if gust is not None:
+                try:
+                    gust = float(gust)
 
-            sectors[label]["count"] += 1
-            sectors[label]["speed_sum_ms"] += speed
-
-            if sectors[label]["speed_max_ms"] is None or speed > sectors[label]["speed_max_ms"]:
-                sectors[label]["speed_max_ms"] = speed
+                    if (
+                        gust_max is None
+                        or gust > gust_max
+                    ):
+                        gust_max = gust
+                except (TypeError, ValueError):
+                    pass
 
             total += 1
             speed_sum += speed
@@ -876,31 +978,250 @@ def get_windrose(period="24h"):
             if speed_max is None or speed > speed_max:
                 speed_max = speed
 
+            timestamp = row["timestamp_local"]
+
+            if speed < 0.5:
+                calm_samples += 1
+
+                if first_timestamp is None:
+                    first_timestamp = timestamp
+
+                last_timestamp = timestamp
+                continue
+
+            _, label = sector
+            item = sectors[label]
+
+            item["count"] += 1
+            item["speed_sum_ms"] += speed
+
+            if (
+                item["speed_max_ms"] is None
+                or speed > item["speed_max_ms"]
+            ):
+                item["speed_max_ms"] = speed
+
+            if first_timestamp is None:
+                first_timestamp = timestamp
+
+            last_timestamp = timestamp
+
+        directional_total = total - calm_samples
         dominant_sector = None
         dominant_count = 0
 
         for label in labels:
-            s = sectors[label]
+            item = sectors[label]
 
-            if s["count"] > 0:
-                s["frequency_pct"] = round((s["count"] / total) * 100.0, 2) if total else 0.0
-                s["speed_avg_ms"] = round(s["speed_sum_ms"] / s["count"], 2)
-                s["speed_max_ms"] = round(s["speed_max_ms"], 2)
+            if item["count"] > 0:
+                item["frequency_pct"] = round(
+                    item["count"] * 100.0
+                    / directional_total,
+                    2,
+                )
+                item["speed_avg_ms"] = round(
+                    item["speed_sum_ms"]
+                    / item["count"],
+                    2,
+                )
+                item["speed_max_ms"] = round(
+                    item["speed_max_ms"],
+                    2,
+                )
 
-            s.pop("speed_sum_ms", None)
+            item.pop("speed_sum_ms", None)
 
-            if s["count"] > dominant_count:
+            if item["count"] > dominant_count:
                 dominant_sector = label
-                dominant_count = s["count"]
+                dominant_count = item["count"]
+
+        hourly_summary = []
+        speed_max_timestamp = None
+        gust_max_timestamp = None
+
+        if selected_date:
+            hourly = {
+                hour: {
+                    "hour": f"{hour:02d}:00",
+                    "samples": 0,
+                    "speed_sum_ms": 0.0,
+                    "speed_max_ms": None,
+                    "gust_max_ms": None,
+                    "calm_samples": 0,
+                }
+                for hour in range(24)
+            }
+
+            daily_speed_max = None
+            daily_gust_max = None
+
+            for row in rows:
+                try:
+                    speed = float(
+                        row["wind_speed_ms"]
+                    )
+                    timestamp = str(
+                        row["timestamp_local"]
+                    )
+                    hour = int(timestamp[11:13])
+                except (
+                    TypeError,
+                    ValueError,
+                    IndexError,
+                ):
+                    continue
+
+                item = hourly[hour]
+                item["samples"] += 1
+                item["speed_sum_ms"] += speed
+
+                if (
+                    item["speed_max_ms"] is None
+                    or speed > item["speed_max_ms"]
+                ):
+                    item["speed_max_ms"] = speed
+
+                if speed < 0.5:
+                    item["calm_samples"] += 1
+
+                if (
+                    daily_speed_max is None
+                    or speed > daily_speed_max
+                ):
+                    daily_speed_max = speed
+                    speed_max_timestamp = timestamp
+
+                gust = row["wind_gust_ms"]
+
+                if gust is not None:
+                    try:
+                        gust = float(gust)
+
+                        if (
+                            item["gust_max_ms"] is None
+                            or gust
+                            > item["gust_max_ms"]
+                        ):
+                            item["gust_max_ms"] = gust
+
+                        if (
+                            daily_gust_max is None
+                            or gust > daily_gust_max
+                        ):
+                            daily_gust_max = gust
+                            gust_max_timestamp = timestamp
+
+                    except (
+                        TypeError,
+                        ValueError,
+                    ):
+                        pass
+
+            for hour in range(24):
+                item = hourly[hour]
+                samples = item["samples"]
+
+                hourly_summary.append({
+                    "hour": item["hour"],
+                    "samples": samples,
+                    "coverage_pct": round(
+                        samples * 100.0 / 60,
+                        2,
+                    ),
+                    "speed_avg_ms": (
+                        round(
+                            item["speed_sum_ms"]
+                            / samples,
+                            2,
+                        )
+                        if samples
+                        else None
+                    ),
+                    "speed_max_ms": (
+                        round(
+                            item["speed_max_ms"],
+                            2,
+                        )
+                        if item["speed_max_ms"]
+                        is not None
+                        else None
+                    ),
+                    "gust_max_ms": (
+                        round(
+                            item["gust_max_ms"],
+                            2,
+                        )
+                        if item["gust_max_ms"]
+                        is not None
+                        else None
+                    ),
+                    "calm_frequency_pct": (
+                        round(
+                            item["calm_samples"]
+                            * 100.0
+                            / samples,
+                            2,
+                        )
+                        if samples
+                        else None
+                    ),
+                })
 
         return {
+            "status": "ok",
+            "station_id": station_id,
             "period": period,
+            "selected_date": selected_date,
+            "speed_max_timestamp": speed_max_timestamp,
+            "gust_max_timestamp": gust_max_timestamp,
+            "hourly_summary": hourly_summary,
             "samples": total,
+            "coverage_pct": (
+                round(total * 100.0 / 1440, 2)
+                if selected_date
+                else None
+            ),
+            "directional_samples": directional_total,
+            "calm_samples": calm_samples,
+            "calm_frequency_pct": (
+                round(
+                    calm_samples * 100.0 / total,
+                    2,
+                )
+                if total
+                else None
+            ),
             "dominant_sector": dominant_sector,
-            "dominant_frequency_pct": round((dominant_count / total) * 100.0, 2) if total else None,
-            "speed_avg_ms": round(speed_sum / total, 2) if total else None,
-            "speed_max_ms": round(speed_max, 2) if speed_max is not None else None,
-            "sectors": [sectors[label] for label in labels],
+            "dominant_frequency_pct": (
+                round(
+                    dominant_count * 100.0
+                    / directional_total,
+                    2,
+                )
+                if directional_total
+                else None
+            ),
+            "speed_avg_ms": (
+                round(speed_sum / total, 2)
+                if total
+                else None
+            ),
+            "speed_max_ms": (
+                round(speed_max, 2)
+                if speed_max is not None
+                else None
+            ),
+            "gust_max_ms": (
+                round(gust_max, 2)
+                if gust_max is not None
+                else None
+            ),
+            "first_timestamp": first_timestamp,
+            "last_timestamp": last_timestamp,
+            "sectors": [
+                sectors[label]
+                for label in labels
+            ],
         }
 
     finally:
@@ -910,10 +1231,78 @@ def get_windrose(period="24h"):
 @app.route("/api/windrose")
 def api_windrose():
     from flask import request
-    period = request.args.get("period", "24h")
-    if period not in ["24h", "7d", "30d", "all"]:
+
+    period = (
+        request.args.get(
+            "period",
+            "24h",
+        )
+        .strip()
+        .lower()
+    )
+
+    if period not in {
+        "24h",
+        "7d",
+        "30d",
+        "all",
+        "date",
+    }:
         period = "24h"
-    return jsonify(get_windrose(period))
+
+    station_id = (
+        request.args.get(
+            "station_id",
+            "CU01",
+        )
+        .strip()
+        .upper()
+    )
+
+    if station_id not in {
+        "CU01",
+        "SJ01",
+    }:
+        return jsonify(
+            {
+                "status": "error",
+                "error": "Estación no válida.",
+                "available_stations": [
+                    "CU01",
+                    "SJ01",
+                ],
+            }
+        ), 400
+
+    selected_date = (
+        request.args.get("date", "").strip()
+        or None
+    )
+
+    if selected_date:
+        import datetime as dt
+
+        try:
+            dt.datetime.strptime(
+                selected_date,
+                "%Y-%m-%d",
+            )
+        except ValueError:
+            return jsonify({
+                "status": "error",
+                "error": (
+                    "Fecha no válida. "
+                    "Utilice YYYY-MM-DD."
+                ),
+            }), 400
+
+    return jsonify(
+        get_windrose(
+            period=period,
+            station_id=station_id,
+            selected_date=selected_date,
+        )
+    )
 
 
 @app.route("/api/master/summary")
@@ -1054,10 +1443,9 @@ def api_health():
 
     # AtmosLink V5.1.1 operational state model.
     #
-    # 0-180 s: normal acquisition cadence.
-    # 181-600 s: expected operational delay.
-    # 601-900 s: confirmed stale observation.
-    # >900 s: critical acquisition interruption.
+    # 0-420 s: normal acquisition and synchronization cadence.
+    # 421-900 s: operational delay beyond the expected cycle.
+    # >900 s: confirmed stale observation.
     if database_status != "ok":
         overall_status = "unhealthy"
         operational_state = "CRITICAL"
@@ -1068,17 +1456,17 @@ def api_health():
         operational_state = "UNKNOWN"
         http_status = 200
 
-    elif observation_age_seconds <= 180:
+    elif observation_age_seconds <= 420:
         overall_status = "healthy"
-        operational_state = "FRESH"
-        http_status = 200
-
-    elif observation_age_seconds <= 600:
-        overall_status = "observing"
-        operational_state = "WAITING"
+        operational_state = "ONLINE"
         http_status = 200
 
     elif observation_age_seconds <= 900:
+        overall_status = "observing"
+        operational_state = "DELAYED"
+        http_status = 200
+
+    elif observation_age_seconds <= 1800:
         overall_status = "degraded"
         operational_state = "STALE"
         http_status = 200
@@ -1092,9 +1480,9 @@ def api_health():
         "status": overall_status,
         "operational_state": operational_state,
         "state_thresholds_seconds": {
-            "fresh_max": 180,
+            "fresh_max": 420,
             "waiting_max": 600,
-            "stale_max": 900,
+            "stale_max": 1800,
         },
         "service": "atmoslink-dashboard",
         "platform": "AtmosLink Research Platform",
@@ -1146,6 +1534,17 @@ def register_dashboard_startup_event():
 
 if os.environ.get("ATMOSLINK_STATION"):
     register_dashboard_startup_event()
+
+
+
+@app.route("/ui-v3")
+def ui_v3():
+    """
+    AtmosLink Multi-Site Scientific Control Center.
+    Interfaz paralela a las vistas legacy y UI v2.
+    """
+    return render_template("v3/index.html")
+
 
 
 if __name__ == "__main__":

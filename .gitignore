@@ -44,3 +44,52 @@ erial
 # Arduino IDE temporary copies
 *_copy_*.ino
 *_copy_*
+
+# ============================================================
+# AtmosLink - exclusiones de desarrollo y operación
+# Baseline científico 2026-09-04
+# ============================================================
+
+# Entornos Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Artefactos de compilación
+build/
+dist/
+*.o
+*.elf
+*.map
+
+# Backups / rescates / estados temporales
+*.bak
+*.bak.*
+*.fallido_*
+*.rescate_*
+*.rescate_bloqueado_*
+*.pre_*
+
+# Datos operativos locales
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Backups de datos
+backups/
+*.zip
+*.tar.gz
+
+# Variables y secretos locales
+.env
+.env.*
+credentials.json
+credentials*.json
+client_secret*.json
+token.json
+token*.json
+on.tool
+Config/remote_stations.yaml

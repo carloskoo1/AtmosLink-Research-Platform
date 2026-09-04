@@ -1,0 +1,1257 @@
+{
+  "latest": {
+    "bme_ok": 1,
+    "bucket_hour": "2026-07-27 03:00:00-05:00",
+    "bucket_minute": "2026-07-27 03:01:00-05:00",
+    "dew_point_C": 9.92,
+    "era5_age_label": "hace 7.2 días",
+    "era5_dewpoint_c": 8.184112548828125,
+    "era5_lat": null,
+    "era5_lon": null,
+    "era5_precip_mm": 0.0809207558631897,
+    "era5_press_hpa": 693.0918579101562,
+    "era5_rh_pct": 99.39,
+    "era5_site_tag": null,
+    "era5_temp_c": 8.27392578125,
+    "era5_timestamp_local": "2026-07-19 23:00:00",
+    "era5_timestamp_utc": null,
+    "era5_wind_ms": 0.9349427819252014,
+    "hum_avg_pct": 78.98,
+    "local_bme_ok": 1,
+    "local_dew_point_c": 9.92,
+    "local_hum_avg_pct": 78.98,
+    "local_hum_max_pct": 79.17,
+    "local_hum_min_pct": 78.85,
+    "local_press_hpa": 741.6,
+    "local_pulses_delta": 0,
+    "local_pulses_total": 13,
+    "local_rain_1h_mm": 0.0,
+    "local_rain_1min_mm": 0.0,
+    "local_rain_ok": 1,
+    "local_rain_total_mm": 3.63,
+    "local_temp_avg_c": 13.49,
+    "local_temp_max_c": 13.52,
+    "local_temp_min_c": 13.47,
+    "local_vapor_pressure_hpa": 12.21,
+    "local_wind_direction_deg": null,
+    "local_wind_gust_ms": null,
+    "local_wind_ok": 0.0,
+    "local_wind_speed_ms": null,
+    "master_timestamp_hour": "2026-07-27 03:00:00-05:00",
+    "master_timestamp_local": "2026-07-27 03:01:00-05:00",
+    "nasa_age_label": "hace 2.4 días",
+    "nasa_dewpoint_c": 14.17,
+    "nasa_downloaded_at_utc": null,
+    "nasa_lat": null,
+    "nasa_lon": null,
+    "nasa_precip_mm": 5.53,
+    "nasa_press_hpa": 780.4000000000001,
+    "nasa_press_kpa": null,
+    "nasa_rh_pct": 88.52,
+    "nasa_site_tag": null,
+    "nasa_source": null,
+    "nasa_temp_c": 16.08,
+    "nasa_timestamp_local": "2026-07-24 18:00:00",
+    "nasa_timestamp_utc": null,
+    "nasa_wind10m_ms": 0.9,
+    "observation_age_label": "hace 1.2 min",
+    "observation_age_seconds": 73,
+    "observation_state": "CURRENT",
+    "pres_avg_hPa": 741.6,
+    "radio_dl_rate": null,
+    "radio_error": null,
+    "radio_local_role": null,
+    "radio_mcs_dl": null,
+    "radio_mcs_ul": null,
+    "radio_note": "ok",
+    "radio_role": "AP",
+    "radio_role_from_radio": null,
+    "radio_rssi_c0e": null,
+    "radio_rssi_c0p": null,
+    "radio_rssi_c1e": null,
+    "radio_rssi_c1p": null,
+    "radio_snr_dl": null,
+    "radio_snr_ul": null,
+    "radio_sta_dl_rssi": null,
+    "radio_sta_ul_rssi": null,
+    "radio_station_id": null,
+    "radio_station_name": null,
+    "radio_timestamp_local": "2026-07-27 01:07:53",
+    "radio_timestamp_utc": null,
+    "radio_ul_rate": null,
+    "rain_1h_mm": 0.0,
+    "rain_1min_mm": 0.0,
+    "rain_ok": 1,
+    "rain_state": "NO_RAIN",
+    "rain_total_mm": 3.63,
+    "scientific_quality": {
+      "anemometer": "NOT_INSTALLED",
+      "bme280": "OK",
+      "era5": "OK",
+      "nasa_power": "OK",
+      "radio_link": "OK",
+      "rain_gauge": "OK"
+    },
+    "station_id": "CU01",
+    "station_name": "Cerro Cuñacales",
+    "temp_avg_C": 13.49,
+    "timestamp_local": "2026-07-27 03:01:00",
+    "vapor_pressure_hPa": 12.21,
+    "weather_timestamp_local": "2026-07-27T03:01:01-05:00",
+    "weather_timestamp_local_clean": "2026-07-27 03:01:01",
+    "weather_timestamp_utc": "2026-07-27T08:01:01+00:00",
+    "wind_direction_deg": null,
+    "wind_direction_text": null,
+    "wind_gust_ms": null,
+    "wind_ok": 0.0,
+    "wind_requested": false,
+    "wind_speed_ms": null,
+    "wind_state": "NOT_INSTALLED"
+  },
+  "health": {
+    "checked_at_local": "2026-07-27T03:02:14",
+    "database": {
+      "error": null,
+      "path": "/home/carlos/Proyectos/EstacionMeteorologica/SQLite/CU01/weather_local.db",
+      "status": "ok"
+    },
+    "latest_error": null,
+    "latest_observation": "2026-07-27 03:01:01",
+    "observation_age_seconds": 73.0,
+    "operational_state": "FRESH",
+    "platform": "AtmosLink Research Platform",
+    "service": "atmoslink-dashboard",
+    "state_thresholds_seconds": {
+      "fresh_max": 180,
+      "stale_max": 900,
+      "waiting_max": 600
+    },
+    "station_id": "CU01",
+    "station_name": "Cerro Cuñacales",
+    "status": "healthy",
+    "version": "5.1.1"
+  },
+  "core_status": {
+    "alerts": {
+      "alert_count": 2,
+      "alerts": [
+        {
+          "id": "TASK_remote_backup_FAILED",
+          "message": "Estado: timeout. Fallos acumulados: 1.",
+          "severity": "warning",
+          "title": "Tarea fallida: remote_backup"
+        },
+        {
+          "id": "RADIO_LINK_STATUS",
+          "message": "Nota del colector: SM_NOT_ASSOCIATED",
+          "severity": "warning",
+          "title": "Estado anómalo del radioenlace"
+        }
+      ],
+      "updated_at": "2026-07-27T08:01:32+00:00"
+    },
+    "atmospheric_corridor": {
+      "database": "SQLite/CU01/weather_local.db",
+      "message": "Corredor atmosférico AP–MID–SM generado correctamente.",
+      "sources": {
+        "ERA5": {
+          "gradients": [
+            {
+              "ap_value": 9.022,
+              "gradient_ap_to_mid": -0.748,
+              "gradient_ap_to_sm": -1.402,
+              "gradient_mid_to_sm": -0.654,
+              "label": "Temperatura",
+              "mid_value": 8.274,
+              "sm_value": 7.62,
+              "unit": "°C",
+              "variable": "temp_c"
+            },
+            {
+              "ap_value": 99.63180653255283,
+              "gradient_ap_to_mid": -0.24,
+              "gradient_ap_to_sm": -1.783,
+              "gradient_mid_to_sm": -1.543,
+              "label": "Humedad relativa",
+              "mid_value": 99.39202498633728,
+              "sm_value": 97.84876765353508,
+              "unit": "%",
+              "variable": "rh_pct"
+            },
+            {
+              "ap_value": 707.142,
+              "gradient_ap_to_mid": -14.05,
+              "gradient_ap_to_sm": -30.63,
+              "gradient_mid_to_sm": -16.58,
+              "label": "Presión",
+              "mid_value": 693.092,
+              "sm_value": 676.512,
+              "unit": "hPa",
+              "variable": "press_hpa"
+            },
+            {
+              "ap_value": 0.047,
+              "gradient_ap_to_mid": 0.034,
+              "gradient_ap_to_sm": 0.023,
+              "gradient_mid_to_sm": -0.011,
+              "label": "Precipitación",
+              "mid_value": 0.081,
+              "sm_value": 0.07,
+              "unit": "mm",
+              "variable": "precip_mm"
+            },
+            {
+              "ap_value": 0.669,
+              "gradient_ap_to_mid": 0.266,
+              "gradient_ap_to_sm": 0.472,
+              "gradient_mid_to_sm": 0.206,
+              "label": "Viento",
+              "mid_value": 0.935,
+              "sm_value": 1.141,
+              "unit": "m/s",
+              "variable": "wind_ms"
+            }
+          ],
+          "points": {
+            "AP_CUNACALES": {
+              "precip_mm": 0.047,
+              "press_hpa": 707.142,
+              "rh_pct": 99.63180653255283,
+              "site_tag": "AP_CUNACALES",
+              "temp_c": 9.022,
+              "timestamp_local": "2026-07-19T23:00:00-05:00",
+              "wind_ms": 0.669
+            },
+            "MID_LINK": {
+              "precip_mm": 0.081,
+              "press_hpa": 693.092,
+              "rh_pct": 99.39202498633728,
+              "site_tag": "MID_LINK",
+              "temp_c": 8.274,
+              "timestamp_local": "2026-07-19T23:00:00-05:00",
+              "wind_ms": 0.935
+            },
+            "SM_SAN_JOSE": {
+              "precip_mm": 0.07,
+              "press_hpa": 676.512,
+              "rh_pct": 97.84876765353508,
+              "site_tag": "SM_SAN_JOSE",
+              "temp_c": 7.62,
+              "timestamp_local": "2026-07-19T23:00:00-05:00",
+              "wind_ms": 1.141
+            }
+          },
+          "source": "ERA5",
+          "valid_points": 3
+        },
+        "NASA": {
+          "gradients": [
+            {
+              "ap_value": 16.08,
+              "gradient_ap_to_mid": 0.0,
+              "gradient_ap_to_sm": 0.25,
+              "gradient_mid_to_sm": 0.25,
+              "label": "Temperatura",
+              "mid_value": 16.08,
+              "sm_value": 16.33,
+              "unit": "°C",
+              "variable": "temp_c"
+            },
+            {
+              "ap_value": 88.52,
+              "gradient_ap_to_mid": 0.0,
+              "gradient_ap_to_sm": -6.92,
+              "gradient_mid_to_sm": -6.92,
+              "label": "Humedad relativa",
+              "mid_value": 88.52,
+              "sm_value": 81.6,
+              "unit": "%",
+              "variable": "rh_pct"
+            },
+            {
+              "ap_value": 780.4,
+              "gradient_ap_to_mid": 0.0,
+              "gradient_ap_to_sm": -13.7,
+              "gradient_mid_to_sm": -13.7,
+              "label": "Presión",
+              "mid_value": 780.4,
+              "sm_value": 766.7,
+              "unit": "hPa",
+              "variable": "press_hpa"
+            },
+            {
+              "ap_value": 5.53,
+              "gradient_ap_to_mid": 0.0,
+              "gradient_ap_to_sm": 5.8,
+              "gradient_mid_to_sm": 5.8,
+              "label": "Precipitación",
+              "mid_value": 5.53,
+              "sm_value": 11.33,
+              "unit": "mm",
+              "variable": "precip_mm"
+            },
+            {
+              "ap_value": 0.9,
+              "gradient_ap_to_mid": 0.0,
+              "gradient_ap_to_sm": -0.08,
+              "gradient_mid_to_sm": -0.08,
+              "label": "Viento",
+              "mid_value": 0.9,
+              "sm_value": 0.82,
+              "unit": "m/s",
+              "variable": "wind_ms"
+            }
+          ],
+          "points": {
+            "AP_CUNACALES": {
+              "precip_mm": 5.53,
+              "press_hpa": 780.4,
+              "rh_pct": 88.52,
+              "site_tag": "AP_CUNACALES",
+              "temp_c": 16.08,
+              "timestamp_local": "2026-07-24T18:00:00-05:00",
+              "wind_ms": 0.9
+            },
+            "MID_LINK": {
+              "precip_mm": 5.53,
+              "press_hpa": 780.4,
+              "rh_pct": 88.52,
+              "site_tag": "MID_LINK",
+              "temp_c": 16.08,
+              "timestamp_local": "2026-07-24T18:00:00-05:00",
+              "wind_ms": 0.9
+            },
+            "SM_SAN_JOSE": {
+              "precip_mm": 11.33,
+              "press_hpa": 766.7,
+              "rh_pct": 81.6,
+              "site_tag": "SM_SAN_JOSE",
+              "temp_c": 16.33,
+              "timestamp_local": "2026-07-24T18:00:00-05:00",
+              "wind_ms": 0.82
+            }
+          },
+          "source": "NASA",
+          "valid_points": 3
+        }
+      },
+      "station_id": "CU01",
+      "station_name": "Cerro Cuñacales",
+      "status": "ok",
+      "updated_at": "2026-07-27T02:57:48"
+    },
+    "database": "/home/carlos/Proyectos/EstacionMeteorologica/SQLite/CU01/weather_local.db",
+    "health": {
+      "checks": {
+        "cpu_memory": {
+          "cpu_percent": 11.3,
+          "memory_percent": 32.6,
+          "status": "ok"
+        },
+        "disk": {
+          "free_gb": 404.6,
+          "free_percent": 86.57,
+          "status": "ok",
+          "total_gb": 467.35,
+          "used_gb": 38.94
+        },
+        "internet": {
+          "message": "Internet disponible",
+          "status": "ok"
+        },
+        "sqlite": {
+          "databases": [
+            {
+              "database": "SQLite/weather_local_sj01.db",
+              "integrity": "ok"
+            },
+            {
+              "database": "SQLite/weather_local.db",
+              "integrity": "ok"
+            },
+            {
+              "database": "SQLite/global_master.db",
+              "integrity": "ok"
+            },
+            {
+              "database": "SQLite/propagation_physics.db",
+              "integrity": "ok"
+            },
+            {
+              "database": "SQLite/propagation_physics_field.db",
+              "integrity": "ok"
+            }
+          ],
+          "status": "ok"
+        },
+        "task_registry": {
+          "status": "ok",
+          "tasks": {
+            "atmospheric_corridor": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 0.079,
+              "last_end": "2026-07-27T02:57:48",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:48",
+              "last_start": "2026-07-27T02:57:48",
+              "last_success": "2026-07-27T02:57:48",
+              "status": "completed"
+            },
+            "build_station_observations": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 1.582,
+              "last_end": "2026-07-27T02:57:47",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:47",
+              "last_start": "2026-07-27T02:57:45",
+              "last_success": "2026-07-27T02:57:47",
+              "status": "completed"
+            },
+            "daily_backup": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 21600,
+              "last_duration_seconds": 2.794,
+              "last_end": "2026-07-26T22:22:47",
+              "last_error": null,
+              "last_run": "2026-07-26T22:22:47",
+              "last_start": "2026-07-26T22:22:44",
+              "last_success": "2026-07-26T22:22:47",
+              "status": "completed"
+            },
+            "enrich_master_dataset": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 10.796,
+              "last_end": "2026-07-27T02:57:40",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:40",
+              "last_start": "2026-07-27T02:57:29",
+              "last_success": "2026-07-27T02:57:40",
+              "status": "completed"
+            },
+            "era5_downloader": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 86400,
+              "last_duration_seconds": 202.294,
+              "last_end": "2026-07-26T16:22:06",
+              "last_error": null,
+              "last_run": "2026-07-26T16:22:06",
+              "last_start": "2026-07-26T16:18:43",
+              "last_success": "2026-07-26T16:22:06",
+              "status": "completed"
+            },
+            "health_monitor": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 60,
+              "last_duration_seconds": 1.257,
+              "last_end": "2026-07-27T03:00:22",
+              "last_error": null,
+              "last_run": "2026-07-27T03:00:22",
+              "last_start": "2026-07-27T03:01:30",
+              "last_success": "2026-07-27T03:00:22",
+              "status": "running"
+            },
+            "master_quality_check": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 5.339,
+              "last_end": "2026-07-27T02:57:45",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:45",
+              "last_start": "2026-07-27T02:57:40",
+              "last_success": "2026-07-27T02:57:45",
+              "status": "completed"
+            },
+            "nasa_power_downloader": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 86400,
+              "last_duration_seconds": 4.633,
+              "last_end": "2026-07-26T16:22:10",
+              "last_error": null,
+              "last_run": "2026-07-26T16:22:10",
+              "last_start": "2026-07-26T16:22:06",
+              "last_success": "2026-07-26T16:22:10",
+              "status": "completed"
+            },
+            "notification_engine": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 60,
+              "last_duration_seconds": 0.172,
+              "last_end": "2026-07-27T03:00:22",
+              "last_error": null,
+              "last_run": "2026-07-27T03:00:22",
+              "last_start": "2026-07-27T03:00:22",
+              "last_success": "2026-07-27T03:00:22",
+              "status": "completed"
+            },
+            "qc_summary": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 0.075,
+              "last_end": "2026-07-27T02:57:45",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:45",
+              "last_start": "2026-07-27T02:57:45",
+              "last_success": "2026-07-27T02:57:45",
+              "status": "completed"
+            },
+            "radio_collector": {
+              "enabled": false,
+              "failures": 0,
+              "interval_seconds": 60,
+              "last_duration_seconds": null,
+              "last_end": null,
+              "last_error": null,
+              "last_run": null,
+              "last_start": null,
+              "last_success": null,
+              "status": "disabled"
+            },
+            "remote_backup": {
+              "enabled": true,
+              "failures": 1,
+              "interval_seconds": 900,
+              "last_duration_seconds": 300.007,
+              "last_end": "2026-07-27T02:46:52",
+              "last_error": "Timeout after 300 seconds",
+              "last_run": "2026-07-27T02:46:52",
+              "last_start": "2026-07-27T02:41:52",
+              "last_success": "2026-07-27T02:26:50",
+              "status": "timeout"
+            },
+            "scientific_agreement_index": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 0.076,
+              "last_end": "2026-07-27T02:57:48",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:48",
+              "last_start": "2026-07-27T02:57:48",
+              "last_success": "2026-07-27T02:57:48",
+              "status": "completed"
+            },
+            "scientific_comparison": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 1.604,
+              "last_end": "2026-07-27T02:57:48",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:48",
+              "last_start": "2026-07-27T02:57:47",
+              "last_success": "2026-07-27T02:57:48",
+              "status": "completed"
+            },
+            "scientific_health_score": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 0.085,
+              "last_end": "2026-07-27T02:57:45",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:45",
+              "last_start": "2026-07-27T02:57:45",
+              "last_success": "2026-07-27T02:57:45",
+              "status": "completed"
+            },
+            "scientific_reliability": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 0.095,
+              "last_end": "2026-07-27T02:57:45",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:45",
+              "last_start": "2026-07-27T02:57:45",
+              "last_success": "2026-07-27T02:57:45",
+              "status": "completed"
+            },
+            "station_sync": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 300,
+              "last_duration_seconds": 4.694,
+              "last_end": "2026-07-27T02:57:24",
+              "last_error": null,
+              "last_run": "2026-07-27T02:57:24",
+              "last_start": "2026-07-27T02:57:19",
+              "last_success": "2026-07-27T02:57:24",
+              "status": "completed"
+            },
+            "sync_master_dataset": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 60,
+              "last_duration_seconds": 7.932,
+              "last_end": "2026-07-27T03:01:30",
+              "last_error": null,
+              "last_run": "2026-07-27T03:01:30",
+              "last_start": "2026-07-27T03:01:22",
+              "last_success": "2026-07-27T03:01:30",
+              "status": "completed"
+            },
+            "telegram_alert_sender": {
+              "enabled": true,
+              "failures": 0,
+              "interval_seconds": 60,
+              "last_duration_seconds": 0.105,
+              "last_end": "2026-07-27T03:01:30",
+              "last_error": null,
+              "last_run": "2026-07-27T03:01:30",
+              "last_start": "2026-07-27T03:01:30",
+              "last_success": "2026-07-27T03:01:30",
+              "status": "completed"
+            },
+            "weather_logger": {
+              "enabled": false,
+              "failures": 0,
+              "interval_seconds": 60,
+              "last_duration_seconds": null,
+              "last_end": null,
+              "last_error": null,
+              "last_run": null,
+              "last_start": null,
+              "last_success": null,
+              "status": "disabled"
+            }
+          },
+          "updated_at": "2026-07-27T03:01:30"
+        }
+      },
+      "overall_status": "HEALTHY",
+      "updated_at": "2026-07-27T03:01:32"
+    },
+    "master_summary": {
+      "era5_matched_records": 23815,
+      "first_record": "2026-06-25 21:30:00",
+      "last_record": "2026-07-27 03:01:00",
+      "nasa_matched_records": 32425,
+      "radio_matched_records": 3,
+      "total_records": 35787
+    },
+    "qc_summary": {
+      "critical": 0,
+      "database": "SQLite/CU01/weather_local.db",
+      "issues_by_type": {
+        "HUM_JUMP": 2,
+        "PRESS_JUMP": 49,
+        "RAIN_TOTAL_JUMP": 698
+      },
+      "message": "Se detectaron 749 advertencias de calidad.",
+      "ok": 0,
+      "station_id": "CU01",
+      "station_name": "Cerro Cuñacales",
+      "status": "warning",
+      "total_issues": 749,
+      "updated_at": "2026-07-27T02:57:45",
+      "warning": 749
+    },
+    "registry": {
+      "tasks": {
+        "atmospheric_corridor": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 0.079,
+          "last_end": "2026-07-27T02:57:48",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:48",
+          "last_start": "2026-07-27T02:57:48",
+          "last_success": "2026-07-27T02:57:48",
+          "status": "completed"
+        },
+        "build_station_observations": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 1.582,
+          "last_end": "2026-07-27T02:57:47",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:47",
+          "last_start": "2026-07-27T02:57:45",
+          "last_success": "2026-07-27T02:57:47",
+          "status": "completed"
+        },
+        "daily_backup": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 21600,
+          "last_duration_seconds": 2.794,
+          "last_end": "2026-07-26T22:22:47",
+          "last_error": null,
+          "last_run": "2026-07-26T22:22:47",
+          "last_start": "2026-07-26T22:22:44",
+          "last_success": "2026-07-26T22:22:47",
+          "status": "completed"
+        },
+        "enrich_master_dataset": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 10.796,
+          "last_end": "2026-07-27T02:57:40",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:40",
+          "last_start": "2026-07-27T02:57:29",
+          "last_success": "2026-07-27T02:57:40",
+          "status": "completed"
+        },
+        "era5_downloader": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 86400,
+          "last_duration_seconds": 202.294,
+          "last_end": "2026-07-26T16:22:06",
+          "last_error": null,
+          "last_run": "2026-07-26T16:22:06",
+          "last_start": "2026-07-26T16:18:43",
+          "last_success": "2026-07-26T16:22:06",
+          "status": "completed"
+        },
+        "health_monitor": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 60,
+          "last_duration_seconds": 1.253,
+          "last_end": "2026-07-27T03:01:32",
+          "last_error": null,
+          "last_run": "2026-07-27T03:01:32",
+          "last_start": "2026-07-27T03:01:30",
+          "last_success": "2026-07-27T03:01:32",
+          "status": "completed"
+        },
+        "master_quality_check": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 5.339,
+          "last_end": "2026-07-27T02:57:45",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:45",
+          "last_start": "2026-07-27T02:57:40",
+          "last_success": "2026-07-27T02:57:45",
+          "status": "completed"
+        },
+        "nasa_power_downloader": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 86400,
+          "last_duration_seconds": 4.633,
+          "last_end": "2026-07-26T16:22:10",
+          "last_error": null,
+          "last_run": "2026-07-26T16:22:10",
+          "last_start": "2026-07-26T16:22:06",
+          "last_success": "2026-07-26T16:22:10",
+          "status": "completed"
+        },
+        "notification_engine": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 60,
+          "last_duration_seconds": 0.162,
+          "last_end": "2026-07-27T03:01:32",
+          "last_error": null,
+          "last_run": "2026-07-27T03:01:32",
+          "last_start": "2026-07-27T03:01:32",
+          "last_success": "2026-07-27T03:01:32",
+          "status": "completed"
+        },
+        "qc_summary": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 0.075,
+          "last_end": "2026-07-27T02:57:45",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:45",
+          "last_start": "2026-07-27T02:57:45",
+          "last_success": "2026-07-27T02:57:45",
+          "status": "completed"
+        },
+        "radio_collector": {
+          "enabled": false,
+          "failures": 0,
+          "interval_seconds": 60,
+          "last_duration_seconds": null,
+          "last_end": null,
+          "last_error": null,
+          "last_run": null,
+          "last_start": null,
+          "last_success": null,
+          "status": "disabled"
+        },
+        "remote_backup": {
+          "enabled": true,
+          "failures": 1,
+          "interval_seconds": 900,
+          "last_duration_seconds": 300.007,
+          "last_end": "2026-07-27T02:46:52",
+          "last_error": null,
+          "last_run": "2026-07-27T02:46:52",
+          "last_start": "2026-07-27T03:01:52",
+          "last_success": "2026-07-27T02:26:50",
+          "status": "running"
+        },
+        "scientific_agreement_index": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 0.076,
+          "last_end": "2026-07-27T02:57:48",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:48",
+          "last_start": "2026-07-27T02:57:48",
+          "last_success": "2026-07-27T02:57:48",
+          "status": "completed"
+        },
+        "scientific_comparison": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 1.604,
+          "last_end": "2026-07-27T02:57:48",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:48",
+          "last_start": "2026-07-27T02:57:47",
+          "last_success": "2026-07-27T02:57:48",
+          "status": "completed"
+        },
+        "scientific_health_score": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 0.085,
+          "last_end": "2026-07-27T02:57:45",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:45",
+          "last_start": "2026-07-27T02:57:45",
+          "last_success": "2026-07-27T02:57:45",
+          "status": "completed"
+        },
+        "scientific_reliability": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 0.095,
+          "last_end": "2026-07-27T02:57:45",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:45",
+          "last_start": "2026-07-27T02:57:45",
+          "last_success": "2026-07-27T02:57:45",
+          "status": "completed"
+        },
+        "station_sync": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 300,
+          "last_duration_seconds": 4.694,
+          "last_end": "2026-07-27T02:57:24",
+          "last_error": null,
+          "last_run": "2026-07-27T02:57:24",
+          "last_start": "2026-07-27T02:57:19",
+          "last_success": "2026-07-27T02:57:24",
+          "status": "completed"
+        },
+        "sync_master_dataset": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 60,
+          "last_duration_seconds": 7.932,
+          "last_end": "2026-07-27T03:01:30",
+          "last_error": null,
+          "last_run": "2026-07-27T03:01:30",
+          "last_start": "2026-07-27T03:01:22",
+          "last_success": "2026-07-27T03:01:30",
+          "status": "completed"
+        },
+        "telegram_alert_sender": {
+          "enabled": true,
+          "failures": 0,
+          "interval_seconds": 60,
+          "last_duration_seconds": 0.105,
+          "last_end": "2026-07-27T03:01:30",
+          "last_error": null,
+          "last_run": "2026-07-27T03:01:30",
+          "last_start": "2026-07-27T03:01:30",
+          "last_success": "2026-07-27T03:01:30",
+          "status": "completed"
+        },
+        "weather_logger": {
+          "enabled": false,
+          "failures": 0,
+          "interval_seconds": 60,
+          "last_duration_seconds": null,
+          "last_end": null,
+          "last_error": null,
+          "last_run": null,
+          "last_start": null,
+          "last_success": null,
+          "status": "disabled"
+        }
+      },
+      "updated_at": "2026-07-27T03:01:52"
+    },
+    "scientific_agreement": {
+      "agreement_index": 51.0,
+      "level": "low",
+      "message": "Baja concordancia científica; usar fuentes externas con cautela.",
+      "recommended_sources": {
+        "Humedad relativa": {
+          "correlation": 0.1959,
+          "mae": 14.1488,
+          "quality": "moderate",
+          "source": "ERA5",
+          "unit": "%"
+        },
+        "Precipitación": {
+          "correlation": -0.0684,
+          "mae": 1.5675,
+          "quality": "moderate",
+          "source": "ERA5",
+          "unit": "mm"
+        },
+        "Presión": {
+          "correlation": 0.091,
+          "mae": 180.5362,
+          "quality": "poor",
+          "source": "NASA",
+          "unit": "hPa"
+        },
+        "Temperatura": {
+          "correlation": 0.3283,
+          "mae": 6.9179,
+          "quality": "poor",
+          "source": "NASA",
+          "unit": "°C"
+        },
+        "Velocidad de viento": {
+          "correlation": 0.1708,
+          "mae": 1.1996,
+          "quality": "moderate",
+          "source": "NASA",
+          "unit": "m/s"
+        }
+      },
+      "source_wins": {
+        "ERA5": 2,
+        "NASA": 3
+      },
+      "station_id": "CU01",
+      "station_name": "Cerro Cuñacales",
+      "status": "critical",
+      "updated_at": "2026-07-27T02:57:48",
+      "valid_blocks": 10
+    },
+    "scientific_comparison": {
+      "comparisons": [
+        {
+          "bias": -6.8815,
+          "correlation": 0.3283,
+          "interpretation": "Diferencia térmica alta; requiere cautela.",
+          "label": "Temperatura",
+          "local_column": "local_temp_avg_c",
+          "mae": 6.9179,
+          "metric": "temperature_c",
+          "quality": "poor",
+          "records": 32425,
+          "rmse": 7.9335,
+          "source": "NASA",
+          "source_column": "nasa_temp_c",
+          "unit": "°C"
+        },
+        {
+          "bias": -13.8533,
+          "correlation": 0.4664,
+          "interpretation": "Diferencia térmica alta; requiere cautela.",
+          "label": "Temperatura",
+          "local_column": "local_temp_avg_c",
+          "mae": 13.8533,
+          "metric": "temperature_c",
+          "quality": "poor",
+          "records": 23815,
+          "rmse": 14.0603,
+          "source": "ERA5",
+          "source_column": "era5_temp_c",
+          "unit": "°C"
+        },
+        {
+          "bias": 0.9195,
+          "correlation": 0.2564,
+          "interpretation": "Concordancia de humedad aceptable.",
+          "label": "Humedad relativa",
+          "local_column": "local_hum_avg_pct",
+          "mae": 15.9935,
+          "metric": "relative_humidity_pct",
+          "quality": "moderate",
+          "records": 32425,
+          "rmse": 19.037,
+          "source": "NASA",
+          "source_column": "nasa_rh_pct",
+          "unit": "%"
+        },
+        {
+          "bias": 6.0486,
+          "correlation": 0.1959,
+          "interpretation": "Concordancia de humedad aceptable.",
+          "label": "Humedad relativa",
+          "local_column": "local_hum_avg_pct",
+          "mae": 14.1488,
+          "metric": "relative_humidity_pct",
+          "quality": "moderate",
+          "records": 23815,
+          "rmse": 16.4086,
+          "source": "ERA5",
+          "source_column": "era5_rh_pct",
+          "unit": "%"
+        },
+        {
+          "bias": -111.9999,
+          "correlation": 0.091,
+          "interpretation": "Diferencia barométrica elevada.",
+          "label": "Presión",
+          "local_column": "local_press_hpa",
+          "mae": 180.5362,
+          "metric": "pressure_hpa",
+          "quality": "poor",
+          "records": 32425,
+          "rmse": 192.5971,
+          "source": "NASA",
+          "source_column": "nasa_press_hpa",
+          "unit": "hPa"
+        },
+        {
+          "bias": -220.1578,
+          "correlation": 0.1196,
+          "interpretation": "Diferencia barométrica elevada.",
+          "label": "Presión",
+          "local_column": "local_press_hpa",
+          "mae": 230.7638,
+          "metric": "pressure_hpa",
+          "quality": "poor",
+          "records": 23815,
+          "rmse": 267.5287,
+          "source": "ERA5",
+          "source_column": "era5_press_hpa",
+          "unit": "hPa"
+        },
+        {
+          "bias": 1.5615,
+          "correlation": -0.0668,
+          "interpretation": "Diferencia de precipitación moderada.",
+          "label": "Precipitación",
+          "local_column": "local_rain_1h_mm",
+          "mae": 2.8536,
+          "metric": "precipitation_mm",
+          "quality": "moderate",
+          "records": 32425,
+          "rmse": 6.4019,
+          "source": "NASA",
+          "source_column": "nasa_precip_mm",
+          "unit": "mm"
+        },
+        {
+          "bias": -0.205,
+          "correlation": -0.0684,
+          "interpretation": "Diferencia de precipitación moderada.",
+          "label": "Precipitación",
+          "local_column": "local_rain_1h_mm",
+          "mae": 1.5675,
+          "metric": "precipitation_mm",
+          "quality": "moderate",
+          "records": 23815,
+          "rmse": 4.9959,
+          "source": "ERA5",
+          "source_column": "era5_precip_mm",
+          "unit": "mm"
+        },
+        {
+          "bias": 1.087,
+          "correlation": 0.1708,
+          "interpretation": "Diferencia de viento moderada.",
+          "label": "Velocidad de viento",
+          "local_column": "local_wind_speed_ms",
+          "mae": 1.1996,
+          "metric": "wind_speed_ms",
+          "quality": "moderate",
+          "records": 17475,
+          "rmse": 1.3513,
+          "source": "NASA",
+          "source_column": "nasa_wind10m_ms",
+          "unit": "m/s"
+        },
+        {
+          "bias": 1.1914,
+          "correlation": 0.3088,
+          "interpretation": "Diferencia de viento moderada.",
+          "label": "Velocidad de viento",
+          "local_column": "local_wind_speed_ms",
+          "mae": 1.2621,
+          "metric": "wind_speed_ms",
+          "quality": "moderate",
+          "records": 11279,
+          "rmse": 1.4382,
+          "source": "ERA5",
+          "source_column": "era5_wind_ms",
+          "unit": "m/s"
+        }
+      ],
+      "database": "SQLite/CU01/weather_local.db",
+      "message": "Comparación generada con 10 bloques válidos y 4 con baja concordancia.",
+      "recommendations": [
+        {
+          "bias": -6.8815,
+          "correlation": 0.3283,
+          "label": "Temperatura",
+          "mae": 6.9179,
+          "message": "Para Temperatura, la fuente recomendada es NASA con MAE=6.9179 °C y correlación=0.3283.",
+          "metric": "temperature_c",
+          "quality": "poor",
+          "recommended_source": "NASA",
+          "records": 32425,
+          "rmse": 7.9335,
+          "unit": "°C"
+        },
+        {
+          "bias": 6.0486,
+          "correlation": 0.1959,
+          "label": "Humedad relativa",
+          "mae": 14.1488,
+          "message": "Para Humedad relativa, la fuente recomendada es ERA5 con MAE=14.1488 % y correlación=0.1959.",
+          "metric": "relative_humidity_pct",
+          "quality": "moderate",
+          "recommended_source": "ERA5",
+          "records": 23815,
+          "rmse": 16.4086,
+          "unit": "%"
+        },
+        {
+          "bias": -111.9999,
+          "correlation": 0.091,
+          "label": "Presión",
+          "mae": 180.5362,
+          "message": "Para Presión, la fuente recomendada es NASA con MAE=180.5362 hPa y correlación=0.091.",
+          "metric": "pressure_hpa",
+          "quality": "poor",
+          "recommended_source": "NASA",
+          "records": 32425,
+          "rmse": 192.5971,
+          "unit": "hPa"
+        },
+        {
+          "bias": -0.205,
+          "correlation": -0.0684,
+          "label": "Precipitación",
+          "mae": 1.5675,
+          "message": "Para Precipitación, la fuente recomendada es ERA5 con MAE=1.5675 mm y correlación=-0.0684.",
+          "metric": "precipitation_mm",
+          "quality": "moderate",
+          "recommended_source": "ERA5",
+          "records": 23815,
+          "rmse": 4.9959,
+          "unit": "mm"
+        },
+        {
+          "bias": 1.087,
+          "correlation": 0.1708,
+          "label": "Velocidad de viento",
+          "mae": 1.1996,
+          "message": "Para Velocidad de viento, la fuente recomendada es NASA con MAE=1.1996 m/s y correlación=0.1708.",
+          "metric": "wind_speed_ms",
+          "quality": "moderate",
+          "recommended_source": "NASA",
+          "records": 17475,
+          "rmse": 1.3513,
+          "unit": "m/s"
+        }
+      ],
+      "station_id": "CU01",
+      "station_name": "Cerro Cuñacales",
+      "status": "warning",
+      "summary": "Se recomienda revisar las variables con alto error antes de usarlas como referencia externa.",
+      "updated_at": "2026-07-27T02:57:47"
+    },
+    "scientific_health": {
+      "database": "SQLite/CU01/weather_local.db",
+      "master_records": 35782,
+      "message": "Confiabilidad aceptable con advertencias de calidad.",
+      "qc_critical": 0,
+      "qc_warning": 749,
+      "score": 87.91,
+      "station_id": "CU01",
+      "station_name": "Cerro Cuñacales",
+      "status": "warning",
+      "updated_at": "2026-07-27T02:57:45",
+      "validity_percent": 97.91,
+      "weather_records": 37648
+    },
+    "scientific_reliability": {
+      "database": "SQLite/CU01/weather_local.db",
+      "discarded_estimate": 1866,
+      "local_completeness_percent": 100.0,
+      "master_completeness_percent": 95.04,
+      "master_records": 35782,
+      "message": "Confiabilidad científica aceptable con observaciones.",
+      "qc_critical": 0,
+      "qc_status": "warning",
+      "qc_warning": 749,
+      "reliability_percent": 92.47,
+      "station_id": "CU01",
+      "station_name": "Cerro Cuñacales",
+      "status": "warning",
+      "updated_at": "2026-07-27T02:57:45",
+      "validity_percent": 97.91,
+      "weather_records": 37648
+    },
+    "station": {
+      "altitude_m": 2730,
+      "ap_ip": "192.168.1.2",
+      "config_file": "Config/station_cu01.yaml",
+      "database": "SQLite/CU01/weather_local.db",
+      "deployment_mode": "field",
+      "latitude": -6.6924,
+      "local_role": "AP",
+      "longitude": -78.51418,
+      "radio_role": "AP",
+      "serial_baudrate": null,
+      "serial_port": null,
+      "serial_timeout": null,
+      "sm_ip": "192.168.1.3",
+      "station_id": "CU01",
+      "station_name": "Cerro Cuñacales",
+      "timezone": "America/Lima"
+    }
+  },
+  "stations_latest": [
+    {
+      "bme_ok": 1,
+      "hum_avg_pct": 78.98,
+      "pres_avg_hPa": 741.6,
+      "radio_role": "AP",
+      "rain_ok": 1,
+      "rain_total_mm": 3.63,
+      "source_station_id": "CU01",
+      "station_id": "CU01",
+      "station_name": "Cerro Cuñacales",
+      "temp_avg_C": 13.49,
+      "timestamp_local": "2026-07-27 03:01:01",
+      "wind_direction_deg": null,
+      "wind_direction_text": null,
+      "wind_gust_ms": null,
+      "wind_ok": 0.0,
+      "wind_speed_ms": null
+    }
+  ]
+}

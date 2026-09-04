@@ -33,7 +33,8 @@ def run_quality_check():
     if not DB_FILE.exists():
         raise FileNotFoundError(f"No existe la base de datos: {DB_FILE}")
 
-    conn = sqlite3.connect(DB_FILE)
+    conn = sqlite3.connect(DB_FILE, timeout=60)
+    conn.execute("PRAGMA busy_timeout=60000")
 
     table = "master_observations_enriched"
     if not table_exists(conn, table):

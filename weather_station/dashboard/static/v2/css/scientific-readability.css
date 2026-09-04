@@ -1,0 +1,233 @@
+/* =========================================================
+   AtmosLink — Legibilidad científica
+   Contraste moderado para fondos claros.
+   ========================================================= */
+
+:root {
+  --atl-text-primary-strong: #203b55;
+  --atl-text-primary: #294760;
+  --atl-text-secondary: #506a80;
+  --atl-text-muted: #647d92;
+  --atl-text-label: #58738a;
+  --atl-border-visible: #ccdbe7;
+  --atl-card-soft: #f3f7fa;
+}
+
+/*
+ * Contenido principal. No modifica la barra lateral.
+ */
+main,
+#proDashboardRoot,
+.atl-main,
+.atl-content,
+.atl-professional {
+  color: var(
+    --atl-text-primary
+  );
+}
+
+/*
+ * Títulos.
+ */
+main h1,
+main h2,
+main h3,
+main h4,
+main h5,
+#proDashboardRoot h1,
+#proDashboardRoot h2,
+#proDashboardRoot h3,
+#proDashboardRoot h4 {
+  color: var(
+    --atl-text-primary-strong
+  ) !important;
+  font-weight: 700;
+}
+
+/*
+ * Párrafos y textos explicativos.
+ */
+main p,
+main td,
+main th,
+#proDashboardRoot p,
+#proDashboardRoot td,
+#proDashboardRoot th {
+  color: var(
+    --atl-text-secondary
+  );
+}
+
+/*
+ * Textos secundarios que antes aparecían demasiado claros.
+ */
+main small,
+main time,
+main figcaption,
+#proDashboardRoot small,
+#proDashboardRoot time,
+#proDashboardRoot figcaption,
+[class*="__description"],
+[class*="__detail"],
+[class*="__subtitle"],
+[class*="__meta"] {
+  color: var(
+    --atl-text-muted
+  ) !important;
+  opacity: 1 !important;
+}
+
+/*
+ * Etiquetas, encabezados pequeños y nombres de variables.
+ */
+main label,
+#proDashboardRoot label,
+[class*="__label"],
+[class*="eyebrow"],
+[class*="kicker"] {
+  color: var(
+    --atl-text-label
+  ) !important;
+  opacity: 1 !important;
+  font-weight: 650;
+}
+
+/*
+ * Valores científicos y métricas.
+ */
+main strong,
+main output,
+#proDashboardRoot strong,
+#proDashboardRoot output,
+[class*="__value"] {
+  color: var(
+    --atl-text-primary-strong
+  );
+}
+
+/*
+ * Tarjetas y tablas: borde ligeramente más visible.
+ */
+main article,
+main table,
+#proDashboardRoot article,
+#proDashboardRoot table,
+[class*="metric-card"],
+[class*="status-card"],
+[class*="summary-card"] {
+  border-color: var(
+    --atl-border-visible
+  );
+}
+
+/*
+ * Conservación de colores semánticos.
+ */
+.status-ok,
+.status-online,
+.status-success,
+[class*="--success"],
+[class*="--online"] {
+  color: #087443 !important;
+}
+
+.status-warning,
+.status-pending,
+[class*="--warning"],
+[class*="--pending"] {
+  color: #8a5a00 !important;
+}
+
+.status-error,
+.status-danger,
+[class*="--error"],
+[class*="--danger"] {
+  color: #a83a3a !important;
+}
+
+/*
+ * Notas científicas con contraste suficiente.
+ */
+.atl-note,
+.atl-scientific-note,
+[class*="warning"],
+[class*="interpretation"] {
+  color: #5a4a24;
+}
+
+/*
+ * Mejor lectura de los ejes y leyendas SVG.
+ */
+main svg text,
+#proDashboardRoot svg text {
+  fill: #526d84;
+  opacity: 1;
+}
+
+/*
+ * Evita que los textos deshabilitados sean casi invisibles.
+ */
+main [aria-disabled="true"],
+#proDashboardRoot [aria-disabled="true"] {
+  opacity: 0.72;
+}
+
+
+/* ATMOSLINK_SCIENTIFIC_POLISH_V2
+   Contraste y semántica visual para estados en acumulación.
+*/
+
+:root {
+  --atmos-text-main: #203b55;
+  --atmos-text-body: #38566f;
+  --atmos-text-muted: #5b7186;
+  --atmos-pending: #b7791f;
+  --atmos-pending-soft: #fff8e8;
+  --atmos-pending-border: #e7b85d;
+}
+
+/* Textos auxiliares y secundarios con mayor legibilidad. */
+.scientific-card small,
+.scientific-card .subtitle,
+.scientific-card .description,
+.scientific-card .meta,
+.scientific-card .label,
+.scientific-card [class*="caption"],
+.scientific-card [class*="helper"],
+.scientific-card [class*="secondary"],
+.scientific-card [class*="muted"],
+[class*="scientific"] small,
+[class*="campaign"] small,
+[class*="readiness"] small,
+[class*="validation"] small {
+  color: var(--atmos-text-muted);
+  opacity: 1;
+}
+
+/* Clases aplicadas por scientific-consistency.js. */
+.atmos-pending-panel {
+  border-left-color: var(--atmos-pending) !important;
+}
+
+.atmos-pending-panel [class*="progress"] {
+  --progress-color: var(--atmos-pending);
+}
+
+.atmos-pending-status {
+  color: var(--atmos-pending) !important;
+}
+
+.atmos-pending-notice {
+  background: var(--atmos-pending-soft) !important;
+  border-color: var(--atmos-pending-border) !important;
+  color: #74521b !important;
+}
+
+/* Una cobertura de 0 % debe verse vacía, sin simular avance. */
+.atmos-zero-progress {
+  width: 0 !important;
+  min-width: 0 !important;
+  flex: 0 0 0 !important;
+  transform: scaleX(0) !important;
+  transform-origin: left center !important;
+}

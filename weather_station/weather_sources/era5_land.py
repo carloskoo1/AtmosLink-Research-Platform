@@ -144,9 +144,17 @@ def extract_day(date_lima, site_tag, lat, lon):
     if float(ds[lon_name].max()) > 180 and lon_sel < 0:
         lon_sel = 360 + lon_sel
 
-    point = ds.sel({lat_name: lat, lon_name: lon_sel}, method="nearest")
-    point = point.sel({time_name: slice(start_utc, end_utc - timedelta(seconds=1))})
+    point = ds.sel(
+        {
+            lat_name: lat,
+            lon_name: lon_sel,
+        },
+        method="nearest",
+    )
 
+    # Se conserva inicialmente toda la ventana UTC descargada.
+    # Esto permite utilizar la hora anterior al inicio del día
+    # local para desacumular correctamente la precipitación.
     df = point.to_dataframe().reset_index()
 
     if time_name in df.columns and time_name != "time":
@@ -160,12 +168,57 @@ def extract_day(date_lima, site_tag, lat, lon):
 
     df["temp_c"] = pick_col(df, "2m_temperature", "t2m") - 273.15
     df["dewpoint_c"] = pick_col(df, "2m_dewpoint_temperature", "d2m") - 273.15
-    df["precip_mm"] = pick_col(df, "total_precipitation", "tp") * 1000.0
+    # ERA5-Land entrega total_precipitation como acumulación
+    # dentro del ciclo. Primero se convierte de metros a milímetros
+    # y después se obtiene la cantidad correspondiente a cada hora.
+    precip_accumulated_mm = (
+        pd.to_numeric(
+            pick_col(
+                df,
+                "total_precipitation",
+                "tp",
+            ),
+            errors="coerce",
+        )
+        * 1000.0
+    )
+
+    precip_difference_mm = (
+        precip_accumulated_mm.diff()
+    )
+
+    # Una diferencia negativa identifica el reinicio del ciclo.
+    # En esa hora, el propio valor acumulado representa la primera
+    # cantidad del nuevo ciclo.
+    df["precip_mm"] = (
+        precip_difference_mm.where(
+            precip_difference_mm >= 0,
+            precip_accumulated_mm,
+        )
+        .fillna(precip_accumulated_mm)
+        .clip(lower=0)
+    )
     df["press_hpa"] = pick_col(df, "surface_pressure", "sp") / 100.0
 
     u = pick_col(df, "10m_u_component_of_wind", "u10")
     v = pick_col(df, "10m_v_component_of_wind", "v10")
     df["wind_ms"] = (u * u + v * v) ** 0.5
+
+    # La desacumulación se realiza antes de recortar el día
+    # local para no perder la observación de la hora precedente.
+    start_filter = pd.Timestamp(
+        start_utc,
+        tz="UTC",
+    )
+    end_filter = pd.Timestamp(
+        end_utc,
+        tz="UTC",
+    )
+
+    df = df[
+        (df["timestamp_utc"] >= start_filter)
+        & (df["timestamp_utc"] < end_filter)
+    ].copy()
 
     return df[[
         "timestamp_utc",

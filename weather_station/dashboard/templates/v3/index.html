@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AtmosLink | Multi-Site Scientific Control Center</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='v3/css/atmoslink-v3.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='v3/css/scientific-v31.css') }}"
+    >
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-mark">A</div>
+
+            <div>
+                <div class="brand-name">AtmosLink</div>
+                <div class="brand-subtitle">
+                    Research Platform
+                </div>
+            </div>
+        </div>
+
+        <nav class="navigation">
+
+            <button
+                class="nav-item active"
+                data-view="global"
+            >
+                <span class="nav-icon">◈</span>
+                <span>Global</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-view="cu01"
+            >
+                <span class="nav-icon">A</span>
+                <span>CU01 · Cuñacales</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-view="sj01"
+            >
+                <span class="nav-icon">S</span>
+                <span>SJ01 · San José</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-view="radio"
+            >
+                <span class="nav-icon">⌁</span>
+                <span>Radio Link</span>
+            </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+
+            <div class="sidebar-state">
+                <span class="state-dot"></span>
+
+                <div>
+                    <strong>Campaña activa</strong>
+                    <small>6 GHz Upper</small>
+                </div>
+            </div>
+
+            <div class="sidebar-meta">
+                AtmosLink UI v3
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div>
+
+                <div class="eyebrow">
+                    OBSERVATORIO CIENTÍFICO MULTISEDE
+                </div>
+
+                <h1 id="page-title">
+                    Estado global
+                </h1>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="connection-indicator">
+                    <span
+                        id="api-dot"
+                        class="connection-dot"
+                    ></span>
+
+                    <span id="api-state">
+                        Conectando...
+                    </span>
+                </div>
+
+                <div
+                    id="clock"
+                    class="clock"
+                >
+                    --
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section
+            id="view-global"
+            class="view active"
+        >
+
+            <section class="hero">
+
+                <div>
+
+                    <div class="hero-kicker">
+                        CAMPAÑA DE INVESTIGACIÓN
+                    </div>
+
+                    <h2>
+                        Corredor Atmosférico y Radioenlace
+                        Rural Altoandino
+                    </h2>
+
+                    <p>
+                        Monitoreo sincronizado de meteorología,
+                        radiofrecuencia y fuentes atmosféricas
+                        de referencia entre Cerro Cuñacales y
+                        Cerro San José.
+                    </p>
+
+                </div>
+
+                <div class="hero-badges">
+
+                    <span class="badge">
+                        FIELD
+                    </span>
+
+                    <span class="badge">
+                        6 GHz UPPER
+                    </span>
+
+                    <span class="badge">
+                        ePMP 4600C
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <section class="health-grid">
+
+                <article class="health-card">
+
+                    <div class="health-header">
+                        <span>CU01</span>
+                        <span
+                            id="cu01-health"
+                            class="status-pill waiting"
+                        >
+                            --
+                        </span>
+                    </div>
+
+                    <h3>Cerro Cuñacales</h3>
+
+                    <div class="station-role">
+                        FIELD · AP
+                    </div>
+
+                    <div class="health-time">
+                        Última observación:
+                        <strong id="cu01-last">
+                            --
+                        </strong>
+                    </div>
+
+                </article>
+
+
+                <article class="health-card">
+
+                    <div class="health-header">
+                        <span>RADIO LINK</span>
+
+                        <span
+                            id="radio-health"
+                            class="status-pill waiting"
+                        >
+                            --
+                        </span>
+                    </div>
+
+                    <h3>6 GHz Upper</h3>
+
+                    <div class="station-role">
+                        ePMP 4600C · PtP
+                    </div>
+
+                    <div class="health-time">
+                        Telemetría:
+                        <strong id="radio-last">
+                            --
+                        </strong>
+                    </div>
+
+                </article>
+
+
+                <article class="health-card">
+
+                    <div class="health-header">
+                        <span>SJ01</span>
+
+                        <span
+                            id="sj01-health"
+                            class="status-pill waiting"
+                        >
+                            --
+                        </span>
+                    </div>
+
+                    <h3>Cerro San José</h3>
+
+                    <div class="station-role">
+                        FIELD · SM
+                    </div>
+
+                    <div class="health-time">
+                        Última observación:
+                        <strong id="sj01-last">
+                            --
+                        </strong>
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <section class="section-heading">
+
+                <div>
+                    <div class="eyebrow">
+                        METEOROLOGÍA DE CAMPO
+                    </div>
+
+                    <h2>
+                        Condiciones actuales
+                    </h2>
+                </div>
+
+                <div class="source-tag">
+                    SENSOR LOCAL
+                </div>
+
+            </section>
+
+
+            <section class="station-comparison">
+
+                <article class="station-panel">
+
+                    <div class="station-panel-header">
+
+                        <div>
+                            <div class="station-code">
+                                CU01
+                            </div>
+
+                            <h3>
+                                Cerro Cuñacales
+                            </h3>
+
+                            <div class="station-subtitle">
+                                AP · Estación meteorológica de campo
+                            </div>
+                        </div>
+
+                        <span class="field-chip">
+                            FIELD
+                        </span>
+
+                    </div>
+
+                    <div class="metric-grid">
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Temperatura
+                            </span>
+                            <strong id="cu01-temp">--</strong>
+                            <span class="metric-unit">°C</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Humedad
+                            </span>
+                            <strong id="cu01-hum">--</strong>
+                            <span class="metric-unit">%</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Presión
+                            </span>
+                            <strong id="cu01-pres">--</strong>
+                            <span class="metric-unit">hPa</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Lluvia 1 h
+                            </span>
+                            <strong id="cu01-rain">--</strong>
+                            <span class="metric-unit">mm</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Viento
+                            </span>
+                            <strong id="cu01-wind">--</strong>
+                            <span class="metric-unit">m/s</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Dirección
+                            </span>
+                            <strong id="cu01-dir">--</strong>
+                            <span
+                                id="cu01-dirtext"
+                                class="metric-unit"
+                            >
+                                --
+                            </span>
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <article class="station-panel">
+
+                    <div class="station-panel-header">
+
+                        <div>
+                            <div class="station-code">
+                                SJ01
+                            </div>
+
+                            <h3>
+                                Cerro San José
+                            </h3>
+
+                            <div class="station-subtitle">
+                                SM · Estación meteorológica de campo
+                            </div>
+                        </div>
+
+                        <span class="field-chip">
+                            FIELD
+                        </span>
+
+                    </div>
+
+                    <div class="metric-grid">
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Temperatura
+                            </span>
+                            <strong id="sj01-temp">--</strong>
+                            <span class="metric-unit">°C</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Humedad
+                            </span>
+                            <strong id="sj01-hum">--</strong>
+                            <span class="metric-unit">%</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Presión
+                            </span>
+                            <strong id="sj01-pres">--</strong>
+                            <span class="metric-unit">hPa</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Lluvia 1 h
+                            </span>
+                            <strong id="sj01-rain">--</strong>
+                            <span class="metric-unit">mm</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Viento
+                            </span>
+                            <strong id="sj01-wind">--</strong>
+                            <span class="metric-unit">m/s</span>
+                        </div>
+
+                        <div class="metric">
+                            <span class="metric-label">
+                                Dirección
+                            </span>
+                            <strong id="sj01-dir">--</strong>
+                            <span
+                                id="sj01-dirtext"
+                                class="metric-unit"
+                            >
+                                --
+                            </span>
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <section class="section-heading">
+
+                <div>
+                    <div class="eyebrow">
+                        RADIOFRECUENCIA
+                    </div>
+
+                    <h2>
+                        Estado del enlace
+                    </h2>
+                </div>
+
+                <div class="source-tag">
+                    ePMP 4600C
+                </div>
+
+            </section>
+
+
+            <section class="rf-card">
+
+                <div class="rf-endpoint">
+
+                    <span class="endpoint-role">
+                        ACCESS POINT
+                    </span>
+
+                    <strong>
+                        Cuñacales
+                    </strong>
+
+                    <span>
+                        192.168.1.8
+                    </span>
+
+                    <small>
+                        CU01 · AP
+                    </small>
+
+                </div>
+
+
+                <div class="rf-middle">
+
+                    <div class="rf-band">
+                        6 GHz UPPER
+                    </div>
+
+                    <div class="rf-line">
+                        <span></span>
+                        <div class="rf-arrow">↔</div>
+                        <span></span>
+                    </div>
+
+                    <div class="rf-live">
+                        LINK TELEMETRY
+                    </div>
+
+                </div>
+
+
+                <div class="rf-endpoint right">
+
+                    <span class="endpoint-role">
+                        SUBSCRIBER MODULE
+                    </span>
+
+                    <strong>
+                        San José
+                    </strong>
+
+                    <span>
+                        192.168.1.9
+                    </span>
+
+                    <small>
+                        SJ01 · SM
+                    </small>
+
+                </div>
+
+
+                <div class="rf-metrics">
+
+                    <div class="rf-metric">
+                        <span>RSSI DL</span>
+                        <strong id="rf-rssi-dl">--</strong>
+                        <small>dBm</small>
+                    </div>
+
+                    <div class="rf-metric">
+                        <span>RSSI UL</span>
+                        <strong id="rf-rssi-ul">--</strong>
+                        <small>dBm</small>
+                    </div>
+
+                    <div class="rf-metric">
+                        <span>SNR DL</span>
+                        <strong id="rf-snr-dl">--</strong>
+                        <small>dB</small>
+                    </div>
+
+                    <div class="rf-metric">
+                        <span>SNR UL</span>
+                        <strong id="rf-snr-ul">--</strong>
+                        <small>dB</small>
+                    </div>
+
+                    <div class="rf-metric">
+                        <span>MCS DL</span>
+                        <strong id="rf-mcs-dl">--</strong>
+                    </div>
+
+                    <div class="rf-metric">
+                        <span>MCS UL</span>
+                        <strong id="rf-mcs-ul">--</strong>
+                    </div>
+
+                    <div class="rf-metric">
+                        <span>DL Rate</span>
+                        <strong id="rf-rate-dl">--</strong>
+                        <small>Mbps</small>
+                    </div>
+
+                    <div class="rf-metric">
+                        <span>Age RF</span>
+                        <strong id="rf-age">--</strong>
+                        <small>s</small>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section class="section-heading">
+
+                <div>
+                    <div class="eyebrow">
+                        CORREDOR ATMOSFÉRICO
+                    </div>
+
+                    <h2>
+                        Observación extremo a extremo
+                    </h2>
+                </div>
+
+            </section>
+
+
+            <section class="corridor">
+
+                <div class="corridor-node">
+
+                    <span class="node-tag sensor">
+                        SENSOR
+                    </span>
+
+                    <strong>
+                        CU01
+                    </strong>
+
+                    <small>
+                        Cuñacales
+                    </small>
+
+                    <div id="corridor-cu01-temp">
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="corridor-segment">
+
+                    <span></span>
+
+                    <div>
+                        ERA5-Land
+                        <small>
+                            referencia atmosférica
+                        </small>
+                    </div>
+
+                    <span></span>
+
+                </div>
+
+
+                <div class="corridor-center">
+
+                    <div>
+                        ≈ 12 km
+                    </div>
+
+                    <small>
+                        corredor de investigación
+                    </small>
+
+                </div>
+
+
+                <div class="corridor-segment">
+
+                    <span></span>
+
+                    <div>
+                        NASA POWER
+                        <small>
+                            referencia atmosférica
+                        </small>
+                    </div>
+
+                    <span></span>
+
+                </div>
+
+
+                <div class="corridor-node">
+
+                    <span class="node-tag sensor">
+                        SENSOR
+                    </span>
+
+                    <strong>
+                        SJ01
+                    </strong>
+
+                    <small>
+                        San José
+                    </small>
+
+                    <div id="corridor-sj01-temp">
+                        --
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <section
+            id="view-cu01"
+            class="view"
+        >
+
+            <div class="detail-header">
+
+                <div>
+
+                    <div class="eyebrow">
+                        ESTACIÓN DE CAMPO
+                    </div>
+
+                    <h2>
+                        CU01 · Cerro Cuñacales
+                    </h2>
+
+                    <p>
+                        Punto AP del radioenlace y estación
+                        meteorológica local.
+                    </p>
+
+                </div>
+
+                <span class="field-chip">
+                    FIELD
+                </span>
+
+            </div>
+
+            <div
+                id="cu01-detail"
+                class="detail-grid"
+            ></div>
+
+            <div class="chart-card">
+
+                <div class="chart-header">
+
+                    <div>
+                        <div class="eyebrow">
+                            ÚLTIMAS OBSERVACIONES
+                        </div>
+
+                        <h3>
+                            Temperatura CU01
+                        </h3>
+                    </div>
+
+                    <span class="source-tag">
+                        SENSOR
+                    </span>
+
+                </div>
+
+                <svg
+                    id="chart-cu01"
+                    class="line-chart"
+                    viewBox="0 0 1000 260"
+                    preserveAspectRatio="none"
+                ></svg>
+
+            </div>
+
+        </section>
+
+
+        <section
+            id="view-sj01"
+            class="view"
+        >
+
+            <div class="detail-header">
+
+                <div>
+
+                    <div class="eyebrow">
+                        ESTACIÓN DE CAMPO
+                    </div>
+
+                    <h2>
+                        SJ01 · Cerro San José
+                    </h2>
+
+                    <p>
+                        Punto SM del radioenlace y estación
+                        meteorológica local.
+                    </p>
+
+                    <small class="deployment-note">
+                        Operación de campo desde
+                        31/08/2026 16:00 (-05:00)
+                    </small>
+
+                </div>
+
+                <span class="field-chip">
+                    FIELD
+                </span>
+
+            </div>
+
+            <div
+                id="sj01-detail"
+                class="detail-grid"
+            ></div>
+
+            <div class="chart-card">
+
+                <div class="chart-header">
+
+                    <div>
+                        <div class="eyebrow">
+                            ÚLTIMAS OBSERVACIONES
+                        </div>
+
+                        <h3>
+                            Temperatura SJ01
+                        </h3>
+                    </div>
+
+                    <span class="source-tag">
+                        SENSOR
+                    </span>
+
+                </div>
+
+                <svg
+                    id="chart-sj01"
+                    class="line-chart"
+                    viewBox="0 0 1000 260"
+                    preserveAspectRatio="none"
+                ></svg>
+
+            </div>
+
+        </section>
+
+
+        <section
+            id="view-radio"
+            class="view"
+        >
+
+            <div class="detail-header">
+
+                <div>
+
+                    <div class="eyebrow">
+                        TELEMETRÍA RF
+                    </div>
+
+                    <h2>
+                        Radio Link · 6 GHz Upper
+                    </h2>
+
+                    <p>
+                        Cambium ePMP Force 4600C
+                    </p>
+
+                </div>
+
+                <span class="field-chip">
+                    ACTIVE
+                </span>
+
+            </div>
+
+
+            <section class="radio-detail-layout">
+
+                <article class="device-card">
+
+                    <div class="device-role">
+                        AP
+                    </div>
+
+                    <h3>
+                        Cuñacales
+                    </h3>
+
+                    <strong>
+                        192.168.1.8
+                    </strong>
+
+                    <small>
+                        Cambium ePMP Force 4600C
+                    </small>
+
+                </article>
+
+
+                <div class="radio-link-graphic">
+
+                    <div>
+                        6 GHz UPPER
+                    </div>
+
+                    <span>
+                        ◉━━━━━━━━━━━━━━━━━━◉
+                    </span>
+
+                    <small>
+                        enlace punto a punto
+                    </small>
+
+                </div>
+
+
+                <article class="device-card">
+
+                    <div class="device-role">
+                        SM
+                    </div>
+
+                    <h3>
+                        San José
+                    </h3>
+
+                    <strong>
+                        192.168.1.9
+                    </strong>
+
+                    <small>
+                        Cambium ePMP Force 4600C
+                    </small>
+
+                </article>
+
+            </section>
+
+
+            <div
+                id="radio-detail"
+                class="detail-grid"
+            ></div>
+
+        </section>
+
+
+        <footer class="footer">
+
+            <span>
+                AtmosLink Research Platform
+            </span>
+
+            <span>
+                Multi-Site Scientific Control Center
+            </span>
+
+            <span id="footer-update">
+                Actualización: --
+            </span>
+
+        </footer>
+
+    </main>
+
+</div>
+
+<script
+    src="{{ url_for('static', filename='v3/js/atmoslink-v3.js') }}"
+></script>
+
+
+<script
+    src="{{ url_for('static', filename='v3/js/scientific-v31.js') }}"
+></script>
+
+</body>
+</html>

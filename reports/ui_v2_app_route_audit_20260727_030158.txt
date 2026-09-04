@@ -1,0 +1,258 @@
+===== INICIO DE app.py =====
+from flask import Flask, render_template, jsonify
+import sqlite3
+from datetime import datetime
+import json
+from pathlib import Path
+import os
+
+from weather_station.config.station_manager import get_station_context
+from weather_station.events.event_logger import log_event, list_events, event_statistics
+
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+STATION_CONTEXT = get_station_context()
+DB_FILE = BASE_DIR / STATION_CONTEXT["database"]
+
+RUNTIME_DIR = BASE_DIR / "runtime"
+HEALTH_FILE = RUNTIME_DIR / "health_status.json"
+TASK_REGISTRY_FILE = RUNTIME_DIR / "task_registry.json"
+ALERTS_FILE = RUNTIME_DIR / "alerts.json"
+QC_SUMMARY_FILE = RUNTIME_DIR / "qc_summary.json"
+SCIENTIFIC_HEALTH_FILE = RUNTIME_DIR / "scientific_health_score.json"
+SCIENTIFIC_RELIABILITY_FILE = RUNTIME_DIR / "scientific_reliability.json"
+SCIENTIFIC_COMPARISON_FILE = RUNTIME_DIR / "scientific_comparison.json"
+SCIENTIFIC_AGREEMENT_FILE = RUNTIME_DIR / "scientific_agreement_index.json"
+ATMOSPHERIC_CORRIDOR_FILE = RUNTIME_DIR / "atmospheric_corridor.json"
+
+app = Flask(__name__)
+
+
+def load_json(path):
+    if not path.exists():
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def clean_timestamp(value):
+    if value is None:
+        return None
+    value = str(value).replace("T", " ")
+    if value.endswith("-05:00") or value.endswith("+00:00"):
+        value = value[:-6]
+    return value
+
+
+def wind_direction_text(deg):
+    if deg is None:
+        return None
+    try:
+        deg = float(deg) % 360
+    except Exception:
+        return None
+
+    labels = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+              "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+    idx = int((deg + 11.25) // 22.5) % 16
+    return labels[idx]
+
+
+def table_exists(conn, table_name):
+    q = """
+    SELECT name FROM sqlite_master
+    WHERE type='table' AND name=?
+    """
+    return conn.execute(q, (table_name,)).fetchone() is not None
+
+
+def get_columns(conn, table_name):
+    if not table_exists(conn, table_name):
+        return []
+    return [r[1] for r in conn.execute(f"PRAGMA table_info({table_name})").fetchall()]
+
+
+def get_connection():
+    conn = sqlite3.connect(DB_FILE)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def select_expr(columns, column_name, alias=None):
+    alias = alias or column_name
+    if column_name in columns:
+        return f"{column_name} AS {alias}"
+    return f"NULL AS {alias}"
+
+
+
+
+def parse_dashboard_datetime(value):
+    if not value:
+        return None
+    try:
+        value = str(value).replace("Z", "+00:00")
+        dt = datetime.fromisoformat(value)
+        if dt.tzinfo is not None:
+            dt = dt.replace(tzinfo=None)
+        return dt
+    except Exception:
+        return None
+
+
+def seconds_age_label(seconds):
+    if seconds is None:
+        return "--"
+    try:
+        seconds = int(seconds)
+    except Exception:
+        return "--"
+
+    if seconds < 60:
+        return f"hace {seconds} s"
+    minutes = seconds / 60
+    if minutes < 60:
+        return f"hace {minutes:.1f} min"
+    hours = minutes / 60
+    return f"hace {hours:.1f} h"
+
+
+def age_seconds_from_now(timestamp_value):
+    dt = parse_dashboard_datetime(timestamp_value)
+    if dt is None:
+        return None
+
+    now = datetime.now()
+    return max(int((now - dt).total_seconds()), 0)
+
+
+def wind_installation_requested():
+    """
+    Indica si el módulo RS485 de viento está habilitado en esta
+    instalación. Un sensor deshabilitado no debe mostrarse como error.
+    """
+    return os.getenv(
+        "ATMOSLINK_WIND_ENABLED",
+        "0",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+
+
+===== RUTAS HTML EXISTENTES =====
+1:from flask import Flask, render_template, jsonify
+685:@app.route("/")
+686:def index():
+687:    return render_template("index.html")
+690:@app.route("/api/v2/overview")
+695:@app.route("/api/latest")
+700:@app.route("/api/history")
+768:@app.route("/api/stations/latest")
+892:@app.route("/api/windrose")
+901:@app.route("/api/master/summary")
+906:@app.route("/api/core/status")
+927:@app.route("/api/events")
+970:@app.route("/api/health")
+
+===== ÚLTIMAS 100 LÍNEAS =====
+    )
+
+    # AtmosLink V5.1.1 operational state model.
+    #
+    # 0-180 s: normal acquisition cadence.
+    # 181-600 s: expected operational delay.
+    # 601-900 s: confirmed stale observation.
+    # >900 s: critical acquisition interruption.
+    if database_status != "ok":
+        overall_status = "unhealthy"
+        operational_state = "CRITICAL"
+        http_status = 503
+
+    elif observation_age_seconds is None:
+        overall_status = "degraded"
+        operational_state = "UNKNOWN"
+        http_status = 200
+
+    elif observation_age_seconds <= 180:
+        overall_status = "healthy"
+        operational_state = "FRESH"
+        http_status = 200
+
+    elif observation_age_seconds <= 600:
+        overall_status = "observing"
+        operational_state = "WAITING"
+        http_status = 200
+
+    elif observation_age_seconds <= 900:
+        overall_status = "degraded"
+        operational_state = "STALE"
+        http_status = 200
+
+    else:
+        overall_status = "critical"
+        operational_state = "CRITICAL"
+        http_status = 200
+
+    payload = {
+        "status": overall_status,
+        "operational_state": operational_state,
+        "state_thresholds_seconds": {
+            "fresh_max": 180,
+            "waiting_max": 600,
+            "stale_max": 900,
+        },
+        "service": "atmoslink-dashboard",
+        "platform": "AtmosLink Research Platform",
+        "version": "5.1.1",
+        "station_id": STATION_CONTEXT.get("station_id"),
+        "station_name": STATION_CONTEXT.get("station_name"),
+        "database": {
+            "status": database_status,
+            "path": str(DB_FILE),
+            "error": database_error,
+        },
+        "latest_observation": latest_observation,
+        "observation_age_seconds": observation_age_seconds,
+        "latest_error": latest_error,
+        "checked_at_local": checked_at.isoformat(
+            timespec="seconds"
+        ),
+    }
+
+    return jsonify(payload), http_status
+
+
+
+
+def register_dashboard_startup_event():
+    try:
+        log_event(
+            category="SYSTEM",
+            severity="SUCCESS",
+            station=STATION_CONTEXT.get("station_id"),
+            title="AtmosLink dashboard started",
+            description=(
+                "Gunicorn loaded the AtmosLink dashboard application."
+            ),
+            author="system",
+            tags=["dashboard", "gunicorn", "startup"],
+            metadata={
+                "platform_version": "5.2.1",
+                "database": str(DB_FILE),
+            },
+            dedupe_key="dashboard-startup",
+            dedupe_seconds=60,
+        )
+    except Exception:
+        app.logger.exception(
+            "Unable to register dashboard startup event."
+        )
+
+
+if os.environ.get("ATMOSLINK_STATION"):
+    register_dashboard_startup_event()
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=False)

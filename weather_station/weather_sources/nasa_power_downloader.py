@@ -249,7 +249,30 @@ def save_to_sqlite(payload, site_tag, lat, lon):
         temp_c = get_param(parameters, "T2M", ts)
         dewpoint_c = get_param(parameters, "T2MDEW", ts)
         rh_pct = get_param(parameters, "RH2M", ts)
-        precip_mm = get_param(parameters, "PRECTOTCORR", ts)
+        # NASA POWER Hourly PRECTOTCORR.
+        #
+        # La API Hourly devuelve PRECTOTCORR con unidad
+        # declarada mm/day. Para obtener la cantidad
+        # equivalente correspondiente a una hora se
+        # convierte:
+        #
+        #     mm/hour = (mm/day) / 24
+        #
+        # precip_mm queda almacenado como cantidad
+        # equivalente por hora para su comparacion
+        # temporal con el pluviometro local.
+        precip_rate_mm_day = get_param(
+            parameters,
+            "PRECTOTCORR",
+            ts,
+        )
+
+        precip_mm = (
+            precip_rate_mm_day / 24.0
+            if precip_rate_mm_day is not None
+            else None
+        )
+
         press_kpa = get_param(parameters, "PS", ts)
         wind10m_ms = get_param(parameters, "WS10M", ts)
 
