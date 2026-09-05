@@ -1,0 +1,440 @@
+/*
+ * AtmosLink UI v3.1
+ * Scientific comparison layer
+ */
+
+.scientific-v31 {
+    margin-top: 18px;
+    background: #ffffff;
+    border: 1px solid #dbe4ed;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(24, 44, 68, 0.08);
+    overflow: hidden;
+}
+
+.scientific-v31-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #e5ebf1;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.scientific-v31-header h3 {
+    margin: 4px 0 4px;
+    font-size: 17px;
+    color: #172638;
+}
+
+.scientific-v31-header p {
+    margin: 0;
+    color: #708295;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.scientific-v31-title-tag {
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.09em;
+    color: #1769aa;
+    background: #e7f2fb;
+    border: 1px solid #cfe4f4;
+    border-radius: 999px;
+    padding: 6px 9px;
+    white-space: nowrap;
+}
+
+.scientific-v31-statusbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 11px 20px;
+    background: #f7f9fc;
+    border-bottom: 1px solid #e6ecf2;
+}
+
+.scientific-source-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 5px 8px;
+    border-radius: 999px;
+    border: 1px solid #dbe4ed;
+    background: #ffffff;
+    color: #687b8e;
+}
+
+.scientific-source-state::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #a8b2bc;
+}
+
+.scientific-source-state.ok {
+    color: #187653;
+    background: #e7f5ee;
+    border-color: #cde9dc;
+}
+
+.scientific-source-state.ok::before {
+    background: #22865f;
+}
+
+.scientific-source-state.pending {
+    color: #996b15;
+    background: #fff4dd;
+    border-color: #f0deb5;
+}
+
+.scientific-source-state.pending::before {
+    background: #c28a20;
+}
+
+.scientific-table-wrap {
+    overflow-x: auto;
+}
+
+.scientific-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.scientific-table th,
+.scientific-table td {
+    padding: 12px 14px;
+    text-align: right;
+    border-bottom: 1px solid #edf1f5;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+
+.scientific-table th {
+    background: #fbfcfd;
+    color: #687c90;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 850;
+}
+
+.scientific-table th:first-child,
+.scientific-table td:first-child {
+    text-align: left;
+}
+
+.scientific-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.scientific-variable {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.scientific-variable strong {
+    color: #25384a;
+    font-size: 11px;
+}
+
+.scientific-variable small {
+    color: #8796a5;
+    font-size: 9px;
+}
+
+.scientific-local {
+    font-weight: 800;
+    color: #172638;
+}
+
+.scientific-model {
+    color: #425c75;
+}
+
+.scientific-delta {
+    font-weight: 750;
+}
+
+.scientific-delta.good {
+    color: #1b805a;
+}
+
+.scientific-delta.medium {
+    color: #a36d12;
+}
+
+.scientific-delta.high {
+    color: #a74343;
+}
+
+.scientific-na {
+    color: #a4afba;
+}
+
+.scientific-note {
+    padding: 12px 20px;
+    background: #fbfcfd;
+    color: #7b8b9b;
+    font-size: 9px;
+    border-top: 1px solid #edf1f5;
+    line-height: 1.5;
+}
+
+.sensor-state-ok {
+    color: #1b805a !important;
+}
+
+.sensor-state-ok::after {
+    content: "OK";
+}
+
+.sensor-state-ok-value {
+    display: none !important;
+}
+
+.v31-version {
+    color: #6f8498;
+    font-size: 9px;
+    margin-top: 3px;
+}
+
+@media (max-width: 800px) {
+    .scientific-v31-header {
+        flex-direction: column;
+    }
+}
+
+/* =========================================================
+   AtmosLink v3.1.1
+   Corrección de estado de sensores y semántica científica
+   ========================================================= */
+
+.sensor-state-ok::after {
+    content: none !important;
+}
+
+.scientific-delta,
+.scientific-delta.good,
+.scientific-delta.medium,
+.scientific-delta.high {
+    color: #425c75 !important;
+}
+
+.scientific-v31-title-tag {
+    color: #1769aa;
+    background: #e7f2fb;
+    border-color: #cfe4f4;
+}
+
+/* AtmosLink V4 — NASA POWER temporal availability detail */
+.scientific-source-detail {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.scientific-source-detail.available {
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.20);
+}
+
+.scientific-source-detail.pending {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.22);
+}
+
+/* V4 scientific strict temporal match */
+.scientific-match-detail {
+    margin-top: 10px;
+    padding: 8px 12px;
+    font-size: 0.80rem;
+    line-height: 1.4;
+    color: #475569;
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.14);
+    border-radius: 10px;
+}
+
+.scientific-match-detail strong {
+    color: #1e3a5f;
+}
+
+
+/* =========================================================
+   AtmosLink V4 · System Health
+   ========================================================= */
+
+.system-health-panel {
+    margin-top: 26px;
+    margin-bottom: 34px;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid rgba(148,163,184,.24);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(15,23,42,.05);
+}
+
+.system-health-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+.system-health-heading h2 {
+    margin: 4px 0 5px;
+}
+
+.system-health-heading p {
+    margin: 0;
+    font-size: .84rem;
+    color: #64748b;
+}
+
+.system-health-overall {
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .06em;
+}
+
+.system-health-overall.healthy {
+    color: #15803d;
+    background: rgba(34,197,94,.12);
+    border: 1px solid rgba(34,197,94,.25);
+}
+
+.system-health-overall.warning {
+    color: #b45309;
+    background: rgba(245,158,11,.12);
+    border: 1px solid rgba(245,158,11,.25);
+}
+
+.system-health-overall.error {
+    color: #b91c1c;
+    background: rgba(239,68,68,.12);
+    border: 1px solid rgba(239,68,68,.25);
+}
+
+.system-health-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 12px;
+}
+
+.system-health-card {
+    padding: 14px 15px;
+    background: #f8fafc;
+    border: 1px solid rgba(148,163,184,.20);
+    border-radius: 12px;
+}
+
+.system-health-card.healthy {
+    border-left: 3px solid #22c55e;
+}
+
+.system-health-card.warning {
+    border-left: 3px solid #f59e0b;
+}
+
+.system-health-card.error {
+    border-left: 3px solid #ef4444;
+}
+
+.system-health-card.disabled {
+    border-left: 3px solid #94a3b8;
+    opacity: .72;
+}
+
+.system-health-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.system-health-component {
+    font-size: .88rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.system-health-description {
+    margin-top: 3px;
+    font-size: .72rem;
+    color: #64748b;
+}
+
+.system-health-status {
+    padding: 4px 7px;
+    border-radius: 999px;
+    font-size: .58rem;
+    font-weight: 800;
+}
+
+.system-health-status.healthy {
+    color: #15803d;
+    background: rgba(34,197,94,.12);
+}
+
+.system-health-status.warning {
+    color: #b45309;
+    background: rgba(245,158,11,.12);
+}
+
+.system-health-status.error {
+    color: #b91c1c;
+    background: rgba(239,68,68,.12);
+}
+
+.system-health-status.disabled {
+    color: #64748b;
+    background: rgba(148,163,184,.14);
+}
+
+.system-health-meta {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(148,163,184,.15);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: .68rem;
+    color: #64748b;
+}
+
+.system-health-timestamp {
+    font-size: .63rem;
+    color: #94a3b8;
+}
+
+.system-health-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 13px;
+    font-size: .67rem;
+    color: #94a3b8;
+}
+
+@media (max-width: 1100px) {
+    .system-health-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+}
+
+.scientific-match-detail.invalid-period {
+    color: #92400e;
+    background: rgba(245,158,11,.08);
+    border-color: rgba(245,158,11,.24);
+}

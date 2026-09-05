@@ -1547,5 +1547,887 @@ def ui_v3():
 
 
 
+
+
+@app.route("/api/v4/throughput/latest")
+def api_v4_throughput_latest():
+    """
+    Latest bidirectional active throughput measurement for AtmosLink V4.
+
+    Keeps active iperf/ping measurements separate from Cambium
+    reported link-rate telemetry.
+    """
+    import sqlite3
+    from datetime import datetime
+    from pathlib import Path
+    from flask import jsonify
+
+    db_path = Path(
+        "/home/carlos/Proyectos/EstacionMeteorologica/"
+        "SQLite/CU01/weather_local.db"
+    )
+
+    if not db_path.exists():
+        return jsonify({
+            "status": "error",
+            "error": "database_not_found"
+        }), 500
+
+    try:
+        conn = sqlite3.connect(str(db_path))
+        conn.row_factory = sqlite3.Row
+
+        sql = """
+            SELECT
+                id,
+                direction,
+                timestamp_start_local,
+                timestamp_end_local,
+                status,
+                error,
+                protocol,
+                measured_throughput_mbps,
+                retransmits,
+                ping_loss_pct,
+                ping_rtt_min_ms,
+                ping_rtt_avg_ms,
+                ping_rtt_max_ms,
+                ping_rtt_mdev_ms,
+                operating_frequency_mhz,
+                channel_bandwidth_mhz,
+                ap_tx_power_dbm,
+                sm_tx_power_dbm,
+                dl_rssi_dbm,
+                ul_rssi_dbm,
+                dl_snr_db,
+                ul_snr_db,
+                dl_mcs,
+                ul_mcs,
+                reported_dl_link_rate_mbps,
+                reported_ul_link_rate_mbps,
+                rf_timestamp_local,
+                rf_time_delta_seconds
+            FROM active_throughput_6g
+            WHERE direction = ?
+            ORDER BY id DESC
+            LIMIT 1
+        """
+
+        dl_row = conn.execute(sql, ("DL",)).fetchone()
+        ul_row = conn.execute(sql, ("UL",)).fetchone()
+        conn.close()
+
+        def row_to_dict(row):
+            return dict(row) if row else None
+
+        dl = row_to_dict(dl_row)
+        ul = row_to_dict(ul_row)
+
+        if not dl and not ul:
+            return jsonify({
+                "status": "empty",
+                "dl": None,
+                "ul": None
+            })
+
+        timestamps = [
+            r.get("timestamp_end_local")
+            for r in (dl, ul)
+            if r and r.get("timestamp_end_local")
+        ]
+
+        latest_timestamp = max(timestamps) if timestamps else None
+        age_seconds = None
+
+        if latest_timestamp:
+            try:
+                ts = datetime.fromisoformat(latest_timestamp)
+                now = datetime.now(ts.tzinfo)
+                age_seconds = max(
+                    0,
+                    int((now - ts).total_seconds())
+                )
+            except Exception:
+                age_seconds = None
+
+        source = dl or ul
+
+        return jsonify({
+            "status": "ok",
+            "timestamp_local": latest_timestamp,
+            "age_seconds": age_seconds,
+
+            "configuration": {
+                "frequency_mhz":
+                    source.get("operating_frequency_mhz"),
+                "channel_width_mhz":
+                    source.get("channel_bandwidth_mhz"),
+                "ap_tx_power_dbm":
+                    source.get("ap_tx_power_dbm"),
+                "sm_tx_power_dbm":
+                    source.get("sm_tx_power_dbm")
+            },
+
+            "rf_snapshot": {
+                "timestamp_local":
+                    source.get("rf_timestamp_local"),
+                "time_delta_seconds":
+                    source.get("rf_time_delta_seconds"),
+                "rssi_dl_dbm":
+                    source.get("dl_rssi_dbm"),
+                "rssi_ul_dbm":
+                    source.get("ul_rssi_dbm"),
+                "snr_dl_db":
+                    source.get("dl_snr_db"),
+                "snr_ul_db":
+                    source.get("ul_snr_db"),
+                "mcs_dl":
+                    source.get("dl_mcs"),
+                "mcs_ul":
+                    source.get("ul_mcs"),
+                "reported_dl_link_rate_mbps":
+                    source.get(
+                        "reported_dl_link_rate_mbps"
+                    ),
+                "reported_ul_link_rate_mbps":
+                    source.get(
+                        "reported_ul_link_rate_mbps"
+                    )
+            },
+
+            "dl": {
+                "id": dl.get("id"),
+                "status": dl.get("status"),
+                "throughput_mbps":
+                    dl.get("measured_throughput_mbps"),
+                "retransmits":
+                    dl.get("retransmits"),
+                "loss_pct":
+                    dl.get("ping_loss_pct"),
+                "rtt_min_ms":
+                    dl.get("ping_rtt_min_ms"),
+                "rtt_avg_ms":
+                    dl.get("ping_rtt_avg_ms"),
+                "rtt_max_ms":
+                    dl.get("ping_rtt_max_ms"),
+                "rtt_mdev_ms":
+                    dl.get("ping_rtt_mdev_ms"),
+                "timestamp_local":
+                    dl.get("timestamp_end_local"),
+                "error":
+                    dl.get("error")
+            } if dl else None,
+
+            "ul": {
+                "id": ul.get("id"),
+                "status": ul.get("status"),
+                "throughput_mbps":
+                    ul.get("measured_throughput_mbps"),
+                "retransmits":
+                    ul.get("retransmits"),
+                "loss_pct":
+                    ul.get("ping_loss_pct"),
+                "rtt_min_ms":
+                    ul.get("ping_rtt_min_ms"),
+                "rtt_avg_ms":
+                    ul.get("ping_rtt_avg_ms"),
+                "rtt_max_ms":
+                    ul.get("ping_rtt_max_ms"),
+                "rtt_mdev_ms":
+                    ul.get("ping_rtt_mdev_ms"),
+                "timestamp_local":
+                    ul.get("timestamp_end_local"),
+                "error":
+                    ul.get("error")
+            } if ul else None
+        })
+
+    except Exception as exc:
+        return jsonify({
+            "status": "error",
+            "error": str(exc)
+        }), 500
+
+
+
+
+@app.route("/api/v4/system-health")
+def api_v4_system_health():
+    """
+    AtmosLink V4 operational / functional health.
+
+    Principios:
+      - daemon activo != única evidencia de salud;
+      - oneshot inactive/dead puede ser normal;
+      - timers se evalúan por programación + último resultado;
+      - logger, sincronización, RF y throughput se validan además
+        mediante frescura real de los datos almacenados.
+    """
+    import sqlite3
+    import subprocess
+    from datetime import datetime, timezone
+    from pathlib import Path
+
+    project_root = Path(__file__).resolve().parents[2]
+    database = project_root / "SQLite/CU01/weather_local.db"
+
+    now = datetime.now(timezone.utc)
+
+    def systemd_show(unit):
+        properties = [
+            "Id",
+            "Description",
+            "LoadState",
+            "UnitFileState",
+            "ActiveState",
+            "SubState",
+            "Result",
+            "ExecMainStatus",
+            "ExecMainStartTimestamp",
+            "ExecMainExitTimestamp",
+            "NextElapseUSecRealtime",
+        ]
+
+        try:
+            proc = subprocess.run(
+                [
+                    "systemctl",
+                    "show",
+                    unit,
+                    *[
+                        item
+                        for prop in properties
+                        for item in ("-p", prop)
+                    ],
+                ],
+                capture_output=True,
+                text=True,
+                timeout=3,
+                check=False,
+            )
+        except Exception as exc:
+            return {
+                "unit": unit,
+                "available": False,
+                "error": str(exc),
+            }
+
+        data = {
+            "unit": unit,
+            "available": proc.returncode == 0,
+        }
+
+        for line in proc.stdout.splitlines():
+            if "=" not in line:
+                continue
+
+            key, value = line.split("=", 1)
+            data[key] = value
+
+        return data
+
+    def parse_timestamp(value):
+        if not value:
+            return None
+
+        value = str(value).strip()
+
+        if not value:
+            return None
+
+        # SQLite / ISO timestamps.
+        try:
+            dt = datetime.fromisoformat(
+                value.replace("Z", "+00:00")
+            )
+
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+
+            return dt.astimezone(timezone.utc)
+        except Exception:
+            pass
+
+        # Timestamps returned by systemctl:
+        # Sat 2026-09-05 16:18:50 -05
+        parts = value.rsplit(" ", 1)
+
+        if (
+            len(parts) == 2
+            and len(parts[1]) == 3
+            and parts[1][0] in "+-"
+        ):
+            value = parts[0] + " " + parts[1] + "00"
+
+        try:
+            return datetime.strptime(
+                value,
+                "%a %Y-%m-%d %H:%M:%S %z",
+            ).astimezone(timezone.utc)
+        except Exception:
+            return None
+
+    def age_seconds(value):
+        dt = parse_timestamp(value)
+
+        if dt is None:
+            return None
+
+        return max(
+            0,
+            int((now - dt).total_seconds()),
+        )
+
+    def age_label(seconds):
+        if seconds is None:
+            return "—"
+
+        if seconds < 60:
+            return f"{seconds} s"
+
+        if seconds < 3600:
+            return f"{seconds // 60} min"
+
+        if seconds < 86400:
+            return f"{seconds / 3600:.1f} h"
+
+        return f"{seconds / 86400:.1f} días"
+
+    def daemon_health(unit_data):
+        if not unit_data.get("available"):
+            return "error"
+
+        if unit_data.get("ActiveState") == "failed":
+            return "error"
+
+        if (
+            unit_data.get("ActiveState") == "active"
+            and unit_data.get("SubState") == "running"
+        ):
+            return "healthy"
+
+        return "warning"
+
+    def timer_health(timer_data):
+        if not timer_data.get("available"):
+            return "error"
+
+        if timer_data.get("ActiveState") == "failed":
+            return "error"
+
+        if timer_data.get("ActiveState") == "active":
+            return "healthy"
+
+        return "warning"
+
+    def oneshot_health(service_data, timer_data=None):
+        if not service_data.get("available"):
+            return "error"
+
+        if (
+            service_data.get("ActiveState") == "failed"
+            or service_data.get("Result") == "failed"
+        ):
+            return "error"
+
+        result_ok = (
+            service_data.get("Result") in ("success", "")
+            and str(
+                service_data.get(
+                    "ExecMainStatus",
+                    "0",
+                )
+            ) in ("0", "")
+        )
+
+        timer_ok = (
+            timer_data is None
+            or timer_health(timer_data) == "healthy"
+        )
+
+        if result_ok and timer_ok:
+            return "healthy"
+
+        return "warning"
+
+    def table_exists(conn, table):
+        row = conn.execute(
+            """
+            SELECT 1
+            FROM sqlite_master
+            WHERE type='table'
+              AND name=?
+            """,
+            (table,),
+        ).fetchone()
+
+        return row is not None
+
+    def latest_timestamp(
+        conn,
+        table,
+        candidates,
+        where_sql=None,
+        params=(),
+    ):
+        if not table_exists(conn, table):
+            return None
+
+        columns = {
+            row[1]
+            for row in conn.execute(
+                f"PRAGMA table_info({table})"
+            ).fetchall()
+        }
+
+        column = next(
+            (
+                candidate
+                for candidate in candidates
+                if candidate in columns
+            ),
+            None,
+        )
+
+        if column is None:
+            return None
+
+        sql = f"SELECT MAX({column}) FROM {table}"
+
+        if where_sql:
+            sql += " WHERE " + where_sql
+
+        row = conn.execute(
+            sql,
+            params,
+        ).fetchone()
+
+        return row[0] if row else None
+
+    units = {
+        "dashboard": systemd_show(
+            "atmoslink-dashboard.service"
+        ),
+        "logger": systemd_show(
+            "weather-logger.service"
+        ),
+        "scheduler": systemd_show(
+            "atmoslink-scheduler.service"
+        ),
+
+        "sync_service": systemd_show(
+            "atmoslink-remote-sync.service"
+        ),
+        "sync_timer": systemd_show(
+            "atmoslink-remote-sync.timer"
+        ),
+
+        "throughput_service": systemd_show(
+            "atmoslink-throughput-6g.service"
+        ),
+        "throughput_timer": systemd_show(
+            "atmoslink-throughput-6g.timer"
+        ),
+
+        "backup_service": systemd_show(
+            "atmoslink-remote-backup.service"
+        ),
+        "backup_timer": systemd_show(
+            "atmoslink-remote-backup.timer"
+        ),
+
+        "rf_monitor": systemd_show(
+            "epmp-monitor.service"
+        ),
+        "rf_config": systemd_show(
+            "atmoslink-radio-config-6g.service"
+        ),
+
+        "watchdog_service": systemd_show(
+            "atmoslink-weather-watchdog.service"
+        ),
+        "watchdog_timer": systemd_show(
+            "atmoslink-weather-watchdog.timer"
+        ),
+
+        # Legacy/inactive path: informative only.
+        "legacy_rflogger": systemd_show(
+            "rflogger.timer"
+        ),
+    }
+
+    freshness = {
+        "cu01_timestamp": None,
+        "sj01_timestamp": None,
+        "rf_timestamp": None,
+        "throughput_timestamp": None,
+    }
+
+    if database.exists():
+        try:
+            with sqlite3.connect(database) as conn:
+
+                # Multisite weather data.
+                if table_exists(
+                    conn,
+                    "master_observations_multistation",
+                ):
+                    columns = {
+                        row[1]
+                        for row in conn.execute(
+                            "PRAGMA table_info("
+                            "master_observations_multistation"
+                            ")"
+                        ).fetchall()
+                    }
+
+                    ts_col = (
+                        "weather_timestamp_local"
+                        if "weather_timestamp_local" in columns
+                        else "master_timestamp_local"
+                    )
+
+                    for station in ("CU01", "SJ01"):
+                        row = conn.execute(
+                            f"""
+                            SELECT MAX({ts_col})
+                            FROM master_observations_multistation
+                            WHERE source_station_id = ?
+                            """,
+                            (station,),
+                        ).fetchone()
+
+                        freshness[
+                            station.lower() + "_timestamp"
+                        ] = row[0] if row else None
+
+                # ------------------------------------------------
+                # Frescura funcional por fuente real.
+                #
+                # CU01:
+                #   weather_local es escrita directamente por
+                #   weather-logger.service.
+                #
+                # SJ01:
+                #   station_observations representa las observaciones
+                #   remotas ya recibidas por el sincronizador.
+                #
+                # master_observations_multistation queda como fallback
+                # si alguna fuente directa no está disponible.
+                # ------------------------------------------------
+
+                cu01_direct = latest_timestamp(
+                    conn,
+                    "weather_local",
+                    [
+                        "timestamp_local",
+                        "timestamp_utc",
+                    ],
+                )
+
+                if cu01_direct is not None:
+                    freshness["cu01_timestamp"] = (
+                        cu01_direct
+                    )
+
+                sj01_direct = latest_timestamp(
+                    conn,
+                    "station_observations",
+                    [
+                        "timestamp_local",
+                        "timestamp_utc",
+                    ],
+                    where_sql=(
+                        "source_station_id = ?"
+                    ),
+                    params=("SJ01",),
+                )
+
+                if sj01_direct is not None:
+                    freshness["sj01_timestamp"] = (
+                        sj01_direct
+                    )
+
+                freshness["rf_timestamp"] = latest_timestamp(
+                    conn,
+                    "radio_link_local",
+                    [
+                        "timestamp_local",
+                        "radio_timestamp_local",
+                        "collected_at_local",
+                        "created_at",
+                    ],
+                )
+
+                freshness["throughput_timestamp"] = (
+                    latest_timestamp(
+                        conn,
+                        "active_throughput_6g",
+                        [
+                            "timestamp_end_local",
+                            "timestamp_start_local",
+                            "timestamp_local",
+                            "measurement_timestamp_local",
+                            "measured_at_local",
+                            "created_at",
+                        ],
+                    )
+                )
+
+        except Exception as exc:
+            freshness["database_error"] = str(exc)
+
+    for key in (
+        "cu01",
+        "sj01",
+        "rf",
+        "throughput",
+    ):
+        timestamp = freshness.get(
+            key + "_timestamp"
+        )
+
+        seconds = age_seconds(timestamp)
+
+        freshness[key + "_age_seconds"] = seconds
+        freshness[key + "_age_label"] = age_label(seconds)
+
+    def functional_state(
+        system_state,
+        seconds,
+        fresh_limit,
+        delayed_limit,
+    ):
+        if system_state == "error":
+            return "error"
+
+        if seconds is None:
+            return "warning"
+
+        if seconds <= fresh_limit:
+            return (
+                "healthy"
+                if system_state == "healthy"
+                else "warning"
+            )
+
+        if seconds <= delayed_limit:
+            return "warning"
+
+        return "error"
+
+    dashboard_state = daemon_health(
+        units["dashboard"]
+    )
+
+    logger_system = daemon_health(
+        units["logger"]
+    )
+    logger_state = functional_state(
+        logger_system,
+        freshness.get("cu01_age_seconds"),
+        180,
+        600,
+    )
+
+    scheduler_state = daemon_health(
+        units["scheduler"]
+    )
+
+    sync_system = oneshot_health(
+        units["sync_service"],
+        units["sync_timer"],
+    )
+    sync_state = functional_state(
+        sync_system,
+        freshness.get("sj01_age_seconds"),
+        300,
+        600,
+    )
+
+    throughput_system = oneshot_health(
+        units["throughput_service"],
+        units["throughput_timer"],
+    )
+    throughput_state = functional_state(
+        throughput_system,
+        freshness.get(
+            "throughput_age_seconds"
+        ),
+        1200,
+        2100,
+    )
+
+    backup_state = oneshot_health(
+        units["backup_service"],
+        units["backup_timer"],
+    )
+
+    rf_monitor_system = daemon_health(
+        units["rf_monitor"]
+    )
+    rf_state = functional_state(
+        rf_monitor_system,
+        freshness.get("rf_age_seconds"),
+        120,
+        300,
+    )
+
+    rf_config_state = daemon_health(
+        units["rf_config"]
+    )
+
+    watchdog_state = oneshot_health(
+        units["watchdog_service"],
+        units["watchdog_timer"],
+    )
+
+    components = {
+        "dashboard": {
+            "label": "Dashboard",
+            "state": dashboard_state,
+            "unit": units["dashboard"],
+        },
+
+        "logger_cu01": {
+            "label": "Logger CU01",
+            "state": logger_state,
+            "age_seconds": freshness.get(
+                "cu01_age_seconds"
+            ),
+            "age_label": freshness.get(
+                "cu01_age_label"
+            ),
+            "timestamp": freshness.get(
+                "cu01_timestamp"
+            ),
+            "unit": units["logger"],
+        },
+
+        "scheduler": {
+            "label": "Scheduler",
+            "state": scheduler_state,
+            "unit": units["scheduler"],
+        },
+
+        "sync_sj01": {
+            "label": "Sync SJ01",
+            "state": sync_state,
+            "age_seconds": freshness.get(
+                "sj01_age_seconds"
+            ),
+            "age_label": freshness.get(
+                "sj01_age_label"
+            ),
+            "timestamp": freshness.get(
+                "sj01_timestamp"
+            ),
+            "service": units["sync_service"],
+            "timer": units["sync_timer"],
+        },
+
+        "throughput": {
+            "label": "Throughput activo",
+            "state": throughput_state,
+            "age_seconds": freshness.get(
+                "throughput_age_seconds"
+            ),
+            "age_label": freshness.get(
+                "throughput_age_label"
+            ),
+            "timestamp": freshness.get(
+                "throughput_timestamp"
+            ),
+            "service": units[
+                "throughput_service"
+            ],
+            "timer": units[
+                "throughput_timer"
+            ],
+        },
+
+        "backup": {
+            "label": "Backup remoto",
+            "state": backup_state,
+            "service": units["backup_service"],
+            "timer": units["backup_timer"],
+        },
+
+        "rf_monitor": {
+            "label": "Monitor RF",
+            "state": rf_state,
+            "age_seconds": freshness.get(
+                "rf_age_seconds"
+            ),
+            "age_label": freshness.get(
+                "rf_age_label"
+            ),
+            "timestamp": freshness.get(
+                "rf_timestamp"
+            ),
+            "unit": units["rf_monitor"],
+        },
+
+        "rf_config": {
+            "label": "Configuración RF 6G",
+            "state": rf_config_state,
+            "unit": units["rf_config"],
+        },
+
+        "watchdog": {
+            "label": "Weather watchdog",
+            "state": watchdog_state,
+            "service": units[
+                "watchdog_service"
+            ],
+            "timer": units[
+                "watchdog_timer"
+            ],
+        },
+
+        "legacy_rflogger": {
+            "label": "RF Logger legado",
+            "state": "disabled",
+            "informational": True,
+            "timer": units["legacy_rflogger"],
+        },
+    }
+
+    operational_states = [
+        item["state"]
+        for item in components.values()
+        if not item.get("informational")
+    ]
+
+    if "error" in operational_states:
+        overall = "error"
+    elif "warning" in operational_states:
+        overall = "warning"
+    else:
+        overall = "healthy"
+
+    return jsonify(
+        {
+            "status": "ok",
+            "overall": overall,
+            "generated_at_utc": now.isoformat(
+                timespec="seconds"
+            ),
+            "database": str(database),
+            "components": components,
+        }
+    )
+
+
+
+@app.route("/ui-v4")
+def ui_v4():
+    """
+    AtmosLink Scientific Control Center V4.
+    Interfaz experimental paralela a UI V3.
+    """
+    return render_template("v4/index.html")
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
