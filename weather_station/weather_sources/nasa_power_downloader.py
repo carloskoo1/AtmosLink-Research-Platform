@@ -68,8 +68,8 @@ def parse_args():
     parser.add_argument(
         "--lag-days",
         type=int,
-        default=2,
-        help="Retraso asumido de disponibilidad NASA POWER. Por defecto: 2 días",
+        default=7,
+        help="Retraso conservador de disponibilidad NASA POWER. Por defecto: 7 días",
     )
 
     return parser.parse_args()
@@ -201,6 +201,21 @@ def get_param(parameters, name, ts):
 
 
 def is_valid_record(temp_c, dewpoint_c, rh_pct, precip_mm, press_hpa, wind10m_ms):
+    values = [
+        temp_c,
+        dewpoint_c,
+        rh_pct,
+        precip_mm,
+        press_hpa,
+        wind10m_ms,
+    ]
+
+    # NASA POWER puede devolver -999 para horas aún no disponibles.
+    # get_param() los transforma a None. No debemos persistir una hora
+    # completamente vacía como si fuese una observación válida.
+    if all(value is None for value in values):
+        return False
+
     if temp_c is not None and not (-60 <= temp_c <= 60):
         return False
 
@@ -312,13 +327,34 @@ def save_to_sqlite(payload, site_tag, lat, lon):
                 timestamp_local = excluded.timestamp_local,
                 lat = excluded.lat,
                 lon = excluded.lon,
-                temp_c = excluded.temp_c,
-                dewpoint_c = excluded.dewpoint_c,
-                rh_pct = excluded.rh_pct,
-                precip_mm = excluded.precip_mm,
-                press_kpa = excluded.press_kpa,
-                press_hpa = excluded.press_hpa,
-                wind10m_ms = excluded.wind10m_ms,
+                temp_c = COALESCE(
+                    excluded.temp_c,
+                    nasa_power_hourly.temp_c
+                ),
+                dewpoint_c = COALESCE(
+                    excluded.dewpoint_c,
+                    nasa_power_hourly.dewpoint_c
+                ),
+                rh_pct = COALESCE(
+                    excluded.rh_pct,
+                    nasa_power_hourly.rh_pct
+                ),
+                precip_mm = COALESCE(
+                    excluded.precip_mm,
+                    nasa_power_hourly.precip_mm
+                ),
+                press_kpa = COALESCE(
+                    excluded.press_kpa,
+                    nasa_power_hourly.press_kpa
+                ),
+                press_hpa = COALESCE(
+                    excluded.press_hpa,
+                    nasa_power_hourly.press_hpa
+                ),
+                wind10m_ms = COALESCE(
+                    excluded.wind10m_ms,
+                    nasa_power_hourly.wind10m_ms
+                ),
                 source = excluded.source,
                 downloaded_at_utc = excluded.downloaded_at_utc
         """, (

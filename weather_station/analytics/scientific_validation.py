@@ -615,6 +615,27 @@ def build_hourly_dataset(
             else float("nan")
         )
 
+        # NASA POWER: una hora solo tiene correspondencia NASA
+        # cuando existe al menos una variable meteorológica válida.
+        # Los metadatos timestamp/site_tag no deben, por sí solos,
+        # convertir un placeholder en una observación NASA.
+        nasa_measure_cols = [
+            "nasa_temp_c",
+            "nasa_rh_pct",
+            "nasa_press_hpa",
+            "nasa_dewpoint_c",
+            "nasa_precip_mm",
+            "nasa_wind10m_ms",
+        ]
+
+        nasa_valid_mask = (
+            group[nasa_measure_cols]
+            .notna()
+            .any(axis=1)
+        )
+
+        nasa_group = group.loc[nasa_valid_mask]
+
         row = {
             "station_id": STATION_ID,
             "bucket_hour": bucket_hour,
@@ -731,7 +752,7 @@ def build_hourly_dataset(
 
             "nasa_timestamp_local": (
                 first_valid(
-                    group[
+                    nasa_group[
                         "nasa_timestamp_local"
                     ]
                 )
@@ -739,7 +760,7 @@ def build_hourly_dataset(
 
             "nasa_site_tag": (
                 first_valid(
-                    group[
+                    nasa_group[
                         "nasa_site_tag"
                     ]
                 )
@@ -747,7 +768,7 @@ def build_hourly_dataset(
 
             "nasa_temp_c": (
                 first_valid(
-                    group[
+                    nasa_group[
                         "nasa_temp_c"
                     ]
                 )
@@ -755,7 +776,7 @@ def build_hourly_dataset(
 
             "nasa_rh_pct": (
                 first_valid(
-                    group[
+                    nasa_group[
                         "nasa_rh_pct"
                     ]
                 )
@@ -763,7 +784,7 @@ def build_hourly_dataset(
 
             "nasa_press_hpa": (
                 first_valid(
-                    group[
+                    nasa_group[
                         "nasa_press_hpa"
                     ]
                 )
@@ -771,7 +792,7 @@ def build_hourly_dataset(
 
             "nasa_dewpoint_c": (
                 first_valid(
-                    group[
+                    nasa_group[
                         "nasa_dewpoint_c"
                     ]
                 )
@@ -779,7 +800,7 @@ def build_hourly_dataset(
 
             "nasa_precip_mm": (
                 first_valid(
-                    group[
+                    nasa_group[
                         "nasa_precip_mm"
                     ]
                 )
@@ -787,7 +808,7 @@ def build_hourly_dataset(
 
             "nasa_wind10m_ms": (
                 first_valid(
-                    group[
+                    nasa_group[
                         "nasa_wind10m_ms"
                     ]
                 )
