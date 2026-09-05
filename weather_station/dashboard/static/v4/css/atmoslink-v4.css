@@ -1178,3 +1178,108 @@ select {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* AtmosLink V4 — selector de variable de observaciones */
+
+.chart-variable-control {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    margin: 2px 0 10px;
+}
+
+.chart-variable-control label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.chart-variable-select {
+    min-width: 210px;
+    padding: 7px 30px 7px 10px;
+    border: 1px solid rgba(148, 163, 184, .38);
+    border-radius: 8px;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.chart-variable-select:focus {
+    outline: 2px solid rgba(37, 99, 235, .18);
+    outline-offset: 1px;
+    border-color: rgba(37, 99, 235, .55);
+}
+
+@media (max-width: 700px) {
+    .chart-variable-control {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .chart-variable-select {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+
+/* AtmosLink V4 — ejes y tooltip científico */
+
+.chart-axis {
+    stroke: rgba(71, 85, 105, .55);
+    stroke-width: 1;
+}
+
+.chart-axis-label {
+    fill: #64748b;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.chart-axis-unit {
+    fill: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.chart-hover-line {
+    stroke: rgba(15, 23, 42, .38);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+    pointer-events: none;
+}
+
+.chart-hover-dot {
+    fill: #ffffff;
+    stroke: #0f6fb6;
+    stroke-width: 3;
+    pointer-events: none;
+}
+
+.chart-tooltip {
+    pointer-events: none;
+}
+
+.chart-tooltip-bg {
+    fill: rgba(15, 23, 42, .94);
+    stroke: rgba(255, 255, 255, .18);
+    stroke-width: 1;
+}
+
+.chart-tooltip-time {
+    fill: #cbd5e1;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.chart-tooltip-value {
+    fill: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+}

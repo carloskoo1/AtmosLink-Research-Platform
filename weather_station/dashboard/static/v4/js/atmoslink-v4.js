@@ -971,14 +971,62 @@
             return;
         }
 
+        const stationId =
+            svgId.includes("cu01")
+                ? "CU01"
+                : "SJ01";
+
+        const config =
+            observationChartConfig(stationId);
+
+        const parseTime = record => {
+            const raw =
+                record?.timestamp_local ??
+                record?.weather_timestamp_local ??
+                null;
+
+            if (!raw) {
+                return null;
+            }
+
+            const normalized =
+                String(raw).replace(
+                    /^(\d{4}-\d{2}-\d{2}) /,
+                    "$1T"
+                );
+
+            const d = new Date(normalized);
+
+            return Number.isNaN(d.getTime())
+                ? null
+                : d;
+        };
+
         const points =
-            extractTemperature(records);
+            (records ?? [])
+                .map(record => {
+                    const value =
+                        Number(record?.temp_avg_C);
+
+                    return {
+                        value:
+                            Number.isFinite(value)
+                                ? value
+                                : null,
+                        time:
+                            parseTime(record)
+                    };
+                })
+                .filter(
+                    point =>
+                        point.value !== null
+                );
 
         if (points.length < 2) {
             svg.innerHTML = `
                 <text
                     x="500"
-                    y="130"
+                    y="140"
                     text-anchor="middle"
                     class="chart-label"
                 >
@@ -988,8 +1036,22 @@
             return;
         }
 
+        const width = 1000;
+        const height = 300;
+
+        const left = 70;
+        const right = 20;
+        const top = 20;
+        const bottom = 48;
+
+        const usableW =
+            width - left - right;
+
+        const usableH =
+            height - top - bottom;
+
         const values =
-            points.map((p) => p.value);
+            points.map(p => p.value);
 
         let min =
             Math.min(...values);
@@ -997,84 +1059,233 @@
         let max =
             Math.max(...values);
 
-        if (min === max) {
-            min -= 1;
-            max += 1;
+        let range =
+            max - min;
+
+        if (range === 0) {
+            range =
+                Math.abs(max) > 0
+                    ? Math.abs(max) * 0.1
+                    : 1;
         }
 
-        const padX = 45;
-        const padY = 28;
+        min -= range * 0.08;
+        max += range * 0.08;
 
-        const width = 1000;
-        const height = 260;
+        if (
+            ["humidity", "rain1h", "wind", "gust"]
+                .includes(
+                    observationChartSelection[
+                        stationId
+                    ]
+                ) &&
+            min < 0
+        ) {
+            min = 0;
+        }
 
-        const usableW =
-            width - padX * 2;
+        const times =
+            points.map(
+                p =>
+                    p.time
+                        ? p.time.getTime()
+                        : null
+            );
 
-        const usableH =
-            height - padY * 2;
+        const useTime =
+            times.every(Number.isFinite);
+
+        const tMin =
+            useTime
+                ? Math.min(...times)
+                : 0;
+
+        const tMax =
+            useTime
+                ? Math.max(...times)
+                : points.length - 1;
+
+        const tRange =
+            Math.max(
+                1,
+                tMax - tMin
+            );
 
         const coords =
             points.map(
-                (p, index) => {
+                (point, index) => {
+
+                    const domain =
+                        useTime
+                            ? point.time.getTime()
+                            : index;
+
                     const x =
-                        padX +
+                        left +
                         (
-                            index /
-                            (points.length - 1)
+                            (domain - tMin) /
+                            tRange
                         ) * usableW;
 
                     const y =
-                        padY +
+                        top +
                         (
                             1 -
                             (
-                                (p.value - min) /
+                                (point.value - min) /
                                 (max - min)
                             )
                         ) * usableH;
 
-                    return [x, y];
+                    return {
+                        ...point,
+                        x,
+                        y
+                    };
                 }
             );
 
         const polyline =
             coords
                 .map(
-                    ([x, y]) =>
-                        `${x.toFixed(1)},${y.toFixed(1)}`
+                    p =>
+                        `${p.x.toFixed(1)},${p.y.toFixed(1)}`
                 )
                 .join(" ");
 
         const area =
             [
-                `${coords[0][0]},${height - padY}`,
+                `${coords[0].x},${height - bottom}`,
                 ...coords.map(
-                    ([x, y]) => `${x},${y}`
+                    p => `${p.x},${p.y}`
                 ),
-                `${coords[coords.length - 1][0]},${height - padY}`
+                `${coords[coords.length - 1].x},${height - bottom}`
             ].join(" ");
 
-        const gridLines = [];
+        const yParts = [];
 
         for (let i = 0; i <= 4; i++) {
-            const y =
-                padY +
-                (usableH / 4) * i;
+            const fraction =
+                i / 4;
 
-            gridLines.push(`
+            const y =
+                top +
+                usableH * fraction;
+
+            const value =
+                max -
+                (max - min) * fraction;
+
+            yParts.push(`
                 <line
-                    x1="${padX}"
+                    x1="${left}"
                     y1="${y}"
-                    x2="${width - padX}"
+                    x2="${width - right}"
                     y2="${y}"
                     class="chart-grid"
                 />
+
+                <text
+                    x="${left - 10}"
+                    y="${y + 4}"
+                    text-anchor="end"
+                    class="chart-axis-label"
+                >
+                    ${value.toFixed(
+                        config.unit === "mm" ? 2 : 1
+                    )}
+                </text>
             `);
         }
 
+        const formatTime = date =>
+            new Intl.DateTimeFormat(
+                "es-PE",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                    timeZone: "America/Lima"
+                }
+            ).format(date);
+
+        const xParts = [];
+
+        for (let i = 0; i <= 5; i++) {
+            const fraction =
+                i / 5;
+
+            const x =
+                left +
+                usableW * fraction;
+
+            let label = "";
+
+            if (useTime) {
+                label =
+                    formatTime(
+                        new Date(
+                            tMin +
+                            tRange * fraction
+                        )
+                    );
+            }
+
+            xParts.push(`
+                <text
+                    x="${x}"
+                    y="${height - 19}"
+                    text-anchor="middle"
+                    class="chart-axis-label"
+                >
+                    ${label}
+                </text>
+            `);
+        }
+
+        svg.setAttribute(
+            "viewBox",
+            `0 0 ${width} ${height}`
+        );
+
         svg.innerHTML = `
-            ${gridLines.join("")}
+            ${yParts.join("")}
+            ${xParts.join("")}
+
+            <line
+                x1="${left}"
+                y1="${top}"
+                x2="${left}"
+                y2="${height - bottom}"
+                class="chart-axis"
+            />
+
+            <line
+                x1="${left}"
+                y1="${height - bottom}"
+                x2="${width - right}"
+                y2="${height - bottom}"
+                class="chart-axis"
+            />
+
+            <text
+                x="18"
+                y="${height / 2}"
+                class="chart-axis-unit"
+                text-anchor="middle"
+                transform="rotate(-90 18 ${height / 2})"
+            >
+                ${config.unit}
+            </text>
+
+            <text
+                x="${width - right}"
+                y="${height - 4}"
+                class="chart-axis-unit"
+                text-anchor="end"
+            >
+                Hora local (-05)
+            </text>
 
             <polygon
                 points="${area}"
@@ -1085,7 +1296,524 @@
                 points="${polyline}"
                 class="chart-line"
             ></polyline>
+
+            <line
+                id="${svgId}-hover-line"
+                class="chart-hover-line"
+                x1="0"
+                y1="${top}"
+                x2="0"
+                y2="${height - bottom}"
+                visibility="hidden"
+            />
+
+            <circle
+                id="${svgId}-hover-dot"
+                class="chart-hover-dot"
+                cx="0"
+                cy="0"
+                r="5"
+                visibility="hidden"
+            />
+
+            <g
+                id="${svgId}-tooltip"
+                class="chart-tooltip"
+                visibility="hidden"
+            >
+                <rect
+                    width="205"
+                    height="58"
+                    rx="7"
+                    class="chart-tooltip-bg"
+                ></rect>
+
+                <text
+                    x="10"
+                    y="20"
+                    class="chart-tooltip-time"
+                ></text>
+
+                <text
+                    x="10"
+                    y="42"
+                    class="chart-tooltip-value"
+                ></text>
+            </g>
+
+            <rect
+                id="${svgId}-overlay"
+                x="${left}"
+                y="${top}"
+                width="${usableW}"
+                height="${usableH}"
+                fill="transparent"
+                style="cursor:crosshair"
+            />
         `;
+
+        const overlay =
+            document.getElementById(
+                `${svgId}-overlay`
+            );
+
+        const hoverLine =
+            document.getElementById(
+                `${svgId}-hover-line`
+            );
+
+        const hoverDot =
+            document.getElementById(
+                `${svgId}-hover-dot`
+            );
+
+        const tooltip =
+            document.getElementById(
+                `${svgId}-tooltip`
+            );
+
+        const timeText =
+            tooltip.querySelector(
+                ".chart-tooltip-time"
+            );
+
+        const valueText =
+            tooltip.querySelector(
+                ".chart-tooltip-value"
+            );
+
+        const formatDateTime = date => {
+            if (!date) {
+                return "Hora no disponible";
+            }
+
+            return new Intl.DateTimeFormat(
+                "es-PE",
+                {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false,
+                    timeZone: "America/Lima"
+                }
+            ).format(date);
+        };
+
+        overlay.addEventListener(
+            "pointermove",
+            event => {
+
+                const rect =
+                    svg.getBoundingClientRect();
+
+                const mouseX =
+                    (
+                        (event.clientX - rect.left) /
+                        rect.width
+                    ) * width;
+
+                let nearest =
+                    coords[0];
+
+                let distance =
+                    Math.abs(
+                        nearest.x - mouseX
+                    );
+
+                for (
+                    let i = 1;
+                    i < coords.length;
+                    i++
+                ) {
+                    const d =
+                        Math.abs(
+                            coords[i].x -
+                            mouseX
+                        );
+
+                    if (d < distance) {
+                        nearest =
+                            coords[i];
+
+                        distance = d;
+                    }
+                }
+
+                hoverLine.setAttribute(
+                    "x1",
+                    nearest.x
+                );
+
+                hoverLine.setAttribute(
+                    "x2",
+                    nearest.x
+                );
+
+                hoverLine.setAttribute(
+                    "visibility",
+                    "visible"
+                );
+
+                hoverDot.setAttribute(
+                    "cx",
+                    nearest.x
+                );
+
+                hoverDot.setAttribute(
+                    "cy",
+                    nearest.y
+                );
+
+                hoverDot.setAttribute(
+                    "visibility",
+                    "visible"
+                );
+
+                timeText.textContent =
+                    formatDateTime(
+                        nearest.time
+                    );
+
+                const decimals =
+                    config.unit === "mm"
+                        ? 2
+                        : (
+                            config.unit === "hPa"
+                                ? 2
+                                : 1
+                        );
+
+                valueText.textContent =
+                    `${config.label}: ` +
+                    `${nearest.value.toFixed(decimals)} ` +
+                    `${config.unit}`;
+
+                let tx =
+                    nearest.x + 12;
+
+                if (tx + 205 > width - right) {
+                    tx =
+                        nearest.x - 217;
+                }
+
+                let ty =
+                    nearest.y - 70;
+
+                if (ty < top) {
+                    ty =
+                        nearest.y + 12;
+                }
+
+                tooltip.setAttribute(
+                    "transform",
+                    `translate(${tx},${ty})`
+                );
+
+                tooltip.setAttribute(
+                    "visibility",
+                    "visible"
+                );
+            }
+        );
+
+        overlay.addEventListener(
+            "pointerleave",
+            () => {
+                hoverLine.setAttribute(
+                    "visibility",
+                    "hidden"
+                );
+
+                hoverDot.setAttribute(
+                    "visibility",
+                    "hidden"
+                );
+
+                tooltip.setAttribute(
+                    "visibility",
+                    "hidden"
+                );
+            }
+        );
+    }
+
+
+    /*
+     * V4 — selector de variable para últimas observaciones.
+     *
+     * Reutiliza drawLineChart() sin modificar el backend:
+     * la variable elegida se proyecta temporalmente sobre
+     * temp_avg_C, que es el campo consumido por el renderer
+     * histórico original.
+     */
+
+    const observationChartVariables = {
+        temperature: {
+            label: "Temperatura",
+            unit: "°C",
+            field: "temp_avg_C"
+        },
+        humidity: {
+            label: "Humedad relativa",
+            unit: "%",
+            field: "hum_avg_pct"
+        },
+        pressure: {
+            label: "Presión",
+            unit: "hPa",
+            field: "pres_avg_hPa"
+        },
+        rain1h: {
+            label: "Lluvia 1 h",
+            unit: "mm",
+            field: "rain_1h_mm"
+        },
+        wind: {
+            label: "Velocidad del viento",
+            unit: "m/s",
+            field: "wind_speed_ms"
+        },
+        gust: {
+            label: "Ráfaga",
+            unit: "m/s",
+            field: "wind_gust_ms"
+        }
+    };
+
+
+    const observationChartSelection = {
+        CU01: "temperature",
+        SJ01: "temperature"
+    };
+
+
+    function observationChartConfig(stationId) {
+        const key =
+            observationChartSelection[stationId] ??
+            "temperature";
+
+        return (
+            observationChartVariables[key] ??
+            observationChartVariables.temperature
+        );
+    }
+
+
+    function observationChartRecords(
+        records,
+        stationId
+    ) {
+        const config =
+            observationChartConfig(stationId);
+
+        return (records ?? []).map(record => {
+
+            const raw =
+                record?.[config.field];
+
+            const numeric =
+                raw === null ||
+                raw === undefined ||
+                raw === ""
+                    ? null
+                    : Number(raw);
+
+            return {
+                ...record,
+                temp_avg_C:
+                    Number.isFinite(numeric)
+                        ? numeric
+                        : null
+            };
+        });
+    }
+
+
+    function updateObservationChartTitle(
+        stationId
+    ) {
+        const config =
+            observationChartConfig(stationId);
+
+        const svg =
+            document.getElementById(
+                `chart-${stationId.toLowerCase()}`
+            );
+
+        if (!svg) {
+            return;
+        }
+
+        let host = svg.parentElement;
+
+        for (
+            let depth = 0;
+            host && depth < 6;
+            depth += 1,
+            host = host.parentElement
+        ) {
+            const headings =
+                host.querySelectorAll(
+                    "h2, h3, h4"
+                );
+
+            for (const heading of headings) {
+
+                const text =
+                    heading.textContent.trim();
+
+                if (
+                    text.includes(stationId) &&
+                    (
+                        text.includes("Temperatura") ||
+                        text.includes("Humedad") ||
+                        text.includes("Presión") ||
+                        text.includes("Lluvia") ||
+                        text.includes("Viento") ||
+                        text.includes("Ráfaga") ||
+                        text.includes("Velocidad")
+                    )
+                ) {
+                    heading.textContent =
+                        `${config.label} ${stationId}`;
+
+                    return;
+                }
+            }
+        }
+    }
+
+
+    function ensureObservationChartSelector(
+        stationId
+    ) {
+        const stationLower =
+            stationId.toLowerCase();
+
+        const svg =
+            document.getElementById(
+                `chart-${stationLower}`
+            );
+
+        if (!svg) {
+            return;
+        }
+
+        const selectId =
+            `chart-variable-${stationLower}`;
+
+        let select =
+            document.getElementById(selectId);
+
+        if (!select) {
+
+            const control =
+                document.createElement("div");
+
+            control.className =
+                "chart-variable-control";
+
+            const label =
+                document.createElement("label");
+
+            label.setAttribute(
+                "for",
+                selectId
+            );
+
+            label.textContent =
+                "Variable";
+
+            select =
+                document.createElement("select");
+
+            select.id = selectId;
+
+            select.className =
+                "chart-variable-select";
+
+            for (
+                const [key, config]
+                of Object.entries(
+                    observationChartVariables
+                )
+            ) {
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value = key;
+
+                option.textContent =
+                    `${config.label} · ${config.unit}`;
+
+                select.appendChild(option);
+            }
+
+            select.value =
+                observationChartSelection[
+                    stationId
+                ];
+
+            select.addEventListener(
+                "change",
+                () => {
+                    observationChartSelection[
+                        stationId
+                    ] = select.value;
+
+                    renderObservationChart(
+                        stationId
+                    );
+                }
+            );
+
+            control.appendChild(label);
+            control.appendChild(select);
+
+            svg.insertAdjacentElement(
+                "beforebegin",
+                control
+            );
+        }
+
+        select.value =
+            observationChartSelection[
+                stationId
+            ];
+    }
+
+
+    function renderObservationChart(
+        stationId
+    ) {
+        const stationLower =
+            stationId.toLowerCase();
+
+        const history =
+            stationId === "CU01"
+                ? state.historyCU01
+                : state.historySJ01;
+
+        ensureObservationChartSelector(
+            stationId
+        );
+
+        updateObservationChartTitle(
+            stationId
+        );
+
+        drawLineChart(
+            `chart-${stationLower}`,
+            observationChartRecords(
+                history,
+                stationId
+            )
+        );
     }
 
 
@@ -1114,14 +1842,12 @@
             `${fmt(state.SJ01?.temp_avg_C, 1)} °C`
         );
 
-        drawLineChart(
-            "chart-cu01",
-            state.historyCU01
+        renderObservationChart(
+            "CU01"
         );
 
-        drawLineChart(
-            "chart-sj01",
-            state.historySJ01
+        renderObservationChart(
+            "SJ01"
         );
 
         if (state.lastRefresh) {
