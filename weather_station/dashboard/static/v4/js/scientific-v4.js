@@ -1316,6 +1316,50 @@
 
 
 
+    function scientificSampleMaturity(n) {
+        /*
+         * Política operativa AtmosLink.
+         *
+         * Estos umbrales NO constituyen una norma estadística
+         * universal. Se utilizan como indicador de madurez
+         * descriptiva del conjunto disponible.
+         */
+        if (n < 10) {
+            return {
+                key: "insufficient",
+                label: "INSUFICIENTE",
+                description:
+                    "Muestra demasiado pequeña para interpretar métricas de asociación."
+            };
+        }
+
+        if (n < 30) {
+            return {
+                key: "preliminary",
+                label: "PRELIMINAR",
+                description:
+                    "Resultados descriptivos preliminares."
+            };
+        }
+
+        if (n < 100) {
+            return {
+                key: "moderate",
+                label: "MODERADA",
+                description:
+                    "Muestra con utilidad descriptiva moderada."
+            };
+        }
+
+        return {
+            key: "robust",
+            label: "ROBUSTA DESCRIPTIVAMENTE",
+            description:
+                "Muestra amplia para análisis descriptivo."
+        };
+    }
+
+
     function scientificMetrics(pairs) {
         const valid =
             Array.isArray(pairs)
@@ -1328,13 +1372,18 @@
 
         const n = valid.length;
 
+        const maturity =
+            scientificSampleMaturity(n);
+
         if (!n) {
             return {
                 n: 0,
                 bias: null,
                 mae: null,
                 rmse: null,
-                r2: null
+                r2: null,
+                nse: null,
+                maturity
             };
         }
 
@@ -1375,18 +1424,58 @@
                 0
             ) / n;
 
-        const ssTot =
+        const referenceMean =
             valid.reduce(
-                (a, pair) => {
-                    const d =
-                        pair.observed -
-                        observedMean;
-
-                    return a + d * d;
-                },
+                (a, pair) =>
+                    a + pair.reference,
                 0
-            );
+            ) / n;
 
+        /*
+         * r² de Pearson:
+         * cuadrado del coeficiente de correlación lineal.
+         */
+        let covariance = 0;
+        let varianceObserved = 0;
+        let varianceReference = 0;
+
+        for (const pair of valid) {
+            const dx =
+                pair.observed -
+                observedMean;
+
+            const dy =
+                pair.reference -
+                referenceMean;
+
+            covariance += dx * dy;
+            varianceObserved += dx * dx;
+            varianceReference += dy * dy;
+        }
+
+        let r2 = null;
+
+        if (
+            n >= 2 &&
+            varianceObserved > 0 &&
+            varianceReference > 0
+        ) {
+            const r =
+                covariance /
+                Math.sqrt(
+                    varianceObserved *
+                    varianceReference
+                );
+
+            r2 = r * r;
+        }
+
+        /*
+         * NSE — Nash-Sutcliffe Efficiency.
+         *
+         * Esta era la expresión que anteriormente estaba
+         * etiquetada incorrectamente como R².
+         */
         const ssRes =
             valid.reduce(
                 (a, pair) => {
@@ -1399,7 +1488,19 @@
                 0
             );
 
-        const r2 =
+        const ssTot =
+            valid.reduce(
+                (a, pair) => {
+                    const d =
+                        pair.observed -
+                        observedMean;
+
+                    return a + d * d;
+                },
+                0
+            );
+
+        const nse =
             ssTot > 0
                 ? 1 - ssRes / ssTot
                 : null;
@@ -1409,7 +1510,9 @@
             bias,
             mae,
             rmse,
-            r2
+            r2,
+            nse,
+            maturity
         };
     }
 
@@ -1429,6 +1532,102 @@
         era5Metrics,
         nasaMetrics
     ) {
+        function associationValue(
+            metric,
+            value
+        ) {
+            /*
+             * Con N < 10 evitamos presentar r²/NSE como
+             * indicadores interpretables.
+             */
+            if (
+                metric.n < 10 ||
+                !Number.isFinite(value)
+            ) {
+                return "—";
+            }
+
+            return value.toFixed(3);
+        }
+
+        function card(
+            source,
+            metric
+        ) {
+            return `
+                <div class="scientific-metrics-card">
+
+                    <div class="scientific-metrics-card-head">
+                        <strong>${source}</strong>
+
+                        <span class="
+                            scientific-maturity-badge
+                            ${metric.maturity.key}
+                        ">
+                            ${metric.maturity.label}
+                        </span>
+                    </div>
+
+                    <span>
+                        N
+                        <b>${metric.n}</b>
+                    </span>
+
+                    <span>
+                        Bias
+                        <b>
+                            ${scientificMetricValue(
+                                metric.bias
+                            )} ${variable.unit}
+                        </b>
+                    </span>
+
+                    <span>
+                        MAE
+                        <b>
+                            ${scientificMetricValue(
+                                metric.mae
+                            )} ${variable.unit}
+                        </b>
+                    </span>
+
+                    <span>
+                        RMSE
+                        <b>
+                            ${scientificMetricValue(
+                                metric.rmse
+                            )} ${variable.unit}
+                        </b>
+                    </span>
+
+                    <span>
+                        r²
+                        <b>
+                            ${associationValue(
+                                metric,
+                                metric.r2
+                            )}
+                        </b>
+                    </span>
+
+                    <span>
+                        NSE
+                        <b>
+                            ${associationValue(
+                                metric,
+                                metric.nse
+                            )}
+                        </b>
+                    </span>
+
+                    <small class="scientific-maturity-detail">
+                        ${metric.maturity.description}
+                    </small>
+
+                </div>
+            `;
+        }
+
         return `
             <div class="scientific-metrics-panel">
 
@@ -1437,113 +1636,32 @@
                 </div>
 
                 <div class="scientific-metrics-grid">
+                    ${card(
+                        "ERA5-Land",
+                        era5Metrics
+                    )}
 
-                    <div class="scientific-metrics-card">
-                        <strong>ERA5-Land</strong>
-
-                        <span>
-                            N
-                            <b>${era5Metrics.n}</b>
-                        </span>
-
-                        <span>
-                            Bias
-                            <b>
-                                ${scientificMetricValue(
-                                    era5Metrics.bias
-                                )} ${variable.unit}
-                            </b>
-                        </span>
-
-                        <span>
-                            MAE
-                            <b>
-                                ${scientificMetricValue(
-                                    era5Metrics.mae
-                                )} ${variable.unit}
-                            </b>
-                        </span>
-
-                        <span>
-                            RMSE
-                            <b>
-                                ${scientificMetricValue(
-                                    era5Metrics.rmse
-                                )} ${variable.unit}
-                            </b>
-                        </span>
-
-                        <span>
-                            R²
-                            <b>
-                                ${scientificMetricValue(
-                                    era5Metrics.r2,
-                                    3
-                                )}
-                            </b>
-                        </span>
-                    </div>
-
-                    <div class="scientific-metrics-card">
-                        <strong>NASA POWER</strong>
-
-                        <span>
-                            N
-                            <b>${nasaMetrics.n}</b>
-                        </span>
-
-                        <span>
-                            Bias
-                            <b>
-                                ${scientificMetricValue(
-                                    nasaMetrics.bias
-                                )} ${variable.unit}
-                            </b>
-                        </span>
-
-                        <span>
-                            MAE
-                            <b>
-                                ${scientificMetricValue(
-                                    nasaMetrics.mae
-                                )} ${variable.unit}
-                            </b>
-                        </span>
-
-                        <span>
-                            RMSE
-                            <b>
-                                ${scientificMetricValue(
-                                    nasaMetrics.rmse
-                                )} ${variable.unit}
-                            </b>
-                        </span>
-
-                        <span>
-                            R²
-                            <b>
-                                ${scientificMetricValue(
-                                    nasaMetrics.r2,
-                                    3
-                                )}
-                            </b>
-                        </span>
-                    </div>
-
+                    ${card(
+                        "NASA POWER",
+                        nasaMetrics
+                    )}
                 </div>
 
                 <div class="scientific-metrics-note">
                     Bias = media(referencia − local).
-                    MAE y RMSE describen magnitud de diferencia.
-                    R² se calcula sobre los pares mostrados y no
-                    implica por sí solo acuerdo físico ni ausencia
-                    de sesgo.
+                    MAE y RMSE cuantifican magnitud de diferencia.
+                    r² representa asociación lineal.
+                    NSE evalúa reproducción respecto a la variabilidad
+                    observada. Para N &lt; 10, r² y NSE se ocultan
+                    como indicadores interpretables.
+                    La clasificación de madurez es una política
+                    operativa AtmosLink y no una norma estadística
+                    universal.
                 </div>
 
             </div>
         `;
     }
-
 
 
     function scientificDrawConcordance(
