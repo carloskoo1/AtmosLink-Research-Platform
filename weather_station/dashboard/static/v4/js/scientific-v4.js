@@ -1316,6 +1316,236 @@
 
 
 
+    function scientificMetrics(pairs) {
+        const valid =
+            Array.isArray(pairs)
+                ? pairs.filter(
+                    pair =>
+                        Number.isFinite(pair?.observed) &&
+                        Number.isFinite(pair?.reference)
+                )
+                : [];
+
+        const n = valid.length;
+
+        if (!n) {
+            return {
+                n: 0,
+                bias: null,
+                mae: null,
+                rmse: null,
+                r2: null
+            };
+        }
+
+        const errors =
+            valid.map(
+                pair =>
+                    pair.reference -
+                    pair.observed
+            );
+
+        const bias =
+            errors.reduce(
+                (a, b) => a + b,
+                0
+            ) / n;
+
+        const mae =
+            errors.reduce(
+                (a, b) =>
+                    a + Math.abs(b),
+                0
+            ) / n;
+
+        const mse =
+            errors.reduce(
+                (a, b) =>
+                    a + b * b,
+                0
+            ) / n;
+
+        const rmse =
+            Math.sqrt(mse);
+
+        const observedMean =
+            valid.reduce(
+                (a, pair) =>
+                    a + pair.observed,
+                0
+            ) / n;
+
+        const ssTot =
+            valid.reduce(
+                (a, pair) => {
+                    const d =
+                        pair.observed -
+                        observedMean;
+
+                    return a + d * d;
+                },
+                0
+            );
+
+        const ssRes =
+            valid.reduce(
+                (a, pair) => {
+                    const d =
+                        pair.observed -
+                        pair.reference;
+
+                    return a + d * d;
+                },
+                0
+            );
+
+        const r2 =
+            ssTot > 0
+                ? 1 - ssRes / ssTot
+                : null;
+
+        return {
+            n,
+            bias,
+            mae,
+            rmse,
+            r2
+        };
+    }
+
+
+    function scientificMetricValue(
+        value,
+        digits = 2
+    ) {
+        return Number.isFinite(value)
+            ? value.toFixed(digits)
+            : "—";
+    }
+
+
+    function scientificMetricsHTML(
+        variable,
+        era5Metrics,
+        nasaMetrics
+    ) {
+        return `
+            <div class="scientific-metrics-panel">
+
+                <div class="scientific-metrics-header">
+                    MÉTRICAS SOBRE PARES COMPARABLES
+                </div>
+
+                <div class="scientific-metrics-grid">
+
+                    <div class="scientific-metrics-card">
+                        <strong>ERA5-Land</strong>
+
+                        <span>
+                            N
+                            <b>${era5Metrics.n}</b>
+                        </span>
+
+                        <span>
+                            Bias
+                            <b>
+                                ${scientificMetricValue(
+                                    era5Metrics.bias
+                                )} ${variable.unit}
+                            </b>
+                        </span>
+
+                        <span>
+                            MAE
+                            <b>
+                                ${scientificMetricValue(
+                                    era5Metrics.mae
+                                )} ${variable.unit}
+                            </b>
+                        </span>
+
+                        <span>
+                            RMSE
+                            <b>
+                                ${scientificMetricValue(
+                                    era5Metrics.rmse
+                                )} ${variable.unit}
+                            </b>
+                        </span>
+
+                        <span>
+                            R²
+                            <b>
+                                ${scientificMetricValue(
+                                    era5Metrics.r2,
+                                    3
+                                )}
+                            </b>
+                        </span>
+                    </div>
+
+                    <div class="scientific-metrics-card">
+                        <strong>NASA POWER</strong>
+
+                        <span>
+                            N
+                            <b>${nasaMetrics.n}</b>
+                        </span>
+
+                        <span>
+                            Bias
+                            <b>
+                                ${scientificMetricValue(
+                                    nasaMetrics.bias
+                                )} ${variable.unit}
+                            </b>
+                        </span>
+
+                        <span>
+                            MAE
+                            <b>
+                                ${scientificMetricValue(
+                                    nasaMetrics.mae
+                                )} ${variable.unit}
+                            </b>
+                        </span>
+
+                        <span>
+                            RMSE
+                            <b>
+                                ${scientificMetricValue(
+                                    nasaMetrics.rmse
+                                )} ${variable.unit}
+                            </b>
+                        </span>
+
+                        <span>
+                            R²
+                            <b>
+                                ${scientificMetricValue(
+                                    nasaMetrics.r2,
+                                    3
+                                )}
+                            </b>
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="scientific-metrics-note">
+                    Bias = media(referencia − local).
+                    MAE y RMSE describen magnitud de diferencia.
+                    R² se calcula sobre los pares mostrados y no
+                    implica por sí solo acuerdo físico ni ausencia
+                    de sesgo.
+                </div>
+
+            </div>
+        `;
+    }
+
+
+
     function scientificDrawConcordance(
         stationId,
         payload
@@ -1440,12 +1670,28 @@
             }
         }
 
+        const era5Metrics =
+            scientificMetrics(
+                era5Pairs
+            );
+
+        const nasaMetrics =
+            scientificMetrics(
+                nasaPairs
+            );
+
         summary.innerHTML = `
             <strong>Concordancia con observación local</strong>
             · ${payload?.label ?? variable.label}
             · Ventana mostrada:
             ERA5 ${era5Pairs.length} pares
             · NASA ${nasaPairs.length} pares
+
+            ${scientificMetricsHTML(
+                variable,
+                era5Metrics,
+                nasaMetrics
+            )}
         `;
 
         if (legend) {
