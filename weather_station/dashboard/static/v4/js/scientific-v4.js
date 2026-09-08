@@ -471,6 +471,11 @@
         SJ01: "temperature"
     };
 
+    const scientificChartMode = {
+        CU01: "timeseries",
+        SJ01: "timeseries"
+    };
+
     const scientificChartVariables = {
         temperature: {
             label: "Temperatura",
@@ -522,6 +527,26 @@
                 class="scientific-history"
                 id="scientific-history-${stationId.toLowerCase()}"
             >
+                <div class="scientific-history-tabs">
+                    <button
+                        type="button"
+                        class="scientific-history-tab active"
+                        data-station="${stationId}"
+                        data-mode="timeseries"
+                    >
+                        Serie temporal
+                    </button>
+
+                    <button
+                        type="button"
+                        class="scientific-history-tab"
+                        data-station="${stationId}"
+                        data-mode="delta"
+                    >
+                        Δ respecto al local
+                    </button>
+                </div>
+
                 <div class="scientific-history-header">
                     <div>
                         <div class="scientific-history-eyebrow">
@@ -560,7 +585,10 @@
                     ></svg>
                 </div>
 
-                <div class="scientific-history-legend">
+                <div
+                    class="scientific-history-legend"
+                    id="scientific-history-legend-${stationId.toLowerCase()}"
+                >
                     <span class="scientific-history-legend-item">
                         <i class="scientific-history-key local"></i>
                         Sensor local
@@ -649,6 +677,634 @@
 
         return node;
     }
+
+
+    function scientificDrawDelta(
+        stationId,
+        payload
+    ) {
+        const svg =
+            document.getElementById(
+                `scientific-history-chart-${stationId.toLowerCase()}`
+            );
+
+        const summary =
+            document.getElementById(
+                `scientific-history-summary-${stationId.toLowerCase()}`
+            );
+
+        if (!svg || !summary) {
+            return;
+        }
+
+        svg.innerHTML = "";
+
+        const allRecords =
+            Array.isArray(payload?.records)
+                ? payload.records
+                : [];
+
+        let lastComparableIndex = -1;
+
+        for (
+            let i = allRecords.length - 1;
+            i >= 0;
+            i--
+        ) {
+            const record = allRecords[i];
+
+            if (
+                scientificNumber(record?.era5) !== null ||
+                scientificNumber(record?.nasa) !== null
+            ) {
+                lastComparableIndex = i;
+                break;
+            }
+        }
+
+        const records =
+            lastComparableIndex >= 0
+                ? allRecords.slice(
+                    Math.max(0, lastComparableIndex - 167),
+                    lastComparableIndex + 1
+                )
+                : allRecords.slice(-168);
+
+        const variableKey =
+            scientificChartSelection[stationId]
+            ?? "temperature";
+
+        const variable =
+            scientificChartVariables[variableKey]
+            ?? scientificChartVariables.temperature;
+
+        const parsed = records
+            .map(record => {
+                const timestamp =
+                    scientificDate(record.timestamp);
+
+                const observed =
+                    scientificNumber(record.observed);
+
+                const era5 =
+                    scientificNumber(record.era5);
+
+                const nasa =
+                    scientificNumber(record.nasa);
+
+                return {
+                    timestamp,
+                    deltaEra5:
+                        observed !== null &&
+                        era5 !== null
+                            ? era5 - observed
+                            : null,
+                    deltaNasa:
+                        observed !== null &&
+                        nasa !== null
+                            ? nasa - observed
+                            : null
+                };
+            })
+            .filter(record => record.timestamp);
+
+        const era5Count =
+            parsed.filter(
+                r => r.deltaEra5 !== null
+            ).length;
+
+        const nasaCount =
+            parsed.filter(
+                r => r.deltaNasa !== null
+            ).length;
+
+        const legend =
+            document.getElementById(
+                `scientific-history-legend-${stationId.toLowerCase()}`
+            );
+
+        if (legend) {
+            legend.innerHTML = `
+                <span class="scientific-history-legend-item">
+                    <i class="scientific-history-key era5"></i>
+                    Δ ERA5-Land
+                </span>
+
+                <span class="scientific-history-legend-item">
+                    <i class="scientific-history-key nasa"></i>
+                    Δ NASA POWER
+                </span>
+
+                <span class="scientific-history-legend-item">
+                    <i class="scientific-history-key zero"></i>
+                    Δ = 0
+                </span>
+            `;
+        }
+
+        summary.innerHTML = `
+            <strong>Diferencia respecto a observación local</strong>
+            · ${payload?.label ?? variable.label}
+            · Ventana mostrada: ERA5 ${era5Count} pares
+            · NASA ${nasaCount} pares
+            · Δ = referencia − local
+        `;
+
+        const numericValues = [];
+
+        for (const record of parsed) {
+            if (record.deltaEra5 !== null) {
+                numericValues.push(record.deltaEra5);
+            }
+
+            if (record.deltaNasa !== null) {
+                numericValues.push(record.deltaNasa);
+            }
+        }
+
+        if (!numericValues.length) {
+            const text =
+                scientificSvgElement(
+                    "text",
+                    {
+                        x: 450,
+                        y: 165,
+                        "text-anchor": "middle",
+                        class: "scientific-chart-empty"
+                    }
+                );
+
+            text.textContent =
+                "Sin pares comparables para Δ";
+
+            svg.appendChild(text);
+            return;
+        }
+
+        const W = 900;
+        const H = 330;
+
+        const margin = {
+            left: 72,
+            right: 24,
+            top: 20,
+            bottom: 58
+        };
+
+        const chartWidth =
+            W - margin.left - margin.right;
+
+        const chartHeight =
+            H - margin.top - margin.bottom;
+
+        let minY =
+            Math.min(
+                ...numericValues,
+                0
+            );
+
+        let maxY =
+            Math.max(
+                ...numericValues,
+                0
+            );
+
+        if (minY === maxY) {
+            minY -= 1;
+            maxY += 1;
+        }
+
+        const padding =
+            Math.max(
+                (maxY - minY) * 0.08,
+                0.1
+            );
+
+        minY -= padding;
+        maxY += padding;
+
+        const minTime =
+            parsed[0].timestamp.getTime();
+
+        let maxTime =
+            parsed[
+                parsed.length - 1
+            ].timestamp.getTime();
+
+        if (minTime === maxTime) {
+            maxTime += 3600000;
+        }
+
+        const xScale = time =>
+            margin.left +
+            (
+                (
+                    time.getTime() - minTime
+                ) /
+                (
+                    maxTime - minTime
+                )
+            ) * chartWidth;
+
+        const yScale = value =>
+            margin.top +
+            (
+                1 -
+                (
+                    (value - minY) /
+                    (maxY - minY)
+                )
+            ) * chartHeight;
+
+        for (let i = 0; i <= 4; i++) {
+            const ratio = i / 4;
+
+            const y =
+                margin.top +
+                ratio * chartHeight;
+
+            const value =
+                maxY -
+                ratio * (maxY - minY);
+
+            svg.appendChild(
+                scientificSvgElement(
+                    "line",
+                    {
+                        x1: margin.left,
+                        x2: W - margin.right,
+                        y1: y,
+                        y2: y,
+                        class: "scientific-chart-grid"
+                    }
+                )
+            );
+
+            const label =
+                scientificSvgElement(
+                    "text",
+                    {
+                        x: margin.left - 12,
+                        y: y + 4,
+                        "text-anchor": "end",
+                        class: "scientific-chart-axis-label"
+                    }
+                );
+
+            label.textContent =
+                value.toFixed(
+                    Math.abs(maxY - minY) < 10
+                        ? 1
+                        : 0
+                );
+
+            svg.appendChild(label);
+        }
+
+        const zeroY = yScale(0);
+
+        svg.appendChild(
+            scientificSvgElement(
+                "line",
+                {
+                    x1: margin.left,
+                    x2: W - margin.right,
+                    y1: zeroY,
+                    y2: zeroY,
+                    class: "scientific-delta-zero"
+                }
+            )
+        );
+
+        const tickCount =
+            Math.min(
+                5,
+                Math.max(
+                    2,
+                    parsed.length
+                )
+            );
+
+        for (let i = 0; i < tickCount; i++) {
+            const index =
+                Math.round(
+                    i *
+                    (parsed.length - 1) /
+                    (tickCount - 1)
+                );
+
+            const record =
+                parsed[index];
+
+            const x =
+                xScale(record.timestamp);
+
+            const label =
+                scientificSvgElement(
+                    "text",
+                    {
+                        x,
+                        y: H - 28,
+                        "text-anchor": "middle",
+                        class: "scientific-chart-axis-label"
+                    }
+                );
+
+            label.textContent =
+                scientificLocalTime(
+                    record.timestamp
+                );
+
+            svg.appendChild(label);
+        }
+
+        const unitLabel =
+            scientificSvgElement(
+                "text",
+                {
+                    x: 14,
+                    y: margin.top + chartHeight / 2,
+                    transform:
+                        `rotate(-90 14 ${
+                            margin.top +
+                            chartHeight / 2
+                        })`,
+                    "text-anchor": "middle",
+                    class: "scientific-chart-unit"
+                }
+            );
+
+        unitLabel.textContent =
+            `Δ ${variable.unit}`;
+
+        svg.appendChild(unitLabel);
+
+        function drawSeries(
+            key,
+            cssClass
+        ) {
+            let segment = [];
+
+            function flush() {
+                if (segment.length === 1) {
+                    const p = segment[0];
+
+                    svg.appendChild(
+                        scientificSvgElement(
+                            "circle",
+                            {
+                                cx: p.x,
+                                cy: p.y,
+                                r: 2.7,
+                                class:
+                                    `scientific-chart-point ${cssClass}`
+                            }
+                        )
+                    );
+                }
+
+                if (segment.length >= 2) {
+                    const points =
+                        segment
+                            .map(
+                                p =>
+                                    `${p.x},${p.y}`
+                            )
+                            .join(" ");
+
+                    svg.appendChild(
+                        scientificSvgElement(
+                            "polyline",
+                            {
+                                points,
+                                fill: "none",
+                                class:
+                                    `scientific-chart-line ${cssClass}`
+                            }
+                        )
+                    );
+                }
+
+                segment = [];
+            }
+
+            for (const record of parsed) {
+                const value =
+                    record[key];
+
+                if (value === null) {
+                    flush();
+                    continue;
+                }
+
+                segment.push({
+                    x: xScale(
+                        record.timestamp
+                    ),
+                    y: yScale(value)
+                });
+            }
+
+            flush();
+        }
+
+        drawSeries(
+            "deltaEra5",
+            "scientific-series-era5"
+        );
+
+        drawSeries(
+            "deltaNasa",
+            "scientific-series-nasa"
+        );
+
+        const hoverLine =
+            scientificSvgElement(
+                "line",
+                {
+                    y1: margin.top,
+                    y2: margin.top + chartHeight,
+                    class: "scientific-history-hover-line"
+                }
+            );
+
+        hoverLine.style.display = "none";
+        svg.appendChild(hoverLine);
+
+        const hoverBox =
+            scientificSvgElement(
+                "g",
+                {
+                    class: "scientific-history-tooltip"
+                }
+            );
+
+        hoverBox.style.display = "none";
+
+        const tooltipBg =
+            scientificSvgElement(
+                "rect",
+                {
+                    width: 205,
+                    height: 66,
+                    rx: 7,
+                    class: "scientific-history-tooltip-bg"
+                }
+            );
+
+        const tooltipText =
+            scientificSvgElement(
+                "text",
+                {
+                    x: 10,
+                    y: 18,
+                    class: "scientific-history-tooltip-text"
+                }
+            );
+
+        hoverBox.appendChild(tooltipBg);
+        hoverBox.appendChild(tooltipText);
+        svg.appendChild(hoverBox);
+
+        const overlay =
+            scientificSvgElement(
+                "rect",
+                {
+                    x: margin.left,
+                    y: margin.top,
+                    width: chartWidth,
+                    height: chartHeight,
+                    class: "scientific-history-overlay"
+                }
+            );
+
+        overlay.addEventListener(
+            "mousemove",
+            event => {
+                const rect =
+                    svg.getBoundingClientRect();
+
+                const mouseX =
+                    (
+                        event.clientX -
+                        rect.left
+                    ) *
+                    (
+                        W / rect.width
+                    );
+
+                let nearest =
+                    parsed[0];
+
+                let nearestDistance =
+                    Infinity;
+
+                for (const record of parsed) {
+                    const distance =
+                        Math.abs(
+                            xScale(
+                                record.timestamp
+                            ) -
+                            mouseX
+                        );
+
+                    if (
+                        distance <
+                        nearestDistance
+                    ) {
+                        nearestDistance =
+                            distance;
+
+                        nearest = record;
+                    }
+                }
+
+                const x =
+                    xScale(
+                        nearest.timestamp
+                    );
+
+                hoverLine.setAttribute(
+                    "x1",
+                    x
+                );
+
+                hoverLine.setAttribute(
+                    "x2",
+                    x
+                );
+
+                hoverLine.style.display = "";
+
+                const lines = [
+                    scientificLocalTime(
+                        nearest.timestamp
+                    ),
+                    `Δ ERA5: ${
+                        nearest.deltaEra5 === null
+                            ? "—"
+                            : nearest.deltaEra5.toFixed(2)
+                    } ${variable.unit}`,
+                    `Δ NASA: ${
+                        nearest.deltaNasa === null
+                            ? "—"
+                            : nearest.deltaNasa.toFixed(2)
+                    } ${variable.unit}`
+                ];
+
+                tooltipText.innerHTML = "";
+
+                lines.forEach(
+                    (line, index) => {
+                        const tspan =
+                            scientificSvgElement(
+                                "tspan",
+                                {
+                                    x: 10,
+                                    dy:
+                                        index === 0
+                                            ? 0
+                                            : 18
+                                }
+                            );
+
+                        tspan.textContent =
+                            line;
+
+                        tooltipText.appendChild(
+                            tspan
+                        );
+                    }
+                );
+
+                const tooltipX =
+                    x > W - 235
+                        ? x - 215
+                        : x + 10;
+
+                hoverBox.setAttribute(
+                    "transform",
+                    `translate(${tooltipX},${margin.top + 8})`
+                );
+
+                hoverBox.style.display = "";
+            }
+        );
+
+        overlay.addEventListener(
+            "mouseleave",
+            () => {
+                hoverLine.style.display =
+                    "none";
+
+                hoverBox.style.display =
+                    "none";
+            }
+        );
+
+        svg.appendChild(overlay);
+    }
+
 
 
     function scientificDrawHistory(
@@ -743,6 +1399,30 @@
                     )
                 }`
                 : "";
+
+        const legend =
+            document.getElementById(
+                `scientific-history-legend-${stationId.toLowerCase()}`
+            );
+
+        if (legend) {
+            legend.innerHTML = `
+                <span class="scientific-history-legend-item">
+                    <i class="scientific-history-key local"></i>
+                    Sensor local
+                </span>
+
+                <span class="scientific-history-legend-item">
+                    <i class="scientific-history-key era5"></i>
+                    ERA5-Land
+                </span>
+
+                <span class="scientific-history-legend-item">
+                    <i class="scientific-history-key nasa"></i>
+                    NASA POWER
+                </span>
+            `;
+        }
 
         summary.innerHTML = `
             <strong>${payload?.label ?? variable.label}</strong>
@@ -1291,10 +1971,21 @@
                     `/api/scientific/hourly?station_id=${stationId}&variable=${variable}`
                 );
 
-            scientificDrawHistory(
-                stationId,
-                payload
-            );
+            const mode =
+                scientificChartMode[stationId]
+                ?? "timeseries";
+
+            if (mode === "delta") {
+                scientificDrawDelta(
+                    stationId,
+                    payload
+                );
+            } else {
+                scientificDrawHistory(
+                    stationId,
+                    payload
+                );
+            }
 
         } catch (error) {
             console.warn(
@@ -1308,6 +1999,41 @@
             }
         }
     }
+
+
+    function installScientificHistoryTabs(
+        stationId
+    ) {
+        const buttons =
+            document.querySelectorAll(
+                `.scientific-history-tab[data-station="${stationId}"]`
+            );
+
+        buttons.forEach(button => {
+            button.addEventListener(
+                "click",
+                async () => {
+                    scientificChartMode[
+                        stationId
+                    ] =
+                        button.dataset.mode;
+
+                    buttons.forEach(
+                        candidate =>
+                            candidate.classList.toggle(
+                                "active",
+                                candidate === button
+                            )
+                    );
+
+                    await loadScientificHistory(
+                        stationId
+                    );
+                }
+            );
+        });
+    }
+
 
 
     function installScientificHistorySelector(
@@ -1945,6 +2671,10 @@ async function fetchJSON(url) {
                     latest,
                     scientific
                 );
+
+            installScientificHistoryTabs(
+                stationId
+            );
 
             installScientificHistorySelector(
                 stationId

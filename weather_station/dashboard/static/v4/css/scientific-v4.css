@@ -630,3 +630,41 @@
 svg.scientific-history-chart polyline.scientific-chart-line {
     fill: none !important;
 }
+
+/* ATMOSLINK V4.2.1 — DELTA VIEW */
+
+.scientific-history-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.scientific-history-tab {
+    padding: 7px 12px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.76rem;
+    cursor: pointer;
+}
+
+.scientific-history-tab.active {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.45);
+    font-weight: 700;
+}
+
+.scientific-delta-zero {
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-opacity: 0.55;
+    stroke-dasharray: 4 4;
+    vector-effect: non-scaling-stroke;
+}
+
+.scientific-history-key.zero {
+    border-top-style: dashed;
+    opacity: 0.55;
+}
