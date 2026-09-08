@@ -668,3 +668,52 @@ svg.scientific-history-chart polyline.scientific-chart-line {
     border-top-style: dashed;
     opacity: 0.55;
 }
+
+/* ATMOSLINK V4.2.2 — CONCORDANCE VIEW */
+
+.scientific-concordance-point {
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    cursor: crosshair;
+}
+
+.scientific-concordance-era5 {
+    fill: currentColor;
+    stroke: currentColor;
+    opacity: 0.72;
+}
+
+.scientific-concordance-nasa {
+    fill: currentColor;
+    stroke: currentColor;
+    opacity: 0.42;
+}
+
+.scientific-concordance-identity {
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-dasharray: 6 5;
+    stroke-opacity: 0.48;
+    vector-effect: non-scaling-stroke;
+}
+
+.scientific-concordance-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.scientific-concordance-dot.era5 {
+    opacity: 0.72;
+}
+
+.scientific-concordance-dot.nasa {
+    opacity: 0.42;
+}
+
+.scientific-history-key.identity {
+    border-top-style: dashed;
+    opacity: 0.48;
+}

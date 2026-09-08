@@ -545,6 +545,15 @@
                     >
                         Δ respecto al local
                     </button>
+
+                    <button
+                        type="button"
+                        class="scientific-history-tab"
+                        data-station="${stationId}"
+                        data-mode="concordance"
+                    >
+                        Concordancia
+                    </button>
                 </div>
 
                 <div class="scientific-history-header">
@@ -1307,6 +1316,625 @@
 
 
 
+    function scientificDrawConcordance(
+        stationId,
+        payload
+    ) {
+        const svg =
+            document.getElementById(
+                `scientific-history-chart-${stationId.toLowerCase()}`
+            );
+
+        const summary =
+            document.getElementById(
+                `scientific-history-summary-${stationId.toLowerCase()}`
+            );
+
+        const legend =
+            document.getElementById(
+                `scientific-history-legend-${stationId.toLowerCase()}`
+            );
+
+        if (!svg || !summary) {
+            return;
+        }
+
+        svg.innerHTML = "";
+
+        const allRecords =
+            Array.isArray(payload?.records)
+                ? payload.records
+                : [];
+
+        /*
+         * Igual que en las otras vistas:
+         * anclar la ventana al último registro donde exista
+         * al menos una referencia externa.
+         */
+        let lastComparableIndex = -1;
+
+        for (
+            let i = allRecords.length - 1;
+            i >= 0;
+            i--
+        ) {
+            const record = allRecords[i];
+
+            if (
+                scientificNumber(record?.era5) !== null ||
+                scientificNumber(record?.nasa) !== null
+            ) {
+                lastComparableIndex = i;
+                break;
+            }
+        }
+
+        const records =
+            lastComparableIndex >= 0
+                ? allRecords.slice(
+                    Math.max(
+                        0,
+                        lastComparableIndex - 167
+                    ),
+                    lastComparableIndex + 1
+                )
+                : allRecords.slice(-168);
+
+        const variableKey =
+            scientificChartSelection[stationId]
+            ?? "temperature";
+
+        const variable =
+            scientificChartVariables[variableKey]
+            ?? scientificChartVariables.temperature;
+
+        const era5Pairs = [];
+        const nasaPairs = [];
+
+        for (const record of records) {
+
+            const timestamp =
+                scientificDate(
+                    record.timestamp
+                );
+
+            const observed =
+                scientificNumber(
+                    record.observed
+                );
+
+            const era5 =
+                scientificNumber(
+                    record.era5
+                );
+
+            const nasa =
+                scientificNumber(
+                    record.nasa
+                );
+
+            if (
+                timestamp &&
+                observed !== null &&
+                era5 !== null
+            ) {
+                era5Pairs.push({
+                    timestamp,
+                    observed,
+                    reference: era5,
+                    source: "ERA5-Land"
+                });
+            }
+
+            if (
+                timestamp &&
+                observed !== null &&
+                nasa !== null
+            ) {
+                nasaPairs.push({
+                    timestamp,
+                    observed,
+                    reference: nasa,
+                    source: "NASA POWER"
+                });
+            }
+        }
+
+        summary.innerHTML = `
+            <strong>Concordancia con observación local</strong>
+            · ${payload?.label ?? variable.label}
+            · Ventana mostrada:
+            ERA5 ${era5Pairs.length} pares
+            · NASA ${nasaPairs.length} pares
+        `;
+
+        if (legend) {
+            legend.innerHTML = `
+                <span class="scientific-history-legend-item">
+                    <i class="scientific-concordance-dot era5"></i>
+                    ERA5-Land
+                </span>
+
+                <span class="scientific-history-legend-item">
+                    <i class="scientific-concordance-dot nasa"></i>
+                    NASA POWER
+                </span>
+
+                <span class="scientific-history-legend-item">
+                    <i class="scientific-history-key identity"></i>
+                    y = x
+                </span>
+            `;
+        }
+
+        const allPairs = [
+            ...era5Pairs,
+            ...nasaPairs
+        ];
+
+        if (!allPairs.length) {
+
+            const text =
+                scientificSvgElement(
+                    "text",
+                    {
+                        x: 450,
+                        y: 165,
+                        "text-anchor": "middle",
+                        class: "scientific-chart-empty"
+                    }
+                );
+
+            text.textContent =
+                "Sin pares comparables para concordancia";
+
+            svg.appendChild(text);
+
+            return;
+        }
+
+        /*
+         * Una única escala común X/Y.
+         *
+         * Esto es imprescindible para que la diagonal y=x
+         * tenga interpretación geométrica correcta.
+         */
+        const values = [];
+
+        for (const pair of allPairs) {
+            values.push(
+                pair.observed,
+                pair.reference
+            );
+        }
+
+        let minValue =
+            Math.min(...values);
+
+        let maxValue =
+            Math.max(...values);
+
+        if (minValue === maxValue) {
+            minValue -= 1;
+            maxValue += 1;
+        }
+
+        const padding =
+            Math.max(
+                (maxValue - minValue) * 0.08,
+                0.1
+            );
+
+        minValue -= padding;
+        maxValue += padding;
+
+        const W = 900;
+        const H = 330;
+
+        const margin = {
+            left: 74,
+            right: 28,
+            top: 20,
+            bottom: 62
+        };
+
+        const chartWidth =
+            W - margin.left - margin.right;
+
+        const chartHeight =
+            H - margin.top - margin.bottom;
+
+        const xScale = value =>
+            margin.left +
+            (
+                (value - minValue) /
+                (maxValue - minValue)
+            ) * chartWidth;
+
+        const yScale = value =>
+            margin.top +
+            (
+                1 -
+                (
+                    (value - minValue) /
+                    (maxValue - minValue)
+                )
+            ) * chartHeight;
+
+        /*
+         * Grid común.
+         */
+        for (let i = 0; i <= 4; i++) {
+
+            const ratio =
+                i / 4;
+
+            const value =
+                minValue +
+                ratio *
+                (maxValue - minValue);
+
+            const x =
+                xScale(value);
+
+            const y =
+                yScale(value);
+
+            svg.appendChild(
+                scientificSvgElement(
+                    "line",
+                    {
+                        x1: x,
+                        x2: x,
+                        y1: margin.top,
+                        y2:
+                            margin.top +
+                            chartHeight,
+                        class:
+                            "scientific-chart-grid"
+                    }
+                )
+            );
+
+            svg.appendChild(
+                scientificSvgElement(
+                    "line",
+                    {
+                        x1: margin.left,
+                        x2:
+                            margin.left +
+                            chartWidth,
+                        y1: y,
+                        y2: y,
+                        class:
+                            "scientific-chart-grid"
+                    }
+                )
+            );
+
+            const xLabel =
+                scientificSvgElement(
+                    "text",
+                    {
+                        x,
+                        y: H - 32,
+                        "text-anchor": "middle",
+                        class:
+                            "scientific-chart-axis-label"
+                    }
+                );
+
+            xLabel.textContent =
+                value.toFixed(
+                    Math.abs(
+                        maxValue -
+                        minValue
+                    ) < 10
+                        ? 1
+                        : 0
+                );
+
+            svg.appendChild(xLabel);
+
+            const yLabel =
+                scientificSvgElement(
+                    "text",
+                    {
+                        x:
+                            margin.left -
+                            12,
+                        y: y + 4,
+                        "text-anchor": "end",
+                        class:
+                            "scientific-chart-axis-label"
+                    }
+                );
+
+            yLabel.textContent =
+                value.toFixed(
+                    Math.abs(
+                        maxValue -
+                        minValue
+                    ) < 10
+                        ? 1
+                        : 0
+                );
+
+            svg.appendChild(yLabel);
+        }
+
+        /*
+         * Diagonal ideal y=x.
+         */
+        svg.appendChild(
+            scientificSvgElement(
+                "line",
+                {
+                    x1:
+                        xScale(minValue),
+                    y1:
+                        yScale(minValue),
+                    x2:
+                        xScale(maxValue),
+                    y2:
+                        yScale(maxValue),
+                    class:
+                        "scientific-concordance-identity"
+                }
+            )
+        );
+
+        /*
+         * Títulos de ejes.
+         */
+        const xTitle =
+            scientificSvgElement(
+                "text",
+                {
+                    x:
+                        margin.left +
+                        chartWidth / 2,
+                    y: H - 8,
+                    "text-anchor": "middle",
+                    class:
+                        "scientific-chart-unit"
+                }
+            );
+
+        xTitle.textContent =
+            `Observación local (${variable.unit})`;
+
+        svg.appendChild(xTitle);
+
+        const yTitle =
+            scientificSvgElement(
+                "text",
+                {
+                    x: 15,
+                    y:
+                        margin.top +
+                        chartHeight / 2,
+                    transform:
+                        `rotate(-90 15 ${
+                            margin.top +
+                            chartHeight / 2
+                        })`,
+                    "text-anchor": "middle",
+                    class:
+                        "scientific-chart-unit"
+                }
+            );
+
+        yTitle.textContent =
+            `Referencia (${variable.unit})`;
+
+        svg.appendChild(yTitle);
+
+        /*
+         * Tooltip.
+         */
+        const tooltip =
+            scientificSvgElement(
+                "g",
+                {
+                    class:
+                        "scientific-history-tooltip"
+                }
+            );
+
+        tooltip.style.display =
+            "none";
+
+        const tooltipBg =
+            scientificSvgElement(
+                "rect",
+                {
+                    width: 225,
+                    height: 84,
+                    rx: 7,
+                    class:
+                        "scientific-history-tooltip-bg"
+                }
+            );
+
+        const tooltipText =
+            scientificSvgElement(
+                "text",
+                {
+                    x: 10,
+                    y: 18,
+                    class:
+                        "scientific-history-tooltip-text"
+                }
+            );
+
+        tooltip.appendChild(
+            tooltipBg
+        );
+
+        tooltip.appendChild(
+            tooltipText
+        );
+
+        svg.appendChild(
+            tooltip
+        );
+
+        function drawPoints(
+            pairs,
+            cssClass
+        ) {
+            for (const pair of pairs) {
+
+                const x =
+                    xScale(
+                        pair.observed
+                    );
+
+                const y =
+                    yScale(
+                        pair.reference
+                    );
+
+                const circle =
+                    scientificSvgElement(
+                        "circle",
+                        {
+                            cx: x,
+                            cy: y,
+                            r: 3.8,
+                            class:
+                                `scientific-concordance-point ${cssClass}`
+                        }
+                    );
+
+                circle.addEventListener(
+                    "mouseenter",
+                    () => {
+
+                        tooltipText.innerHTML =
+                            "";
+
+                        const delta =
+                            pair.reference -
+                            pair.observed;
+
+                        const lines = [
+                            pair.source,
+                            scientificLocalTime(
+                                pair.timestamp
+                            ),
+                            `Local: ${
+                                pair.observed.toFixed(2)
+                            } ${variable.unit}`,
+                            `Referencia: ${
+                                pair.reference.toFixed(2)
+                            } ${variable.unit}`,
+                            `Δ: ${
+                                delta.toFixed(2)
+                            } ${variable.unit}`
+                        ];
+
+                        lines.forEach(
+                            (
+                                line,
+                                index
+                            ) => {
+
+                                const tspan =
+                                    scientificSvgElement(
+                                        "tspan",
+                                        {
+                                            x: 10,
+                                            dy:
+                                                index === 0
+                                                    ? 0
+                                                    : 15
+                                        }
+                                    );
+
+                                tspan.textContent =
+                                    line;
+
+                                tooltipText
+                                    .appendChild(
+                                        tspan
+                                    );
+                            }
+                        );
+
+                        let tooltipX =
+                            x + 10;
+
+                        if (
+                            tooltipX +
+                            225 >
+                            W - 5
+                        ) {
+                            tooltipX =
+                                x - 235;
+                        }
+
+                        let tooltipY =
+                            y - 15;
+
+                        if (tooltipY < 5) {
+                            tooltipY = 5;
+                        }
+
+                        if (
+                            tooltipY +
+                            84 >
+                            H - 5
+                        ) {
+                            tooltipY =
+                                H - 89;
+                        }
+
+                        tooltip.setAttribute(
+                            "transform",
+                            `translate(${tooltipX},${tooltipY})`
+                        );
+
+                        tooltip.style.display =
+                            "";
+                    }
+                );
+
+                circle.addEventListener(
+                    "mouseleave",
+                    () => {
+                        tooltip.style.display =
+                            "none";
+                    }
+                );
+
+                svg.appendChild(
+                    circle
+                );
+            }
+        }
+
+        drawPoints(
+            era5Pairs,
+            "scientific-concordance-era5"
+        );
+
+        drawPoints(
+            nasaPairs,
+            "scientific-concordance-nasa"
+        );
+
+        /*
+         * Mantener tooltip por encima de los puntos.
+         */
+        svg.appendChild(
+            tooltip
+        );
+    }
+
+
+
     function scientificDrawHistory(
         stationId,
         payload
@@ -1976,11 +2604,23 @@
                 ?? "timeseries";
 
             if (mode === "delta") {
+
                 scientificDrawDelta(
                     stationId,
                     payload
                 );
+
+            } else if (
+                mode === "concordance"
+            ) {
+
+                scientificDrawConcordance(
+                    stationId,
+                    payload
+                );
+
             } else {
+
                 scientificDrawHistory(
                     stationId,
                     payload
