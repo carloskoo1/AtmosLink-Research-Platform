@@ -554,6 +554,15 @@
                     >
                         Concordancia
                     </button>
+
+                    <button
+                        type="button"
+                        class="scientific-history-tab"
+                        data-station="${stationId}"
+                        data-mode="summary"
+                    >
+                        Resumen
+                    </button>
                 </div>
 
                 <div class="scientific-history-header">
@@ -1662,6 +1671,368 @@
             </div>
         `;
     }
+
+
+    function scientificFullPairs(
+        payload,
+        sourceKey
+    ) {
+        const records =
+            Array.isArray(payload?.records)
+                ? payload.records
+                : [];
+
+        const pairs = [];
+
+        for (const record of records) {
+
+            const observed =
+                scientificNumber(
+                    record?.observed
+                );
+
+            const reference =
+                scientificNumber(
+                    record?.[sourceKey]
+                );
+
+            if (
+                observed === null ||
+                reference === null
+            ) {
+                continue;
+            }
+
+            pairs.push({
+                observed,
+                reference
+            });
+        }
+
+        return pairs;
+    }
+
+
+    function scientificSummaryMetric(
+        metric,
+        key,
+        digits = 2
+    ) {
+        if (
+            metric?.n < 10 &&
+            ["r2", "nse"].includes(key)
+        ) {
+            return "—";
+        }
+
+        const value =
+            metric?.[key];
+
+        return Number.isFinite(value)
+            ? value.toFixed(digits)
+            : "—";
+    }
+
+
+    function scientificDrawSummary(
+        stationId,
+        datasets
+    ) {
+        const svg =
+            document.getElementById(
+                `scientific-history-chart-${stationId.toLowerCase()}`
+            );
+
+        const summary =
+            document.getElementById(
+                `scientific-history-summary-${stationId.toLowerCase()}`
+            );
+
+        const legend =
+            document.getElementById(
+                `scientific-history-legend-${stationId.toLowerCase()}`
+            );
+
+        if (!svg || !summary) {
+            return;
+        }
+
+        /*
+         * En modo Resumen no utilizamos el SVG como gráfica.
+         * Insertamos una matriz HTML dentro del mismo contenedor.
+         */
+        const wrap =
+            svg.parentElement;
+
+        if (!wrap) {
+            return;
+        }
+
+        svg.style.display = "none";
+
+        let matrix =
+            wrap.querySelector(
+                ".scientific-summary-matrix"
+            );
+
+        if (!matrix) {
+            matrix =
+                document.createElement(
+                    "div"
+                );
+
+            matrix.className =
+                "scientific-summary-matrix";
+
+            wrap.appendChild(
+                matrix
+            );
+        }
+
+        if (legend) {
+            legend.innerHTML = `
+                <span class="scientific-history-legend-item">
+                    Resumen estadístico por variable y fuente
+                </span>
+            `;
+        }
+
+        summary.innerHTML = `
+            <strong>Resumen científico multivariable</strong>
+            · dataset comparable completo disponible
+            · métricas calculadas exclusivamente sobre pares válidos
+        `;
+
+        const variableOrder = [
+            "temperature",
+            "humidity",
+            "pressure",
+            "dewpoint",
+            "precipitation",
+            "wind"
+        ];
+
+        const rows = [];
+
+        for (const variableKey of variableOrder) {
+
+            const payload =
+                datasets?.[variableKey];
+
+            if (!payload) {
+                continue;
+            }
+
+            const definition =
+                scientificChartVariables[
+                    variableKey
+                ];
+
+            const era5Pairs =
+                scientificFullPairs(
+                    payload,
+                    "era5"
+                );
+
+            const nasaPairs =
+                scientificFullPairs(
+                    payload,
+                    "nasa"
+                );
+
+            const era5 =
+                scientificMetrics(
+                    era5Pairs
+                );
+
+            const nasa =
+                scientificMetrics(
+                    nasaPairs
+                );
+
+            rows.push(`
+                <tr>
+                    <td rowspan="2" class="scientific-summary-variable">
+                        <strong>
+                            ${definition?.label ?? payload?.label ?? variableKey}
+                        </strong>
+                        <small>
+                            ${definition?.unit ?? ""}
+                        </small>
+                    </td>
+
+                    <td>ERA5-Land</td>
+                    <td>${era5.n}</td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            era5,
+                            "bias"
+                        )}
+                    </td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            era5,
+                            "mae"
+                        )}
+                    </td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            era5,
+                            "rmse"
+                        )}
+                    </td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            era5,
+                            "r2",
+                            3
+                        )}
+                    </td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            era5,
+                            "nse",
+                            3
+                        )}
+                    </td>
+
+                    <td>
+                        <span class="
+                            scientific-maturity-badge
+                            ${era5.maturity.key}
+                        ">
+                            ${era5.maturity.label}
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>NASA POWER</td>
+                    <td>${nasa.n}</td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            nasa,
+                            "bias"
+                        )}
+                    </td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            nasa,
+                            "mae"
+                        )}
+                    </td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            nasa,
+                            "rmse"
+                        )}
+                    </td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            nasa,
+                            "r2",
+                            3
+                        )}
+                    </td>
+
+                    <td>
+                        ${scientificSummaryMetric(
+                            nasa,
+                            "nse",
+                            3
+                        )}
+                    </td>
+
+                    <td>
+                        <span class="
+                            scientific-maturity-badge
+                            ${nasa.maturity.key}
+                        ">
+                            ${nasa.maturity.label}
+                        </span>
+                    </td>
+                </tr>
+            `);
+        }
+
+        matrix.innerHTML = `
+            <div class="scientific-summary-heading">
+                MATRIZ CIENTÍFICA · ${stationId}
+            </div>
+
+            <div class="scientific-summary-table-wrap">
+                <table class="scientific-summary-table">
+
+                    <thead>
+                        <tr>
+                            <th>Variable</th>
+                            <th>Fuente</th>
+                            <th>N</th>
+                            <th>Bias</th>
+                            <th>MAE</th>
+                            <th>RMSE</th>
+                            <th>r²</th>
+                            <th>NSE</th>
+                            <th>Madurez</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${rows.join("")}
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="scientific-summary-note">
+                Bias = referencia − observación local.
+                MAE y RMSE expresan magnitud de diferencia.
+                r² representa asociación lineal.
+                NSE evalúa reproducción respecto a la variabilidad observada.
+                Para N &lt; 10, r² y NSE no se presentan como
+                indicadores interpretables.
+                Cada variable utiliza todos sus pares válidos disponibles.
+            </div>
+        `;
+    }
+
+
+    function scientificRestoreChart(
+        stationId
+    ) {
+        const svg =
+            document.getElementById(
+                `scientific-history-chart-${stationId.toLowerCase()}`
+            );
+
+        if (!svg) {
+            return;
+        }
+
+        svg.style.display = "";
+
+        const wrap =
+            svg.parentElement;
+
+        const matrix =
+            wrap?.querySelector(
+                ".scientific-summary-matrix"
+            );
+
+        if (matrix) {
+            matrix.remove();
+        }
+    }
+
 
 
     function scientificDrawConcordance(
@@ -2952,20 +3323,57 @@
             scientificChartSelection[stationId]
             ?? "temperature";
 
+        const mode =
+            scientificChartMode[stationId]
+            ?? "timeseries";
+
         const summary =
             document.getElementById(
                 `scientific-history-summary-${stationId.toLowerCase()}`
             );
 
         try {
+
+            if (mode === "summary") {
+
+                const variableKeys =
+                    Object.keys(
+                        scientificChartVariables
+                    );
+
+                const responses =
+                    await Promise.all(
+                        variableKeys.map(
+                            async key => [
+                                key,
+                                await fetchJSON(
+                                    `/api/scientific/hourly?station_id=${stationId}&variable=${key}`
+                                )
+                            ]
+                        )
+                    );
+
+                const datasets =
+                    Object.fromEntries(
+                        responses
+                    );
+
+                scientificDrawSummary(
+                    stationId,
+                    datasets
+                );
+
+                return;
+            }
+
+            scientificRestoreChart(
+                stationId
+            );
+
             const payload =
                 await fetchJSON(
                     `/api/scientific/hourly?station_id=${stationId}&variable=${variable}`
                 );
-
-            const mode =
-                scientificChartMode[stationId]
-                ?? "timeseries";
 
             if (mode === "delta") {
 
@@ -2992,6 +3400,7 @@
             }
 
         } catch (error) {
+
             console.warn(
                 `scientific hourly ${stationId}`,
                 error
@@ -2999,7 +3408,7 @@
 
             if (summary) {
                 summary.textContent =
-                    "No fue posible cargar la serie científica.";
+                    "No fue posible cargar el análisis científico.";
             }
         }
     }

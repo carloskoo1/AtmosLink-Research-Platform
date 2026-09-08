@@ -1839,8 +1839,8 @@ SCIENTIFIC_VARIABLE_MAPPING = {
         "label": "Presión atmosférica normalizada",
         "unit": "hPa",
         "observed": "local_press_hpa",
-        "era5": "era5_press_station_hpa",
-        "nasa": "nasa_press_station_hpa",
+        "era5": "era5_press_hpa",
+        "nasa": "nasa_press_hpa",
     },
     "dewpoint": {
         "label": "Punto de rocío",
@@ -1852,7 +1852,7 @@ SCIENTIFIC_VARIABLE_MAPPING = {
     "precipitation": {
         "label": "Precipitación horaria",
         "unit": "mm",
-        "observed": "local_precip_hour_mm",
+        "observed": "local_rain_total_mm",
         "era5": "era5_precip_mm",
         "nasa": "nasa_precip_mm",
     },
@@ -2039,22 +2039,106 @@ def api_scientific_hourly():
                     variable_key
                     == "precipitation"
                 ):
-                    aggregation[
-                        observed_column
-                    ] = "max"
+                    # Precipitación horaria local derivada de los
+                    # incrementos positivos sucesivos del contador
+                    # acumulado local_rain_total_mm.
+                    #
+                    # local_rain_1h_mm no se usa porque representa
+                    # una ventana móvil retrospectiva.
+                    #
+                    # Un salto negativo del acumulado se interpreta
+                    # como reset del contador y no como precipitación.
+                    dataframe = (
+                        dataframe
+                        .sort_values(
+                            [
+                                "_hour_utc",
+                                "bucket_minute",
+                            ]
+                        )
+                        .reset_index(drop=True)
+                    )
 
-                dataframe = (
-                    dataframe
-                    .groupby(
-                        "bucket_hour",
-                        as_index=False,
+                    dataframe[
+                        "_rain_delta_mm"
+                    ] = (
+                        pd.to_numeric(
+                            dataframe[
+                                observed_column
+                            ],
+                            errors="coerce",
+                        )
+                        .diff()
                     )
-                    .agg(aggregation)
-                    .sort_values(
-                        "bucket_hour"
+
+                    dataframe.loc[
+                        dataframe[
+                            "_rain_delta_mm"
+                        ] < 0,
+                        "_rain_delta_mm",
+                    ] = 0.0
+
+                    dataframe[
+                        "_rain_delta_mm"
+                    ] = (
+                        dataframe[
+                            "_rain_delta_mm"
+                        ]
+                        .fillna(0.0)
                     )
-                    .reset_index(drop=True)
-                )
+
+                    grouped = (
+                        dataframe
+                        .groupby(
+                            "bucket_hour",
+                            as_index=False,
+                        )
+                        .agg(
+                            {
+                                "_rain_delta_mm":
+                                    "sum",
+                                model_columns[0]:
+                                    "last",
+                                model_columns[1]:
+                                    "last",
+                            }
+                        )
+                    )
+
+                    grouped[
+                        observed_column
+                    ] = grouped[
+                        "_rain_delta_mm"
+                    ]
+
+                    dataframe = (
+                        grouped[
+                            [
+                                "bucket_hour",
+                                observed_column,
+                                model_columns[0],
+                                model_columns[1],
+                            ]
+                        ]
+                        .sort_values(
+                            "bucket_hour"
+                        )
+                        .reset_index(drop=True)
+                    )
+
+                else:
+                    dataframe = (
+                        dataframe
+                        .groupby(
+                            "bucket_hour",
+                            as_index=False,
+                        )
+                        .agg(aggregation)
+                        .sort_values(
+                            "bucket_hour"
+                        )
+                        .reset_index(drop=True)
+                    )
 
     else:
         path = (
