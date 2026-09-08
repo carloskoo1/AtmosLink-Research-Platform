@@ -1810,6 +1810,29 @@ import math
 import pandas as pd
 
 
+# Diferencias físicas de esquema para la estación SJ01.
+#
+# La interfaz científica conserva las mismas variables conceptuales,
+# pero master_observations_multistation utiliza nombres de columnas
+# distintos al CSV científico consolidado de CU01.
+SJ01_SCIENTIFIC_STORAGE_MAPPING = {
+    "pressure": {
+        "observed": "local_press_hpa",
+        "era5": "era5_press_hpa",
+        "nasa": "nasa_press_hpa",
+    },
+    "precipitation": {
+        # En SJ01 este campo es el contador acumulado.
+        # La precipitación horaria se reconstruye posteriormente
+        # mediante incrementos positivos y detección de resets.
+        "observed": "local_rain_total_mm",
+        "era5": "era5_precip_mm",
+        "nasa": "nasa_precip_mm",
+    },
+}
+
+
+
 SCIENTIFIC_HOURLY_REPORTS = {
     "CU01": (
         Path(__file__).resolve().parents[2]
@@ -1839,8 +1862,8 @@ SCIENTIFIC_VARIABLE_MAPPING = {
         "label": "Presión atmosférica normalizada",
         "unit": "hPa",
         "observed": "local_press_hpa",
-        "era5": "era5_press_hpa",
-        "nasa": "nasa_press_hpa",
+        "era5": "era5_press_station_hpa",
+        "nasa": "nasa_press_station_hpa",
     },
     "dewpoint": {
         "label": "Punto de rocío",
@@ -1852,7 +1875,7 @@ SCIENTIFIC_VARIABLE_MAPPING = {
     "precipitation": {
         "label": "Precipitación horaria",
         "unit": "mm",
-        "observed": "local_rain_total_mm",
+        "observed": "local_precip_hour_mm",
         "era5": "era5_precip_mm",
         "nasa": "nasa_precip_mm",
     },
@@ -1932,6 +1955,18 @@ def api_scientific_hourly():
                 ),
             }
         ), 400
+
+    # Copia independiente para evitar modificar el
+    # mapping científico global durante una petición.
+    variable = dict(variable)
+
+    if station_id == "SJ01":
+        variable.update(
+            SJ01_SCIENTIFIC_STORAGE_MAPPING.get(
+                variable_key,
+                {}
+            )
+        )
 
     if station_id == "SJ01":
         conn = get_connection()

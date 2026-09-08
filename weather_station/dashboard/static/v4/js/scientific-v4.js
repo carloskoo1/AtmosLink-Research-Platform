@@ -1734,6 +1734,469 @@
     }
 
 
+    function scientificCoverageStats(
+        payload
+    ) {
+        const records =
+            Array.isArray(payload?.records)
+                ? payload.records
+                : [];
+
+        const localRecords =
+            records.filter(
+                record =>
+                    scientificNumber(
+                        record?.observed
+                    ) !== null
+            );
+
+        const era5Pairs =
+            records.filter(
+                record =>
+                    scientificNumber(
+                        record?.observed
+                    ) !== null
+                    &&
+                    scientificNumber(
+                        record?.era5
+                    ) !== null
+            );
+
+        const nasaPairs =
+            records.filter(
+                record =>
+                    scientificNumber(
+                        record?.observed
+                    ) !== null
+                    &&
+                    scientificNumber(
+                        record?.nasa
+                    ) !== null
+            );
+
+        function firstTimestamp(
+            rows
+        ) {
+            return rows.length
+                ? rows[0]?.timestamp ?? null
+                : null;
+        }
+
+        function lastTimestamp(
+            rows
+        ) {
+            return rows.length
+                ? rows[
+                    rows.length - 1
+                ]?.timestamp ?? null
+                : null;
+        }
+
+        function coverage(
+            pairs
+        ) {
+            if (!localRecords.length) {
+                return null;
+            }
+
+            return (
+                pairs.length /
+                localRecords.length
+            ) * 100;
+        }
+
+        return {
+            localCount:
+                localRecords.length,
+
+            era5Count:
+                era5Pairs.length,
+
+            nasaCount:
+                nasaPairs.length,
+
+            era5Coverage:
+                coverage(
+                    era5Pairs
+                ),
+
+            nasaCoverage:
+                coverage(
+                    nasaPairs
+                ),
+
+            firstEra5:
+                firstTimestamp(
+                    era5Pairs
+                ),
+
+            lastEra5:
+                lastTimestamp(
+                    era5Pairs
+                ),
+
+            firstNasa:
+                firstTimestamp(
+                    nasaPairs
+                ),
+
+            lastNasa:
+                lastTimestamp(
+                    nasaPairs
+                ),
+
+            firstLocal:
+                firstTimestamp(
+                    localRecords
+                ),
+
+            lastLocal:
+                lastTimestamp(
+                    localRecords
+                ),
+        };
+    }
+
+
+    function scientificCoverageStatus(
+        percentage
+    ) {
+        if (
+            !Number.isFinite(
+                percentage
+            )
+        ) {
+            return {
+                key: "none",
+                label: "SIN COBERTURA"
+            };
+        }
+
+        if (
+            percentage < 10
+        ) {
+            return {
+                key: "limited",
+                label: "LIMITADA"
+            };
+        }
+
+        if (
+            percentage < 50
+        ) {
+            return {
+                key: "partial",
+                label: "PARCIAL"
+            };
+        }
+
+        if (
+            percentage < 90
+        ) {
+            return {
+                key: "substantial",
+                label: "SUSTANCIAL"
+            };
+        }
+
+        return {
+            key: "high",
+            label: "ALTA"
+        };
+    }
+
+
+    function scientificCoveragePercent(
+        value
+    ) {
+        return Number.isFinite(
+            value
+        )
+            ? `${value.toFixed(1)} %`
+            : "—";
+    }
+
+
+    function scientificProvenanceTime(
+        timestamp
+    ) {
+        if (!timestamp) {
+            return "—";
+        }
+
+        const date =
+            new Date(
+                timestamp
+            );
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+            return "—";
+        }
+
+        return new Intl.DateTimeFormat(
+            "es-PE",
+            {
+                timeZone:
+                    "America/Lima",
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+            }
+        ).format(date);
+    }
+
+
+    function scientificProvenanceHTML(
+        stationId,
+        datasets
+    ) {
+        const variableOrder = [
+            "temperature",
+            "humidity",
+            "pressure",
+            "dewpoint",
+            "precipitation",
+            "wind"
+        ];
+
+        const rows = [];
+
+        let fieldStartLocal =
+            null;
+
+        for (
+            const variableKey
+            of variableOrder
+        ) {
+            const payload =
+                datasets?.[
+                    variableKey
+                ];
+
+            if (!payload) {
+                continue;
+            }
+
+            if (
+                !fieldStartLocal
+                &&
+                payload?.field_start_local
+            ) {
+                fieldStartLocal =
+                    payload.field_start_local;
+            }
+
+            const definition =
+                scientificChartVariables[
+                    variableKey
+                ];
+
+            const stats =
+                scientificCoverageStats(
+                    payload
+                );
+
+            const era5State =
+                scientificCoverageStatus(
+                    stats.era5Coverage
+                );
+
+            const nasaState =
+                scientificCoverageStatus(
+                    stats.nasaCoverage
+                );
+
+            rows.push(`
+                <tr>
+                    <td class="scientific-provenance-variable">
+                        <strong>
+                            ${
+                                definition?.label
+                                ??
+                                payload?.label
+                                ??
+                                variableKey
+                            }
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${stats.localCount}
+                    </td>
+
+                    <td>
+                        ${stats.era5Count}
+                    </td>
+
+                    <td>
+                        ${scientificCoveragePercent(
+                            stats.era5Coverage
+                        )}
+                    </td>
+
+                    <td>
+                        <span class="
+                            scientific-coverage-badge
+                            ${era5State.key}
+                        ">
+                            ${era5State.label}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${stats.nasaCount}
+                    </td>
+
+                    <td>
+                        ${scientificCoveragePercent(
+                            stats.nasaCoverage
+                        )}
+                    </td>
+
+                    <td>
+                        <span class="
+                            scientific-coverage-badge
+                            ${nasaState.key}
+                        ">
+                            ${nasaState.label}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${
+                            scientificProvenanceTime(
+                                stats.firstEra5
+                                ??
+                                stats.firstNasa
+                            )
+                        }
+                    </td>
+
+                    <td>
+                        ${
+                            scientificProvenanceTime(
+                                stats.lastEra5
+                                ??
+                                stats.lastNasa
+                            )
+                        }
+                    </td>
+                </tr>
+            `);
+        }
+
+        const stationNote =
+            stationId === "SJ01"
+                ? `
+                    <div class="
+                        scientific-provenance-validation-note
+                    ">
+                        <strong>
+                            Límite de validez de campo SJ01:
+                        </strong>
+                        31/08/2026 16:00 -05.
+                        No se consideran observaciones anteriores
+                        para la evaluación científica de San José.
+                    </div>
+                `
+                : "";
+
+        return `
+            <section class="
+                scientific-provenance-panel
+            ">
+
+                <div class="
+                    scientific-provenance-heading
+                ">
+                    DATA PROVENANCE · SCIENTIFIC QUALITY
+                </div>
+
+                <div class="
+                    scientific-provenance-meta
+                ">
+                    <span>
+                        <strong>Estación:</strong>
+                        ${stationId}
+                    </span>
+
+                    <span>
+                        <strong>
+                            Inicio científico:
+                        </strong>
+                        ${
+                            fieldStartLocal
+                            ?? "Dataset histórico validado"
+                        }
+                    </span>
+
+                    <span>
+                        <strong>
+                            Criterio:
+                        </strong>
+                        únicamente pares horarios
+                        Local–Referencia realmente disponibles
+                    </span>
+                </div>
+
+                ${stationNote}
+
+                <div class="
+                    scientific-provenance-table-wrap
+                ">
+                    <table class="
+                        scientific-provenance-table
+                    ">
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Local</th>
+                                <th>ERA5 N</th>
+                                <th>ERA5 cobertura</th>
+                                <th>Estado</th>
+                                <th>NASA N</th>
+                                <th>NASA cobertura</th>
+                                <th>Estado</th>
+                                <th>Primera coincidencia</th>
+                                <th>Última coincidencia</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            ${rows.join("")}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="
+                    scientific-provenance-footnote
+                ">
+                    Cobertura =
+                    pares comparables /
+                    observaciones locales válidas × 100.
+                    La clasificación de cobertura es
+                    descriptiva y operacional:
+                    &lt;10 % limitada,
+                    10–49.9 % parcial,
+                    50–89.9 % sustancial,
+                    ≥90 % alta.
+                    No constituye por sí sola una
+                    validación estadística de la fuente.
+                </div>
+
+            </section>
+        `;
+    }
+
+
+
     function scientificDrawSummary(
         stationId,
         datasets
@@ -1965,6 +2428,11 @@
         }
 
         matrix.innerHTML = `
+            ${scientificProvenanceHTML(
+                stationId,
+                datasets
+            )}
+
             <div class="scientific-summary-heading">
                 MATRIZ CIENTÍFICA · ${stationId}
             </div>
