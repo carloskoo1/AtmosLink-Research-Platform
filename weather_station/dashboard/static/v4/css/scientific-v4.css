@@ -438,3 +438,195 @@
     background: rgba(245,158,11,.08);
     border-color: rgba(245,158,11,.24);
 }
+
+
+/* ATMOSLINK V4.2 SCIENTIFIC SOURCE COMPARISON */
+
+.scientific-history {
+    margin: 18px 0 20px;
+    padding: 16px 16px 12px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.18);
+}
+
+.scientific-history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.scientific-history-eyebrow {
+    margin-bottom: 4px;
+    font-size: 0.68rem;
+    letter-spacing: 0.10em;
+    font-weight: 700;
+    opacity: 0.68;
+}
+
+.scientific-history-select {
+    min-width: 220px;
+    padding: 8px 10px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 9px;
+    font: inherit;
+    background: var(--surface, #111827);
+    color: inherit;
+}
+
+.scientific-history-summary {
+    min-height: 24px;
+    margin: 8px 0 6px;
+    font-size: 0.78rem;
+    opacity: 0.78;
+}
+
+.scientific-history-chart-wrap {
+    width: 100%;
+    overflow: hidden;
+}
+
+.scientific-history-chart {
+    display: block;
+    width: 100%;
+    height: 330px;
+    overflow: visible;
+}
+
+.scientific-chart-grid {
+    stroke: currentColor;
+    stroke-opacity: 0.10;
+    stroke-width: 1;
+}
+
+.scientific-chart-axis-label,
+.scientific-chart-unit,
+.scientific-chart-empty {
+    fill: currentColor;
+    opacity: 0.62;
+    font-size: 11px;
+}
+
+.scientific-chart-unit {
+    font-weight: 700;
+}
+
+.scientific-chart-line {
+    fill: none;
+    stroke-width: 2.4;
+    vector-effect: non-scaling-stroke;
+}
+
+.scientific-series-local {
+    stroke: currentColor;
+    fill: currentColor;
+}
+
+.scientific-series-era5 {
+    stroke: currentColor;
+    fill: currentColor;
+    stroke-dasharray: 8 5;
+    opacity: 0.72;
+}
+
+.scientific-series-nasa {
+    stroke: currentColor;
+    fill: currentColor;
+    stroke-dasharray: 2 5;
+    opacity: 0.58;
+}
+
+.scientific-history-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 4px;
+    font-size: 0.76rem;
+}
+
+.scientific-history-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.scientific-history-key {
+    display: inline-block;
+    width: 28px;
+    height: 0;
+    border-top: 2px solid currentColor;
+}
+
+.scientific-history-key.era5 {
+    border-top-style: dashed;
+    opacity: 0.72;
+}
+
+.scientific-history-key.nasa {
+    border-top-style: dotted;
+    opacity: 0.58;
+}
+
+.scientific-history-note {
+    margin-top: 9px;
+    font-size: 0.71rem;
+    line-height: 1.45;
+    opacity: 0.62;
+}
+
+.scientific-history-hover-line {
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-opacity: 0.35;
+    stroke-dasharray: 3 3;
+    pointer-events: none;
+}
+
+.scientific-history-tooltip {
+    pointer-events: none;
+}
+
+.scientific-history-tooltip-bg {
+    fill: #0f172a;
+    fill-opacity: 0.94;
+    stroke: rgba(148, 163, 184, 0.35);
+    stroke-width: 1;
+}
+
+.scientific-history-tooltip-text {
+    fill: #f8fafc;
+    font-size: 11px;
+}
+
+.scientific-history-overlay {
+    fill: transparent;
+    pointer-events: all;
+    cursor: crosshair;
+}
+
+@media (max-width: 760px) {
+    .scientific-history-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .scientific-history-select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .scientific-history-chart {
+        height: 290px;
+    }
+}
+
+.scientific-chart-point {
+    fill: currentColor;
+    stroke-width: 0;
+}
+
+svg.scientific-history-chart polyline.scientific-chart-line {
+    fill: none !important;
+}
