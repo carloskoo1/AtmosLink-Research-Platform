@@ -2422,6 +2422,294 @@
 
 
 
+    function scientificQualityDecision(
+        temporalStats,
+        coverageStats,
+        metrics
+    ) {
+        const completeness =
+            temporalStats?.completeness;
+
+        const coverage =
+            coverageStats;
+
+        const n =
+            metrics?.n ?? 0;
+
+        /*
+         * Política operacional AtmosLink.
+         * No constituye una norma estadística universal.
+         *
+         * APTA:
+         * - completitud local >= 95 %
+         * - N comparable >= 30
+         * - cobertura externa >= 50 %
+         *
+         * PRELIMINAR:
+         * - completitud local >= 80 %
+         * - N comparable >= 10
+         * - cobertura externa >= 10 %
+         *
+         * NO APTA:
+         * - no cumple las condiciones anteriores.
+         */
+
+        if (
+            Number.isFinite(
+                completeness
+            )
+            &&
+            Number.isFinite(
+                coverage
+            )
+            &&
+            completeness >= 95
+            &&
+            coverage >= 50
+            &&
+            n >= 30
+        ) {
+            return {
+                key: "suitable",
+                label: "APTA"
+            };
+        }
+
+        if (
+            Number.isFinite(
+                completeness
+            )
+            &&
+            Number.isFinite(
+                coverage
+            )
+            &&
+            completeness >= 80
+            &&
+            coverage >= 10
+            &&
+            n >= 10
+        ) {
+            return {
+                key: "preliminary",
+                label: "PRELIMINAR"
+            };
+        }
+
+        return {
+            key: "not-suitable",
+            label: "NO APTA"
+        };
+    }
+
+
+    function scientificQualitySummaryHTML(
+        stationId,
+        datasets
+    ) {
+        const variableOrder = [
+            "temperature",
+            "humidity",
+            "pressure",
+            "dewpoint",
+            "precipitation",
+            "wind"
+        ];
+
+        const rows = [];
+
+        for (
+            const variableKey
+            of variableOrder
+        ) {
+            const payload =
+                datasets?.[
+                    variableKey
+                ];
+
+            if (!payload) {
+                continue;
+            }
+
+            const definition =
+                scientificChartVariables[
+                    variableKey
+                ];
+
+            const temporal =
+                scientificTemporalStats(
+                    payload
+                );
+
+            const coverage =
+                scientificCoverageStats(
+                    payload
+                );
+
+            const era5Pairs =
+                scientificFullPairs(
+                    payload,
+                    "era5"
+                );
+
+            const nasaPairs =
+                scientificFullPairs(
+                    payload,
+                    "nasa"
+                );
+
+            const era5Metrics =
+                scientificMetrics(
+                    era5Pairs
+                );
+
+            const nasaMetrics =
+                scientificMetrics(
+                    nasaPairs
+                );
+
+            const era5Decision =
+                scientificQualityDecision(
+                    temporal,
+                    coverage.era5Coverage,
+                    era5Metrics
+                );
+
+            const nasaDecision =
+                scientificQualityDecision(
+                    temporal,
+                    coverage.nasaCoverage,
+                    nasaMetrics
+                );
+
+            rows.push(`
+                <tr>
+                    <td class="
+                        scientific-quality-variable
+                    ">
+                        <strong>
+                            ${
+                                definition?.label
+                                ??
+                                payload?.label
+                                ??
+                                variableKey
+                            }
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${
+                            Number.isFinite(
+                                temporal.completeness
+                            )
+                                ? temporal.completeness.toFixed(1)
+                                : "—"
+                        } %
+                    </td>
+
+                    <td>
+                        ${era5Metrics.n}
+                    </td>
+
+                    <td>
+                        ${
+                            scientificCoveragePercent(
+                                coverage.era5Coverage
+                            )
+                        }
+                    </td>
+
+                    <td>
+                        <span class="
+                            scientific-quality-badge
+                            ${era5Decision.key}
+                        ">
+                            ${era5Decision.label}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${nasaMetrics.n}
+                    </td>
+
+                    <td>
+                        ${
+                            scientificCoveragePercent(
+                                coverage.nasaCoverage
+                            )
+                        }
+                    </td>
+
+                    <td>
+                        <span class="
+                            scientific-quality-badge
+                            ${nasaDecision.key}
+                        ">
+                            ${nasaDecision.label}
+                        </span>
+                    </td>
+                </tr>
+            `);
+        }
+
+        return `
+            <section class="
+                scientific-quality-panel
+            ">
+
+                <div class="
+                    scientific-quality-heading
+                ">
+                    SCIENTIFIC QUALITY SUMMARY
+                </div>
+
+                <div class="
+                    scientific-quality-table-wrap
+                ">
+                    <table class="
+                        scientific-quality-table
+                    ">
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Completitud local</th>
+                                <th>ERA5 N</th>
+                                <th>ERA5 cobertura</th>
+                                <th>ERA5 calidad</th>
+                                <th>NASA N</th>
+                                <th>NASA cobertura</th>
+                                <th>NASA calidad</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            ${rows.join("")}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="
+                    scientific-quality-note
+                ">
+                    Política operacional AtmosLink:
+                    APTA = completitud local ≥95 %,
+                    N comparable ≥30 y cobertura externa ≥50 %.
+                    PRELIMINAR = completitud local ≥80 %,
+                    N comparable ≥10 y cobertura externa ≥10 %.
+                    En los demás casos se clasifica como NO APTA.
+                    Esta clasificación resume la aptitud descriptiva
+                    del conjunto disponible y no sustituye una
+                    validación estadística formal ni una evaluación
+                    física específica de cada variable.
+                </div>
+
+            </section>
+        `;
+    }
+
+
+
     function scientificProvenanceHTML(
         stationId,
         datasets
@@ -2903,6 +3191,11 @@
             )}
 
             ${scientificTemporalDiagnosticsHTML(
+                stationId,
+                datasets
+            )}
+
+            ${scientificQualitySummaryHTML(
                 stationId,
                 datasets
             )}

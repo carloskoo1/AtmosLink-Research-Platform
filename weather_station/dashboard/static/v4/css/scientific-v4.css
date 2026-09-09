@@ -961,3 +961,96 @@ svg.scientific-history-chart polyline.scientific-chart-line {
         min-width: 1100px;
     }
 }
+
+/* ATMOSLINK V4.6 — SCIENTIFIC QUALITY SUMMARY */
+
+.scientific-quality-panel {
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.025);
+}
+
+.scientific-quality-heading {
+    margin-bottom: 10px;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    opacity: 0.72;
+}
+
+.scientific-quality-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.scientific-quality-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.69rem;
+}
+
+.scientific-quality-table th,
+.scientific-quality-table td {
+    padding: 8px 8px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    text-align: right;
+    vertical-align: middle;
+}
+
+.scientific-quality-table th:first-child,
+.scientific-quality-table td:first-child {
+    text-align: left;
+}
+
+.scientific-quality-table thead th {
+    font-size: 0.60rem;
+    font-weight: 800;
+    letter-spacing: 0.035em;
+    opacity: 0.64;
+    white-space: nowrap;
+}
+
+.scientific-quality-variable {
+    min-width: 140px;
+}
+
+.scientific-quality-badge {
+    display: inline-block;
+    min-width: 82px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    text-align: center;
+    font-size: 0.56rem;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+}
+
+.scientific-quality-badge.suitable {
+    background: rgba(34, 197, 94, 0.10);
+    border: 1px solid rgba(34, 197, 94, 0.30);
+}
+
+.scientific-quality-badge.preliminary {
+    background: rgba(245, 158, 11, 0.10);
+    border: 1px solid rgba(245, 158, 11, 0.30);
+}
+
+.scientific-quality-badge.not-suitable {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.28);
+}
+
+.scientific-quality-note {
+    margin-top: 10px;
+    font-size: 0.63rem;
+    line-height: 1.45;
+    opacity: 0.60;
+}
+
+@media (max-width: 1000px) {
+    .scientific-quality-table {
+        min-width: 900px;
+    }
+}
