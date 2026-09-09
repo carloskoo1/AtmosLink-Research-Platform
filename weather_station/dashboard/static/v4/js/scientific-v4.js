@@ -1953,6 +1953,475 @@
     }
 
 
+    function scientificTemporalStats(
+        payload
+    ) {
+        const records =
+            Array.isArray(payload?.records)
+                ? payload.records
+                : [];
+
+        const localTimes =
+            records
+            .filter(
+                record =>
+                    scientificNumber(
+                        record?.observed
+                    ) !== null
+            )
+            .map(
+                record =>
+                    new Date(
+                        record.timestamp
+                    ).getTime()
+            )
+            .filter(
+                value =>
+                    Number.isFinite(value)
+            )
+            .sort(
+                (a, b) => a - b
+            );
+
+        const era5Times =
+            records
+            .filter(
+                record =>
+                    scientificNumber(
+                        record?.observed
+                    ) !== null
+                    &&
+                    scientificNumber(
+                        record?.era5
+                    ) !== null
+            )
+            .map(
+                record =>
+                    new Date(
+                        record.timestamp
+                    ).getTime()
+            )
+            .filter(
+                value =>
+                    Number.isFinite(value)
+            )
+            .sort(
+                (a, b) => a - b
+            );
+
+        const nasaTimes =
+            records
+            .filter(
+                record =>
+                    scientificNumber(
+                        record?.observed
+                    ) !== null
+                    &&
+                    scientificNumber(
+                        record?.nasa
+                    ) !== null
+            )
+            .map(
+                record =>
+                    new Date(
+                        record.timestamp
+                    ).getTime()
+            )
+            .filter(
+                value =>
+                    Number.isFinite(value)
+            )
+            .sort(
+                (a, b) => a - b
+            );
+
+        if (!localTimes.length) {
+            return {
+                expectedHours: 0,
+                localHours: 0,
+                completeness: null,
+                missingHours: 0,
+                maxGapHours: null,
+                longestRunHours: 0,
+                era5LagHours: null,
+                nasaLagHours: null,
+            };
+        }
+
+        const HOUR_MS =
+            60 * 60 * 1000;
+
+        const firstLocal =
+            localTimes[0];
+
+        const lastLocal =
+            localTimes[
+                localTimes.length - 1
+            ];
+
+        const expectedHours =
+            Math.floor(
+                (
+                    lastLocal -
+                    firstLocal
+                ) / HOUR_MS
+            ) + 1;
+
+        const localHours =
+            localTimes.length;
+
+        const missingHours =
+            Math.max(
+                0,
+                expectedHours -
+                localHours
+            );
+
+        const completeness =
+            expectedHours > 0
+                ? (
+                    localHours /
+                    expectedHours
+                ) * 100
+                : null;
+
+        let maxGapHours = 0;
+        let currentRun = 1;
+        let longestRunHours = 1;
+
+        for (
+            let i = 1;
+            i < localTimes.length;
+            i++
+        ) {
+            const diffHours =
+                Math.round(
+                    (
+                        localTimes[i] -
+                        localTimes[i - 1]
+                    ) / HOUR_MS
+                );
+
+            const gapHours =
+                Math.max(
+                    0,
+                    diffHours - 1
+                );
+
+            if (
+                gapHours >
+                maxGapHours
+            ) {
+                maxGapHours =
+                    gapHours;
+            }
+
+            if (diffHours === 1) {
+                currentRun++;
+            } else {
+                currentRun = 1;
+            }
+
+            if (
+                currentRun >
+                longestRunHours
+            ) {
+                longestRunHours =
+                    currentRun;
+            }
+        }
+
+        function lagHours(
+            externalTimes
+        ) {
+            if (!externalTimes.length) {
+                return null;
+            }
+
+            const lastExternal =
+                externalTimes[
+                    externalTimes.length - 1
+                ];
+
+            return Math.max(
+                0,
+                (
+                    lastLocal -
+                    lastExternal
+                ) / HOUR_MS
+            );
+        }
+
+        return {
+            expectedHours,
+            localHours,
+            completeness,
+            missingHours,
+            maxGapHours,
+            longestRunHours,
+            era5LagHours:
+                lagHours(
+                    era5Times
+                ),
+            nasaLagHours:
+                lagHours(
+                    nasaTimes
+                ),
+        };
+    }
+
+
+    function scientificCompletenessStatus(
+        percentage
+    ) {
+        /*
+         * Política operacional AtmosLink.
+         * No constituye una norma estadística universal.
+         */
+        if (
+            !Number.isFinite(
+                percentage
+            )
+        ) {
+            return {
+                key: "none",
+                label: "SIN DATOS"
+            };
+        }
+
+        if (percentage >= 95) {
+            return {
+                key: "excellent",
+                label: "ALTA"
+            };
+        }
+
+        if (percentage >= 80) {
+            return {
+                key: "good",
+                label: "ACEPTABLE"
+            };
+        }
+
+        if (percentage >= 50) {
+            return {
+                key: "partial",
+                label: "PARCIAL"
+            };
+        }
+
+        return {
+            key: "fragmented",
+            label: "FRAGMENTADA"
+        };
+    }
+
+
+    function scientificLagText(
+        hours
+    ) {
+        if (
+            !Number.isFinite(
+                hours
+            )
+        ) {
+            return "—";
+        }
+
+        if (hours < 24) {
+            return `${hours.toFixed(0)} h`;
+        }
+
+        return `${
+            (hours / 24).toFixed(1)
+        } d`;
+    }
+
+
+    function scientificTemporalDiagnosticsHTML(
+        stationId,
+        datasets
+    ) {
+        const variableOrder = [
+            "temperature",
+            "humidity",
+            "pressure",
+            "dewpoint",
+            "precipitation",
+            "wind"
+        ];
+
+        const rows = [];
+
+        for (
+            const variableKey
+            of variableOrder
+        ) {
+            const payload =
+                datasets?.[
+                    variableKey
+                ];
+
+            if (!payload) {
+                continue;
+            }
+
+            const definition =
+                scientificChartVariables[
+                    variableKey
+                ];
+
+            const stats =
+                scientificTemporalStats(
+                    payload
+                );
+
+            const state =
+                scientificCompletenessStatus(
+                    stats.completeness
+                );
+
+            rows.push(`
+                <tr>
+                    <td class="
+                        scientific-temporal-variable
+                    ">
+                        <strong>
+                            ${
+                                definition?.label
+                                ??
+                                payload?.label
+                                ??
+                                variableKey
+                            }
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${stats.expectedHours}
+                    </td>
+
+                    <td>
+                        ${stats.localHours}
+                    </td>
+
+                    <td>
+                        ${
+                            Number.isFinite(
+                                stats.completeness
+                            )
+                                ? stats.completeness.toFixed(1)
+                                : "—"
+                        } %
+                    </td>
+
+                    <td>
+                        <span class="
+                            scientific-completeness-badge
+                            ${state.key}
+                        ">
+                            ${state.label}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${stats.missingHours}
+                    </td>
+
+                    <td>
+                        ${
+                            Number.isFinite(
+                                stats.maxGapHours
+                            )
+                                ? `${stats.maxGapHours} h`
+                                : "—"
+                        }
+                    </td>
+
+                    <td>
+                        ${stats.longestRunHours} h
+                    </td>
+
+                    <td>
+                        ${
+                            scientificLagText(
+                                stats.era5LagHours
+                            )
+                        }
+                    </td>
+
+                    <td>
+                        ${
+                            scientificLagText(
+                                stats.nasaLagHours
+                            )
+                        }
+                    </td>
+                </tr>
+            `);
+        }
+
+        return `
+            <section class="
+                scientific-temporal-panel
+            ">
+
+                <div class="
+                    scientific-temporal-heading
+                ">
+                    TEMPORAL COMPLETENESS · GAP DIAGNOSTICS
+                </div>
+
+                <div class="
+                    scientific-temporal-table-wrap
+                ">
+                    <table class="
+                        scientific-temporal-table
+                    ">
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Horas esperadas</th>
+                                <th>Horas locales</th>
+                                <th>Completitud</th>
+                                <th>Estado</th>
+                                <th>Horas faltantes</th>
+                                <th>Hueco máximo</th>
+                                <th>Racha continua máxima</th>
+                                <th>Rezago ERA5</th>
+                                <th>Rezago NASA</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            ${rows.join("")}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="
+                    scientific-temporal-note
+                ">
+                    Horas esperadas =
+                    intervalo horario inclusivo entre la
+                    primera y última observación local válida.
+                    Completitud =
+                    horas locales disponibles /
+                    horas esperadas × 100.
+                    El hueco máximo describe pérdida local.
+                    El rezago ERA5/NASA expresa la diferencia
+                    entre la última observación local y la
+                    última coincidencia disponible de cada fuente.
+                    No debe interpretarse automáticamente como
+                    latencia operacional del proveedor.
+                </div>
+
+            </section>
+        `;
+    }
+
+
+
     function scientificProvenanceHTML(
         stationId,
         datasets
@@ -2429,6 +2898,11 @@
 
         matrix.innerHTML = `
             ${scientificProvenanceHTML(
+                stationId,
+                datasets
+            )}
+
+            ${scientificTemporalDiagnosticsHTML(
                 stationId,
                 datasets
             )}
