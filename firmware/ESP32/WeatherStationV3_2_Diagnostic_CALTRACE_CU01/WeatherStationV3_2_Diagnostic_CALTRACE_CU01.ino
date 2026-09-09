@@ -34,7 +34,9 @@ DO NOT parse INFO lines as meteorological observations.
 
 #define ATMOSLINK_BME280_ADDRESS 0x76
 
-const float MM_PER_TIP = 0.2794;
+// Calibración experimental 2026-09-09: área 100 x 48 mm; 300 mL; 154, 151 y 148 cuentas
+// Factor promedio obtenido: 0.4139 mm por basculación
+const float MM_PER_TIP = 0.414;
 
 const unsigned long SAMPLE_INTERVAL_MS = 60000;
 const unsigned long READ_INTERVAL_MS   = 5000;
