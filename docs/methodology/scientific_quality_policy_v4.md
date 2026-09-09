@@ -142,6 +142,115 @@ formal inferential statistics.
 
 ---
 
+## 6.1 Multi-source scientific readiness
+
+AtmosLink V4.7 adds a higher-level readiness summary derived exclusively
+from the V4.6 operational scientific-quality decisions.
+
+No new numerical thresholds are introduced.
+
+Two aggregation concepts are reported.
+
+### MULTI-SOURCE READINESS
+
+This indicator represents the current ability to perform a simultaneous
+scientific comparison using:
+
+- local observations;
+- ERA5-Land;
+- NASA POWER.
+
+The station-level state is obtained conservatively from the worst
+operational quality state among the evaluated external sources.
+
+Conceptually:
+
+multi-source readiness =
+minimum(ERA5 readiness, NASA POWER readiness)
+
+where the ordering is:
+
+APTA > PRELIMINAR > NO APTA
+
+The corresponding dashboard labels are:
+
+| V4.6 quality state | V4.7 readiness label |
+|---|---|
+| APTA | READY |
+| PRELIMINAR | PARTIAL |
+| NO APTA | LIMITED |
+
+A LIMITED multi-source readiness state does not mean that the local
+station is scientifically invalid. It means that simultaneous analysis
+with all external sources is currently constrained by at least one source.
+
+For example, a station may have highly complete local observations and a
+usable ERA5-Land comparison while NASA POWER still has insufficient
+temporal coverage.
+
+### BEST AVAILABLE COMPARISON
+
+This indicator identifies the strongest currently available external
+comparison.
+
+Conceptually:
+
+best available comparison =
+maximum(ERA5 readiness, NASA POWER readiness)
+
+using the same ordering:
+
+APTA > PRELIMINAR > NO APTA
+
+This indicator is intended to distinguish between:
+
+1. readiness for simultaneous Local + ERA5-Land + NASA POWER analysis; and
+2. readiness for the best external comparison currently available.
+
+This prevents the absence or limited maturity of one external source from
+being incorrectly interpreted as invalidating all scientific comparison
+possibilities for the station.
+
+### Local data readiness
+
+Local readiness is summarized from the temporal-completeness states
+defined in Section 5.
+
+The dashboard maps them operationally as follows:
+
+| Local completeness state | Readiness label |
+|---|---|
+| ALTA | READY |
+| ACEPTABLE | PARTIAL |
+| PARCIAL | PARTIAL |
+| FRAGMENTADA | LIMITED |
+| SIN DATOS | LIMITED |
+
+Station-level local readiness uses the most conservative completeness
+state among the evaluated variables.
+
+### Aggregation principle
+
+The readiness layer is intentionally conservative.
+
+For each source, the station-level state corresponds to the worst state
+among the evaluated meteorological variables.
+
+Therefore:
+
+- one variable classified as NO APTA makes that source LIMITED at station
+  level;
+- one variable classified as PRELIMINAR prevents that source from being
+  reported as READY;
+- all evaluated variables must be APTA for a source to be READY.
+
+This aggregation rule is a transparency and data-readiness mechanism. It
+does not replace interpretation of individual variables, physical
+validation, uncertainty analysis, or formal statistical inference.
+
+---
+
+
 ## 7. Quantitative comparison metrics
 
 For valid paired observations AtmosLink reports:
