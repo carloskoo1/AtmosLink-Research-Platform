@@ -2710,6 +2710,601 @@
 
 
 
+    function scientificWorstQuality(
+        decisions
+    ) {
+        const rank = {
+            "suitable": 2,
+            "preliminary": 1,
+            "not-suitable": 0,
+        };
+
+        const valid =
+            decisions.filter(Boolean);
+
+        if (!valid.length) {
+            return {
+                key: "not-suitable",
+                label: "NO APTA"
+            };
+        }
+
+        return valid.reduce(
+            (worst, current) =>
+                rank[current.key] <
+                rank[worst.key]
+                    ? current
+                    : worst,
+            valid[0]
+        );
+    }
+
+
+    function scientificWorstCompleteness(
+        states
+    ) {
+        const rank = {
+            "excellent": 3,
+            "good": 2,
+            "partial": 1,
+            "fragmented": 0,
+            "none": -1,
+        };
+
+        const valid =
+            states.filter(Boolean);
+
+        if (!valid.length) {
+            return {
+                key: "none",
+                label: "SIN DATOS"
+            };
+        }
+
+        return valid.reduce(
+            (worst, current) =>
+                rank[current.key] <
+                rank[worst.key]
+                    ? current
+                    : worst,
+            valid[0]
+        );
+    }
+
+
+    function scientificGlobalReadiness(
+        datasets
+    ) {
+        const variableOrder = [
+            "temperature",
+            "humidity",
+            "pressure",
+            "dewpoint",
+            "precipitation",
+            "wind"
+        ];
+
+        const localStates = [];
+        const era5Decisions = [];
+        const nasaDecisions = [];
+
+        const reasons = [];
+
+        for (
+            const variableKey
+            of variableOrder
+        ) {
+            const payload =
+                datasets?.[
+                    variableKey
+                ];
+
+            if (!payload) {
+                continue;
+            }
+
+            const definition =
+                scientificChartVariables[
+                    variableKey
+                ];
+
+            const label =
+                definition?.label
+                ?? payload?.label
+                ?? variableKey;
+
+            const temporal =
+                scientificTemporalStats(
+                    payload
+                );
+
+            const coverage =
+                scientificCoverageStats(
+                    payload
+                );
+
+            const era5Metrics =
+                scientificMetrics(
+                    scientificFullPairs(
+                        payload,
+                        "era5"
+                    )
+                );
+
+            const nasaMetrics =
+                scientificMetrics(
+                    scientificFullPairs(
+                        payload,
+                        "nasa"
+                    )
+                );
+
+            const localState =
+                scientificCompletenessStatus(
+                    temporal.completeness
+                );
+
+            const era5Decision =
+                scientificQualityDecision(
+                    temporal,
+                    coverage.era5Coverage,
+                    era5Metrics
+                );
+
+            const nasaDecision =
+                scientificQualityDecision(
+                    temporal,
+                    coverage.nasaCoverage,
+                    nasaMetrics
+                );
+
+            localStates.push(
+                localState
+            );
+
+            era5Decisions.push(
+                era5Decision
+            );
+
+            nasaDecisions.push(
+                nasaDecision
+            );
+
+            if (
+                era5Decision.key !==
+                "suitable"
+            ) {
+                reasons.push({
+                    source: "ERA5-Land",
+                    variable: label,
+                    quality:
+                        era5Decision.label,
+                    n:
+                        era5Metrics.n,
+                    coverage:
+                        coverage.era5Coverage,
+                    completeness:
+                        temporal.completeness,
+                });
+            }
+
+            if (
+                nasaDecision.key !==
+                "suitable"
+            ) {
+                reasons.push({
+                    source: "NASA POWER",
+                    variable: label,
+                    quality:
+                        nasaDecision.label,
+                    n:
+                        nasaMetrics.n,
+                    coverage:
+                        coverage.nasaCoverage,
+                    completeness:
+                        temporal.completeness,
+                });
+            }
+        }
+
+        const local =
+            scientificWorstCompleteness(
+                localStates
+            );
+
+        const era5 =
+            scientificWorstQuality(
+                era5Decisions
+            );
+
+        const nasa =
+            scientificWorstQuality(
+                nasaDecisions
+            );
+
+        /*
+         * Estado científico global:
+         * peor estado entre ERA5 y NASA.
+         *
+         * No introduce umbrales nuevos.
+         * Agrega conservadoramente las decisiones V4.6.
+         */
+        const multiSource =
+            scientificWorstQuality(
+                [
+                    era5,
+                    nasa,
+                ]
+            );
+
+        const rank = {
+            "suitable": 2,
+            "preliminary": 1,
+            "not-suitable": 0,
+        };
+
+        const bestAvailable =
+            rank[era5.key] >= rank[nasa.key]
+                ? era5
+                : nasa;
+
+        return {
+            local,
+            era5,
+            nasa,
+            multiSource,
+            bestAvailable,
+            reasons,
+        };
+    }
+
+
+    function scientificReadinessLabel(
+        decision
+    ) {
+        if (
+            decision.key ===
+            "suitable"
+        ) {
+            return "READY";
+        }
+
+        if (
+            decision.key ===
+            "preliminary"
+        ) {
+            return "PARTIAL";
+        }
+
+        return "LIMITED";
+    }
+
+
+    function scientificLocalReadinessLabel(
+        state
+    ) {
+        if (
+            state.key ===
+            "excellent"
+        ) {
+            return "READY";
+        }
+
+        if (
+            state.key === "good"
+            ||
+            state.key === "partial"
+        ) {
+            return "PARTIAL";
+        }
+
+        return "LIMITED";
+    }
+
+
+
+    function scientificReadinessReasonsSummary(
+        reasons
+    ) {
+        const grouped = new Map();
+
+        for (const reason of reasons) {
+            const key =
+                `${reason.source}|${reason.quality}`;
+
+            if (!grouped.has(key)) {
+                grouped.set(
+                    key,
+                    {
+                        source: reason.source,
+                        quality: reason.quality,
+                        variables: [],
+                        minN: reason.n,
+                        minCoverage:
+                            reason.coverage,
+                        minCompleteness:
+                            reason.completeness,
+                    }
+                );
+            }
+
+            const item =
+                grouped.get(key);
+
+            item.variables.push(
+                reason.variable
+            );
+
+            item.minN =
+                Math.min(
+                    item.minN,
+                    reason.n
+                );
+
+            if (
+                Number.isFinite(
+                    reason.coverage
+                )
+            ) {
+                item.minCoverage =
+                    Number.isFinite(
+                        item.minCoverage
+                    )
+                        ? Math.min(
+                            item.minCoverage,
+                            reason.coverage
+                        )
+                        : reason.coverage;
+            }
+
+            if (
+                Number.isFinite(
+                    reason.completeness
+                )
+            ) {
+                item.minCompleteness =
+                    Number.isFinite(
+                        item.minCompleteness
+                    )
+                        ? Math.min(
+                            item.minCompleteness,
+                            reason.completeness
+                        )
+                        : reason.completeness;
+            }
+        }
+
+        return Array.from(
+            grouped.values()
+        );
+    }
+
+
+    function scientificReadinessReasonHTML(
+        reason
+    ) {
+        const coverage =
+            Number.isFinite(
+                reason.minCoverage
+            )
+                ? `${reason.minCoverage.toFixed(1)} %`
+                : "—";
+
+        const completeness =
+            Number.isFinite(
+                reason.minCompleteness
+            )
+                ? `${reason.minCompleteness.toFixed(1)} %`
+                : "—";
+
+        return `
+            <li>
+                <strong>
+                    ${reason.source}
+                </strong>
+                · ${reason.quality}
+                · variables=${
+                    reason.variables.join(", ")
+                }
+                · N mínimo=${reason.minN}
+                · cobertura mínima=${coverage}
+                · completitud local mínima=${completeness}
+            </li>
+        `;
+    }
+
+
+
+    function scientificGlobalReadinessHTML(
+        stationId,
+        datasets
+    ) {
+        const readiness =
+            scientificGlobalReadiness(
+                datasets
+            );
+
+        const localLabel =
+            scientificLocalReadinessLabel(
+                readiness.local
+            );
+
+        const era5Label =
+            scientificReadinessLabel(
+                readiness.era5
+            );
+
+        const nasaLabel =
+            scientificReadinessLabel(
+                readiness.nasa
+            );
+
+        const multiSourceLabel =
+            scientificReadinessLabel(
+                readiness.multiSource
+            );
+
+        const bestAvailableLabel =
+            scientificReadinessLabel(
+                readiness.bestAvailable
+            );
+
+        const importantReasons =
+            scientificReadinessReasonsSummary(
+                readiness.reasons
+                .filter(
+                    reason =>
+                        reason.quality !==
+                        "APTA"
+                )
+            );
+
+        return `
+            <section class="
+                scientific-readiness-panel
+            ">
+
+                <div class="
+                    scientific-readiness-heading
+                ">
+                    SCIENTIFIC READINESS · ${stationId}
+                </div>
+
+                <div class="
+                    scientific-readiness-overall
+                    ${readiness.multiSource.key}
+                ">
+                    <span>
+                        MULTI-SOURCE READINESS
+                    </span>
+
+                    <strong>
+                        ${multiSourceLabel}
+                    </strong>
+                </div>
+
+                <div class="
+                    scientific-readiness-best
+                    ${readiness.bestAvailable.key}
+                ">
+                    <span>
+                        BEST AVAILABLE COMPARISON
+                    </span>
+
+                    <strong>
+                        ${bestAvailableLabel}
+                    </strong>
+                </div>
+
+                <div class="
+                    scientific-readiness-grid
+                ">
+
+                    <div class="
+                        scientific-readiness-card
+                        ${readiness.local.key}
+                    ">
+                        <small>
+                            LOCAL DATA
+                        </small>
+
+                        <strong>
+                            ${localLabel}
+                        </strong>
+
+                        <span>
+                            ${readiness.local.label}
+                        </span>
+                    </div>
+
+                    <div class="
+                        scientific-readiness-card
+                        ${readiness.era5.key}
+                    ">
+                        <small>
+                            ERA5-Land
+                        </small>
+
+                        <strong>
+                            ${era5Label}
+                        </strong>
+
+                        <span>
+                            ${readiness.era5.label}
+                        </span>
+                    </div>
+
+                    <div class="
+                        scientific-readiness-card
+                        ${readiness.nasa.key}
+                    ">
+                        <small>
+                            NASA POWER
+                        </small>
+
+                        <strong>
+                            ${nasaLabel}
+                        </strong>
+
+                        <span>
+                            ${readiness.nasa.label}
+                        </span>
+                    </div>
+
+                </div>
+
+                ${
+                    importantReasons.length
+                        ? `
+                            <div class="
+                                scientific-readiness-reasons
+                            ">
+                                <strong>
+                                    Factores limitantes actuales
+                                </strong>
+
+                                <ul>
+                                    ${
+                                        importantReasons
+                                        .map(
+                                            scientificReadinessReasonHTML
+                                        )
+                                        .join("")
+                                    }
+                                </ul>
+                            </div>
+                        `
+                        : `
+                            <div class="
+                                scientific-readiness-reasons
+                            ">
+                                No se identifican actualmente
+                                restricciones operacionales
+                                bajo los criterios AtmosLink V4.
+                            </div>
+                        `
+                }
+
+                <div class="
+                    scientific-readiness-note
+                ">
+                    MULTI-SOURCE READINESS representa la
+                    capacidad actual de análisis conjunto
+                    Local + ERA5-Land + NASA POWER y adopta
+                    conservadoramente el peor estado entre
+                    fuentes. BEST AVAILABLE COMPARISON indica
+                    la mejor comparación externa actualmente
+                    disponible. No se introducen nuevos umbrales;
+                    se reutilizan exclusivamente los criterios
+                    documentados en V4.5 y V4.6.
+                </div>
+
+            </section>
+        `;
+    }
+
+
+
     function scientificProvenanceHTML(
         stationId,
         datasets
@@ -3185,6 +3780,11 @@
         }
 
         matrix.innerHTML = `
+            ${scientificGlobalReadinessHTML(
+                stationId,
+                datasets
+            )}
+
             ${scientificProvenanceHTML(
                 stationId,
                 datasets
