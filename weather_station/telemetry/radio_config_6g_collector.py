@@ -93,6 +93,7 @@ def bandwidth_mhz(raw_value: Any) -> float | None:
     # Correspondencias verificadas con la interfaz del Force 4600C.
     mapping = {
         1: 20.0,
+        2: 40.0,
     }
 
     return mapping.get(raw)
