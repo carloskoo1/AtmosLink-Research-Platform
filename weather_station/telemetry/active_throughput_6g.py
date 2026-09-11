@@ -91,15 +91,20 @@ def bps_to_mbps(value: Any) -> float | None:
         return None
 
 
-def run_iperf(direction: str) -> tuple[dict[str, Any] | None, str]:
+def run_iperf(
+    direction: str,
+    duration_seconds: int,
+    omit_seconds: int,
+    parallel_streams: int,
+) -> tuple[dict[str, Any] | None, str]:
     command = [
         "iperf3",
         "--client", SERVER_IP,
         "--bind", CLIENT_IP,
         "--port", str(PORT),
-        "--time", str(DURATION_SECONDS),
-        "--omit", str(OMIT_SECONDS),
-        "--parallel", str(PARALLEL_STREAMS),
+        "--time", str(duration_seconds),
+        "--omit", str(omit_seconds),
+        "--parallel", str(parallel_streams),
         "--json",
     ]
     if direction == "UL":
@@ -107,7 +112,7 @@ def run_iperf(direction: str) -> tuple[dict[str, Any] | None, str]:
 
     errors: list[str] = []
     for attempt in range(1, 4):
-        result = run(command, timeout=DURATION_SECONDS + OMIT_SECONDS + 30)
+        result = run(command, timeout=duration_seconds + omit_seconds + 30)
         raw = result.stdout.strip()
         try:
             payload = json.loads(raw) if raw else None
@@ -305,6 +310,9 @@ def nearest_weather(
 
 def build_record(
     test_id: str,
+    duration_seconds: int,
+    omit_seconds: int,
+    parallel_streams: int,
     direction: str,
     start_utc: str,
     start_local: str,
@@ -339,9 +347,9 @@ def build_record(
         "client_interface": CLIENT_INTERFACE,
         "server_interface": SERVER_INTERFACE,
         "route_verified": 1,
-        "duration_seconds": DURATION_SECONDS,
-        "omit_seconds": OMIT_SECONDS,
-        "parallel_streams": PARALLEL_STREAMS,
+        "duration_seconds": duration_seconds,
+        "omit_seconds": omit_seconds,
+        "parallel_streams": parallel_streams,
         "sender_mbps": bps_to_mbps(sent.get("bits_per_second")),
         "receiver_mbps": receiver_mbps,
         "measured_throughput_mbps": receiver_mbps,
@@ -421,7 +429,14 @@ def export_csv(connection: sqlite3.Connection, destination: Path) -> None:
     temporary.replace(destination)
 
 
-def collect(database: Path, output_csv: Path, directions: list[str]) -> None:
+def collect(
+    database: Path,
+    output_csv: Path,
+    directions: list[str],
+    duration_seconds: int,
+    omit_seconds: int,
+    parallel_streams: int,
+) -> None:
     lock_path = Path("runtime/active_throughput_6g.lock")
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with lock_path.open("w") as lock_handle:
@@ -441,14 +456,23 @@ def collect(database: Path, output_csv: Path, directions: list[str]) -> None:
                 time.sleep(5)
             start_utc, start_local = now_pair()
             before = interface_counters(CLIENT_INTERFACE)
-            payload, error = run_iperf(direction)
+            payload, error = run_iperf(
+                direction,
+                duration_seconds,
+                omit_seconds,
+                parallel_streams,
+            )
             after = interface_counters(CLIENT_INTERFACE)
             end_utc, end_local = now_pair()
             rf = nearest_rf(connection, start_utc)
             cu01 = nearest_weather(connection, "CU01", start_utc)
             sj01 = nearest_weather(connection, "SJ01", start_utc)
             record = build_record(
-                test_id, direction, start_utc, start_local, end_utc, end_local,
+                test_id,
+                duration_seconds,
+                omit_seconds,
+                parallel_streams,
+                direction, start_utc, start_local, end_utc, end_local,
                 payload, error, before, after, ping, rf, cu01, sj01,
             )
             insert_record(connection, record)
@@ -469,9 +493,21 @@ def main() -> None:
     parser.add_argument("--database", type=Path, required=True)
     parser.add_argument("--output-csv", type=Path, required=True)
     parser.add_argument("--direction", choices=["BOTH", "DL", "UL"], default="BOTH")
+    parser.add_argument("--duration", type=int, default=DURATION_SECONDS)
+    parser.add_argument("--omit", type=int, default=OMIT_SECONDS)
+    parser.add_argument("--parallel", type=int, default=PARALLEL_STREAMS)
     args = parser.parse_args()
+
     directions = ["DL", "UL"] if args.direction == "BOTH" else [args.direction]
-    collect(args.database, args.output_csv, directions)
+
+    collect(
+        args.database,
+        args.output_csv,
+        directions,
+        args.duration,
+        args.omit,
+        args.parallel,
+    )
 
 
 if __name__ == "__main__":
