@@ -310,6 +310,7 @@ def nearest_weather(
 
 def build_record(
     test_id: str,
+    campaign_id: str,
     duration_seconds: int,
     omit_seconds: int,
     parallel_streams: int,
@@ -332,7 +333,7 @@ def build_record(
     receiver_mbps = bps_to_mbps(received.get("bits_per_second"))
     return {
         "test_id": test_id,
-        "campaign_id": CAMPAIGN_ID,
+        "campaign_id": campaign_id,
         "link_id": LINK_ID,
         "direction": direction,
         "timestamp_start_utc": start_utc,
@@ -433,6 +434,7 @@ def collect(
     database: Path,
     output_csv: Path,
     directions: list[str],
+    campaign_id: str,
     duration_seconds: int,
     omit_seconds: int,
     parallel_streams: int,
@@ -469,6 +471,7 @@ def collect(
             sj01 = nearest_weather(connection, "SJ01", start_utc)
             record = build_record(
                 test_id,
+                campaign_id,
                 duration_seconds,
                 omit_seconds,
                 parallel_streams,
@@ -493,6 +496,7 @@ def main() -> None:
     parser.add_argument("--database", type=Path, required=True)
     parser.add_argument("--output-csv", type=Path, required=True)
     parser.add_argument("--direction", choices=["BOTH", "DL", "UL"], default="BOTH")
+    parser.add_argument("--campaign-id", default=CAMPAIGN_ID)
     parser.add_argument("--duration", type=int, default=DURATION_SECONDS)
     parser.add_argument("--omit", type=int, default=OMIT_SECONDS)
     parser.add_argument("--parallel", type=int, default=PARALLEL_STREAMS)
@@ -504,6 +508,7 @@ def main() -> None:
         args.database,
         args.output_csv,
         directions,
+        args.campaign_id,
         args.duration,
         args.omit,
         args.parallel,
