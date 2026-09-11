@@ -218,15 +218,65 @@ def atomic_publish_table(
 ) -> None:
     temporary = f"{table_name}_new"
     previous = f"{table_name}_old"
-    dataframe.to_sql(temporary, connection, if_exists="replace", index=False, chunksize=1000)
+
+    # Guardar vistas dependientes antes del intercambio atómico.
+    # SQLite reescribe referencias de vistas durante ALTER TABLE RENAME;
+    # si luego se elimina *_old, esas vistas pueden quedar inválidas.
+    dependent_views = connection.execute(
+        """
+        SELECT name, sql
+        FROM sqlite_master
+        WHERE type = 'view'
+          AND sql IS NOT NULL
+          AND instr(lower(sql), lower(?)) > 0
+        """,
+        (table_name,),
+    ).fetchall()
+
+    dataframe.to_sql(
+        temporary,
+        connection,
+        if_exists="replace",
+        index=False,
+        chunksize=1000,
+    )
+
     connection.execute("BEGIN IMMEDIATE")
+
     try:
-        connection.execute(f'DROP TABLE IF EXISTS "{previous}"')
+        # Retirar temporalmente las vistas para evitar que SQLite
+        # cambie sus referencias hacia *_old.
+        for view_name, _ in dependent_views:
+            connection.execute(
+                f'DROP VIEW IF EXISTS "{view_name}"'
+            )
+
+        connection.execute(
+            f'DROP TABLE IF EXISTS "{previous}"'
+        )
+
         if table_exists(connection, table_name):
-            connection.execute(f'ALTER TABLE "{table_name}" RENAME TO "{previous}"')
-        connection.execute(f'ALTER TABLE "{temporary}" RENAME TO "{table_name}"')
-        connection.execute(f'DROP TABLE IF EXISTS "{previous}"')
+            connection.execute(
+                f'ALTER TABLE "{table_name}" '
+                f'RENAME TO "{previous}"'
+            )
+
+        connection.execute(
+            f'ALTER TABLE "{temporary}" '
+            f'RENAME TO "{table_name}"'
+        )
+
+        connection.execute(
+            f'DROP TABLE IF EXISTS "{previous}"'
+        )
+
+        # Restaurar las vistas con su definición original,
+        # ahora apuntando al nombre estable de la tabla.
+        for _, view_sql in dependent_views:
+            connection.execute(view_sql)
+
         connection.commit()
+
     except Exception:
         connection.rollback()
         raise

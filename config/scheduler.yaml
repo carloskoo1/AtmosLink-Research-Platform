@@ -80,7 +80,7 @@ tasks:
     - -m
     - weather_station.backup.remote_backup
   station_sync:
-    enabled: true
+    enabled: false
     interval_seconds: 300
     command:
     - python3
@@ -149,6 +149,13 @@ tasks:
     - python3
     - -m
     - weather_station.analytics.atmospheric_corridor
+  build_multistation_master:
+    enabled: true
+    interval_seconds: 900
+    command:
+    - python3
+    - -m
+    - weather_station.sync.build_multistation_master
   scientific_campaign_export:
     enabled: true
     interval_seconds: 3600
@@ -160,6 +167,14 @@ tasks:
     - SQLite/CU01/weather_local.db
     - --output-dir
     - Data/exports
+  scientific_hourly_6g:
+    enabled: true
+    interval_seconds: 3600
+    command:
+    - python3
+    - -m
+    - weather_station.analytics.scientific_hourly_6g
+    timeout_seconds: 300
   atmospheric_master_reconcile:
     enabled: true
     interval_seconds: 900
