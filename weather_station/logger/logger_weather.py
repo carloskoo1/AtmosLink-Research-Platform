@@ -14,7 +14,7 @@ from weather_station.config.station_manager import get_station_context
 from weather_station.acquisition.parser import parse_weather_line
 from weather_station.database.sqlite_manager import init_db, insert_weather
 from weather_station.database.csv_writer import init_csv, append_csv
-from weather_station.acquisition.wind_rs485 import read_wind
+from weather_station.acquisition.wind_sampler import WindSampler
 
 
 STATION_CONTEXT = get_station_context()
@@ -84,6 +84,14 @@ WIND_TIMEOUT = float(
     or STATION_CONTEXT.get("wind_timeout")
     or 2.0
 )
+
+
+WIND_SAMPLE_PERIOD = float(
+    os.getenv("ATMOSLINK_WIND_SAMPLE_PERIOD")
+    or 1.0
+)
+
+WIND_SAMPLER = None
 
 
 _WIND_WARNING_STATE = {
@@ -270,9 +278,13 @@ def get_wind_availability():
 
 def get_wind_fields():
     """
-    Obtiene los datos del anemómetro si está disponible.
-    Si no está disponible, el logger continúa sin viento.
+    Obtiene un snapshot del muestreador continuo de viento.
+
+    El hilo WindSampler es el único propietario lógico del RS485.
+    Este método no abre el puerto serie.
     """
+    global WIND_SAMPLER
+
     available, reason = get_wind_availability()
 
     if not available:
@@ -281,18 +293,16 @@ def get_wind_fields():
 
         return empty_wind_fields()
 
+    if WIND_SAMPLER is None:
+        warn_wind_once("WindSampler no inicializado")
+        return empty_wind_fields()
+
     try:
-        reading = read_wind(
-            port=WIND_PORT,
-            baudrate=WIND_BAUDRATE,
-            slave_id=WIND_SLAVE_ID,
-            timeout=WIND_TIMEOUT,
-        )
+        reading = WIND_SAMPLER.snapshot_and_reset_gust()
 
         if reading.get("wind_ok") != 1:
             warn_wind_once(
-                f"lectura de viento no válida: "
-                f"{reading.get('wind_error')}"
+                "WindSampler sin muestra reciente válida"
             )
         else:
             _WIND_WARNING_STATE["reason"] = None
@@ -300,13 +310,17 @@ def get_wind_fields():
 
         return {
             "wind_speed_ms": reading.get("wind_speed_ms"),
-            "wind_direction_deg": reading.get("wind_direction_deg"),
+            "wind_direction_deg": reading.get(
+                "wind_direction_deg"
+            ),
             "wind_gust_ms": reading.get("wind_gust_ms"),
             "wind_ok": reading.get("wind_ok", 0),
         }
 
     except Exception as exc:
-        warn_wind_once(f"error leyendo viento RS485: {exc}")
+        warn_wind_once(
+            f"error obteniendo snapshot de viento: {exc}"
+        )
         return empty_wind_fields()
 
 
@@ -399,8 +413,38 @@ def validate_weather_row(row):
 
 
 def run_logger():
+    global WIND_SAMPLER
+
     init_db()
     init_csv()
+
+    wind_available, wind_reason = get_wind_availability()
+
+    if WIND_REQUESTED and wind_available:
+        WIND_SAMPLER = WindSampler(
+            port=WIND_PORT,
+            baudrate=WIND_BAUDRATE,
+            slave_id=WIND_SLAVE_ID,
+            timeout=min(WIND_TIMEOUT, 0.5),
+            period=WIND_SAMPLE_PERIOD,
+            stale_seconds=4.0,
+        )
+
+        WIND_SAMPLER.start()
+
+        print(
+            "WindSampler iniciado: "
+            f"{WIND_SAMPLE_PERIOD:.1f} Hz nominal"
+            if WIND_SAMPLE_PERIOD == 1.0
+            else
+            f"WindSampler iniciado: periodo "
+            f"{WIND_SAMPLE_PERIOD:.2f} s"
+        )
+
+        logging.info(
+            "WindSampler iniciado | periodo=%.3f s",
+            WIND_SAMPLE_PERIOD,
+        )
 
     print("Logger meteorológico iniciado")
     print(

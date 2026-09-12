@@ -133,8 +133,21 @@ def read_wind(
         ser.write(request)
         ser.flush()
 
-        time.sleep(0.2)
-        response = ser.read(64)
+        # La respuesta Modbus RTU se lee según la longitud indicada
+        # por su propia cabecera. Evita esperar innecesariamente
+        # hasta agotar el timeout con ser.read(64).
+        header = ser.read(3)
+
+        if len(header) != 3:
+            response = b""
+        else:
+            byte_count = header[2]
+            body = ser.read(byte_count + 2)
+
+            if len(body) != byte_count + 2:
+                response = b""
+            else:
+                response = header + body
 
     if not response:
         return {
