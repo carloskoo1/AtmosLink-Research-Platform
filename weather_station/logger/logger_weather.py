@@ -24,6 +24,9 @@ STATION_CONTEXT = get_station_context()
 SERIAL_PORT = STATION_CONTEXT.get("serial_port") or "/dev/ttyUSB0"
 BAUD_RATE = STATION_CONTEXT.get("serial_baudrate") or 115200
 SERIAL_TIMEOUT = STATION_CONTEXT.get("serial_timeout") or 2
+SERIAL_SILENCE_RECONNECT_SECONDS = float(
+    os.getenv("ATMOSLINK_SERIAL_SILENCE_RECONNECT_SECONDS", "150")
+)
 
 WIND_REQUESTED = os.getenv(
     "ATMOSLINK_WIND_ENABLED", "0"
@@ -889,11 +892,25 @@ def run_logger():
                         exc,
                     )
 
+                last_serial_rx = time.monotonic()
+
                 while True:
                     raw = ser.readline()
 
                     if not raw:
+                        silence_seconds = time.monotonic() - last_serial_rx
+                        if silence_seconds >= SERIAL_SILENCE_RECONNECT_SECONDS:
+                            message = (
+                                "Silencio serial prolongado en "
+                                f"{SERIAL_PORT}: {silence_seconds:.0f}s sin bytes; "
+                                "reabriendo puerto"
+                            )
+                            print(message)
+                            logging.warning(message)
+                            raise SerialException(message)
                         continue
+
+                    last_serial_rx = time.monotonic()
 
                     try:
                         line = raw.decode(
