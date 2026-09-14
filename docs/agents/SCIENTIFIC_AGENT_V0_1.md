@@ -84,3 +84,17 @@ También se generan respuestas narrativas para estado operativo, calidad/cobertu
 
 La protección de datos permanece inalterada: SQLite se abre con `mode=ro` y `PRAGMA query_only=ON`; una prueba de escritura falla con `OperationalError: attempt to write a readonly database`.
 
+
+## v0.4 — reportes científicos reproducibles
+
+La versión 0.4 genera un paquete de reporte científico sin modificar la base original. El comando `report` produce un informe Markdown, metadatos JSON y tres figuras PNG: evolución horaria de SNR, evolución horaria de goodput y dispersión SNR DL vs humedad relativa de CU01.
+
+Ejemplo:
+
+```bash
+python3 weather_station/agents/scientific_agent.py report --hours 24
+```
+
+Cada paquete registra versión del agente, ventana temporal, número de horas científicas, primera y última hora UTC, commit Git, métricas de calidad/cobertura y nombres de las figuras. La base SQLite permanece en modo `read-only` con `PRAGMA query_only=ON`.
+
+Los reportes se almacenan por defecto en `Data/exports/scientific_agent_reports/` y están concebidos como productos derivados reproducibles; no sustituyen ni modifican los datos crudos o las tablas científicas fuente.

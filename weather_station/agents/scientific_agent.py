@@ -19,7 +19,7 @@ from pathlib import Path
 DEFAULT_DB = Path(
     "/home/carlos/Proyectos/EstacionMeteorologica/SQLite/CU01/weather_local.db"
 )
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 
 
 def connect_readonly(db_path: Path) -> sqlite3.Connection:
@@ -367,9 +367,104 @@ def render_scientific_narrative(payload: dict) -> str:
         f"estado={tp.get('status', 'N/D')}."
     )
 
+
+def generate_reproducible_report(conn: sqlite3.Connection, hours: int, output_dir: Path) -> dict:
+    """Generate a read-only scientific report bundle (Markdown + PNG + JSON metadata)."""
+    import subprocess
+    import pandas as pd
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+    df = pd.read_sql_query(
+        "SELECT * FROM scientific_hourly_6g_general WHERE hour_utc >= ? ORDER BY hour_utc",
+        conn, params=(cutoff.isoformat(),),
+    )
+    if df.empty:
+        raise RuntimeError("No scientific hourly data available for requested window")
+
+    df["hour_utc"] = pd.to_datetime(df["hour_utc"], utc=True, errors="coerce")
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    prefix = f"atmoslink_scientific_report_{hours}h_{stamp}"
+    report_path = output_dir / f"{prefix}.md"
+    metadata_path = output_dir / f"{prefix}.json"
+
+    figures = []
+    fig1 = output_dir / f"{prefix}_snr.png"
+    ax = df.plot(x="hour_utc", y=["dl_snr_mean_db", "ul_snr_mean_db"], figsize=(10, 5))
+    ax.set_title(f"AtmosLink — SNR horario ({hours} h)")
+    ax.set_xlabel("Hora UTC")
+    ax.set_ylabel("SNR (dB)")
+    ax.grid(True, alpha=0.25)
+    ax.figure.tight_layout(); ax.figure.savefig(fig1, dpi=160); plt.close(ax.figure)
+    figures.append(fig1)
+
+    fig2 = output_dir / f"{prefix}_goodput.png"
+    ax = df.plot(x="hour_utc", y=["dl_active_measured_throughput_mbps_mean", "ul_active_measured_throughput_mbps_mean"], figsize=(10, 5))
+    ax.set_title(f"AtmosLink — Goodput activo horario ({hours} h)")
+    ax.set_xlabel("Hora UTC")
+    ax.set_ylabel("Goodput (Mbps)")
+    ax.grid(True, alpha=0.25)
+    ax.figure.tight_layout(); ax.figure.savefig(fig2, dpi=160); plt.close(ax.figure)
+    figures.append(fig2)
+
+    fig3 = output_dir / f"{prefix}_snr_vs_humidity_cu01.png"
+    pair = df[["cu01_rh_mean_pct", "dl_snr_mean_db"]].dropna()
+    fig, ax = plt.subplots(figsize=(7, 5))
+    ax.scatter(pair["cu01_rh_mean_pct"], pair["dl_snr_mean_db"], alpha=0.75)
+    ax.set_title("SNR DL vs humedad relativa CU01")
+    ax.set_xlabel("Humedad relativa CU01 (%)")
+    ax.set_ylabel("SNR DL (dB)")
+    ax.grid(True, alpha=0.25)
+    fig.tight_layout(); fig.savefig(fig3, dpi=160); plt.close(fig)
+    figures.append(fig3)
+
+    analysis = analyze_window(conn, hours)
+    quality = quality_summary(conn, hours)
+    payload = {"intent": "window", "question": f"Reporte científico reproducible de {hours} horas", "result": analysis}
+    narrative = render_scientific_narrative(payload)
+    try:
+        git_commit = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
+    except Exception:
+        git_commit = None
+    metadata = {
+        "agent_version": VERSION, "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "database_mode": "read-only", "window_hours": hours, "hourly_rows": int(len(df)),
+        "first_hour_utc": str(df["hour_utc"].min()), "last_hour_utc": str(df["hour_utc"].max()),
+        "git_commit": git_commit, "quality": quality,
+        "figures": [x.name for x in figures],
+    }
+    metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2, default=str) + "\n")
+    report = [
+        f"# AtmosLink Scientific Agent v{VERSION} — reporte reproducible", "",
+        f"Ventana solicitada: **{hours} horas**",
+        f"Generado UTC: **{metadata['generated_at_utc']}**",
+        f"Git commit: **{git_commit or 'N/D'}**",
+        "Base científica: **SQLite en modo solo lectura**", "",
+        "## Interpretación científica", "", narrative, "",
+        "## Calidad y cobertura", "",
+        f"- Horas disponibles: {quality['hours_available']}",
+        f"- Validez RF media: {_fmt(quality['rf_validity_pct_mean'])} %",
+        f"- Cobertura temporal RF media: {_fmt(quality['rf_temporal_coverage_pct_mean'])} %",
+        f"- Horas con configuración mezclada: {quality['mixed_configuration_hours']}", "",
+        "## Figuras", "",
+        f"![SNR]({fig1.name})", "", f"![Goodput]({fig2.name})", "",
+        f"![SNR vs humedad CU01]({fig3.name})", "",
+        "## Nota metodológica", "",
+        "Las asociaciones son exploratorias y no implican causalidad. Los datos científicos originales no fueron modificados.",
+    ]
+    report_path.write_text("\n".join(report) + "\n")
+    return {
+        "report": str(report_path), "metadata": str(metadata_path),
+        "figures": [str(x) for x in figures], "hourly_rows": int(len(df)),
+        "read_only": True,
+    }
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="AtmosLink Scientific Agent v0.3 (read-only)"
+        description="AtmosLink Scientific Agent v0.4 (read-only)"
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -388,6 +483,10 @@ def build_parser() -> argparse.ArgumentParser:
     ask = sub.add_parser("ask", help="Controlled natural-language scientific question")
     ask.add_argument("question", nargs="+", help="Question in Spanish or English")
     ask.add_argument("--format", choices=("json", "narrative"), default="narrative")
+
+    report = sub.add_parser("report", help="Generate reproducible Markdown + PNG scientific report")
+    report.add_argument("--hours", type=int, default=24)
+    report.add_argument("--output-dir", type=Path, default=Path("Data/exports/scientific_agent_reports"))
     return parser
 
 
@@ -407,6 +506,8 @@ def main() -> int:
             result = campaign_summary(conn, args.campaign_id)
         elif args.command == "ask":
             result = answer_question(conn, " ".join(args.question))
+        elif args.command == "report":
+            result = generate_reproducible_report(conn, args.hours, args.output_dir)
         else:
             raise SystemExit("Unsupported command")
 
