@@ -9,12 +9,14 @@ import sqlite3
 import subprocess
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
 
 
 CAMPAIGN_ID = "CAMPAIGN_6G_20260831"
+FORMAL_CAMPAIGN_ID = "ANDEAN_6GHZ_3X2_2026"
+FORMAL_START_LOCAL = "2026-09-15T00:00:00-05:00"
 LINK_ID = "LINK_6G_4600C"
 TABLE = "active_throughput_6g"
 CLIENT_IP = "192.168.1.50"
@@ -501,6 +503,19 @@ def main() -> None:
     parser.add_argument("--omit", type=int, default=OMIT_SECONDS)
     parser.add_argument("--parallel", type=int, default=PARALLEL_STREAMS)
     args = parser.parse_args()
+
+    # Safety guard: the legacy 15-minute pilot timer invokes this module without
+    # --campaign-id. From the formal 3x2 start onward it must not generate extra
+    # network load or contaminate the experiment. The formal runner explicitly
+    # passes ANDEAN_6GHZ_3X2_2026 and is therefore unaffected.
+    now_local = datetime.now(timezone(timedelta(hours=-5))).isoformat()
+    if args.campaign_id == CAMPAIGN_ID and now_local >= FORMAL_START_LOCAL:
+        print(
+            f"Legacy pilot throughput skipped after formal start {FORMAL_START_LOCAL}; "
+            f"formal campaign is {FORMAL_CAMPAIGN_ID}.",
+            flush=True,
+        )
+        return
 
     directions = ["DL", "UL"] if args.direction == "BOTH" else [args.direction]
 

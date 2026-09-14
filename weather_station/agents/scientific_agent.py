@@ -19,7 +19,7 @@ from pathlib import Path
 DEFAULT_DB = Path(
     "/home/carlos/Proyectos/EstacionMeteorologica/SQLite/CU01/weather_local.db"
 )
-VERSION = "0.6.0"
+VERSION = "0.6.1"
 
 FORMAL_CAMPAIGN_START_LOCAL = "2026-09-15T00:00:00-05:00"
 FORMAL_CAMPAIGN_ID = "ANDEAN_6GHZ_3X2_2026"
@@ -533,14 +533,15 @@ def render_comparison_narrative(result: dict) -> str:
 
 def formal_campaign_guard(conn: sqlite3.Connection) -> dict:
     total_pre = scalar(conn, "SELECT COUNT(*) FROM active_throughput_6g WHERE timestamp_start_local < ?", (FORMAL_CAMPAIGN_START_LOCAL,))
-    total_formal = scalar(conn, "SELECT COUNT(*) FROM active_throughput_6g WHERE timestamp_start_local >= ?", (FORMAL_CAMPAIGN_START_LOCAL,))
+    total_formal = scalar(conn, "SELECT COUNT(*) FROM active_throughput_6g WHERE timestamp_start_local >= ? AND campaign_id = ?", (FORMAL_CAMPAIGN_START_LOCAL, FORMAL_CAMPAIGN_ID))
+    foreign_postformal = scalar(conn, "SELECT COUNT(*) FROM active_throughput_6g WHERE timestamp_start_local >= ? AND campaign_id <> ?", (FORMAL_CAMPAIGN_START_LOCAL, FORMAL_CAMPAIGN_ID))
     first = FIRST_FORMAL_SCENARIO
     first_pre = scalar(conn, """SELECT COUNT(*) FROM active_throughput_6g
         WHERE timestamp_start_local < ? AND operating_frequency_mhz=? AND channel_bandwidth_mhz=?""",
         (FORMAL_CAMPAIGN_START_LOCAL, first["frequency_mhz"], first["bandwidth_mhz"]))
     first_formal = scalar(conn, """SELECT COUNT(*) FROM active_throughput_6g
-        WHERE timestamp_start_local >= ? AND operating_frequency_mhz=? AND channel_bandwidth_mhz=?""",
-        (FORMAL_CAMPAIGN_START_LOCAL, first["frequency_mhz"], first["bandwidth_mhz"]))
+        WHERE timestamp_start_local >= ? AND campaign_id=? AND operating_frequency_mhz=? AND channel_bandwidth_mhz=?""",
+        (FORMAL_CAMPAIGN_START_LOCAL, FORMAL_CAMPAIGN_ID, first["frequency_mhz"], first["bandwidth_mhz"]))
     now_local = datetime.now(timezone(timedelta(hours=-5))).isoformat()
     phase = "FORMAL" if now_local >= FORMAL_CAMPAIGN_START_LOCAL else "PILOT_BASELINE"
     return {
@@ -551,6 +552,7 @@ def formal_campaign_guard(conn: sqlite3.Connection) -> dict:
         "first_scenario": first,
         "preformal_rows_total": total_pre,
         "formal_rows_total": total_formal,
+        "foreign_campaign_rows_after_formal_start": foreign_postformal,
         "first_scenario_preformal_rows": first_pre,
         "first_scenario_formal_rows": first_formal,
         "guard_rule": "Rows before formal_start_local are never included in formal 3x2 analysis.",
@@ -563,9 +565,10 @@ def formal_scenario_summary(conn: sqlite3.Connection, freq: float, bw: float) ->
         SELECT direction, status, measured_throughput_mbps, ping_rtt_avg_ms, retransmits,
                dl_snr_db, ul_snr_db, dl_rssi_dbm, ul_rssi_dbm, timestamp_start_local
         FROM active_throughput_6g
-        WHERE timestamp_start_local >= ? AND operating_frequency_mhz=? AND channel_bandwidth_mhz=?
+        WHERE timestamp_start_local >= ? AND campaign_id=?
+          AND operating_frequency_mhz=? AND channel_bandwidth_mhz=?
         ORDER BY timestamp_start_local
-    """, (FORMAL_CAMPAIGN_START_LOCAL, freq, bw)).fetchall()
+    """, (FORMAL_CAMPAIGN_START_LOCAL, FORMAL_CAMPAIGN_ID, freq, bw)).fetchall()
     bydir = {}
     for direction in ("DL", "UL"):
         items = [dict(r) for r in rows if r["direction"] == direction and r["status"] == "OK"]
@@ -582,7 +585,7 @@ def formal_scenario_summary(conn: sqlite3.Connection, freq: float, bw: float) ->
         "formal_start_local": FORMAL_CAMPAIGN_START_LOCAL,
         "frequency_mhz": freq, "bandwidth_mhz": bw,
         "rows_total": len(rows), "directions": bydir,
-        "note": "Pre-formal pilot/baseline rows are excluded by timestamp guard."
+        "note": "Formal analysis requires both timestamp >= formal start and the formal campaign_id; pilot/legacy rows are excluded."
     }
 
 
