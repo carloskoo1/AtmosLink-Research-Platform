@@ -3,6 +3,7 @@ import json
 import shutil
 import socket
 import subprocess
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
@@ -33,7 +34,9 @@ REMOTE_TARGETS = (
 
 PLATFORM_NAME = "AtmosLink Research Platform"
 PLATFORM_VERSION = "1.0-lts"
-MAX_REMOTE_SECONDS = 600
+MAX_REMOTE_SECONDS = 1800
+UPLOAD_ATTEMPTS = 3
+RETRY_DELAY_SECONDS = 120
 
 
 def now_utc() -> str:
@@ -103,6 +106,24 @@ def get_latest_local_backup(
     return backups[0] if backups else None
 
 
+def get_today_local_backup(
+    station_id: str,
+) -> Optional[Path]:
+    latest = get_latest_local_backup(station_id)
+
+    if latest is None:
+        return None
+
+    latest_date = datetime.fromtimestamp(
+        latest.stat().st_mtime
+    ).date()
+
+    if latest_date == datetime.now().date():
+        return latest
+
+    return None
+
+
 def create_local_backup() -> bool:
     command = [
         str(BASE_DIR / "venv" / "bin" / "python"),
@@ -164,27 +185,43 @@ def upload_backup(
         "5m",
     ]
 
-    result = run_command(
-        command,
-        timeout=MAX_REMOTE_SECONDS,
-    )
+    for attempt in range(1, UPLOAD_ATTEMPTS + 1):
+        try:
+            result = run_command(
+                command,
+                timeout=MAX_REMOTE_SECONDS,
+            )
+        except subprocess.TimeoutExpired:
+            log(
+                f"Timeout subiendo backup a {description} "
+                f"| intento={attempt}/{UPLOAD_ATTEMPTS} "
+                f"| limite={MAX_REMOTE_SECONDS}s"
+            )
+            result = None
 
-    if result.returncode != 0:
-        log(
-            f"Error subiendo backup a {description}: "
-            f"{remote_file}"
-        )
+        if result is not None and result.returncode == 0:
+            log(
+                f"Backup subido correctamente a {description}: "
+                f"{remote_file} | intento={attempt}"
+            )
+            return True
 
-        if result.stderr.strip():
+        if result is not None and result.stderr.strip():
             log(result.stderr.strip())
 
-        return False
+        if attempt < UPLOAD_ATTEMPTS:
+            log(
+                f"Reintento diferido para {description} "
+                f"en {RETRY_DELAY_SECONDS}s "
+                f"| siguiente={attempt + 1}/{UPLOAD_ATTEMPTS}"
+            )
+            time.sleep(RETRY_DELAY_SECONDS)
 
     log(
-        f"Backup subido correctamente a {description}: "
-        f"{remote_file}"
+        f"Error subiendo backup a {description} tras "
+        f"{UPLOAD_ATTEMPTS} intentos: {remote_file}"
     )
-    return True
+    return False
 
 
 def verify_remote_backup(
@@ -410,22 +447,30 @@ def main() -> int:
 
         available_remotes = configured_remotes()
 
-        log(
-            "Generando un único backup local consistente "
-            "para ambos destinos remotos"
-        )
+        backup_path = get_today_local_backup(station_id)
 
-        if not create_local_backup():
-            raise RuntimeError(
-                "No se pudo crear el backup local consistente"
+        if backup_path is not None:
+            log(
+                "Reutilizando backup local existente del día "
+                f"para evitar duplicados: {backup_path.name}"
+            )
+        else:
+            log(
+                "Generando un único backup local consistente "
+                "para ambos destinos remotos"
             )
 
-        backup_path = get_latest_local_backup(station_id)
+            if not create_local_backup():
+                raise RuntimeError(
+                    "No se pudo crear el backup local consistente"
+                )
 
-        if backup_path is None:
-            raise RuntimeError(
-                "No se encontró el backup local recién generado"
-            )
+            backup_path = get_latest_local_backup(station_id)
+
+            if backup_path is None:
+                raise RuntimeError(
+                    "No se encontró el backup local recién generado"
+                )
 
         for target in REMOTE_TARGETS:
             key = str(target["key"])
@@ -452,6 +497,22 @@ def main() -> int:
                 )
                 log(message)
                 result["error"] = message
+                destinations[key] = result
+                continue
+
+            already_verified = verify_remote_backup(
+                backup_path=backup_path,
+                remote_directory=remote_directory,
+                description=description,
+            )
+
+            if already_verified:
+                log(
+                    f"Backup ya presente y verificado en {description}; "
+                    "se omite una subida duplicada"
+                )
+                result["uploaded"] = True
+                result["verified"] = True
                 destinations[key] = result
                 continue
 
