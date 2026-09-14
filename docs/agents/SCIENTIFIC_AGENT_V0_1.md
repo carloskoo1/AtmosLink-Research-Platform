@@ -68,3 +68,19 @@ Example:
 `python3 weather_station/agents/scientific_agent.py ask "Compara SNR, RSSI y goodput con humedad durante las últimas 24 horas"`
 
 The natural-language layer does not generate arbitrary SQL. It only routes questions to predefined scientific functions, preserving the read-only boundary and reproducibility.
+## v0.3 — interpretación científica automática
+
+La versión 0.3 incorpora un renderizador científico en lenguaje natural sobre las consultas controladas de v0.2. El agente puede devolver una narrativa legible para investigador o tesista sin utilizar SQL libre ni modificar la base de datos.
+
+Ejemplo:
+
+```bash
+python3 weather_station/agents/scientific_agent.py ask "Compara SNR, RSSI y goodput con humedad durante las últimas 24 horas" --format narrative
+```
+
+La respuesta incluye métricas resumidas, la asociación exploratoria de mayor magnitud y una advertencia metodológica explícita: correlación no implica causalidad y deben considerarse autocorrelación temporal, cobertura, configuración y variables de confusión.
+
+También se generan respuestas narrativas para estado operativo, calidad/cobertura y campañas. El modo JSON continúa disponible con `--format json`.
+
+La protección de datos permanece inalterada: SQLite se abre con `mode=ro` y `PRAGMA query_only=ON`; una prueba de escritura falla con `OperationalError: attempt to write a readonly database`.
+

@@ -19,7 +19,7 @@ from pathlib import Path
 DEFAULT_DB = Path(
     "/home/carlos/Proyectos/EstacionMeteorologica/SQLite/CU01/weather_local.db"
 )
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 
 
 def connect_readonly(db_path: Path) -> sqlite3.Connection:
@@ -258,9 +258,118 @@ def answer_question(conn: sqlite3.Connection, question: str) -> dict:
 
     return {"intent": "status", "question": question, "result": latest_status(conn)}
 
+
+def _fmt(value, digits=2, suffix=""):
+    if value is None:
+        return "no disponible"
+    return f"{float(value):.{digits}f}{suffix}"
+
+
+def _human_metric(name: str) -> str:
+    labels = {
+        "dl_snr_mean_db": "SNR DL",
+        "ul_snr_mean_db": "SNR UL",
+        "dl_rssi_mean_dbm": "RSSI DL",
+        "ul_rssi_mean_dbm": "RSSI UL",
+        "dl_active_measured_throughput_mbps_mean": "goodput DL",
+        "ul_active_measured_throughput_mbps_mean": "goodput UL",
+        "dl_active_ping_rtt_avg_ms_mean": "RTT DL",
+        "cu01_temp_mean_c": "temperatura CU01",
+        "cu01_rh_mean_pct": "humedad CU01",
+        "cu01_press_median_hpa": "presión CU01",
+        "cu01_wind_mean_ms": "viento CU01",
+        "sj01_temp_mean_c": "temperatura SJ01",
+        "sj01_rh_mean_pct": "humedad SJ01",
+        "sj01_press_median_hpa": "presión SJ01",
+        "sj01_wind_mean_ms": "viento SJ01",
+    }
+    return labels.get(name, name)
+
+
+def render_scientific_narrative(payload: dict) -> str:
+    intent = payload.get("intent")
+    result = payload.get("result") or {}
+
+    if intent == "window":
+        means = result.get("means", {})
+        hours = result.get("window_hours_requested")
+        rows = result.get("hourly_rows", 0)
+        lines = [
+            f"Análisis exploratorio de las últimas {hours} horas ({rows} horas científicas disponibles).",
+            (
+                "El radioenlace presentó un SNR medio de "
+                f"{_fmt(means.get('dl_snr_mean_db'))} dB en DL y "
+                f"{_fmt(means.get('ul_snr_mean_db'))} dB en UL. "
+                f"El RSSI medio fue {_fmt(means.get('dl_rssi_mean_dbm'))} dBm en DL y "
+                f"{_fmt(means.get('ul_rssi_mean_dbm'))} dBm en UL."
+            ),
+            (
+                "Las pruebas activas registraron un goodput medio de "
+                f"{_fmt(means.get('dl_active_measured_throughput_mbps_mean'))} Mbps en DL y "
+                f"{_fmt(means.get('ul_active_measured_throughput_mbps_mean'))} Mbps en UL, "
+                f"con RTT DL medio de {_fmt(means.get('dl_active_ping_rtt_avg_ms_mean'))} ms."
+            ),
+        ]
+        strongest = result.get("strongest_correlations") or {}
+        if strongest:
+            pair, value = next(iter(strongest.items()))
+            left, right = pair.split("__vs__", 1)
+            direction = "positiva" if value > 0 else "negativa"
+            lines.append(
+                "La asociación exploratoria de mayor magnitud fue entre "
+                f"{_human_metric(left)} y {_human_metric(right)} "
+                f"(r = {value:.2f}, {direction})."
+            )
+        lines.append(
+            "Interpretación metodológica: estas asociaciones son exploratorias; no demuestran causalidad. "
+            "Para inferencia científica deben considerarse autocorrelación temporal, cobertura, configuración del radioenlace y posibles variables de confusión."
+        )
+        return "\n\n".join(lines)
+
+    if intent == "quality":
+        return (
+            f"Calidad de datos para las últimas {result.get('window_hours_requested')} horas: "
+            f"{result.get('hours_available', 0)} horas disponibles, validez RF media de "
+            f"{_fmt(result.get('rf_validity_pct_mean'))} %, cobertura temporal RF de "
+            f"{_fmt(result.get('rf_temporal_coverage_pct_mean'))} % y cobertura RF de "
+            f"{_fmt(result.get('rf_coverage_pct_mean'))} %. "
+            f"Se detectaron {result.get('mixed_configuration_hours', 0)} horas con configuración mezclada. "
+            f"Pruebas activas registradas: DL={int(result.get('dl_active_test_count') or 0)} y "
+            f"UL={int(result.get('ul_active_test_count') or 0)}."
+        )
+
+    if intent == "campaign":
+        groups = result.get("groups") or []
+        ok = [g for g in groups if g.get("status") == "OK" and g.get("frequency_mhz") is not None]
+        lines = [
+            f"Resumen de campaña {result.get('campaign_id')}: {result.get('rows', 0)} registros de pruebas activas."
+        ]
+        for g in ok[:6]:
+            lines.append(
+                f"{g.get('direction')} @ {g.get('frequency_mhz'):.0f} MHz / {g.get('bandwidth_mhz'):.0f} MHz: "
+                f"n={g.get('n')}, goodput medio={_fmt(g.get('throughput_mean_mbps'))} Mbps, "
+                f"RTT={_fmt(g.get('rtt_mean_ms'))} ms, retransmisiones medias={_fmt(g.get('retransmits_mean'))}."
+            )
+        lines.append("Los resultados deben interpretarse separando escenario, dirección, periodo experimental y condiciones meteorológicas.")
+        return "\n".join(lines)
+
+    status = result
+    stations = status.get("stations", {})
+    rf = status.get("latest_rf") or {}
+    tp = status.get("latest_active_throughput") or {}
+    return (
+        "Estado científico reciente de AtmosLink. "
+        f"CU01: {stations.get('CU01', {}).get('weather_timestamp_local', 'sin dato')}; "
+        f"SJ01: {stations.get('SJ01', {}).get('weather_timestamp_local', 'sin dato')}. "
+        f"Última telemetría RF: SNR DL={_fmt(rf.get('snr_dl'))} dB, SNR UL={_fmt(rf.get('snr_ul'))} dB, "
+        f"MCS DL={_fmt(rf.get('mcs_dl'), 0)}, MCS UL={_fmt(rf.get('mcs_ul'), 0)}. "
+        f"Última prueba activa: {tp.get('direction', 'N/D')} { _fmt(tp.get('measured_throughput_mbps')) } Mbps, "
+        f"estado={tp.get('status', 'N/D')}."
+    )
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="AtmosLink Scientific Agent v0.2 (read-only)"
+        description="AtmosLink Scientific Agent v0.3 (read-only)"
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -278,6 +387,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     ask = sub.add_parser("ask", help="Controlled natural-language scientific question")
     ask.add_argument("question", nargs="+", help="Question in Spanish or English")
+    ask.add_argument("--format", choices=("json", "narrative"), default="narrative")
     return parser
 
 
@@ -300,7 +410,10 @@ def main() -> int:
         else:
             raise SystemExit("Unsupported command")
 
-    print(json.dumps(result, indent=2, ensure_ascii=False, default=str))
+    if args.command == "ask" and args.format == "narrative":
+        print(render_scientific_narrative(result))
+    else:
+        print(json.dumps(result, indent=2, ensure_ascii=False, default=str))
     return 0
 
 
