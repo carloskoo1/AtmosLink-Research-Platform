@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AtmosLink Scientific Agent v0.1.
+"""AtmosLink Scientific Agent v0.2.
 
 Read-only analytical interface over the validated AtmosLink SQLite store.
 No command in this module may modify scientific source data.
@@ -19,7 +19,7 @@ from pathlib import Path
 DEFAULT_DB = Path(
     "/home/carlos/Proyectos/EstacionMeteorologica/SQLite/CU01/weather_local.db"
 )
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 
 def connect_readonly(db_path: Path) -> sqlite3.Connection:
@@ -223,9 +223,44 @@ def quality_summary(conn: sqlite3.Connection, hours: int) -> dict:
     }
 
 
+
+def answer_question(conn: sqlite3.Connection, question: str) -> dict:
+    q = question.strip().lower()
+    import re
+    match = re.search(r"(\d+)\s*(?:h|hora|horas)", q)
+    hours = int(match.group(1)) if match else 24
+
+    if any(word in q for word in ("calidad", "cobertura", "validez", "qc")):
+        return {"intent": "quality", "question": question, "result": quality_summary(conn, hours)}
+
+    if any(word in q for word in ("campaña", "campaign", "3x2", "3×2")):
+        row = conn.execute(
+            "SELECT campaign_id FROM active_throughput_6g "
+            "WHERE campaign_id IS NOT NULL AND campaign_id <> '' "
+            "ORDER BY timestamp_start_utc DESC LIMIT 1"
+        ).fetchone()
+        campaign_id = row[0] if row else None
+        if not campaign_id:
+            return {"intent": "campaign", "question": question, "error": "No campaign found"}
+        return {"intent": "campaign", "question": question, "result": campaign_summary(conn, campaign_id)}
+
+    analytical_terms = (
+        "snr", "rssi", "goodput", "throughput", "rtt", "retrans",
+        "temperatura", "humedad", "presión", "presion", "viento",
+        "meteorolog", "correl", "relación", "relacion", "compara", "analiza"
+    )
+    if any(term in q for term in analytical_terms):
+        result = analyze_window(conn, hours)
+        result["interpretation"] = (
+            "Exploratory association only; correlations do not establish causality."
+        )
+        return {"intent": "window", "question": question, "result": result}
+
+    return {"intent": "status", "question": question, "result": latest_status(conn)}
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="AtmosLink Scientific Agent v0.1 (read-only)"
+        description="AtmosLink Scientific Agent v0.2 (read-only)"
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -240,6 +275,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     campaign = sub.add_parser("campaign", help="Active-throughput campaign summary")
     campaign.add_argument("--campaign-id", required=True)
+
+    ask = sub.add_parser("ask", help="Controlled natural-language scientific question")
+    ask.add_argument("question", nargs="+", help="Question in Spanish or English")
     return parser
 
 
@@ -257,6 +295,8 @@ def main() -> int:
             result = quality_summary(conn, args.hours)
         elif args.command == "campaign":
             result = campaign_summary(conn, args.campaign_id)
+        elif args.command == "ask":
+            result = answer_question(conn, " ".join(args.question))
         else:
             raise SystemExit("Unsupported command")
 

@@ -59,3 +59,12 @@ v0.4: agentes separados por rol: operacional, científico, tesistas y reportes.
 ## Gobernanza
 
 Toda respuesta derivada de AtmosLink debe conservar fuente, ventana temporal, cobertura, filtros y advertencias metodológicas. Los datos crudos son inmutables para la capa de IA.
+
+## v0.2 — Controlled natural-language interface
+
+A new `ask` command accepts questions in Spanish or English and maps them to controlled read-only analytical intents: status, quality, campaign, or RF-weather window analysis.
+
+Example:
+`python3 weather_station/agents/scientific_agent.py ask "Compara SNR, RSSI y goodput con humedad durante las últimas 24 horas"`
+
+The natural-language layer does not generate arbitrary SQL. It only routes questions to predefined scientific functions, preserving the read-only boundary and reproducibility.
