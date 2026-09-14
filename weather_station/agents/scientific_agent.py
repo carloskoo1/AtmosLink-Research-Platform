@@ -19,7 +19,7 @@ from pathlib import Path
 DEFAULT_DB = Path(
     "/home/carlos/Proyectos/EstacionMeteorologica/SQLite/CU01/weather_local.db"
 )
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 
 
 def connect_readonly(db_path: Path) -> sqlite3.Connection:
@@ -462,9 +462,88 @@ def generate_reproducible_report(conn: sqlite3.Connection, hours: int, output_di
         "read_only": True,
     }
 
+
+def compare_scenarios(conn: sqlite3.Connection, freq_a: float, bw_a: float, freq_b: float, bw_b: float) -> dict:
+    """Compare two RF scenarios using only successful active-throughput tests."""
+    sql = """
+        SELECT direction, operating_frequency_mhz, channel_bandwidth_mhz,
+               measured_throughput_mbps, ping_rtt_avg_ms, retransmits,
+               dl_snr_db, ul_snr_db, dl_rssi_dbm, ul_rssi_dbm
+        FROM active_throughput_6g
+        WHERE status = 'OK'
+          AND operating_frequency_mhz = ?
+          AND channel_bandwidth_mhz = ?
+        ORDER BY timestamp_start_utc
+    """
+
+    def summarize(freq, bw):
+        rows = [dict(r) for r in conn.execute(sql, (freq, bw)).fetchall()]
+        out = {"frequency_mhz": freq, "bandwidth_mhz": bw, "n_total": len(rows), "directions": {}}
+        for direction in ("DL", "UL"):
+            items = [r for r in rows if r.get("direction") == direction]
+            out["directions"][direction] = {
+                "n": len(items),
+                "goodput_mean_mbps": _mean([r.get("measured_throughput_mbps") for r in items]),
+                "rtt_mean_ms": _mean([r.get("ping_rtt_avg_ms") for r in items]),
+                "retransmits_mean": _mean([r.get("retransmits") for r in items]),
+                "dl_snr_mean_db": _mean([r.get("dl_snr_db") for r in items]),
+                "ul_snr_mean_db": _mean([r.get("ul_snr_db") for r in items]),
+                "dl_rssi_mean_dbm": _mean([r.get("dl_rssi_dbm") for r in items]),
+                "ul_rssi_mean_dbm": _mean([r.get("ul_rssi_dbm") for r in items]),
+            }
+        return out
+
+    a, b = summarize(freq_a, bw_a), summarize(freq_b, bw_b)
+    delta = {}
+    for direction in ("DL", "UL"):
+        da, db = a["directions"][direction], b["directions"][direction]
+        delta[direction] = {}
+        for key in ("goodput_mean_mbps", "rtt_mean_ms", "retransmits_mean", "dl_snr_mean_db", "ul_snr_mean_db"):
+            va, vb = da.get(key), db.get(key)
+            delta[direction][key + "_delta_b_minus_a"] = None if va is None or vb is None else vb - va
+    return {
+        "scenario_a": a,
+        "scenario_b": b,
+        "delta_b_minus_a": delta,
+        "warning": "Comparison is descriptive; unequal dates/weather and sequential blocks may confound scenario effects.",
+    }
+
+
+def render_comparison_narrative(result: dict) -> str:
+    a, b = result["scenario_a"], result["scenario_b"]
+    lines = [
+        f"Comparación descriptiva: A={a['frequency_mhz']:.0f} MHz/{a['bandwidth_mhz']:.0f} MHz vs B={b['frequency_mhz']:.0f} MHz/{b['bandwidth_mhz']:.0f} MHz."
+    ]
+    for direction in ("DL", "UL"):
+        da, db = a["directions"][direction], b["directions"][direction]
+        lines.append(
+            f"{direction}: A n={da['n']}, goodput={_fmt(da['goodput_mean_mbps'])} Mbps, RTT={_fmt(da['rtt_mean_ms'])} ms; "
+            f"B n={db['n']}, goodput={_fmt(db['goodput_mean_mbps'])} Mbps, RTT={_fmt(db['rtt_mean_ms'])} ms."
+        )
+    lines.append(
+        "Interpretación metodológica: es una comparación descriptiva. No atribuye causalidad al cambio de escenario; deben controlarse fecha, meteorología, dirección, cobertura y el diseño secuencial por bloques."
+    )
+    return "\n".join(lines)
+
+
+def selftest(conn: sqlite3.Connection) -> dict:
+    """Simple user-verifiable smoke test for the scientific agent."""
+    checks = []
+    checks.append({"name": "database_query_only", "ok": scalar(conn, "PRAGMA query_only") == 1})
+    checks.append({"name": "status_available", "ok": bool(latest_status(conn).get("latest_rf"))})
+    checks.append({"name": "hourly_data_available", "ok": scalar(conn, "SELECT COUNT(*) FROM scientific_hourly_6g_general") > 0})
+    checks.append({"name": "throughput_data_available", "ok": scalar(conn, "SELECT COUNT(*) FROM active_throughput_6g") > 0})
+    write_blocked = False
+    try:
+        conn.execute("CREATE TABLE __atmoslink_agent_write_test(x INTEGER)")
+    except sqlite3.OperationalError:
+        write_blocked = True
+    checks.append({"name": "write_protection", "ok": write_blocked})
+    return {"agent_version": VERSION, "all_ok": all(x["ok"] for x in checks), "checks": checks}
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="AtmosLink Scientific Agent v0.4 (read-only)"
+        description="AtmosLink Scientific Agent v0.5 (read-only)"
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -487,6 +566,15 @@ def build_parser() -> argparse.ArgumentParser:
     report = sub.add_parser("report", help="Generate reproducible Markdown + PNG scientific report")
     report.add_argument("--hours", type=int, default=24)
     report.add_argument("--output-dir", type=Path, default=Path("Data/exports/scientific_agent_reports"))
+
+    compare = sub.add_parser("compare", help="Compare two RF frequency/bandwidth scenarios")
+    compare.add_argument("--freq-a", type=float, required=True)
+    compare.add_argument("--bw-a", type=float, required=True)
+    compare.add_argument("--freq-b", type=float, required=True)
+    compare.add_argument("--bw-b", type=float, required=True)
+    compare.add_argument("--format", choices=("json", "narrative"), default="narrative")
+
+    sub.add_parser("selftest", help="Run user-verifiable safety and data checks")
     return parser
 
 
@@ -508,11 +596,17 @@ def main() -> int:
             result = answer_question(conn, " ".join(args.question))
         elif args.command == "report":
             result = generate_reproducible_report(conn, args.hours, args.output_dir)
+        elif args.command == "compare":
+            result = compare_scenarios(conn, args.freq_a, args.bw_a, args.freq_b, args.bw_b)
+        elif args.command == "selftest":
+            result = selftest(conn)
         else:
             raise SystemExit("Unsupported command")
 
     if args.command == "ask" and args.format == "narrative":
         print(render_scientific_narrative(result))
+    elif args.command == "compare" and args.format == "narrative":
+        print(render_comparison_narrative(result))
     else:
         print(json.dumps(result, indent=2, ensure_ascii=False, default=str))
     return 0
