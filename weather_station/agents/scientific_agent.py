@@ -19,7 +19,12 @@ from pathlib import Path
 DEFAULT_DB = Path(
     "/home/carlos/Proyectos/EstacionMeteorologica/SQLite/CU01/weather_local.db"
 )
-VERSION = "0.5.0"
+VERSION = "0.6.0"
+
+FORMAL_CAMPAIGN_START_LOCAL = "2026-09-15T00:00:00-05:00"
+FORMAL_CAMPAIGN_ID = "ANDEAN_6GHZ_3X2_2026"
+FIRST_FORMAL_SCENARIO = {"scenario_id": "F6655_B20", "frequency_mhz": 6655.0, "bandwidth_mhz": 20.0}
+
 
 
 def connect_readonly(db_path: Path) -> sqlite3.Connection:
@@ -526,6 +531,61 @@ def render_comparison_narrative(result: dict) -> str:
     return "\n".join(lines)
 
 
+def formal_campaign_guard(conn: sqlite3.Connection) -> dict:
+    total_pre = scalar(conn, "SELECT COUNT(*) FROM active_throughput_6g WHERE timestamp_start_local < ?", (FORMAL_CAMPAIGN_START_LOCAL,))
+    total_formal = scalar(conn, "SELECT COUNT(*) FROM active_throughput_6g WHERE timestamp_start_local >= ?", (FORMAL_CAMPAIGN_START_LOCAL,))
+    first = FIRST_FORMAL_SCENARIO
+    first_pre = scalar(conn, """SELECT COUNT(*) FROM active_throughput_6g
+        WHERE timestamp_start_local < ? AND operating_frequency_mhz=? AND channel_bandwidth_mhz=?""",
+        (FORMAL_CAMPAIGN_START_LOCAL, first["frequency_mhz"], first["bandwidth_mhz"]))
+    first_formal = scalar(conn, """SELECT COUNT(*) FROM active_throughput_6g
+        WHERE timestamp_start_local >= ? AND operating_frequency_mhz=? AND channel_bandwidth_mhz=?""",
+        (FORMAL_CAMPAIGN_START_LOCAL, first["frequency_mhz"], first["bandwidth_mhz"]))
+    now_local = datetime.now(timezone(timedelta(hours=-5))).isoformat()
+    phase = "FORMAL" if now_local >= FORMAL_CAMPAIGN_START_LOCAL else "PILOT_BASELINE"
+    return {
+        "agent_version": VERSION,
+        "formal_campaign_id": FORMAL_CAMPAIGN_ID,
+        "formal_start_local": FORMAL_CAMPAIGN_START_LOCAL,
+        "current_phase": phase,
+        "first_scenario": first,
+        "preformal_rows_total": total_pre,
+        "formal_rows_total": total_formal,
+        "first_scenario_preformal_rows": first_pre,
+        "first_scenario_formal_rows": first_formal,
+        "guard_rule": "Rows before formal_start_local are never included in formal 3x2 analysis.",
+        "ready": True,
+    }
+
+
+def formal_scenario_summary(conn: sqlite3.Connection, freq: float, bw: float) -> dict:
+    rows = conn.execute("""
+        SELECT direction, status, measured_throughput_mbps, ping_rtt_avg_ms, retransmits,
+               dl_snr_db, ul_snr_db, dl_rssi_dbm, ul_rssi_dbm, timestamp_start_local
+        FROM active_throughput_6g
+        WHERE timestamp_start_local >= ? AND operating_frequency_mhz=? AND channel_bandwidth_mhz=?
+        ORDER BY timestamp_start_local
+    """, (FORMAL_CAMPAIGN_START_LOCAL, freq, bw)).fetchall()
+    bydir = {}
+    for direction in ("DL", "UL"):
+        items = [dict(r) for r in rows if r["direction"] == direction and r["status"] == "OK"]
+        bydir[direction] = {
+            "n_ok": len(items),
+            "goodput_mean_mbps": _mean([x["measured_throughput_mbps"] for x in items]),
+            "rtt_mean_ms": _mean([x["ping_rtt_avg_ms"] for x in items]),
+            "retransmits_mean": _mean([x["retransmits"] for x in items]),
+            "dl_snr_mean_db": _mean([x["dl_snr_db"] for x in items]),
+            "ul_snr_mean_db": _mean([x["ul_snr_db"] for x in items]),
+        }
+    return {
+        "campaign_id": FORMAL_CAMPAIGN_ID, "phase": "FORMAL",
+        "formal_start_local": FORMAL_CAMPAIGN_START_LOCAL,
+        "frequency_mhz": freq, "bandwidth_mhz": bw,
+        "rows_total": len(rows), "directions": bydir,
+        "note": "Pre-formal pilot/baseline rows are excluded by timestamp guard."
+    }
+
+
 def selftest(conn: sqlite3.Connection) -> dict:
     """Simple user-verifiable smoke test for the scientific agent."""
     checks = []
@@ -575,6 +635,12 @@ def build_parser() -> argparse.ArgumentParser:
     compare.add_argument("--format", choices=("json", "narrative"), default="narrative")
 
     sub.add_parser("selftest", help="Run user-verifiable safety and data checks")
+    sub.add_parser("campaign-guard", help="Verify PILOT/BASELINE vs FORMAL separation for 3x2 campaign")
+
+    formal = sub.add_parser("formal-scenario", help="Summarize one formal 3x2 scenario, excluding all pre-formal rows")
+    formal.add_argument("--freq", type=float, required=True)
+    formal.add_argument("--bw", type=float, required=True)
+
     return parser
 
 
@@ -600,6 +666,10 @@ def main() -> int:
             result = compare_scenarios(conn, args.freq_a, args.bw_a, args.freq_b, args.bw_b)
         elif args.command == "selftest":
             result = selftest(conn)
+        elif args.command == "campaign-guard":
+            result = formal_campaign_guard(conn)
+        elif args.command == "formal-scenario":
+            result = formal_scenario_summary(conn, args.freq, args.bw)
         else:
             raise SystemExit("Unsupported command")
 

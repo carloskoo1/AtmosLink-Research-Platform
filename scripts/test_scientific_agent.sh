@@ -29,3 +29,10 @@ echo "=== 5. COMPARACION PILOTO VS PRIMER ESCENARIO FORMAL ==="
 echo
 echo "=== FIN ==="
 echo "Si SELFTEST muestra all_ok=true, el agente está operativo y protegido contra escritura."
+
+
+echo "=== 6. CAMPAIGN GUARD 3x2 ==="
+$PY $AGENT campaign-guard
+
+echo "=== 7. PRIMER ESCENARIO FORMAL ==="
+$PY $AGENT formal-scenario --freq 6655 --bw 20
