@@ -199,12 +199,259 @@ redundancy issues were diagnosed independently.
 
 Future work should include:
 
-1. determining the historical origin of the
-   `scientific_campaign_6g_integrated_old` VIEW dependency;
+1. monitoring the corrected stable-table publication mechanism
+   during subsequent scheduled scientific exports;
 2. reviewing the intermittent timeout behavior of the UNC backup
    destination;
 3. distinguishing backup states such as HEALTHY, DEGRADED and ERROR
    according to actual redundancy;
 4. preserving V4 frontend assets and operational recovery procedures
    under version control.
+
+
+---
+
+## 9. Root cause identified: scientific QC dependency invalidation
+
+Subsequent investigation established the root cause of the recurrent
+`scientific_campaign_6g_integrated_old` dependency.
+
+The failure was not caused by SQLite corruption and was not caused by
+`build_multistation_master.py`.
+
+The root cause was the publication mechanism implemented in
+`scientific_campaign_export.py`.
+
+The previous `atomic_publish_table()` strategy performed a table swap
+using the following pattern:
+
+1. build `<table>_new`;
+2. rename the live table to `<table>_old`;
+3. rename `<table>_new` to the live table name;
+4. drop `<table>_old`.
+
+When the live table was
+`scientific_campaign_6g_integrated`, SQLite preserved the VIEW
+dependency during the rename operation by rewriting the dependent
+`scientific_campaign_6g_analysis_qc` VIEW to reference
+`scientific_campaign_6g_integrated_old`.
+
+After the old table was dropped, the VIEW remained logically invalid.
+
+This explains why the VIEW could be repaired manually and later become
+broken again after a new scientific export.
+
+SQLite physical integrity remained OK throughout the incident.
+
+---
+
+## 10. Permanent publication fix
+
+A replacement publication strategy was developed and validated first
+on an isolated copy of the production database.
+
+The new strategy preserves the identity of an existing live table:
+
+1. build the candidate data in a temporary table;
+2. verify that the temporary and live schemas are compatible;
+3. start an immediate transaction;
+4. delete the rows from the stable live table;
+5. insert the candidate rows into the same live table;
+6. commit;
+7. remove the temporary table.
+
+The existing live table is therefore no longer renamed.
+
+This preserves dependent SQLite VIEW references and prevents
+`scientific_campaign_6g_analysis_qc` from being redirected to an
+`_old` table.
+
+The strategy was tested repeatedly on a sandbox copy before production
+deployment.
+
+Production validation completed successfully:
+
+- scientific integrated table: 6401 rows
+- scientific QC VIEW: 6401 rows
+- QC dependency: `CURRENT_REF`
+- SQLite integrity: OK
+- no `_old` / `_new` publication residue associated with the exporter
+
+The permanent publication fix was committed as part of:
+
+`fac8ce3 fix: harden scientific publication and restore hourly 6GHz pipeline`
+
+---
+
+## 11. Recovery of the scientific hourly 6 GHz pipeline
+
+Investigation also found that the hourly scientific aggregation module
+
+`weather_station/analytics/scientific_hourly_6g.py`
+
+was absent from the active `feature/atmoslink-ui-v2` branch.
+
+Git history demonstrated that the module existed in commit:
+
+`779d641 Harden scientific 6GHz pipeline and hourly QC aggregation`
+
+on `main`, but that commit was not an ancestor of the active feature
+branch.
+
+Therefore the module had not been deleted from the project; it had
+been omitted as a consequence of branch divergence.
+
+The canonical module was restored selectively without merging `main`
+into the operational feature branch.
+
+---
+
+## 12. pandas compatibility correction
+
+The restored hourly module initially failed on the production Python
+environment with:
+
+`TypeError: basic_hourly.<locals>.<lambda>() got an unexpected keyword argument 'include_groups'`
+
+The failure occurred in the calculation of the number of distinct RF
+configurations per hour.
+
+The original implementation used
+`GroupBy.apply(..., include_groups=False)`.
+
+The production pandas version did not support this invocation as
+expected and forwarded `include_groups` to the lambda function.
+
+No pandas upgrade was performed.
+
+Instead, the calculation was rewritten using compatible dataframe
+operations:
+
+- select hour, frequency and bandwidth;
+- remove duplicate combinations;
+- group by hour;
+- count the remaining combinations.
+
+This preserves the intended scientific meaning of
+`configuration_count` while removing the version-dependent
+`GroupBy.apply()` behavior.
+
+The compatibility change was first tested on an isolated SQLite
+snapshot and only then applied to production.
+
+---
+
+## 13. Sandbox validation of the recovered hourly pipeline
+
+The complete hourly pipeline was executed against an isolated snapshot
+of the production SQLite database.
+
+Results:
+
+- `scientific_hourly_6g_general`: 497 unique hourly observations
+- `scientific_hourly_6g_wind`: 447 unique hourly observations
+- duplicate hours: 0
+- mixed-configuration hours: 0
+- SQLite integrity: OK
+- `quick_check`: OK
+
+Scientific source watermarks in the regenerated product:
+
+- RF: 2026-09-24 21:00 UTC
+- CU01 local: 2026-09-24 21:00 UTC
+- SJ01 local: 2026-09-24 21:00 UTC
+- ERA5-Land, both sites: 2026-09-18 04:00 UTC
+- NASA POWER, both sites: 2026-09-22 23:00 UTC
+
+The strict simultaneous intersection of RF, CU01, SJ01, ERA5-Land and
+NASA POWER contained:
+
+- 359 hourly observations
+- 14.96 equivalent days
+- 49.9% of the initial 720-hour scientific maturity threshold
+
+The limiting external source at this point was ERA5-Land.
+
+---
+
+## 14. Production regeneration and scientific validation
+
+After successful sandbox validation, the same tested module was
+executed against production.
+
+Production reproduced the sandbox results:
+
+- general hourly product: 497 rows / 497 unique hours
+- wind hourly product: 447 rows / 447 unique hours
+- general range:
+  2026-09-01 18:00 UTC -> 2026-09-24 21:00 UTC
+- wind range:
+  2026-09-03 20:00 UTC -> 2026-09-24 21:00 UTC
+- strict simultaneous intersection: 359 hours
+- duplicate hours: 0
+- mixed-configuration hours: 0
+- `quick_check`: OK
+- SQLite integrity: OK
+- scientific integrated/QC relationship:
+  `6401 / 6401 / CURRENT_REF`
+
+The previous hourly product had remained frozen at 404 rows with a
+generation timestamp of 2026-09-20.
+
+The successful regeneration therefore recovered 93 additional hourly
+observations in the general scientific product.
+
+---
+
+## 15. 3x2 campaign state at recovery closure
+
+The regenerated hourly product contained the following RF
+configurations:
+
+- 6475 MHz / 20 MHz: 72 hours
+- 6655 MHz / 20 MHz: 49 hours
+- 6655 MHz / 40 MHz: 13 hours
+- 7000 MHz / 20 MHz: 310 hours
+- 7000 MHz / 40 MHz: 53 hours
+
+No hourly observation for 6475 MHz / 40 MHz was present at the time of
+this recovery closure.
+
+Therefore the 3x2 experimental campaign must not be considered
+complete at this point.
+
+The longitudinal AtmosLink acquisition campaign remains independent of
+the completion of the shorter 3x2 experiment and continues collecting
+local atmospheric, external atmospheric and RF observations.
+
+---
+
+## 16. Final closure
+
+At the end of the 24 September recovery:
+
+- acquisition remained operational;
+- CU01 and SJ01 data were fresh;
+- RF telemetry was fresh;
+- Dashboard V4 was operational;
+- scientific QC was operational;
+- the recurrent QC VIEW failure had a demonstrated root cause;
+- the table publication mechanism had been permanently corrected;
+- the scientific hourly module had been restored;
+- the pandas compatibility issue had been corrected;
+- hourly scientific products had been regenerated successfully;
+- SQLite integrity was OK;
+- remote backup redundancy had been recovered;
+- the central AtmosLink services remained active;
+- the 6 GHz campaign remained active.
+
+Relevant recovery commits:
+
+- `bdfdf0f` — restore AtmosLink V4 scientific dashboard assets
+- `9cac8a3` — record AtmosLink recovery incident 2026-09-24
+- `fac8ce3` — harden scientific publication and restore hourly 6 GHz pipeline
+
+The incident can therefore be considered technically closed.
+
+AtmosLink remains in continuous acquisition mode.
 
