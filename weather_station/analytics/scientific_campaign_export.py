@@ -217,19 +217,69 @@ def atomic_publish_table(
     dataframe: pd.DataFrame,
 ) -> None:
     temporary = f"{table_name}_new"
-    previous = f"{table_name}_old"
-    dataframe.to_sql(temporary, connection, if_exists="replace", index=False, chunksize=1000)
-    connection.execute("BEGIN IMMEDIATE")
+
+    # Construir primero la nueva versión fuera de la tabla estable.
+    dataframe.to_sql(
+        temporary,
+        connection,
+        if_exists="replace",
+        index=False,
+        chunksize=1000,
+    )
+
     try:
-        connection.execute(f'DROP TABLE IF EXISTS "{previous}"')
-        if table_exists(connection, table_name):
-            connection.execute(f'ALTER TABLE "{table_name}" RENAME TO "{previous}"')
-        connection.execute(f'ALTER TABLE "{temporary}" RENAME TO "{table_name}"')
-        connection.execute(f'DROP TABLE IF EXISTS "{previous}"')
+        if not table_exists(connection, table_name):
+            # Primera publicación: todavía no existen dependencias.
+            connection.execute("BEGIN IMMEDIATE")
+            connection.execute(
+                f'ALTER TABLE "{temporary}" RENAME TO "{table_name}"'
+            )
+            connection.commit()
+            return
+
+        current_columns = [
+            row[1]
+            for row in connection.execute(
+                f'PRAGMA table_info("{table_name}")'
+            ).fetchall()
+        ]
+        new_columns = [
+            row[1]
+            for row in connection.execute(
+                f'PRAGMA table_info("{temporary}")'
+            ).fetchall()
+        ]
+
+        if current_columns != new_columns:
+            raise RuntimeError(
+                f"Schema mismatch publishing {table_name}: "
+                f"current={current_columns}, new={new_columns}"
+            )
+
+        quoted_columns = ", ".join(
+            '"' + column.replace('"', '""') + '"'
+            for column in current_columns
+        )
+
+        # Mantener estable el objeto SQLite para no alterar las vistas
+        # dependientes durante la publicación.
+        connection.execute("BEGIN IMMEDIATE")
+        connection.execute(f'DELETE FROM "{table_name}"')
+        connection.execute(
+            f'INSERT INTO "{table_name}" ({quoted_columns}) '
+            f'SELECT {quoted_columns} FROM "{temporary}"'
+        )
         connection.commit()
+
     except Exception:
-        connection.rollback()
+        if connection.in_transaction:
+            connection.rollback()
         raise
+
+    finally:
+        connection.execute(f'DROP TABLE IF EXISTS "{temporary}"')
+        connection.commit()
+
 
 
 def serializable(dataframe: pd.DataFrame) -> pd.DataFrame:
