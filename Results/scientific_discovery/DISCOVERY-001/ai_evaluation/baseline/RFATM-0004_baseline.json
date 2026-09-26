@@ -1,0 +1,16 @@
+{
+  "candidate_id": "RFATM-0004",
+  "system": "B0_DETERMINISTIC_TEMPLATE",
+  "description": "The candidate fails temporal precedence and should not be promoted as a precursor.",
+  "alternative_explanations": [
+    "The atmospheric and RF events may reflect a shared regime.",
+    "The atmospheric transition may be coincident with or downstream of RF change."
+  ],
+  "falsification_tests": [
+    "Compare prespecified pre-event and post-event RF entry counts around independent atmospheric events.",
+    "Require post-event excess to preserve direction across temporal folds."
+  ],
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated": false,
+  "validation_status_claimed": false
+}

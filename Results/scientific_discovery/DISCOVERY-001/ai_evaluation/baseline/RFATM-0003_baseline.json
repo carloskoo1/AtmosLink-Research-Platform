@@ -1,0 +1,16 @@
+{
+  "candidate_id": "RFATM-0003",
+  "system": "B0_DETERMINISTIC_TEMPLATE",
+  "description": "The candidate lacks stable event-level temporal independence and should not be promoted.",
+  "alternative_explanations": [
+    "Serial dependence may inflate block-level support.",
+    "Repeated observations from the same regime may create pseudoreplication."
+  ],
+  "falsification_tests": [
+    "Re-express support using refractory event episodes rather than row counts.",
+    "Require directionally consistent results across contiguous temporal folds."
+  ],
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated": false,
+  "validation_status_claimed": false
+}

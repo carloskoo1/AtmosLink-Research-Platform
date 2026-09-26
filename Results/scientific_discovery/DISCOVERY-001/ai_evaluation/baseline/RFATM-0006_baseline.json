@@ -1,0 +1,16 @@
+{
+  "candidate_id": "RFATM-0006",
+  "system": "B0_DETERMINISTIC_TEMPLATE",
+  "description": "The apparent enrichment does not preserve pre/post temporal ordering and should not be promoted.",
+  "alternative_explanations": [
+    "A shared environmental regime may create enrichment without directional precedence.",
+    "Temporal clustering may produce apparent block-level association."
+  ],
+  "falsification_tests": [
+    "Require post-only RF entries to exceed pre-only entries under the registered event window.",
+    "Do not access the confirmatory holdout for a candidate that already fails development directionality."
+  ],
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated": false,
+  "validation_status_claimed": false
+}

@@ -1,0 +1,16 @@
+{
+  "candidate_id": "RFATM-0001",
+  "system": "B0_DETERMINISTIC_TEMPLATE",
+  "description": "The exploratory association is not stable across development periods and should not be promoted.",
+  "alternative_explanations": [
+    "The initial association may be a development-period fluctuation.",
+    "The relationship may depend on an unmodeled time-varying regime."
+  ],
+  "falsification_tests": [
+    "Require sign and effect-direction stability across prespecified contiguous temporal blocks.",
+    "Retain the candidate as screened out unless a newly registered formulation is tested without reusing failed evidence as confirmation."
+  ],
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated": false,
+  "validation_status_claimed": false
+}

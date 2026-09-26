@@ -1,0 +1,16 @@
+{
+  "candidate_id": "RFATM-0002",
+  "system": "B0_DETERMINISTIC_TEMPLATE",
+  "description": "The apparent association is not robust to temporal trend or diurnal-cycle control and should not be promoted.",
+  "alternative_explanations": [
+    "Shared time-of-day structure may explain both atmospheric and RF variation.",
+    "Slow temporal drift may create an association without a direct atmospheric-to-RF relationship."
+  ],
+  "falsification_tests": [
+    "Use same-clock or seasonally matched controls.",
+    "Test residual association after prespecified temporal-trend adjustment."
+  ],
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated": false,
+  "validation_status_claimed": false
+}

@@ -1,0 +1,16 @@
+{
+  "candidate_id": "RFATM-0005",
+  "system": "B0_DETERMINISTIC_TEMPLATE",
+  "description": "The matched trajectory association fails the registered robustness controls and should not be promoted.",
+  "alternative_explanations": [
+    "The association may reflect persistent context rather than a directional precursor.",
+    "The result may be sensitive to outcome definition or control support."
+  ],
+  "falsification_tests": [
+    "Apply prespecified same-clock matched controls and multiplicity correction.",
+    "Use post-event trajectories as a negative-control check for temporal precedence."
+  ],
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated": false,
+  "validation_status_claimed": false
+}

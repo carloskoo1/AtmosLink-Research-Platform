@@ -1,0 +1,98 @@
+[
+  {
+    "candidate_id": "RFATM-0001",
+    "system": "B0_DETERMINISTIC_TEMPLATE",
+    "description": "The exploratory association is not stable across development periods and should not be promoted.",
+    "alternative_explanations": [
+      "The initial association may be a development-period fluctuation.",
+      "The relationship may depend on an unmodeled time-varying regime."
+    ],
+    "falsification_tests": [
+      "Require sign and effect-direction stability across prespecified contiguous temporal blocks.",
+      "Retain the candidate as screened out unless a newly registered formulation is tested without reusing failed evidence as confirmation."
+    ],
+    "recommended_action": "SCREEN_OUT",
+    "numeric_claims_generated": false,
+    "validation_status_claimed": false
+  },
+  {
+    "candidate_id": "RFATM-0002",
+    "system": "B0_DETERMINISTIC_TEMPLATE",
+    "description": "The apparent association is not robust to temporal trend or diurnal-cycle control and should not be promoted.",
+    "alternative_explanations": [
+      "Shared time-of-day structure may explain both atmospheric and RF variation.",
+      "Slow temporal drift may create an association without a direct atmospheric-to-RF relationship."
+    ],
+    "falsification_tests": [
+      "Use same-clock or seasonally matched controls.",
+      "Test residual association after prespecified temporal-trend adjustment."
+    ],
+    "recommended_action": "SCREEN_OUT",
+    "numeric_claims_generated": false,
+    "validation_status_claimed": false
+  },
+  {
+    "candidate_id": "RFATM-0003",
+    "system": "B0_DETERMINISTIC_TEMPLATE",
+    "description": "The candidate lacks stable event-level temporal independence and should not be promoted.",
+    "alternative_explanations": [
+      "Serial dependence may inflate block-level support.",
+      "Repeated observations from the same regime may create pseudoreplication."
+    ],
+    "falsification_tests": [
+      "Re-express support using refractory event episodes rather than row counts.",
+      "Require directionally consistent results across contiguous temporal folds."
+    ],
+    "recommended_action": "SCREEN_OUT",
+    "numeric_claims_generated": false,
+    "validation_status_claimed": false
+  },
+  {
+    "candidate_id": "RFATM-0004",
+    "system": "B0_DETERMINISTIC_TEMPLATE",
+    "description": "The candidate fails temporal precedence and should not be promoted as a precursor.",
+    "alternative_explanations": [
+      "The atmospheric and RF events may reflect a shared regime.",
+      "The atmospheric transition may be coincident with or downstream of RF change."
+    ],
+    "falsification_tests": [
+      "Compare prespecified pre-event and post-event RF entry counts around independent atmospheric events.",
+      "Require post-event excess to preserve direction across temporal folds."
+    ],
+    "recommended_action": "SCREEN_OUT",
+    "numeric_claims_generated": false,
+    "validation_status_claimed": false
+  },
+  {
+    "candidate_id": "RFATM-0005",
+    "system": "B0_DETERMINISTIC_TEMPLATE",
+    "description": "The matched trajectory association fails the registered robustness controls and should not be promoted.",
+    "alternative_explanations": [
+      "The association may reflect persistent context rather than a directional precursor.",
+      "The result may be sensitive to outcome definition or control support."
+    ],
+    "falsification_tests": [
+      "Apply prespecified same-clock matched controls and multiplicity correction.",
+      "Use post-event trajectories as a negative-control check for temporal precedence."
+    ],
+    "recommended_action": "SCREEN_OUT",
+    "numeric_claims_generated": false,
+    "validation_status_claimed": false
+  },
+  {
+    "candidate_id": "RFATM-0006",
+    "system": "B0_DETERMINISTIC_TEMPLATE",
+    "description": "The apparent enrichment does not preserve pre/post temporal ordering and should not be promoted.",
+    "alternative_explanations": [
+      "A shared environmental regime may create enrichment without directional precedence.",
+      "Temporal clustering may produce apparent block-level association."
+    ],
+    "falsification_tests": [
+      "Require post-only RF entries to exceed pre-only entries under the registered event window.",
+      "Do not access the confirmatory holdout for a candidate that already fails development directionality."
+    ],
+    "recommended_action": "SCREEN_OUT",
+    "numeric_claims_generated": false,
+    "validation_status_claimed": false
+  }
+]
