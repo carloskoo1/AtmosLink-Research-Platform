@@ -1,0 +1,96 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "9.0-safeguard-ablation",
+  "validation_accessed": false,
+  "source_trials": "v8 detection surface; no resimulation",
+  "methods": {
+    "M0_naive_uncorrected": "Any of 3 horizons with one-sided p<0.05.",
+    "M1_bonferroni_only": "Any horizon with p<0.05/3.",
+    "M2_bonferroni_support": "Bonferroni plus >=8 discordant driver events.",
+    "M3_ASDE_full": "Bonferroni + >=8 discordant events + post>pre direction in >=3/4 temporal folds."
+  },
+  "false_positive_rates": [
+    {
+      "method": "M1_bonferroni_only",
+      "rate": 0.015,
+      "ci95_low": 0.005114145184492387,
+      "ci95_high": 0.043166480556278884
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "rate": 0.015,
+      "ci95_low": 0.005114145184492387,
+      "ci95_high": 0.043166480556278884
+    },
+    {
+      "method": "M3_ASDE_full",
+      "rate": 0.015,
+      "ci95_low": 0.005114145184492387,
+      "ci95_high": 0.043166480556278884
+    },
+    {
+      "method": "M0_naive_uncorrected",
+      "rate": 0.08,
+      "ci95_low": 0.04984015517626642,
+      "ci95_high": 0.12599048979512317
+    }
+  ],
+  "moderate_signal_recovery": [
+    {
+      "method": "M0_naive_uncorrected",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M1_bonferroni_only",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M3_ASDE_full",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M0_naive_uncorrected",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M1_bonferroni_only",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M3_ASDE_full",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "11.0-frozen-threshold-ablation",
+  "validation_accessed": false,
+  "source": "v10 frozen-threshold trials",
+  "false_positive_rates": [
+    {
+      "method": "M1_bonferroni_only",
+      "rate": 0.015,
+      "ci95_low": 0.005114145184492387,
+      "ci95_high": 0.043166480556278884
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "rate": 0.015,
+      "ci95_low": 0.005114145184492387,
+      "ci95_high": 0.043166480556278884
+    },
+    {
+      "method": "M3_ASDE_full",
+      "rate": 0.015,
+      "ci95_low": 0.005114145184492387,
+      "ci95_high": 0.043166480556278884
+    },
+    {
+      "method": "M0_naive_uncorrected",
+      "rate": 0.08,
+      "ci95_low": 0.04984015517626642,
+      "ci95_high": 0.12599048979512317
+    }
+  ],
+  "moderate_signal_recovery": [
+    {
+      "method": "M0_naive_uncorrected",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M1_bonferroni_only",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M3_ASDE_full",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M0_naive_uncorrected",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M1_bonferroni_only",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M3_ASDE_full",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "method": "M0_naive_uncorrected",
+      "lag_min": 60.0,
+      "rate": 0.12,
+      "ci95_low": 0.05617523710624646,
+      "ci95_high": 0.23805078886623582
+    },
+    {
+      "method": "M1_bonferroni_only",
+      "lag_min": 60.0,
+      "rate": 0.02,
+      "ci95_low": 0.0035391680889764604,
+      "ci95_high": 0.10495686471836953
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "lag_min": 60.0,
+      "rate": 0.02,
+      "ci95_low": 0.0035391680889764604,
+      "ci95_high": 0.10495686471836953
+    },
+    {
+      "method": "M3_ASDE_full",
+      "lag_min": 60.0,
+      "rate": 0.02,
+      "ci95_low": 0.0035391680889764604,
+      "ci95_high": 0.10495686471836953
+    }
+  ]
+}

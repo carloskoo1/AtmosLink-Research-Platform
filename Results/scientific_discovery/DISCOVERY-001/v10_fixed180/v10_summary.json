@@ -1,0 +1,439 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "10b.0-frozen-threshold-benchmark",
+  "validation_accessed": false,
+  "external_replication_accessed": false,
+  "frozen_rf_drop_threshold": -0.5620817932460992,
+  "baseline_rf_drop_events": 158,
+  "familywise_null_trials": 200,
+  "familywise_false_positive_rate": 0.045,
+  "familywise_false_positive_ci95": [
+    0.023852271724704166,
+    0.08329759366096785
+  ],
+  "familywise_recovery": [
+    {
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "trials": 50,
+      "familywise_recovery_rate": 0.98,
+      "ci95_low": 0.8950431352816304,
+      "ci95_high": 0.9964608319110235
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "trials": 50,
+      "familywise_recovery_rate": 0.84,
+      "ci95_low": 0.7148551903823401,
+      "ci95_high": 0.9166267863791231
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "trials": 50,
+      "familywise_recovery_rate": 0.42,
+      "ci95_low": 0.2937479723456693,
+      "ci95_high": 0.5576680331222217
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "trials": 50,
+      "familywise_recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "trials": 50,
+      "familywise_recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "trials": 50,
+      "familywise_recovery_rate": 0.92,
+      "ci95_low": 0.8116149745493629,
+      "ci95_high": 0.9684509967442093
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "trials": 50,
+      "familywise_recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "trials": 50,
+      "familywise_recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "trials": 50,
+      "familywise_recovery_rate": 0.98,
+      "ci95_low": 0.8950431352816304,
+      "ci95_high": 0.9964608319110235
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 15.0,
+      "trials": 50,
+      "familywise_recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 30.0,
+      "trials": 50,
+      "familywise_recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 60.0,
+      "trials": 50,
+      "familywise_recovery_rate": 0.98,
+      "ci95_low": 0.8950431352816304,
+      "ci95_high": 0.9964608319110235
+    }
+  ],
+  "surface": [
+    {
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.94,
+      "ci95_low": 0.8378265662912299,
+      "ci95_high": 0.9793854036353695
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.7,
+      "ci95_low": 0.562493877226366,
+      "ci95_high": 0.8089661091039063
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.7,
+      "ci95_low": 0.562493877226366,
+      "ci95_high": 0.8089661091039063
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.5,
+      "ci95_low": 0.36644286412332855,
+      "ci95_high": 0.6335571358766714
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.56,
+      "ci95_low": 0.4230578680014353,
+      "ci95_high": 0.6883801278976466
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.7,
+      "ci95_low": 0.562493877226366,
+      "ci95_high": 0.8089661091039063
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.07135003417431873
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.04,
+      "ci95_low": 0.011038652660826577,
+      "ci95_high": 0.13460337877954667
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.42,
+      "ci95_low": 0.2937479723456693,
+      "ci95_high": 0.5576680331222217
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.07135003417431873
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.76,
+      "ci95_low": 0.6258705062480763,
+      "ci95_high": 0.8570274759812779
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.86,
+      "ci95_low": 0.738135428014719,
+      "ci95_high": 0.9304925473797714
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.07135003417431873
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.86,
+      "ci95_low": 0.738135428014719,
+      "ci95_high": 0.9304925473797714
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 15.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 15.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 15.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 30.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 30.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 30.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 60.0,
+      "horizon_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.07135003417431873
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 60.0,
+      "horizon_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 60.0,
+      "horizon_min": 120,
+      "trials": 50,
+      "recovery_rate": 0.86,
+      "ci95_low": 0.738135428014719,
+      "ci95_high": 0.9304925473797714
+    }
+  ],
+  "design_note": "RF drop threshold learned once from unmodified development data and frozen before all injections."
+}

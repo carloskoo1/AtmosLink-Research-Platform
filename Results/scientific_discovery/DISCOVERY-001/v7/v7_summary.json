@@ -1,0 +1,170 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "7.0-synthetic-ground-truth-benchmark",
+  "validation_accessed": false,
+  "external_replication_accessed": false,
+  "source": "prevalidation development snapshot only",
+  "driver_definition": "top-15% local peaks of robust 15-min SJ01 warming-minus-humidity-drop score, 60-min refractory",
+  "driver_events_total": 91,
+  "driver_events_by_fold": [
+    25,
+    24,
+    17,
+    25
+  ],
+  "driver_threshold": 2.175421686915581,
+  "baseline_rf_drop_events": 158,
+  "injection": {
+    "effect_sd": [
+      0.5,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "lags_min": [
+      15,
+      30,
+      60
+    ],
+    "duration_min": 15,
+    "activation_probability": 0.7,
+    "trials_per_cell": 50
+  },
+  "detection_gate": "one-sided exact p<0.05, >=8 discordant events, positive post>pre direction in >=3/4 temporal folds",
+  "empirical_null_trials": 200,
+  "empirical_false_positive_rate": 0.015,
+  "power_table": [
+    {
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "trials": 50,
+      "recovery_rate": 0.9,
+      "median_p": 0.011680437226091023,
+      "median_post_only": 30.0,
+      "median_pre_only": 15.0,
+      "median_positive_folds": 4.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "median_p": 0.3157326431964975,
+      "median_post_only": 23.0,
+      "median_pre_only": 19.0,
+      "median_positive_folds": 3.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "median_p": 0.5000000000000002,
+      "median_post_only": 21.0,
+      "median_pre_only": 20.5,
+      "median_positive_folds": 2.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "median_p": 0.00017300057015745549,
+      "median_post_only": 37.0,
+      "median_pre_only": 12.0,
+      "median_positive_folds": 4.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "median_p": 0.011314420602957398,
+      "median_post_only": 29.0,
+      "median_pre_only": 14.0,
+      "median_positive_folds": 4.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "trials": 50,
+      "recovery_rate": 0.04,
+      "median_p": 0.2661953480883313,
+      "median_post_only": 24.0,
+      "median_pre_only": 19.0,
+      "median_positive_folds": 2.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "median_p": 2.276362595656466e-07,
+      "median_post_only": 46.0,
+      "median_pre_only": 9.0,
+      "median_positive_folds": 4.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "median_p": 0.0010260369712891126,
+      "median_post_only": 35.0,
+      "median_pre_only": 13.0,
+      "median_positive_folds": 4.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "trials": 50,
+      "recovery_rate": 0.18,
+      "median_p": 0.10131937553227033,
+      "median_post_only": 30.0,
+      "median_pre_only": 19.0,
+      "median_positive_folds": 4.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 15.0,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "median_p": 2.0196608696565477e-07,
+      "median_post_only": 46.0,
+      "median_pre_only": 9.0,
+      "median_positive_folds": 4.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 30.0,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "median_p": 0.0007844375565604355,
+      "median_post_only": 36.0,
+      "median_pre_only": 14.0,
+      "median_positive_folds": 4.0,
+      "median_activated_events": 64.0
+    },
+    {
+      "effect_sd": 2.0,
+      "lag_min": 60.0,
+      "trials": 50,
+      "recovery_rate": 0.26,
+      "median_p": 0.0675782254228352,
+      "median_post_only": 30.0,
+      "median_pre_only": 19.0,
+      "median_positive_folds": 4.0,
+      "median_activated_events": 64.0
+    }
+  ]
+}
