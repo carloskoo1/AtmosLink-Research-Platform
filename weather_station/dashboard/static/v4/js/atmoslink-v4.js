@@ -275,6 +275,111 @@
     }
 
 
+    function rfConfigurationLabel() {
+        const cfg =
+            state.throughput?.configuration || {};
+
+        const frequency =
+            safeNumber(cfg.frequency_mhz);
+
+        const bandwidth =
+            safeNumber(cfg.channel_width_mhz);
+
+        if (
+            frequency === null ||
+            bandwidth === null
+        ) {
+            return "RF por confirmar";
+        }
+
+        return (
+            `${fmt(frequency, 0)} MHz · ` +
+            `${fmt(bandwidth, 0)} MHz`
+        );
+    }
+
+
+    function renderRFConfiguration() {
+        const label =
+            rfConfigurationLabel();
+
+        const targets = [
+            [
+                "rf-config-hero",
+                ".hero-badges .badge:nth-of-type(2)",
+                label
+            ],
+            [
+                "rf-config-methodology",
+                ".methodology-strip " +
+                ".methodology-item:nth-child(3) strong",
+                label
+            ],
+            [
+                "rf-config-health",
+                ".health-grid " +
+                ".health-card:nth-child(2) h3",
+                label
+            ],
+            [
+                "rf-config-detail",
+                "#view-radio .detail-header h2",
+                `Radio Link · ${label}`
+            ]
+        ];
+
+        targets.forEach(
+            ([id, selector, value]) => {
+                const node =
+                    $(id) ||
+                    document.querySelector(selector);
+
+                if (node) {
+                    node.textContent = value;
+                }
+            }
+        );
+
+        const corridor =
+            $("rf-config-corridor");
+
+        if (corridor) {
+            corridor.textContent = label;
+        } else {
+            const band =
+                document.querySelector(
+                    ".rf-middle .rf-band"
+                );
+
+            const textNode =
+                band &&
+                Array.from(band.childNodes)
+                    .find(
+                        (node) =>
+                            node.nodeType === 3 &&
+                            node.textContent.trim()
+                    );
+
+            if (textNode) {
+                textNode.textContent =
+                    `\n                        ${label}\n                        `;
+            }
+        }
+
+        const activeRadioNav =
+            document.querySelector(
+                '.nav-item.active[data-view="radio"]'
+            );
+
+        if (activeRadioNav) {
+            setText(
+                "page-title",
+                `Radio Link · ${label}`
+            );
+        }
+    }
+
+
     function renderStation(prefix, data) {
         if (!data) {
             return;
@@ -677,6 +782,8 @@
                     : fmt(width, 0)
             } MHz`
         );
+
+        renderRFConfiguration();
 
         const apPower =
             safeNumber(cfg.ap_tx_power_dbm);
@@ -2328,8 +2435,7 @@
         const titles = {
             global: "Estado global",
             cu01: "CU01 · Cerro Cuñacales",
-            sj01: "SJ01 · Cerro San José",
-            radio: "Radio Link · 7000 MHz · 20 MHz"
+            sj01: "SJ01 · Cerro San José"
         };
 
         document
@@ -2381,8 +2487,15 @@
 
                             setText(
                                 "page-title",
-                                titles[view] ||
-                                "AtmosLink"
+                                view === "radio"
+                                    ? (
+                                        "Radio Link · " +
+                                        rfConfigurationLabel()
+                                    )
+                                    : (
+                                        titles[view] ||
+                                        "AtmosLink"
+                                    )
                             );
 
                             window.scrollTo({
