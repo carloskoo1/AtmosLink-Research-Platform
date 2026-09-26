@@ -1,10 +1,10 @@
 {
   "discovery_id": "RFATM-0006",
   "experiment_id": "DISCOVERY-001",
-  "status": "EVIDENCE_ACCUMULATING",
+  "status": "SCREENED_OUT",
   "validation_accessed": false,
   "pattern_class": "atmospheric_transition_archetype",
-  "description": "Rapid warming and drying transition at SJ01 followed by elevated probability of RF degradation entry.",
+  "description": "Rapid warming and drying transition at SJ01 initially associated with elevated block-level RF degradation risk.",
   "transition_window_minutes": 15,
   "response_horizon_minutes": 60,
   "approximate_transition_center": {
@@ -15,24 +15,28 @@
     "sj01_pressure_delta_hpa": -0.076,
     "sj01_wind_delta_ms": 0.384
   },
-  "discovery": {
-    "archetype_events": 32,
-    "exposed_rf_degradation_outcomes": 6,
-    "risk_ratio": 1.37890625,
-    "rr_ci95": [0.6399200793, 2.9712811143]
-  },  "characterization": {
-    "archetype_events": 18,
-    "exposed_rf_degradation_outcomes": 3,
-    "risk_ratio": 1.6,
-    "rr_ci95": [0.5123980705, 4.9961156126]
+  "block_level_screen": {
+    "discovery_risk_ratio": 1.37890625,
+    "characterization_risk_ratio": 1.6
+  },  "strict_directionality_screen": {
+    "discovery": {
+      "archetype_events": 32,
+      "pre_window_rf_entries_any": 7,
+      "post_window_rf_entries_any": 4,
+      "post_only": 2,
+      "pre_only": 5,
+      "one_sided_exact_p": 0.9375
+    },
+    "characterization": {
+      "archetype_events": 18,
+      "pre_window_rf_entries_any": 1,
+      "post_window_rf_entries_any": 3,
+      "post_only": 3,
+      "pre_only": 1,
+      "one_sided_exact_p": 0.3125
+    }
   },
-  "quality_controls": {
-    "cu01_pressure_derivative_excluded": true,
-    "reason": "388 PRESS_JUMP warnings in prevalidation interval",
-    "minimum_multivariate_dimensions": 2,
-    "temporal_block_minutes": 30,
-    "rf_degradation_threshold_source": "D_discovery only"
-  },
-  "interpretation": "Directionally replicated but statistically imprecise. More independent events are required before hypothesis freezing.",
-  "next_gate": "Reassess after additional independent campaign observations without opening D_validation."
+  "failed_gate": "strict_pre_post_temporal_direction",
+  "interpretation": "The block-level association did not establish a stable temporal ordering. Discovery contained more pre-event than post-event RF entries, while characterization showed the opposite. The candidate must not be promoted.",
+  "next_action": "Retain as screened-out provenance; do not use D_validation for this candidate."
 }

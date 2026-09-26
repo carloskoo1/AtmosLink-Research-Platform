@@ -1,0 +1,30 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "policy_state": "ADAPTIVE_DEVELOPMENT",
+  "validation_accessed": false,
+  "external_replication_accessed": false,
+  "development_snapshot": {
+    "file": "Results/scientific_discovery/DISCOVERY-001/prevalidation_7000_20.csv",
+    "sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+    "rows": 2860
+  },
+  "development_folds": [
+    {"fold": 1, "rows": 715, "start_utc": "2026-09-01T18:30:52Z", "end_utc": "2026-09-04T08:02:17Z"},
+    {"fold": 2, "rows": 715, "start_utc": "2026-09-04T08:12:19Z", "end_utc": "2026-09-07T05:14:26Z"},
+    {"fold": 3, "rows": 715, "start_utc": "2026-09-07T05:19:27Z", "end_utc": "2026-09-09T18:41:57Z"},
+    {"fold": 4, "rows": 715, "start_utc": "2026-09-09T18:46:58Z", "end_utc": "2026-09-13T03:29:49Z"}
+  ],  "analysis_history": [
+    {"version": "v1", "family": "lagged pairwise associations", "result": "screened"},
+    {"version": "v2", "family": "latent atmospheric/RF state associations", "result": "screened"},
+    {"version": "v3", "family": "transition archetypes", "result": "screened after stricter temporal-direction audit"},
+    {"version": "v4", "family": "matched same-clock trajectory features", "result": "screened"},
+    {"version": "v5", "family": "strict pre/post directionality across archetypes", "result": "0 of 60 tests passed direction plus support"}
+  ],
+  "methodological_consequence": "The original characterization block has been adaptively inspected and is now development data. It cannot be claimed as independent replication for future candidates.",
+  "confirmatory_holdout": {
+    "name": "D_validation",
+    "rows": 716,
+    "status": "EMBARGOED"
+  },
+  "next_development_rule": "Use blocked temporal resampling within D_development. Freeze a single candidate or a prespecified multiplicity-controlled candidate set before accessing D_validation."
+}

@@ -1,0 +1,25 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "5.0-strict-directionality",
+  "validation_accessed": false,
+  "external_replication_accessed": false,
+  "tests": 60,
+  "strict_directionality_passes": 0,
+  "fdr_pass_both": 0,
+  "decision": "NO_TRAJECTORY_HYPOTHESIS_READY",
+  "rfatm_0006_status": "SCREENED_OUT",
+  "rfatm_0006_failed_gate": "strict_pre_post_temporal_direction",
+  "evidence_budget": {
+    "discovery_rf_entries": 27,
+    "characterization_rf_entries": 9,
+    "discovery_days": 8.006944444444445,
+    "characterization_days": 3.361111111111111,
+    "rf_entry_rate_per_day_discovery": 3.3720728534258457,
+    "rf_entry_rate_per_day_characterization": 2.677685950413223,
+    "pooled_reference_rate_per_day": 3.1667684789248627,
+    "illustrative_target_independent_rf_entries_per_characterization_block": 30,
+    "additional_entries_to_target": 21,
+    "estimated_additional_days_at_characterization_rate": 7.842592592592593,
+    "note": "Operational evidence-budget estimate only; not a formal power calculation and not permission to open D_validation."
+  }
+}

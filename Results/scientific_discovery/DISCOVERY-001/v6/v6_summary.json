@@ -1,0 +1,45 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "6.0-regime-marker-separation",
+  "validation_accessed": false,
+  "development_folds": 4,
+  "rf_drop_events_total": 152,
+  "rf_drop_events_by_fold": [
+    40,
+    33,
+    52,
+    27
+  ],
+  "features_screened": 18,
+  "precursor_candidates": 0,
+  "context_markers": 1,
+  "decision": "NO_PRECURSOR_READY",
+  "context_marker_rows": [
+    {
+      "feature": "sj01_local_hum_avg_pct__std60",
+      "column": "sj01_local_hum_avg_pct",
+      "kind": "std60",
+      "n_events": 128,
+      "sign_consistency": 4,
+      "eligible_folds": 4,
+      "combined_pre_p": 7.876553866923066e-05,
+      "pooled_pre_median": -0.6332922425088866,
+      "pooled_post_median": -0.46120438175982054,
+      "pooled_post_p": 0.02015481691094503,
+      "fold1_n": 36,
+      "fold1_median": -0.4356837915198161,
+      "fold1_p": 0.03209542465629056,
+      "fold2_n": 27,
+      "fold2_median": -0.03452073713929593,
+      "fold2_p": 0.5303222090005875,
+      "fold3_n": 46,
+      "fold3_median": -1.1728439071059502,
+      "fold3_p": 1.1598289518133242e-05,
+      "fold4_n": 19,
+      "fold4_median": -0.30346006029957356,
+      "fold4_p": 0.4653167724609375,
+      "combined_pre_q": 0.001268349571009381,
+      "classification": "CONTEXT_MARKER"
+    }
+  ]
+}

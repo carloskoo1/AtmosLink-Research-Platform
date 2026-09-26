@@ -16,7 +16,8 @@
       "status": "SCREENED_OUT",
       "failed_gate": "temporal_cycle_control",
       "reason": "Association was not stable after trend and diurnal-cycle screening."
-    },    {
+    },
+    {
       "candidate_id": "RFATM-0003",
       "pattern": "Cold-humid-calm atmospheric regime associated with degraded RF state",
       "status": "SCREENED_OUT",
@@ -29,6 +30,20 @@
       "status": "SCREENED_OUT",
       "failed_gate": "strict_temporal_direction",
       "reason": "Block-level enrichment was robust across many thresholds, but RF drops were not more frequent after atmospheric transitions than before them."
+    },
+    {
+      "candidate_id": "RFATM-0005",
+      "pattern": "Lower 60-minute SJ01 humidity variability before RF-quality drops relative to same-clock controls",
+      "status": "SCREENED_OUT",
+      "failed_gate": "matched_trajectory_screening",
+      "reason": "The signal preserved sign but failed FDR replication, post-event negative control, and characterization control-support requirements."
+    },
+    {
+      "candidate_id": "RFATM-0006",
+      "pattern": "Rapid warming and drying transition at SJ01 followed by apparent RF degradation enrichment",
+      "status": "SCREENED_OUT",
+      "failed_gate": "strict_pre_post_temporal_direction",
+      "reason": "Block-level enrichment did not preserve temporal ordering: discovery had more RF entries before than after the atmospheric transition."
     }
   ],
   "frozen_hypotheses": 0,

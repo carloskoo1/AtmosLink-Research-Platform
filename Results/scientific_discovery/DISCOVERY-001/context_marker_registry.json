@@ -1,0 +1,23 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "validation_accessed": false,
+  "markers": [
+    {
+      "marker_id": "CTX-0001",
+      "status": "INTERNAL_CONTEXT_MARKER",
+      "feature": "sj01_local_hum_avg_pct__std60",
+      "description": "Lower 60-minute SJ01 relative-humidity variability around RF-quality drop episodes compared with same-clock controls.",
+      "development_evidence": {
+        "rf_drop_events_total": 152,
+        "rf_drop_events_by_fold": [40, 33, 52, 27],
+        "sign_consistency_folds": "4/4",
+        "combined_pre_q": 0.001268349571009381,
+        "pooled_pre_median_difference": -0.6332922425088866,
+        "pooled_post_median_difference": -0.46120438175982054,
+        "pooled_post_p": 0.02015481691094503
+      },
+      "interpretation": "Persistent environmental regime marker, not a directional precursor, because the difference remains detectable after RF events.",
+      "claim_limit": "May describe an internally reproducible context association only. It must not be described as causal, predictive, validated, or externally replicated."
+    }
+  ]
+}

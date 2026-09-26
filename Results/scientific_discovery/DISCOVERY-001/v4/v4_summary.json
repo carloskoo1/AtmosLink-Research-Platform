@@ -1,0 +1,54 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "4.0-matched-trajectory",
+  "validation_accessed": false,
+  "external_replication_accessed": false,
+  "rf_drop_quantile": 0.075,
+  "rf_drop_threshold": -0.4496635864921984,
+  "rf_drop_events": {
+    "discovery": 101,
+    "characterization": 25
+  },
+  "features_screened": 18,
+  "features_same_sign": 9,
+  "features_fdr_pass_both": 0,
+  "features_all_gates": 0,
+  "candidate": {
+    "candidate_id": "RFATM-0005",
+    "candidate_pattern": "Matched same-clock atmospheric trajectory associated with subsequent RF-quality drop",
+    "selected_exploratory_feature": "sj01_local_hum_avg_pct__std60",
+    "selection_rule": "lowest worst FDR q-value among features preserving effect sign across discovery and characterization",
+    "discovery": {
+      "n_events": 80,
+      "median_controls_per_event": 3.0,
+      "pre_median_difference": -0.5897073657170535,
+      "pre_p": 0.013690178076463074,
+      "pre_q": 0.12321160268816767,
+      "post_median_difference": -0.6142380977110082,
+      "post_p": 0.019253392752083376
+    },
+    "characterization": {
+      "n_events": 12,
+      "median_controls_per_event": 1.0,
+      "pre_median_difference": -1.214534240512732,
+      "pre_p": 0.17626953125,
+      "pre_q": 0.9429408482142857,
+      "post_median_difference": -0.5064080846534514,
+      "post_p": 0.2333984375
+    },
+    "gates": {
+      "same_sign": true,
+      "fdr_pass_both": false,
+      "post_negative_control_pass": false,
+      "control_support_pass": false
+    },
+    "status": "SCREENED_OUT",
+    "failed_gates": [
+      "fdr_pass_both",
+      "post_negative_control_pass",
+      "control_support_pass"
+    ],
+    "reason": "Candidate did not satisfy: fdr_pass_both, post_negative_control_pass, control_support_pass"
+  },
+  "hypothesis_ready": false
+}
