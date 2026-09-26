@@ -62,3 +62,24 @@ No 'first' claim is authorized until these searches are completed and documented
 - Wu R., Keogh E. **Current Time Series Anomaly Detection Benchmarks are Flawed and are Creating the Illusion of Progress.** IEEE TKDE 35(3), 2023; DOI: 10.1109/TKDE.2021.3112126. Consequence: ASDE should emphasize benchmark design validity, full-grid reporting and morphology stress rather than headline recovery alone.
 - Carmona C.U. et al. **Neural Contextual Anomaly Detection for Time Series.** arXiv:2107.07702, 2021. Uses synthetic anomaly injection to learn anomaly boundaries. Consequence: synthetic injection is established methodology and is not itself an ASDE novelty.
 - Lavin A., Ahmad S. **Evaluating Real-Time Anomaly Detection Algorithms — The Numenta Anomaly Benchmark.** ICMLA 2015. Establishes controlled benchmarking of streaming anomaly detectors on real time-series backgrounds. Consequence: ASDE's novelty must lie in scientific-hypothesis screening and provenance constraints, not in benchmarking anomalies on time series.
+
+### Targeted cross-domain search — 2026-09-26
+Queries were run specifically for the intersection of scientific-discovery agents with wireless/RF time series, including combinations of `scientific discovery`, `hypothesis generation`, `agentic`, `wireless`, `radio`, `RSSI`, `SNR`, and `time series`.
+
+Observed result families:
+- general LLM/agentic scientific-discovery surveys and curated bibliographies;
+- automated hypothesis-generation and validation frameworks;
+- scientific-equation discovery agents;
+- wireless resource-management agents using RSSI;
+- supervised or digital-twin radio anomaly detection;
+- Earth-science agentic-discovery roadmaps.
+
+No directly matching primary work was identified in this targeted web search that simultaneously reports all of the following: open/bounded scientific hypothesis search over operational environmental–RF telemetry, explicit adaptive-analysis accounting, temporal-direction falsification for autocorrelated events, scientific-state ontology, analytically protected holdout, and auditable provenance with quantitative false-positive/recovery benchmarks.
+
+**Interpretation limit:** this is negative search evidence only. It is not proof of absence and does not authorize a `first` claim. IEEE Xplore/Scopus/Web of Science structured searches and backward/forward citation chasing remain required before submission.
+
+Additional adjacent sources surfaced:
+- `Towards agentic science for advancing scientific discovery`, Nature Machine Intelligence 2025, DOI 10.1038/s42256-025-01110-x — broad responsible-agentic-science framing.
+- `AI-Generated Hypotheses and the Emergence of Autonomous Scientific Discovery`, ACS Materials Letters 2026 — hypothesis-driven autonomous discovery perspective.
+- `Anomaly detection using machine learning and adopted digital twin concepts in radio environments`, Scientific Reports 2025, DOI 10.1038/s41598-025-02759-5 — radio anomaly detection with simulated data and RSSI/SNR features, but not scientific-hypothesis workflow validation.
+- `Automated Scientific Discovery: From Equation Discovery to Autonomous Discovery Systems`, arXiv:2305.02251 — broad automated-discovery survey and autonomy framing.

@@ -3,11 +3,14 @@
 ## Target
 IEEE Access — Methods manuscript (primary option). The paper focuses on a new auditable scientific-discovery workflow and its quantitative validation. The natural-link analysis is a case study, not the primary causal claim.
 
-## Working title
-**ASDE: An Auditable AI-Assisted Scientific Discovery Engine for Atmospheric–Radioelectric Pattern Screening in a Rural High-Altitude 6 GHz Link**
+## Conditional title policy
+**Title A — only if the blinded AI-contribution pilot passes the preregistered title-retention rule:**  
+**ASDE: An Auditable AI-Assisted Scientific Discovery Workflow for Long-Duration Environmental–Radio Telemetry**
 
-## Alternative shorter title
-**Auditable AI-Assisted Scientific Discovery for Long-Duration 6 GHz Wireless Measurements**
+**Title B — default if incremental AI utility is not demonstrated:**  
+**ASDE: An Auditable Scientific Discovery Workflow for Long-Duration Environmental–Radio Telemetry**
+
+The title decision is intentionally deferred until blinded human scoring is complete. The statistical method, benchmarks and natural-data case study do not depend on that outcome.
 
 ## Draft abstract
 Long-duration wireless measurement campaigns create opportunities for AI-assisted scientific discovery, but serial dependence, multiple testing, sensor artifacts, adaptive data reuse, and post hoc hypothesis formation can convert exploratory associations into unreliable scientific claims. This paper presents the AtmosLink Scientific Discovery Engine (ASDE), an auditable human-in-the-loop workflow for atmospheric–radioelectric pattern discovery in operational wireless telemetry. The AI component is restricted to candidate formulation, mechanistic alternatives, confounder identification, and structured criticism; numerical evidence, multiplicity control, candidate promotion, and validation gates are executed by deterministic versioned procedures. ASDE combines quality-control-based feature eligibility, temporally blocked development analysis, event-level independence, pre/post directionality, multiplicity correction, pattern ontology, immutable provenance, hypothesis freezing, and an analytically isolated real-data holdout. The framework is evaluated on the background of a rural high-altitude 6 GHz link. In natural development data, six apparently promising atmospheric–RF candidates were screened out, and one additional association remained only an outcome-definition-sensitive context signal. A frozen known-driver benchmark first evaluated the screening gate, yielding a family-wise false-positive rate of 2.5% and 94–100% recovery for 1.0 robust-SD joint RF effects at 15–60 min lags. More importantly, a post-freeze hidden-driver benchmark required ASDE to recover the planted atmospheric driver from four competing prespecified hypotheses. Its library-wide null false-positive rate was 2.0% (95% CI: 1.30–3.07%). For 1.0 robust-SD effects, exact-driver selection was 85.3%, 79.0%, and 21.3% at 15, 30, and 60 min, while unique top-1 ranking was 94.5%, 89.5%, and 59.5%, respectively. These results quantify both the operating envelope and the conservatism of the workflow: ASDE can often identify the most plausible candidate while refusing promotion when evidence is insufficient. The study validates a bounded discovery-and-screening process, not a natural atmospheric causal effect.
