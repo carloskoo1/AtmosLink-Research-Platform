@@ -1,0 +1,63 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "2.0",
+  "validation_accessed": false,
+  "prevalidation_snapshot_only": true,
+  "atmospheric_states_k": 4,
+  "rf_states_k": 3,
+  "degraded_rf_state": 0,
+  "discovery_state_rows": 2068,
+  "characterization_state_rows": 680,
+  "candidate_pairs_tested": 15,
+  "stable_candidates": 3,
+  "stable_candidate_definition": "same lift direction, characterization support >=30, min lift >=1.20",
+  "novelty_filter": "multivariate atmospheric state -> future RF state; known direct RF-control relations excluded by construction",
+  "physical_consistency": "fixed 7000/20 configuration; atmospheric representation excludes RF variables; temporal direction enforced",
+  "top_candidates": [
+    {
+      "atmospheric_state": 0,
+      "lag_minutes": 15,
+      "support_n_discovery": 1361,
+      "p_degraded_discovery": 0.13886847905951505,
+      "baseline_p_degraded_discovery": 0.09561567164179105,
+      "lift_discovery": 1.45236106879805,
+      "support_n_characterization": 387,
+      "p_degraded_characterization": 0.056847545219638244,
+      "baseline_p_degraded_characterization": 0.036414565826330535,
+      "lift_characterization": 1.5611210494931425,
+      "same_direction": true,
+      "min_lift": 1.45236106879805,
+      "stable_candidate": true
+    },
+    {
+      "atmospheric_state": 0,
+      "lag_minutes": 0,
+      "support_n_discovery": 1398,
+      "p_degraded_discovery": 0.1380543633762518,
+      "baseline_p_degraded_discovery": 0.09561567164179105,
+      "lift_discovery": 1.4438466101399212,
+      "support_n_characterization": 406,
+      "p_degraded_characterization": 0.06157635467980296,
+      "baseline_p_degraded_characterization": 0.036414565826330535,
+      "lift_characterization": 1.6909814323607426,
+      "same_direction": true,
+      "min_lift": 1.4438466101399212,
+      "stable_candidate": true
+    },
+    {
+      "atmospheric_state": 0,
+      "lag_minutes": 30,
+      "support_n_discovery": 1356,
+      "p_degraded_discovery": 0.140117994100295,
+      "baseline_p_degraded_discovery": 0.09561567164179105,
+      "lift_discovery": 1.4654291675660118,
+      "support_n_characterization": 380,
+      "p_degraded_characterization": 0.05,
+      "baseline_p_degraded_characterization": 0.036414565826330535,
+      "lift_characterization": 1.373076923076923,
+      "same_direction": true,
+      "min_lift": 1.373076923076923,
+      "stable_candidate": true
+    }
+  ]
+}

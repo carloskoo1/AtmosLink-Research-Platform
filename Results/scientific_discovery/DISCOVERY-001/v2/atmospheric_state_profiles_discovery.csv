@@ -1,0 +1,5 @@
+state,cu01_local_temp_avg_c,cu01_local_hum_avg_pct,cu01_local_press_hpa,sj01_local_temp_avg_c,sj01_local_hum_avg_pct,sj01_local_press_hpa,sj01_local_wind_speed_ms
+0,16.86,61.495000000000005,741.41,6.34,94.42,664.56,1.4
+1,23.61,39.9,741.12,12.32,57.63,664.66,7.4
+2,21.86,45.3,738.88,11.03,66.35,662.6,8.4
+3,23.675,40.41,739.095,11.41,63.125,663.51,6.5

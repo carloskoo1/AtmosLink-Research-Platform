@@ -1,0 +1,40 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "2.1-consensus-screen",
+  "validation_accessed": false,
+  "candidate_id": "RFATM-0003",
+  "candidate_name": "cold_humid_calm_atmospheric_regime",
+  "candidate_origin": "recurrent atmospheric state across k/seed ablations",
+  "operational_definition": {
+    "sj01_humidity_pct_min": 90,
+    "sj01_temperature_c_max": 8,
+    "sj01_wind_ms_max": 3,
+    "cu01_humidity_pct_min": 55,
+    "cu01_temperature_c_max": 19
+  },
+  "rf_degradation_definition": {
+    "metric": "mean robust-z across RSSI/SNR/MCS DL+UL",
+    "threshold": -2.2483025315886507,
+    "threshold_source": "10th percentile of D_discovery only"
+  },
+  "temporal_independence_screen": {
+    "block_minutes": 30,
+    "discovery": {
+      "risk_exposed": 0.25301204819277107,
+      "risk_unexposed": 0.12110726643598616,
+      "risk_ratio": 2.089156626506024,
+      "blocks_exposed": 83,
+      "blocks_unexposed": 289
+    },
+    "characterization": {
+      "risk_exposed": 0.029411764705882353,
+      "risk_unexposed": 0.12087912087912088,
+      "risk_ratio": 0.24331550802139038,
+      "blocks_exposed": 34,
+      "blocks_unexposed": 91
+    }
+  },
+  "same_direction_after_blocking": false,
+  "status": "SCREENED_OUT",
+  "reason": "Candidate failed temporal-independence replication in characterization."
+}
