@@ -245,6 +245,18 @@ The composite detector therefore has a clear operating envelope: it is highly se
 
 An exploratory multi-view extension attempted to address this weakness by testing global, RSSI, SNR, and MCS views under multiplicity correction across views and horizons. The empirical null detection rate remained low (0.024 over the registered exploratory null shifts), but recovery improved inconsistently: SNR-only perturbations improved at short lags, while some long-lag RSSI/SNR conditions collapsed and MCS-only recovery remained limited. The multi-view extension was therefore not adopted as the primary detector.
 
+A separately frozen **post-audit** RF stress test (v25) removed the fractional-MCS injection from a new experiment while leaving v12/v21/v23 intact. It applied a 2-dB reduction to RSSI and SNR for 15 min in both directions or in DL/UL alone, held encoded MCS at observed values, and recalibrated three outcome definitions on the same development background. Exact-driver selection over 400 conditional trials per cell was:
+
+| Injected direction / outcome | 15 min | 30 min | 60 min |
+|---|---:|---:|---:|
+| BOTH / analog BOTH | 0.6850 | 0.7825 | 0.1000 |
+| DL / analog BOTH | 0.6850 | 0.7125 | 0.0325 |
+| UL / analog BOTH | 0.6500 | 0.5525 | 0.0300 |
+| DL / analog DL | 0.5175 | 0.8550 | 0.1300 |
+| UL / analog UL | 0.6150 | 0.7375 | 0.2300 |
+
+The opposite-direction detector selected the planted driver in none of its conditional trials. Circular-shift surrogate selection was 19/1000 (BOTH), 8/1000 (DL) and 11/1000 (UL). The same four event families and one physical development background were reused, so these rates neither validate the field null nor demonstrate independent RF transportability. The 2-dB paired RSSI/SNR shift is a numerically admissible telemetry stress, not a calibrated propagation event or a complete adaptive-radio response. Recovery remains weak at 60 min and heterogeneous by planted driver.
+
 ## D. Hidden-Driver End-to-End Audit
 The hidden-driver audit is more demanding because the search procedure must choose among competing atmospheric hypotheses. Under 1000 joint circular-shift surrogate trials on the fixed development background, the four-driver library produced a library-wide selection rate of 0.020, with a conditional Wilson 95% Monte Carlo interval [0.0130, 0.0307].
 
@@ -354,7 +366,7 @@ Rather than normalize this heterogeneity away after seeing the audit, ASDE repor
 ## F. Morphology Robustness Defines an Operating Envelope
 The v15 stress test prevents a broad interpretation of the strong v12 numbers. The primary composite detector is well matched to coherent multi-metric degradation. When only one RF subsystem is perturbed, the composite quality representation dilutes the signal. The exploratory multi-view extension partly recovers some sparse effects but introduces a larger multiplicity burden and does not dominate the primary detector.
 
-This result argues against a single universal RF-degradation detector. A future ASDE version may use a preregistered family of physically interpretable RF views or hierarchical testing procedure, but such a redesign must be frozen and evaluated on new audit seeds or external data rather than tuned retrospectively on the current benchmark.
+The v25 analog stress also shows that a 2-dB direction-specific change has materially different recovery under the pooled and direction-specific scores, especially at 60 min. This result argues against a single universal RF-event detector. A future ASDE version may use a preregistered family of physically interpretable RF views or hierarchical testing procedure, but such a redesign must be frozen and evaluated on independent field episodes rather than tuned retrospectively on the current background.
 
 ## G. What the AI Layer Does—and Does Not Do
 ASDE is intentionally AI-assisted rather than AI-authoritative. The language model does not compute the reported p-values, confidence intervals, event counts, or benchmark metrics. It cannot alter the holdout, thresholds, multiplicity corrections, or candidate state.
@@ -378,7 +390,7 @@ Third, the v21 hidden-driver benchmark is bounded to four prespecified atmospher
 
 Fourth, candidate event families remain temporally related. The final library satisfies the registered overlap rule, but the maximum pairwise overlap lies close to the admissibility boundary. Unique attribution may become harder in richer libraries with more strongly coupled atmospheric variables.
 
-Fifth, the primary RF outcome is a composite of RSSI, SNR, and encoded MCS. Its equal-weight standardization and fractional MCS injections are mathematical constructs, not a physical link-quality or propagation model. Post-audit morphology testing demonstrates reduced sensitivity to sparse subsystem-specific perturbations, and real-data outcome sensitivity shows that at least one exploratory context association depends on the RF event definition. The development snapshot does not contain transmit power, interference spectrum, retries, firmware, or association history needed to exclude operational explanations. A fresh protocol must verify the MCS mapping and test physically admissible, component-specific perturbations before claiming sensitivity to natural radio degradation.
+Fifth, the primary RF outcome is a composite of RSSI, SNR, and encoded MCS. Its equal-weight standardization and fractional MCS injections are mathematical constructs, not a physical link-quality or propagation model. Post-audit morphology testing demonstrates reduced sensitivity to sparse subsystem-specific perturbations, and real-data outcome sensitivity shows that at least one exploratory context association depends on the RF event definition. The reduced analysis snapshot omits operational covariates. A read-only match to the source export found AP Tx power fixed at 10 dBm (2,860/2,860), SM Tx power at 3 dBm (2,858/2,860 available), and dual-link status in 2,858/2,860 rows. Interference, antenna alignment, maintenance history and path conditions remain unmeasured, so operational and propagation explanations cannot be excluded. The frozen v25 post-audit analog stress avoids fractional MCS values and quantifies direction-specific sensitivity, but holds MCS fixed and is not a radio adaptation or propagation model. Vendor mapping of the 1xx/2xx codes, operational interference and independent field validation are still needed before claiming sensitivity to natural radio degradation.
 
 Sixth, the 1,000 circular-shift trials sample a finite orbit of 3,132 admissible offsets on a 3,276-bin development grid with 418 bins missing at least one required variable. The post-audit exhaustive orbit check confirms the Monte Carlo estimate within this scheme but cannot establish stationarity, exchangeability, or valid binomial event-level p-values. Wilson intervals quantify simulation variation conditional on one background, not physical-sampling uncertainty. Null families based on independently adjudicated stable field episodes and dependence-aware surrogates are needed before asserting general Type-I error control; they must be specified without tuning to these results.
 

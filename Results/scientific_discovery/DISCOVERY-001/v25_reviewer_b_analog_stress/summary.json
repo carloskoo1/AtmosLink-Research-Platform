@@ -1,0 +1,77 @@
+{
+  "status": "post-audit RF morphology diagnostic; conditional on one development background",
+  "commit": "35623bc8925259826ec33fdfd8621696f97c2e2e",
+  "source_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "protocol_sha256": "8a55cba37fcb1bc99f9a20a2a184d9d137fe264b1b912779178d09983c031118",
+  "n_development_rows": 2860,
+  "n_grid_bins": 3276,
+  "n_injected": 10800,
+  "n_null": 3000,
+  "reference": {
+    "BOTH": {
+      "features": [
+        "dl_rssi_dbm",
+        "ul_rssi_dbm",
+        "dl_snr_db",
+        "ul_snr_db"
+      ],
+      "median": [
+        -74.0,
+        -80.0,
+        23.0,
+        18.0
+      ],
+      "scale": [
+        0.7412898443291327,
+        0.7412898443291327,
+        0.7412898443291327,
+        1.4826
+      ],
+      "drop_threshold": -0.6745000000000001,
+      "baseline_rf_events": 161
+    },
+    "DL": {
+      "features": [
+        "dl_rssi_dbm",
+        "dl_snr_db"
+      ],
+      "median": [
+        -74.0,
+        23.0
+      ],
+      "scale": [
+        0.7412898443291327,
+        0.7412898443291327
+      ],
+      "drop_threshold": -1.349,
+      "baseline_rf_events": 234
+    },
+    "UL": {
+      "features": [
+        "ul_rssi_dbm",
+        "ul_snr_db"
+      ],
+      "median": [
+        -80.0,
+        18.0
+      ],
+      "scale": [
+        0.7412898443291327,
+        1.4826
+      ],
+      "drop_threshold": -1.0117453797382976,
+      "baseline_rf_events": 171
+    }
+  },
+  "null_selection": {
+    "BOTH": 0.019,
+    "DL": 0.008,
+    "UL": 0.011
+  },
+  "limitations": [
+    "fixed field background",
+    "post-v21 design",
+    "surrogate null uncalibrated",
+    "unverified natural propagation and operational mechanisms"
+  ]
+}
