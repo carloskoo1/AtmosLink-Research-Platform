@@ -10,6 +10,7 @@
 - Partition manifest, adaptive-analysis ledger, holdout-isolation audit, manuscript Draft v1 and claim ledger.
 - Post-audit read-only diagnostic `scripts/audit_asde_reviewer_a_shift_orbit.py`; output `Results/scientific_discovery/DISCOVERY-001/reviewer_a_shift_orbit.json`.
 - Separately frozen post-audit RF-window observability protocol (`7afefe2`), runner and JSON diagnostic reported below.
+- Separately frozen paired-offset observation protocol (`eb25a18`), runner and JSON diagnostic reported below.
 - D_validation and external replication cohorts were not opened for this audit.
 
 ## Verified counts and comparisons
@@ -39,6 +40,26 @@ Over all 3,132 historical circular offsets, M1 and M3 select at 50 offsets each 
 
 The diagnostic checks the calculability of RF-drop differences inside each event window. It does not fully model detector refractory-state history, adaptive threshold selection, or missingness mechanisms. A valid repair would specify the observation policy *before* a new evaluation, retain adequate event support, and calibrate the directional null on independently justified physical temporal blocks. Historical v23 results remain unchanged and conditional on their original policy.
 
+## Paired-offset observation sensitivity
+
+The alternative observation rule was frozen at commit `eb25a18` before execution. It requires finite RF detector differences at matched pre/post offsets and at least half the horizon's offsets paired. Runner: `scripts/audit_asde_reviewer_a_paired_observation.py`; result: `Results/scientific_discovery/DISCOVERY-001/reviewer_a_paired_observation.json` (SHA-256 `12ea0b2f5ec5dfede22145cae6e102338dde59a2fde841cccb6216025aa12de4`). It uses the same development background and historical injection seeds, so is a post-audit sensitivity, not independent replication.
+
+This rule retains **20–28** driver events per driver/horizon, versus **3–21** under the strict complete-window rule. It has fewer than eight discordant events in **3/12** natural-background cells, versus 11/12 with complete windows and 2/12 historically. No natural-background driver is selected by M1/M2/M3 under either the original or paired policy.
+
+| Metric | Historical | Paired observation |
+|---|---:|---:|
+| M1/M2/M3 selected circular offsets, each / 3,132 | 50 | 47 |
+| Shared selected offsets | — | 22 |
+| Offsets with changed selected-driver sets | — | 53 |
+| Shifted driver–horizon cells below eight discordants / 37,584 | 6,856 | 9,029 |
+| 1.0-unit exact/exclusive planted truth, 15 min / 400 | 0.8500 | 0.8075 |
+| 1.0-unit exact/exclusive planted truth, 30 min / 400 | 0.8175 | 0.7450 |
+| 1.0-unit exact/exclusive planted truth, 60 min / 400 | 0.2100 | 0.0950 |
+
+The rerun reproduces the v23 historical M1/M3 injected rates of 0.8500/0.8175/0.2100 exactly. No distractor co-selection was observed in either of these post-audit 1.0-unit pooled cells. The paired rule addresses one concrete asymmetry in observation opportunity while preserving much more support than complete windows. Its nearly unchanged *aggregate* shift-orbit rate masks 53 changed decisions, and the substantial 60-min recovery loss is a real trade-off in this reused-seed diagnostic. None of these values calibrates the binomial null: serial dependence, weather/RF nonstationarity, detector refractory-state history and physical null validity remain unresolved.
+
+**Method decision:** retain v23 as historical conditional evidence; retain the paired rule as a candidate for a new prospectively frozen audit, not an adopted confirmatory replacement. Before new inference, define observation policy and null episodes independently of outcomes, collect enough eligible events per horizon/episode, and test calibration at the physical-block level. D_validation is not a repair set.
+
 ## Objection disposition
 
 | Objection | Severity at review | Resolution / residual boundary |
@@ -47,7 +68,7 @@ The diagnostic checks the calculability of RF-drop differences inside each event
 | Multiplicity attribution | Major | Confirmed: M0→M1 accounts for the observed change; M2/M3 add no selection benefit in 4,600 paired trials or the complete shift orbit. Full-stack efficacy claim prohibited. |
 | Circular-shift null validity | Major; fatal to an unconditional FWER claim | Reframed as surrogate-null selection rate. Gaps, wraparound, nonstationarity, and pre/post asymmetry are not ruled out. No field-wide Type-I guarantee authorized. |
 | Binomial directional-test assumptions | Major | 360-min refractory spacing mitigates local repeats but does not prove independent, symmetric discordant events. Bonferroni is conditional on valid constituent p-values. |
-| RF observation eligibility | **Major, newly quantified** | The original test counts atmospheric events with incompletely observed pre/post RF windows. A strict complete-window sensitivity changes the M1/M3 finite-orbit selections 50→4, primarily because support collapses. No post-hoc substitution or false-positive improvement claim is authorized. |
+| RF observation eligibility | **Major, newly quantified** | The original test counts atmospheric events with incompletely observed pre/post RF windows. A strict complete-window sensitivity changes M1/M3 orbit selections 50→4 while collapsing support. A paired-offset rule retains support and changes the orbit to 47 selections, but only 22 offsets overlap and 60-min planted-truth recovery drops 0.210→0.095. Neither post-hoc alternative may replace v23 or establish field calibration. |
 | Wilson interval interpretation | Major | Manuscript now labels intervals conditional Monte Carlo; no between-episode/link confidence claim. |
 | Adaptive library selection and v21/v23 reuse | Major | Ledger records development reuse; post-freeze seeds test a frozen library on the same physical background. Both audits remain conditional; no external-replication claim. |
 | Weak long-lag and driver-specific power | Major | Results stratified; 1.0-SD/60-min rates can be as low as 2%. Aggregate recovery is not a universal detection claim. |
@@ -74,6 +95,7 @@ Run the frozen v23 verifier, then the separate post-audit diagnostics:
 python3 scripts/verify_discovery_001_v23_audit.py
 python3 scripts/audit_asde_reviewer_a_shift_orbit.py
 python3 scripts/audit_asde_reviewer_a_observability.py
+python3 scripts/audit_asde_reviewer_a_paired_observation.py
 ```
 
 Each diagnostic writes only its own JSON output. It does not change the frozen v23 artifacts.

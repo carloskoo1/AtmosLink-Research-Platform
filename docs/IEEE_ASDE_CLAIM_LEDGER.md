@@ -40,6 +40,8 @@ A manuscript claim is allowed only if it maps to a versioned artifact and stays 
 
 | C31 | Post-audit RF-window observability sensitivity | Protocol commit `7afefe2`, `scripts/audit_asde_reviewer_a_observability.py`, `reviewer_a_observability.json` SHA-256 `d482bc1049c08bc2556e503f0b7c33bedac75e070c648c5bf8d06d682de4c8ec` | "With a strict complete-window rule on the original development background, 11/12 natural driver/horizon cells had <8 discordant events; over 3,132 historical shifts M1/M3 selected at 4 offsets rather than 50, with two shared offsets. This reflects major support and observation-policy sensitivity." | Treat 4/3132 as a superior field Type-I rate, replace historical v23 results post hoc, infer original anti-conservatism, or call the orbit a valid physical null |
 
+| C32 | Post-audit paired-offset RF observation sensitivity | Frozen protocol `eb25a18`, `scripts/audit_asde_reviewer_a_paired_observation.py`, `reviewer_a_paired_observation.json` SHA-256 `12ea0b2f5ec5dfede22145cae6e102338dde59a2fde841cccb6216025aa12de4` | "Matching RF-observable pre/post offsets retained 20–28 driver events/cell, produced 47/3132 M1/M3 shift-orbit selections (22 overlapping the original 50), and changed reused-seed 1.0-unit exact selection at 15/30/60 min from 0.850/0.8175/0.210 to 0.8075/0.745/0.095." | Treat similar orbit totals as equivalence, claim a validated field null or independent replication, or silently replace v23 primary rates |
+
 ## Manuscript enforcement
 Before submission, every sentence in Abstract, Contributions, Results conclusions, Discussion and Conclusion that contains a quantitative, causal, novelty, validation or generalization claim must map to one or more Claim IDs above.
 

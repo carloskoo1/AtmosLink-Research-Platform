@@ -1,0 +1,887 @@
+{
+  "classification": "post-audit observation-policy sensitivity; no field null calibration",
+  "source_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "protocol_sha256": "6951ce64c1ebb1dcb221af4b8e8a9c30d7578dc7894c6319a470c808a16bfb6b",
+  "script_sha256": "dc108b74de2a0139d97e4dc570fe74ff24fca69835edeaa06d67fcefaa8d84ad",
+  "grid_bins": 3276,
+  "observable_detector_bins": 2753,
+  "rf_events": 158,
+  "natural_historical": {
+    "cu01_local_temp_avg_c__rise": {
+      "30": {
+        "original_n": 23,
+        "retained_n": 23,
+        "post_only": 10,
+        "pre_only": 2,
+        "discordant": 12,
+        "p": 0.019287109375,
+        "positive_folds": 3
+      },
+      "60": {
+        "original_n": 23,
+        "retained_n": 23,
+        "post_only": 7,
+        "pre_only": 2,
+        "discordant": 9,
+        "p": 0.08984375,
+        "positive_folds": 3
+      },
+      "120": {
+        "original_n": 23,
+        "retained_n": 23,
+        "post_only": 8,
+        "pre_only": 2,
+        "discordant": 10,
+        "p": 0.0546875,
+        "positive_folds": 4
+      }
+    },
+    "sj01_local_temp_avg_c__fall": {
+      "30": {
+        "original_n": 28,
+        "retained_n": 28,
+        "post_only": 9,
+        "pre_only": 3,
+        "discordant": 12,
+        "p": 0.072998046875,
+        "positive_folds": 2
+      },
+      "60": {
+        "original_n": 28,
+        "retained_n": 28,
+        "post_only": 11,
+        "pre_only": 7,
+        "discordant": 18,
+        "p": 0.2403411865234375,
+        "positive_folds": 2
+      },
+      "120": {
+        "original_n": 28,
+        "retained_n": 28,
+        "post_only": 4,
+        "pre_only": 2,
+        "discordant": 6,
+        "p": 0.34375,
+        "positive_folds": 2
+      }
+    },
+    "sj01_local_hum_avg_pct__fall": {
+      "30": {
+        "original_n": 28,
+        "retained_n": 28,
+        "post_only": 7,
+        "pre_only": 4,
+        "discordant": 11,
+        "p": 0.2744140625,
+        "positive_folds": 2
+      },
+      "60": {
+        "original_n": 28,
+        "retained_n": 28,
+        "post_only": 8,
+        "pre_only": 8,
+        "discordant": 16,
+        "p": 0.5981903076171875,
+        "positive_folds": 1
+      },
+      "120": {
+        "original_n": 28,
+        "retained_n": 28,
+        "post_only": 6,
+        "pre_only": 7,
+        "discordant": 13,
+        "p": 0.70947265625,
+        "positive_folds": 0
+      }
+    },
+    "sj01_local_press_hpa__rise": {
+      "30": {
+        "original_n": 28,
+        "retained_n": 28,
+        "post_only": 3,
+        "pre_only": 5,
+        "discordant": 8,
+        "p": 0.85546875,
+        "positive_folds": 1
+      },
+      "60": {
+        "original_n": 28,
+        "retained_n": 28,
+        "post_only": 3,
+        "pre_only": 6,
+        "discordant": 9,
+        "p": 0.91015625,
+        "positive_folds": 1
+      },
+      "120": {
+        "original_n": 28,
+        "retained_n": 28,
+        "post_only": 3,
+        "pre_only": 4,
+        "discordant": 7,
+        "p": 0.7734375,
+        "positive_folds": 1
+      }
+    }
+  },
+  "natural_paired": {
+    "cu01_local_temp_avg_c__rise": {
+      "30": {
+        "original_n": 23,
+        "retained_n": 21,
+        "median_paired_offsets": 6.0,
+        "unequal_raw_coverage": 6,
+        "post_only": 8,
+        "pre_only": 2,
+        "discordant": 10,
+        "p": 0.0546875,
+        "positive_folds": 3
+      },
+      "60": {
+        "original_n": 23,
+        "retained_n": 20,
+        "median_paired_offsets": 10.0,
+        "unequal_raw_coverage": 14,
+        "post_only": 4,
+        "pre_only": 2,
+        "discordant": 6,
+        "p": 0.34375,
+        "positive_folds": 3
+      },
+      "120": {
+        "original_n": 23,
+        "retained_n": 20,
+        "median_paired_offsets": 21.0,
+        "unequal_raw_coverage": 13,
+        "post_only": 5,
+        "pre_only": 2,
+        "discordant": 7,
+        "p": 0.2265625,
+        "positive_folds": 3
+      }
+    },
+    "sj01_local_temp_avg_c__fall": {
+      "30": {
+        "original_n": 28,
+        "retained_n": 27,
+        "median_paired_offsets": 6.0,
+        "unequal_raw_coverage": 6,
+        "post_only": 8,
+        "pre_only": 3,
+        "discordant": 11,
+        "p": 0.11328125,
+        "positive_folds": 2
+      },
+      "60": {
+        "original_n": 28,
+        "retained_n": 26,
+        "median_paired_offsets": 10.0,
+        "unequal_raw_coverage": 21,
+        "post_only": 10,
+        "pre_only": 5,
+        "discordant": 15,
+        "p": 0.15087890624999997,
+        "positive_folds": 2
+      },
+      "120": {
+        "original_n": 28,
+        "retained_n": 24,
+        "median_paired_offsets": 20.5,
+        "unequal_raw_coverage": 24,
+        "post_only": 4,
+        "pre_only": 1,
+        "discordant": 5,
+        "p": 0.1875,
+        "positive_folds": 2
+      }
+    },
+    "sj01_local_hum_avg_pct__fall": {
+      "30": {
+        "original_n": 28,
+        "retained_n": 25,
+        "median_paired_offsets": 6.0,
+        "unequal_raw_coverage": 10,
+        "post_only": 5,
+        "pre_only": 4,
+        "discordant": 9,
+        "p": 0.5,
+        "positive_folds": 2
+      },
+      "60": {
+        "original_n": 28,
+        "retained_n": 25,
+        "median_paired_offsets": 10.5,
+        "unequal_raw_coverage": 15,
+        "post_only": 6,
+        "pre_only": 7,
+        "discordant": 13,
+        "p": 0.70947265625,
+        "positive_folds": 1
+      },
+      "120": {
+        "original_n": 28,
+        "retained_n": 24,
+        "median_paired_offsets": 20.0,
+        "unequal_raw_coverage": 21,
+        "post_only": 4,
+        "pre_only": 6,
+        "discordant": 10,
+        "p": 0.828125,
+        "positive_folds": 0
+      }
+    },
+    "sj01_local_press_hpa__rise": {
+      "30": {
+        "original_n": 28,
+        "retained_n": 26,
+        "median_paired_offsets": 6.0,
+        "unequal_raw_coverage": 10,
+        "post_only": 3,
+        "pre_only": 5,
+        "discordant": 8,
+        "p": 0.85546875,
+        "positive_folds": 1
+      },
+      "60": {
+        "original_n": 28,
+        "retained_n": 28,
+        "median_paired_offsets": 10.5,
+        "unequal_raw_coverage": 16,
+        "post_only": 4,
+        "pre_only": 6,
+        "discordant": 10,
+        "p": 0.828125,
+        "positive_folds": 1
+      },
+      "120": {
+        "original_n": 28,
+        "retained_n": 26,
+        "median_paired_offsets": 20.5,
+        "unequal_raw_coverage": 21,
+        "post_only": 5,
+        "pre_only": 3,
+        "discordant": 8,
+        "p": 0.36328125,
+        "positive_folds": 3
+      }
+    }
+  },
+  "natural_selected_historical": {
+    "M1": [],
+    "M2": [],
+    "M3": []
+  },
+  "natural_selected_paired": {
+    "M1": [],
+    "M2": [],
+    "M3": []
+  },
+  "natural_below_8_cells": {
+    "historical": 2,
+    "paired": 3
+  },
+  "orbit_offsets": 3132,
+  "orbit_selection": {
+    "M1": {
+      "historical": 50,
+      "paired": 47,
+      "both": 22,
+      "changed": 53
+    },
+    "M2": {
+      "historical": 50,
+      "paired": 47,
+      "both": 22,
+      "changed": 53
+    },
+    "M3": {
+      "historical": 50,
+      "paired": 47,
+      "both": 22,
+      "changed": 53
+    }
+  },
+  "orbit_below_8_cells": {
+    "historical": 6856,
+    "paired": 9029
+  },
+  "injection_1_reference_unit": {
+    "historical": {
+      "M1": {
+        "15": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 340,
+            "exclusive_truth": 340,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.85,
+            "exclusive_truth_rate": 0.85,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 100,
+            "exclusive_truth": 100,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 1.0,
+            "exclusive_truth_rate": 1.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 100,
+            "exclusive_truth": 100,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 1.0,
+            "exclusive_truth_rate": 1.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 100,
+            "exclusive_truth": 100,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 1.0,
+            "exclusive_truth_rate": 1.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 40,
+            "exclusive_truth": 40,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.4,
+            "exclusive_truth_rate": 0.4,
+            "distractor_coselected_rate": 0.0
+          }
+        },
+        "30": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 327,
+            "exclusive_truth": 327,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.8175,
+            "exclusive_truth_rate": 0.8175,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 100,
+            "exclusive_truth": 100,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 1.0,
+            "exclusive_truth_rate": 1.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 99,
+            "exclusive_truth": 99,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.99,
+            "exclusive_truth_rate": 0.99,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 96,
+            "exclusive_truth": 96,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.96,
+            "exclusive_truth_rate": 0.96,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 32,
+            "exclusive_truth": 32,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.32,
+            "exclusive_truth_rate": 0.32,
+            "distractor_coselected_rate": 0.0
+          }
+        },
+        "60": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 84,
+            "exclusive_truth": 84,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.21,
+            "exclusive_truth_rate": 0.21,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 49,
+            "exclusive_truth": 49,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.49,
+            "exclusive_truth_rate": 0.49,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 25,
+            "exclusive_truth": 25,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.25,
+            "exclusive_truth_rate": 0.25,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 2,
+            "exclusive_truth": 2,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.02,
+            "exclusive_truth_rate": 0.02,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 8,
+            "exclusive_truth": 8,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.08,
+            "exclusive_truth_rate": 0.08,
+            "distractor_coselected_rate": 0.0
+          }
+        }
+      },
+      "M3": {
+        "15": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 340,
+            "exclusive_truth": 340,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.85,
+            "exclusive_truth_rate": 0.85,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 100,
+            "exclusive_truth": 100,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 1.0,
+            "exclusive_truth_rate": 1.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 100,
+            "exclusive_truth": 100,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 1.0,
+            "exclusive_truth_rate": 1.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 100,
+            "exclusive_truth": 100,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 1.0,
+            "exclusive_truth_rate": 1.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 40,
+            "exclusive_truth": 40,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.4,
+            "exclusive_truth_rate": 0.4,
+            "distractor_coselected_rate": 0.0
+          }
+        },
+        "30": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 327,
+            "exclusive_truth": 327,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.8175,
+            "exclusive_truth_rate": 0.8175,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 100,
+            "exclusive_truth": 100,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 1.0,
+            "exclusive_truth_rate": 1.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 99,
+            "exclusive_truth": 99,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.99,
+            "exclusive_truth_rate": 0.99,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 96,
+            "exclusive_truth": 96,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.96,
+            "exclusive_truth_rate": 0.96,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 32,
+            "exclusive_truth": 32,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.32,
+            "exclusive_truth_rate": 0.32,
+            "distractor_coselected_rate": 0.0
+          }
+        },
+        "60": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 84,
+            "exclusive_truth": 84,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.21,
+            "exclusive_truth_rate": 0.21,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 49,
+            "exclusive_truth": 49,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.49,
+            "exclusive_truth_rate": 0.49,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 25,
+            "exclusive_truth": 25,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.25,
+            "exclusive_truth_rate": 0.25,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 2,
+            "exclusive_truth": 2,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.02,
+            "exclusive_truth_rate": 0.02,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 8,
+            "exclusive_truth": 8,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.08,
+            "exclusive_truth_rate": 0.08,
+            "distractor_coselected_rate": 0.0
+          }
+        }
+      }
+    },
+    "paired": {
+      "M1": {
+        "15": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 323,
+            "exclusive_truth": 323,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.8075,
+            "exclusive_truth_rate": 0.8075,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 95,
+            "exclusive_truth": 95,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.95,
+            "exclusive_truth_rate": 0.95,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 99,
+            "exclusive_truth": 99,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.99,
+            "exclusive_truth_rate": 0.99,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 88,
+            "exclusive_truth": 88,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.88,
+            "exclusive_truth_rate": 0.88,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 41,
+            "exclusive_truth": 41,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.41,
+            "exclusive_truth_rate": 0.41,
+            "distractor_coselected_rate": 0.0
+          }
+        },
+        "30": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 298,
+            "exclusive_truth": 298,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.745,
+            "exclusive_truth_rate": 0.745,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 99,
+            "exclusive_truth": 99,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.99,
+            "exclusive_truth_rate": 0.99,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 98,
+            "exclusive_truth": 98,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.98,
+            "exclusive_truth_rate": 0.98,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 80,
+            "exclusive_truth": 80,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.8,
+            "exclusive_truth_rate": 0.8,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 21,
+            "exclusive_truth": 21,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.21,
+            "exclusive_truth_rate": 0.21,
+            "distractor_coselected_rate": 0.0
+          }
+        },
+        "60": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 38,
+            "exclusive_truth": 38,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.095,
+            "exclusive_truth_rate": 0.095,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 0,
+            "exclusive_truth": 0,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.0,
+            "exclusive_truth_rate": 0.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 22,
+            "exclusive_truth": 22,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.22,
+            "exclusive_truth_rate": 0.22,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 0,
+            "exclusive_truth": 0,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.0,
+            "exclusive_truth_rate": 0.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 16,
+            "exclusive_truth": 16,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.16,
+            "exclusive_truth_rate": 0.16,
+            "distractor_coselected_rate": 0.0
+          }
+        }
+      },
+      "M3": {
+        "15": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 323,
+            "exclusive_truth": 323,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.8075,
+            "exclusive_truth_rate": 0.8075,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 95,
+            "exclusive_truth": 95,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.95,
+            "exclusive_truth_rate": 0.95,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 99,
+            "exclusive_truth": 99,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.99,
+            "exclusive_truth_rate": 0.99,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 88,
+            "exclusive_truth": 88,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.88,
+            "exclusive_truth_rate": 0.88,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 41,
+            "exclusive_truth": 41,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.41,
+            "exclusive_truth_rate": 0.41,
+            "distractor_coselected_rate": 0.0
+          }
+        },
+        "30": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 298,
+            "exclusive_truth": 298,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.745,
+            "exclusive_truth_rate": 0.745,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 99,
+            "exclusive_truth": 99,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.99,
+            "exclusive_truth_rate": 0.99,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 98,
+            "exclusive_truth": 98,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.98,
+            "exclusive_truth_rate": 0.98,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 80,
+            "exclusive_truth": 80,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.8,
+            "exclusive_truth_rate": 0.8,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 21,
+            "exclusive_truth": 21,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.21,
+            "exclusive_truth_rate": 0.21,
+            "distractor_coselected_rate": 0.0
+          }
+        },
+        "60": {
+          "pooled": {
+            "trials": 400,
+            "truth_selected": 38,
+            "exclusive_truth": 38,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.095,
+            "exclusive_truth_rate": 0.095,
+            "distractor_coselected_rate": 0.0
+          },
+          "cu01_local_temp_avg_c__rise": {
+            "trials": 100,
+            "truth_selected": 0,
+            "exclusive_truth": 0,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.0,
+            "exclusive_truth_rate": 0.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_temp_avg_c__fall": {
+            "trials": 100,
+            "truth_selected": 22,
+            "exclusive_truth": 22,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.22,
+            "exclusive_truth_rate": 0.22,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_hum_avg_pct__fall": {
+            "trials": 100,
+            "truth_selected": 0,
+            "exclusive_truth": 0,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.0,
+            "exclusive_truth_rate": 0.0,
+            "distractor_coselected_rate": 0.0
+          },
+          "sj01_local_press_hpa__rise": {
+            "trials": 100,
+            "truth_selected": 16,
+            "exclusive_truth": 16,
+            "distractor_coselected": 0,
+            "truth_selected_rate": 0.16,
+            "exclusive_truth_rate": 0.16,
+            "distractor_coselected_rate": 0.0
+          }
+        }
+      }
+    }
+  },
+  "warning": "This matched-offset rule was frozen after v23; neither its shift orbit nor reused-seed injection is independent field validation."
+}
