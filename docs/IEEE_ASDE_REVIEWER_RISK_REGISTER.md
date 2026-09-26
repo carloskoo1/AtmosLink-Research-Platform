@@ -16,7 +16,8 @@ Every major claim is paired with the strongest plausible reviewer objection. A c
 | Risk | Likely reviewer objection | Current assessment | Required response |
 |---|---|---|---|
 | R8 Sensor artifacts | Weather sensor faults can create apparent physical transitions | **Demonstrated** | Show PRESS_JUMP example and QC eligibility rule; report excluded features and counts |
-| R9 Outcome construction | RF quality index averages heterogeneous RSSI/SNR/MCS variables | **Characterized, not resolved** | v16 shows CTX-0001 is outcome-definition-sensitive: present under all6/analog/UL-oriented definitions but absent under DL-only. Report this sensitivity and avoid asserting a unique physical degradation metric. |
+| R9 Outcome construction | RF quality index averages heterogeneous RSSI/SNR/MCS variables | **OPEN (Major), Reviewer B** | v16 shows CTX-0001 is outcome-definition-sensitive. The MCS export uses 1xx/2xx integer codes with unverified mapping, while injection yields fractional codes; DL MCS scale falls back to SD 5.893997. Treat benchmark as mathematical telemetry stress, verify MCS mapping, and preregister physically admissible and component-specific benchmarks before any natural RF sensitivity claim. |
+| R21 RF physical and operational attribution | The benchmark mimics a six-variable RF fade while missing operational controls and path meteorology | **OPEN (Major), Reviewer B** | See `IEEE_ASDE_REVIEWER_B_RF_AUDIT.md`: the 2,860-row development snapshot holds frequency/BW fixed but omits Tx power, interference, retries, association and firmware history; endpoint weather does not determine path propagation. No natural fade mechanism or causal attribution is authorized. |
 | R10 Event definition | 85th-percentile atmospheric driver and 180-min spacing were tuned during development | **Known** | Interpret the audit only under the frozen event-definition protocol because thresholds/spacing were selected during development before reserved audit seeds. Do not present those choices as universally optimal or externally validated. |
 | R11 Negative natural results | No natural precursor reached HYPOTHESIS/FROZEN status | **Not a defect** | Present candidate attrition as falsification case study; avoid marketing language implying a natural discovery occurred |
 | R12 Context marker interpretation | CTX-0001 may be post-event consequence or shared regime, not physical driver | **Controlled by ontology** | Keep label INTERNAL_CONTEXT_MARKER; no prediction/causality claim |
@@ -28,7 +29,9 @@ Every major claim is paired with the strongest plausible reviewer objection. A c
 ## Current publication gate
 **Full-draft ready:** yes. The method, known-driver audit, hidden-driver audit, failure-mode stress tests, reproducibility record and claim ledger are sufficient to draft the complete Methods manuscript without opening D_validation.
 
-**Submission-ready:** not yet. Before submission, the following remain mandatory:
+**Submission-ready:** not yet. Reviewer A and Reviewer B remain **OPEN (Major)**; the current conditional Methods framing does not close either objection. Before submission, the following remain mandatory:
+- resolve or explicitly adjudicate the independently justified temporal null and event-dependence calibration in Reviewer A;
+- resolve the encoded-MCS and physically admissible RF benchmark issues in Reviewer B;
 - complete the blinded two-reviewer AI utility pilot and apply the frozen title rule;
 - complete structured IEEE Xplore/Scopus/Web of Science searches plus citation chasing for the final novelty statement;
 - create a DOI-bearing immutable code/data artifact permitted for release;

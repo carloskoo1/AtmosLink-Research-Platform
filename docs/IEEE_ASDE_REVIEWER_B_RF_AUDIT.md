@@ -1,0 +1,28 @@
+# Reviewer B — RF/telecommunications audit
+
+**Date:** 2026-09-26. **Disposition:** **OPEN (Major)**. The primary synthetic benchmark is an algorithmic perturbation of telemetry; it is not yet a physically calibrated model of a 6 GHz radio fade. This audit inspected D_development only; D_validation and external configuration cohorts were not inspected.
+
+## Reproduced evidence
+
+- Source: `Results/scientific_discovery/DISCOVERY-001/prevalidation_7000_20.csv` (2,860 rows, 2026-09-01 18:30:52 to 2026-09-13 03:29:49 UTC). Every row reports 7000 MHz / 20 MHz; the 17-column analysis snapshot contains six RF metrics, seven local weather metrics, timestamp, configuration, and validity flag. It contains no transmit power, retries, interference spectrum, antenna wetness, alignment, throughput, firmware, association, or configuration-change history.
+- `scientific_discovery/synthetic_benchmark.py`: quality is the arithmetic mean of six separately standardized RSSI/SNR/MCS columns. The injected signal subtracts `effect_sd * scale` from **all six columns** for three 5-min bins at registered lags; this deliberately matches the composite detector's sign and morphology.
+- DL MCS observed codes: 103, 104, 106, 109, 201–206; UL MCS: 101–104, 200–203. The exact code semantics in this export have not been independently verified against Cambium's telemetry schema. The vendor specification describes adaptive MCS 0–13, so 101/204 must not be assumed to be linear physical MCS values.
+- The robust reference falls back to ordinary standard deviation when both MAD and IQR are zero. DL MCS median 204, MAD and IQR zero, fallback scale **5.893997**; UL MCS median 202 and scale **1.4826**. The DL scale is affected by rare 1xx codes; ordinary adjacent 203/204 changes are one code unit, while family changes are about 100.
+- At the registered 1.0-SD injection, DL code 204 becomes **198.106003** and UL code 202 becomes **200.5174**. Every injected MCS value is fractional if the original is an integer. Some DL 1xx codes become values below 100. These are mathematical values outside the observed integer telemetry encoding, not valid simulated radio states.
+- First differences of DL RSSI and DL SNR correlate 0.75, UL RSSI and UL SNR 0.48, but DL versus UL analog correlations are about 0.07–0.11 and MCS differences correlate roughly 0–0.04 with RSSI/SNR differences. A simultaneous six-variable reduction is a targeted stressor rather than an empirically typical joint event.
+- The existing v15 morphology stress reports much lower 1-SD recovery for RSSI-only, SNR-only and MCS-only perturbations (0.74/0.50/0.08 at 15/30/60 min). Existing v16 outcome sensitivity changes the exploratory CTX-0001 conclusion under DL-only versus other definitions.
+
+## Objections and required repairs
+
+| Objection | Severity | Evidence-based disposition |
+|---|---|---|
+| Six-variable injection interpreted as RF fade | **Major** | Restrict v12/v21/v23 to algorithmic telemetry stress under frozen morphology. Remove physical-fade or sensitivity-to-natural-degradation interpretation. Historical audit numbers remain valid only for this mathematical family. |
+| Encoded MCS treated as interval-valued and perturbed fractionally | **Major** | Document the code mapping from source/vendor; create a separately frozen, physically admissible MCS perturbation or omit MCS from a new analog-only benchmark. Use independent seeds/backgrounds and report the old benchmark alongside the new one; do not silently substitute results. |
+| Composite RF outcome called degradation | **Major** | Define it as an operational quality score and RF-event detector, not path loss, attenuation, link availability or throughput. Report component and DL/UL sensitivity; one composite need not track a unique physical failure mode. |
+| Missing operational confounders | **Major for causal reading** | Link configuration frequency/BW is constant in this development slice, but Tx power, interference, adaptation, association and maintenance state are absent from the analysis snapshot. Reconcile source telemetry/logs and preregister eligibility/stratification for future field tests. No natural causal claim is authorized. |
+| Endpoint weather implies path mechanism | **Major for mechanism claims** | Two station observations do not measure path-integrated rainfall, refractivity or wet-antenna state. ITU-R P.530 treats terrestrial LOS propagation using multiple mechanisms; require link-budget/path evidence for a specific mechanism. |
+| One link and one configuration | **Major for transportability** | Quantify performance as conditional on this background; independent links, configuration episodes and natural failures are needed to generalize physical behavior. |
+
+**Pass condition:** verified MCS telemetry semantics; physically admissible perturbation and component/direction-specific outcome sensitivity assessed under a fresh protocol; operational covariates and path mechanism either measured or explicitly excluded from claims. Until then Reviewer B remains open. Reviewer A also remains open; the pending blinded AI pilot cannot mitigate either audit.
+
+**Primary external references:** [Cambium Networks, *ePMP 6 GHz Force 4600C Subscriber Module* datasheet (2026)](https://brandcentral.cambiumnetworks.com/asset/9dc0198f-310d-4cc2-8f0d-dfb0161e1e61/Cambium_Networks_data_sheet_ePMP_Force_4600C_SM.pdf), frequency range 5725–7125 MHz, adaptive MCS 0–13, 20-MHz sensitivity specifications; [ITU-R P.530-19 (2025), *Propagation data and prediction methods required for the design of terrestrial line-of-sight systems*](https://www.itu.int/rec/R-REC-P.530). These establish hardware and propagation scope, not a mapping for the export's 1xx/2xx MCS codes.
