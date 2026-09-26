@@ -12,7 +12,7 @@ warnings=[]
 
 # Forbidden or retired language.
 for pat,msg in [
-    (r"\b(first|novel|unprecedented)\s+(method|framework|workflow|system|approach|study)\b", "unqualified priority/novelty claim"),
+    (r"(?<!verification-)\b(first|novel|unprecedented)\s+(method|framework|workflow|system|approach|study)\b", "unqualified priority/novelty claim"),
     (r"\bnever opened\b", "overbroad holdout-access claim"),
     (r"\bnever read\b", "overbroad raw-byte access claim"),
     (r"validates a bounded discovery-and-screening process", "overstrong process-validation claim"),

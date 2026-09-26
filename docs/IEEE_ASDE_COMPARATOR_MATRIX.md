@@ -15,6 +15,11 @@ This matrix records what is explicitly reported in the primary or authoritative 
 | HypoChainer (Jiang et al., IEEE TVCG 2026) | Human–LLM–knowledge-graph hypothesis construction and validation selection | KG-supported evidence and expert-guided prioritization rather than ASDE-style time-series directional gates | Interactive visual/human-in-the-loop reasoning trail | Biology-oriented scientific discovery | Rules out novelty from human–AI collaborative hypothesis construction and validation prioritization |
 | Lin et al. (AI4Research 2025) | LLM-generated hypotheses from scientific literature with meta-analytic statistical evidence | Statistical evidence synthesis / meta-analysis | Evidence-grounded hypothesis generation | Literature-based scientific evidence synthesis | Rules out novelty from pairing LLM hypothesis generation with statistical rigor |
 | Zhao et al. (IEEE Communications Magazine 2026) | Self-evolving multi-agent AI for wireless network/antenna optimization | Systematic validation inside autonomous optimization lifecycle | Supervisor-coordinated multi-agent cycle | Wireless networks / antenna optimization | Rules out novelty from applying agentic AI to wireless systems |
+| THREAD-Bio (Ang et al., Biology 2026) | Trustworthy agentic bioinformatics with decision rights, validation gates, abstention and claim-to-evidence traceability | Separates execution, design, inference, biological and external validation; emphasizes pseudoreplication and calibrated claims | Strong claim-to-evidence and human-approval architecture | Bioinformatics / omics workflows | Rules out novelty claims based on validation gates, claim-to-evidence traceability, abstention or human approval as general concepts |
+| Sargsyan (arXiv 2025) | Structural enforcement of statistical rigor in AI-driven discovery | Online FDR, sequential statistical state, declarative scaffolding, exploration/validation separation | Statistical protocol encoded into workflow architecture | Automated research / AI-scientist systems | Rules out novelty claims based on structurally enforced multiple-testing control or physically protected validation as general architecture |
+| Plato-Bio (arXiv 2026) | Verification-first biological novelty screening | Frozen historical rediscovery and structural benchmarks; hypotheses retained as unvalidated | Explicit workflow states, provenance, citation checks and publication gates | Biology | Rules out novelty from verification-first states/publication gates alone |
+| XScientist (arXiv 2026) | Git-like protocol for long-running autonomous scientific discovery | Quality gates and reproducibility artifacts | Exploration DAG, failed branches, content hashes and claim-to-evidence anchors | General autonomous research | Rules out novelty from Git-like scientific provenance, failed-branch retention or artifact-centered research protocols |
+| LEDGER (arXiv 2026) | Claim-to-evidence trace graphs for auditing LLM agents | Audit coverage rather than ASDE-specific temporal inference | Evidence nodes, workflow nodes and typed claim-support edges | Long-horizon agent workflows | Rules out novelty from claim-to-evidence graphing itself |
 | Reusable Holdout (Dwork et al., Science 2015) | Valid inference under repeated adaptive data analysis | Formal mechanisms for safe adaptive holdout reuse | Not an agentic workflow paper | General statistical data analysis | Establishes that adaptive data reuse threatens validity; ASDE's contribution can only be its operationalization in RF discovery |
 | Post-Selection Inference review (Kuchibhotla et al., 2022) | Inference after exploration/model or variable selection | Sample splitting, simultaneous inference, conditional selective inference | Not a provenance workflow | General statistics | Rules out novelty claims based on sample splitting/post-selection awareness |
 | Luo et al. (2025), hidden pitfalls of AI Scientist systems | Audits failure modes in AI scientist systems | Controlled experiments expose benchmark selection, leakage, metric misuse and post-hoc selection bias | Argues workflow traces/code are needed for reliable evaluation | AI scientist systems | Strong support for ASDE's trace-first audit philosophy, but also strong prior art on reliability concerns |
@@ -27,6 +32,9 @@ This matrix records what is explicitly reported in the primary or authoritative 
 - first autonomous or multi-agent hypothesis generator;
 - first agentic falsification system;
 - first provenance-aware agentic-science framework;
+- first scientific validation-gate or claim-to-evidence architecture;
+- first structurally enforced multiple-testing / protected-validation architecture for AI-driven discovery;
+- first Git-like scientific provenance or publication-gate protocol;
 - first agent-centric logging of prompts, responses, or decisions;
 - first human–LLM collaborative hypothesis-construction workflow;
 - first combination of LLM hypothesis generation with statistical evidence;
@@ -37,7 +45,7 @@ This matrix records what is explicitly reported in the primary or authoritative 
 - first domain-informed or physics-informed AI method.
 
 ## Narrow candidate novelty
-The strongest current claim is not a new primitive algorithm. It is an **implemented methodological composition** for scientific discovery from long-duration operational environmental–RF time series:
+The strongest current claim is not a new primitive algorithm or a new generic agentic-science architecture. It is an **implemented and quantitatively evaluated domain instantiation** for scientific inference from long-duration operational environmental–RF time series:
 
 1. adaptive-analysis accounting that explicitly converts repeatedly inspected subsets into development data;
 2. QC eligibility rules that can prevent sensor artifacts from entering the hypothesis space;
