@@ -1,0 +1,130 @@
+{
+  "version": "16b.0-multiview-exploratory",
+  "validation_accessed": false,
+  "alpha_per_view_horizon": 0.004166666666666667,
+  "thresholds": {
+    "global": -0.5620817932460992,
+    "rssi": -0.6745,
+    "snr": -0.6745,
+    "mcs": -0.3372453797382976
+  },
+  "summary": [
+    {
+      "mode": "injected",
+      "morphology": "joint_step15",
+      "lag_min": 15.0,
+      "trials": 100,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "mode": "injected",
+      "morphology": "joint_step15",
+      "lag_min": 30.0,
+      "trials": 100,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "mode": "injected",
+      "morphology": "joint_step15",
+      "lag_min": 60.0,
+      "trials": 100,
+      "rate": 0.75,
+      "ci95_low": 0.6569535362992417,
+      "ci95_high": 0.8245490599627573
+    },
+    {
+      "mode": "injected",
+      "morphology": "mcs_only_step15",
+      "lag_min": 15.0,
+      "trials": 100,
+      "rate": 0.46,
+      "ci95_low": 0.36560643853331865,
+      "ci95_high": 0.5573531460647615
+    },
+    {
+      "mode": "injected",
+      "morphology": "mcs_only_step15",
+      "lag_min": 30.0,
+      "trials": 100,
+      "rate": 0.45,
+      "ci95_low": 0.3561437510640346,
+      "ci95_high": 0.5475557296835656
+    },
+    {
+      "mode": "injected",
+      "morphology": "mcs_only_step15",
+      "lag_min": 60.0,
+      "trials": 100,
+      "rate": 0.3,
+      "ci95_low": 0.21894753866228117,
+      "ci95_high": 0.39585038432811953
+    },
+    {
+      "mode": "injected",
+      "morphology": "rssi_only_step15",
+      "lag_min": 15.0,
+      "trials": 100,
+      "rate": 0.68,
+      "ci95_low": 0.5833719774632081,
+      "ci95_high": 0.7633098918454312
+    },
+    {
+      "mode": "injected",
+      "morphology": "rssi_only_step15",
+      "lag_min": 30.0,
+      "trials": 100,
+      "rate": 0.95,
+      "ci95_low": 0.8882480347279118,
+      "ci95_high": 0.9784566385436864
+    },
+    {
+      "mode": "injected",
+      "morphology": "rssi_only_step15",
+      "lag_min": 60.0,
+      "trials": 100,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.03699480747600191
+    },
+    {
+      "mode": "injected",
+      "morphology": "snr_only_step15",
+      "lag_min": 15.0,
+      "trials": 100,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "mode": "injected",
+      "morphology": "snr_only_step15",
+      "lag_min": 30.0,
+      "trials": 100,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "mode": "injected",
+      "morphology": "snr_only_step15",
+      "lag_min": 60.0,
+      "trials": 100,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.03699480747600191
+    },
+    {
+      "mode": "null",
+      "morphology": "null_shift",
+      "lag_min": NaN,
+      "trials": 500,
+      "rate": 0.024,
+      "ci95_low": 0.013781177149521824,
+      "ci95_high": 0.04147745969189818
+    }
+  ]
+}

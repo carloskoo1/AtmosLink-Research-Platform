@@ -21,7 +21,7 @@ The contribution is not a claimed meteorological cause of RF degradation. The co
 - Real rural high-altitude 6 GHz link.
 - Multisite local weather + RF telemetry.
 - Development snapshot: 2860 complete-core observations.
-- Real confirmatory holdout: 716 observations, still unopened.
+- Real confirmatory holdout: 716 observations, analytically isolated from candidate selection, tuning, screening, and benchmark development.
 - Development is evaluated using four contiguous temporal folds.
 
 ## Real-data discovery outcome
@@ -99,4 +99,4 @@ Generated ablation figure:
 IEEE Access currently defines a Methods article as work reporting a new experimental, measurement, or mathematical technique. This is the recommended manuscript type for ASDE. The manuscript should emphasize the auditable method and quantitative benchmark, with the AtmosLink natural-data analysis presented as a case study and stress test rather than as a causal weather result.
 
 ## Out-of-family robustness stress test
-A post-audit exploratory stress test challenged the primary detector with alternative RF perturbation morphologies. At 1.0 robust SD per affected metric, recovery for analog RSSI/SNR-only changes was 1.00, 1.00 and 0.94 at 15/30/60 min; DL-only and UL-only changes were 0.96, 0.82 and 0.52; gradual joint changes were 1.00, 1.00 and 0.60; MCS-only changes were 0.70, 0.50 and 0.06. These values are supportive robustness evidence, not part of the preregistered audit benchmark. They define the current operating envelope and show that the detector is less sensitive to partial, discrete and slowly evolving degradation morphologies.
+A post-audit exploratory stress test challenged the primary detector with alternative RF perturbation morphologies using 100 trials per cell. At 1.0 robust SD per affected metric, an abrupt joint 15-minute degradation was recovered at 1.00, 1.00 and 0.98 for 15/30/60-minute lags; a 60-minute sustained joint degradation also yielded 1.00, 1.00 and 0.98; a 30-minute joint ramp yielded 1.00, 1.00 and 0.77. By contrast, RSSI-only, SNR-only and MCS-only 15-minute perturbations each yielded 0.74, 0.50 and 0.08. These values are supportive robustness evidence, not part of the preregistered primary audit benchmark. They show that the current composite RF detector is substantially less sensitive to single-subsystem perturbations and to longer-lag gradual effects.

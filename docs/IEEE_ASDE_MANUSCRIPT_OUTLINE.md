@@ -10,14 +10,14 @@ IEEE Access — Methods manuscript (primary option). The paper focuses on a new 
 **Auditable AI-Assisted Scientific Discovery for Long-Duration 6 GHz Wireless Measurements**
 
 ## Draft abstract
-Long-duration wireless measurement campaigns create an attractive setting for AI-assisted scientific discovery, but serial dependence, multiple testing, adaptive overfitting, sensor artifacts, and post hoc hypothesis formation can transform exploratory associations into false scientific claims. This paper presents the AtmosLink Scientific Discovery Engine (ASDE), an auditable human-in-the-loop workflow for discovering and screening atmospheric–radioelectric patterns in operational wireless-link measurements. ASDE separates exploratory candidate generation from data-quality eligibility, temporal blocking, pre/post directionality, multiplicity control, context-marker classification, hypothesis freezing, and independent holdout validation. The framework is evaluated on the real background of a rural high-altitude 6 GHz link. In the natural development data, six apparently promising atmospheric–RF candidates were rejected before validation. One additional humidity-variability association was retained only as an exploratory, outcome-definition-sensitive context association because it lacked stable temporal precedence and disappeared under a DL-only RF event definition. To quantify discovery performance under known ground truth without opening the real holdout, a benchmark protocol was frozen in Git before an audit-grade synthetic injection experiment. Across 100 trials per effect-lag condition and 1000 circular-shift null trials, the full ASDE gate achieved a family-wise false-positive rate of 2.5% (95% CI: 1.70–3.66%). For injected effects of 1.0 robust standard deviation, recovery was 100%, 100%, and 94% at lags of 15, 30, and 60 min, respectively. An ablation showed that an uncorrected screening rule increased the false-positive rate to 7.9%. These results demonstrate that AI-assisted discovery can be coupled to explicit statistical and provenance safeguards that prioritize falsification and reproducibility over candidate generation.
+Long-duration wireless measurement campaigns create an attractive setting for AI-assisted scientific discovery, but serial dependence, multiple testing, adaptive overfitting, sensor artifacts, and post hoc hypothesis formation can transform exploratory associations into false scientific claims. This paper presents the AtmosLink Scientific Discovery Engine (ASDE), an auditable human-in-the-loop workflow for discovering and screening atmospheric–radioelectric patterns in operational wireless-link measurements. ASDE separates exploratory candidate generation from data-quality eligibility, temporal blocking, pre/post directionality, multiplicity control, context-marker classification, hypothesis freezing, and independent holdout validation. The framework is evaluated on the real background of a rural high-altitude 6 GHz link. In the natural development data, six apparently promising atmospheric–RF candidates were rejected before validation. One additional humidity-variability association was retained only as an exploratory, outcome-definition-sensitive context association because it lacked stable temporal precedence and disappeared under a DL-only RF event definition. To quantify discovery performance under known ground truth without using the real holdout for scientific analysis, a benchmark protocol was frozen in Git before an audit-grade synthetic injection experiment. Across 100 trials per effect-lag condition and 1000 circular-shift null trials, the full ASDE gate achieved a family-wise false-positive rate of 2.5% (95% CI: 1.70–3.66%). For injected effects of 1.0 robust standard deviation, recovery was 100%, 100%, and 94% at lags of 15, 30, and 60 min, respectively. An ablation showed that an uncorrected screening rule increased the false-positive rate to 7.9%. These results demonstrate that AI-assisted discovery can be coupled to explicit statistical and provenance safeguards that prioritize falsification and reproducibility over candidate generation.
 
 ## Index terms
 AI-assisted scientific discovery; wireless measurements; 6 GHz; high-altitude radio links; reproducibility; multiple testing; time-series analysis; environmental sensing; human-in-the-loop AI; experimental methodology.
 
 ## Main contributions
 1. **Auditable discovery architecture.** A stateful workflow that distinguishes candidate generation, context association, hypothesis formation, freezing, and validation.
-2. **Adaptive-analysis protection.** Explicit recognition that repeatedly inspected data become development data; a separate 716-observation real holdout remains unopened.
+2. **Adaptive-analysis protection.** Explicit recognition that repeatedly inspected data become development data; a separate 716-observation real holdout remains analytically isolated from candidate selection, tuning, screening, and benchmark development.
 3. **Temporal-causality safeguards.** Pseudoreplication control, pre/post directionality tests, blocked temporal robustness, and separation of precursors from persistent context markers.
 4. **QC-aware feature eligibility.** Sensor-quality events can disqualify derived features from discovery, preventing instrumental artifacts from becoming scientific candidates.
 5. **Ground-truth benchmark on real background data.** Frozen synthetic injections quantify family-wise false positives and recovery across effect sizes and lags.
@@ -32,7 +32,7 @@ AI-assisted scientific discovery; wireless measurements; 6 GHz; high-altitude ra
 - 1.0-SD recovery: 1.00 at 15 min, 1.00 at 30 min, 0.94 at 60 min.
 - 0.5-SD recovery: 1.00 at 15 min, 0.84 at 30 min, 0.62 at 60 min.
 - Natural-data candidate attrition: 6 RFATM candidates screened out before validation; 1 exploratory outcome-definition-sensitive context association retained; 0 frozen natural hypotheses.
-- Real D_validation: 716 observations, still embargoed.
+- Real D_validation: 716 observations, still embargoed from scientific analysis and candidate evaluation.
 
 ## Section plan
 
@@ -70,7 +70,7 @@ E. Positioning of ASDE relative to prediction-oriented methods.
 - Original discovery/characterization split.
 - Why repeated inspection converted characterization into development data.
 - Four contiguous development folds.
-- 716-row untouched D_validation.
+- 716-row D_validation protected from scientific analysis and adaptive candidate evaluation.
 - No random-row cross-validation for serial data.
 
 ### VI. Synthetic Ground-Truth Benchmark
@@ -99,7 +99,7 @@ F. CTX-0001 outcome-definition sensitivity: why it cannot be promoted to a robus
 ### IX. Limitations
 - Single physical link and geographic environment.
 - Synthetic benchmark validates detection behavior but cannot prove natural causal mechanisms.
-- Natural holdout has not yet been opened because no natural hypothesis has met the freeze gate.
+- Natural holdout has not yet been used for scientific analysis because no natural hypothesis has met the freeze gate.
 - The preregistered benchmark uses joint abrupt RF degradations. A post-audit morphology stress test shows lower sensitivity for DL/UL-only, MCS-only, and gradual effects; therefore benchmark performance must not be generalized to arbitrary degradation morphology.
 - External cross-link replication remains future work.
 
