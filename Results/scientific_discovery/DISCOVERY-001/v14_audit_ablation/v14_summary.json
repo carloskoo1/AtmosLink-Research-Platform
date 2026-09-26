@@ -1,0 +1,118 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "14.0-audit-grade-ablation",
+  "validation_accessed": false,
+  "source": "v12_audit confirmatory trials",
+  "false_positive_rates": [
+    {
+      "method": "M3_ASDE_full",
+      "rate": 0.025,
+      "ci95_low": 0.016990011790561223,
+      "ci95_high": 0.036645541866509784
+    },
+    {
+      "method": "M1_bonferroni_only",
+      "rate": 0.026,
+      "ci95_low": 0.01780381535792082,
+      "ci95_high": 0.0378240845019774
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "rate": 0.026,
+      "ci95_low": 0.01780381535792082,
+      "ci95_high": 0.0378240845019774
+    },
+    {
+      "method": "M0_naive_uncorrected",
+      "rate": 0.079,
+      "ci95_low": 0.06384696504253543,
+      "ci95_high": 0.0973752835672054
+    }
+  ],
+  "moderate_signal_recovery": [
+    {
+      "method": "M0_naive_uncorrected",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "method": "M1_bonferroni_only",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "method": "M3_ASDE_full",
+      "lag_min": 15.0,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "method": "M0_naive_uncorrected",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "method": "M1_bonferroni_only",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "method": "M3_ASDE_full",
+      "lag_min": 30.0,
+      "rate": 1.0,
+      "ci95_low": 0.9630051925239981,
+      "ci95_high": 0.9999999999999999
+    },
+    {
+      "method": "M0_naive_uncorrected",
+      "lag_min": 60.0,
+      "rate": 0.99,
+      "ci95_low": 0.9455124752390653,
+      "ci95_high": 0.9982326134344526
+    },
+    {
+      "method": "M1_bonferroni_only",
+      "lag_min": 60.0,
+      "rate": 0.94,
+      "ci95_low": 0.8752303146877748,
+      "ci95_high": 0.9722142547333433
+    },
+    {
+      "method": "M2_bonferroni_support",
+      "lag_min": 60.0,
+      "rate": 0.94,
+      "ci95_low": 0.8752303146877748,
+      "ci95_high": 0.9722142547333433
+    },
+    {
+      "method": "M3_ASDE_full",
+      "lag_min": 60.0,
+      "rate": 0.94,
+      "ci95_low": 0.8752303146877748,
+      "ci95_high": 0.9722142547333433
+    }
+  ]
+}
