@@ -46,3 +46,23 @@ for effect in [0.5,1.0]:
     fig.savefig(OUT/f"figure_detection_surface_{tag}sd.svg")
     fig.savefig(OUT/f"figure_detection_surface_{tag}sd.png",dpi=300)
     plt.close(fig)
+
+abl=ROOT/"Results/scientific_discovery/DISCOVERY-001/v14_audit_ablation/ablation_summary.csv"
+if abl.exists():
+    a=pd.read_csv(abl)
+    f=a[a["metric"]=="false_positive_rate"].copy()
+    order=["M0_naive_uncorrected","M1_bonferroni_only","M2_bonferroni_support","M3_ASDE_full"]
+    f=f.set_index("method").reindex(order).reset_index()
+    fig,ax=plt.subplots(figsize=(7.0,4.4))
+    yerr=[f["rate"]-f["ci95_low"],f["ci95_high"]-f["rate"]]
+    ax.bar(range(len(f)),f["rate"],yerr=yerr,capsize=4)
+    ax.axhline(0.05,linestyle="--",linewidth=1)
+    ax.set_xticks(range(len(f)),["Naive","Bonferroni","Bonf.+support","ASDE full"])
+    ax.set_ylabel("Empirical family-wise false-positive rate")
+    ax.set_ylim(0,0.12)
+    ax.grid(True,axis="y",alpha=.25)
+    fig.tight_layout()
+    out=ROOT/"Results/scientific_discovery/DISCOVERY-001/v14_audit_ablation"
+    fig.savefig(out/"figure_ablation_false_positive.svg")
+    fig.savefig(out/"figure_ablation_false_positive.png",dpi=300)
+    plt.close(fig)

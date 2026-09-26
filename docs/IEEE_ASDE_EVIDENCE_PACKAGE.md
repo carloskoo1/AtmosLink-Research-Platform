@@ -88,3 +88,12 @@ X. Conclusion
 
 ## Claim discipline
 The paper may claim quantitative performance of ASDE on the frozen synthetic benchmark and describe internally reproducible real-data context associations. It must not claim that weather causes RF degradation in the natural data unless a future frozen hypothesis succeeds on D_validation and subsequent external replication.
+
+## Audit-grade safeguard ablation
+Using the same audit-grade trials, the naive uncorrected rule produced an empirical family-wise false-positive rate of **0.079**, whereas the full ASDE gate produced **0.025**. For a 1.0 robust-SD injected effect, the full gate retained recovery of 1.00, 1.00, and 0.94 at lags of 15, 30, and 60 minutes, respectively. This supports the claim that the safeguards reduce false alarms without materially sacrificing moderate-effect sensitivity in the tested regime.
+
+Generated ablation figure:
+- figure_ablation_false_positive.svg
+
+## Editorial positioning
+IEEE Access currently defines a Methods article as work reporting a new experimental, measurement, or mathematical technique. This is the recommended manuscript type for ASDE. The manuscript should emphasize the auditable method and quantitative benchmark, with the AtmosLink natural-data analysis presented as a case study and stress test rather than as a causal weather result.
