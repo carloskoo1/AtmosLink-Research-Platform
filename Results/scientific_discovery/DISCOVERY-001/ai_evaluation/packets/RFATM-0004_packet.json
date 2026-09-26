@@ -1,0 +1,13 @@
+{
+  "packet": {
+    "experiment_id": "DISCOVERY-001",
+    "candidate_id": "RFATM-0004",
+    "status": "SCREENED_OUT",
+    "pattern": "Multivariate atmospheric transition followed by sharp RF-quality drop",
+    "failed_gate": "strict_temporal_direction",
+    "reason": "Block-level enrichment was robust across many thresholds, but RF drops were not more frequent after atmospheric transitions than before them.",
+    "validation_accessed": false,
+    "external_replication_accessed": false
+  },
+  "canonical_sha256": "c2e38fa40f66aeb1ad82f3699f6cf4bd7bfdfb85ff092a2acea98aeaae759b9e"
+}

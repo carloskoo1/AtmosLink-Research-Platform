@@ -1,0 +1,13 @@
+{
+  "packet": {
+    "experiment_id": "DISCOVERY-001",
+    "candidate_id": "RFATM-0003",
+    "status": "SCREENED_OUT",
+    "pattern": "Cold-humid-calm atmospheric regime associated with degraded RF state",
+    "failed_gate": "temporal_independence",
+    "reason": "30-minute block-level risk reversed between discovery and characterization.",
+    "validation_accessed": false,
+    "external_replication_accessed": false
+  },
+  "canonical_sha256": "65f29da098fddc47a3cc7f973cbd09197eca34b0f115511e11eb3fb859adff3e"
+}

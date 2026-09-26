@@ -1,0 +1,13 @@
+{
+  "packet": {
+    "experiment_id": "DISCOVERY-001",
+    "candidate_id": "RFATM-0002",
+    "status": "SCREENED_OUT",
+    "pattern": "CU01 humidity level inversely associated with DL MCS",
+    "failed_gate": "temporal_cycle_control",
+    "reason": "Association was not stable after trend and diurnal-cycle screening.",
+    "validation_accessed": false,
+    "external_replication_accessed": false
+  },
+  "canonical_sha256": "97f8b0d9412abc4bf039d9a70a4c3097ebdef5b963f67b0d42bc40a702fbc857"
+}

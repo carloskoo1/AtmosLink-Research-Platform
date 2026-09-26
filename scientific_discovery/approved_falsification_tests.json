@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "allowed_test_families": [
+    "blocked_temporal_replication",
+    "same_clock_matched_control",
+    "trend_diurnal_adjustment",
+    "event_refractory_independence",
+    "strict_pre_post_directionality",
+    "post_event_negative_control",
+    "outcome_definition_sensitivity",
+    "qc_feature_exclusion",
+    "multiplicity_controlled_retest",
+    "prospective_new_data_replication"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "pilot": "AI_CONTRIBUTION_PILOT_V1",
+  "status": "FROZEN_BEFORE_A1_GENERATION",
+  "baseline_freeze_commit": "096dfc0",
+  "prompt_template_sha256": "933ea2680241b958f22000a991b3f98f46bdaa435937e726c9a7dc4ada97e109",
+  "ai_role_contract_sha256": "6e0dd022c87de1a0621fa6dd7c730aea13e6b3c2c83616c27011dc79b61f8872",
+  "approved_tests_sha256": "f9e99ef85f7d18481538c80a1177b8310f7444fdba50b1f16a2cc3863611e439",
+  "packet_sha256": {
+    "RFATM-0001": "e95345c5b172e9a0dcfb46627762a11bf8fcdb070d9004a5ad44e0a69e046b5d",
+    "RFATM-0002": "97f8b0d9412abc4bf039d9a70a4c3097ebdef5b963f67b0d42bc40a702fbc857",
+    "RFATM-0003": "65f29da098fddc47a3cc7f973cbd09197eca34b0f115511e11eb3fb859adff3e",
+    "RFATM-0004": "c2e38fa40f66aeb1ad82f3699f6cf4bd7bfdfb85ff092a2acea98aeaae759b9e",
+    "RFATM-0005": "fe7e29af633b368002740e5266ec9ede4cc8ec08b15faa714848c3ffc775b7a6",
+    "RFATM-0006": "0d730d2c6d1f1464ea11bddfcc5bc261de75995023affccd153dd3b09bce51e0"
+  },
+  "generator_model_planned": "GPT-5.6 Sol",
+  "human_blind_review_required": true
+}

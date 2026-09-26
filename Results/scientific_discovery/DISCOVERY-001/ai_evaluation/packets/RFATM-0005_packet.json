@@ -1,0 +1,13 @@
+{
+  "packet": {
+    "experiment_id": "DISCOVERY-001",
+    "candidate_id": "RFATM-0005",
+    "status": "SCREENED_OUT",
+    "pattern": "Lower 60-minute SJ01 humidity variability before RF-quality drops relative to same-clock controls",
+    "failed_gate": "matched_trajectory_screening",
+    "reason": "The signal preserved sign but failed FDR replication, post-event negative control, and characterization control-support requirements.",
+    "validation_accessed": false,
+    "external_replication_accessed": false
+  },
+  "canonical_sha256": "fe7e29af633b368002740e5266ec9ede4cc8ec08b15faa714848c3ffc775b7a6"
+}

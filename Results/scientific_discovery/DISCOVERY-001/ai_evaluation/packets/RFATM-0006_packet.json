@@ -1,0 +1,13 @@
+{
+  "packet": {
+    "experiment_id": "DISCOVERY-001",
+    "candidate_id": "RFATM-0006",
+    "status": "SCREENED_OUT",
+    "pattern": "Rapid warming and drying transition at SJ01 followed by apparent RF degradation enrichment",
+    "failed_gate": "strict_pre_post_temporal_direction",
+    "reason": "Block-level enrichment did not preserve temporal ordering: discovery had more RF entries before than after the atmospheric transition.",
+    "validation_accessed": false,
+    "external_replication_accessed": false
+  },
+  "canonical_sha256": "0d730d2c6d1f1464ea11bddfcc5bc261de75995023affccd153dd3b09bce51e0"
+}

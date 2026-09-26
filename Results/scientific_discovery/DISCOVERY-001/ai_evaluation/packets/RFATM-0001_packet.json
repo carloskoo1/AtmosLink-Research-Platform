@@ -1,0 +1,13 @@
+{
+  "packet": {
+    "experiment_id": "DISCOVERY-001",
+    "candidate_id": "RFATM-0001",
+    "status": "SCREENED_OUT",
+    "pattern": "SJ01 pressure level associated with later DL RSSI/SNR degradation",
+    "failed_gate": "characterization_replication",
+    "reason": "Discovery association did not preserve magnitude or sign in characterization.",
+    "validation_accessed": false,
+    "external_replication_accessed": false
+  },
+  "canonical_sha256": "e95345c5b172e9a0dcfb46627762a11bf8fcdb070d9004a5ad44e0a69e046b5d"
+}
