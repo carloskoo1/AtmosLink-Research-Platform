@@ -85,3 +85,10 @@ Rapid derivatives of CU01 pressure are currently excluded from trajectory discov
 A new intermediate status is introduced: EVIDENCE_ACCUMULATING. This state is used when a pattern preserves direction and relevant effect magnitude across discovery and characterization but the confidence intervals remain too wide for hypothesis promotion.
 
 RFATM-0006 is currently EVIDENCE_ACCUMULATING. It represents an atmospheric transition archetype dominated by rapid warming and drying at SJ01. Approximate 15-minute physical changes at its center are +1.83 C temperature, -8.01 percentage points relative humidity, -0.08 hPa pressure and +0.38 m/s wind at SJ01, with little simultaneous change at CU01. At a 60-minute horizon, block-level RF degradation risk ratios are approximately 1.38 in discovery and 1.60 in characterization. However, both 95% confidence intervals include 1, so the candidate is not frozen and D_validation remains embargoed.
+
+## Status supersession note
+This protocol document preserves the historical evolution of DISCOVERY-001. Candidate-status statements in earlier version sections are not necessarily current.
+
+In particular, the v3 trajectory section recorded RFATM-0006 as `EVIDENCE_ACCUMULATING` based on block-level enrichment. Subsequent v5 strict pre/post directionality testing showed that temporal ordering was not preserved across development periods, and RFATM-0006 was therefore reclassified as `SCREENED_OUT` without accessing D_validation.
+
+The authoritative current candidate state is `Results/scientific_discovery/DISCOVERY-001/candidate_registry.json`. Historical protocol text is retained for auditability rather than rewritten retrospectively.
