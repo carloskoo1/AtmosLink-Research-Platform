@@ -1,0 +1,55 @@
+{
+  "candidate_id": "RFATM-0004",
+  "candidate_pattern": "multivariate atmospheric transition followed by 15-minute RF-quality drop",
+  "stage": "EXPLORATORY_SCREENING",
+  "canonical_exploratory_parameters": {
+    "atmospheric_score_quantile": 0.8,
+    "rf_drop_quantile": 0.075,
+    "horizon_minutes": 60,
+    "atmospheric_delta_minutes": 15,
+    "rf_delta_minutes": 15
+  },
+  "block_association": {
+    "discovery": {
+      "risk_ratio": 1.2628682792617216,
+      "risk_exposed": 0.5573770491803278,
+      "risk_unexposed": 0.44135802469135804,
+      "n_exposed_blocks": 61,
+      "n_unexposed_blocks": 324,
+      "outcomes_exposed": 34,
+      "outcomes_unexposed": 143
+    },
+    "characterization": {
+      "risk_ratio": 2.0064655172413794,
+      "risk_exposed": 0.4827586206896552,
+      "risk_unexposed": 0.24060150375939848,
+      "n_exposed_blocks": 29,
+      "n_unexposed_blocks": 133,
+      "outcomes_exposed": 14,
+      "outcomes_unexposed": 32
+    }
+  },
+  "strict_temporal_direction": {
+    "discovery": {
+      "n_atmospheric_events": 61,
+      "future_events": 30,
+      "past_events": 38,
+      "future_risk": 0.4918032786885246,
+      "past_risk": 0.6229508196721312,
+      "future_minus_past": -0.13114754098360656,
+      "direction_pass": false
+    },
+    "characterization": {
+      "n_atmospheric_events": 29,
+      "future_events": 13,
+      "past_events": 14,
+      "future_risk": 0.4482758620689655,
+      "past_risk": 0.4827586206896552,
+      "future_minus_past": -0.034482758620689655,
+      "direction_pass": false
+    }
+  },
+  "direction_pass_both": false,
+  "status": "SCREENED_OUT",
+  "reason": "Block association did not survive strict temporal ordering: RF drops were not more frequent after atmospheric transitions than before them."
+}

@@ -1,0 +1,36 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "validation_accessed": false,
+  "external_replication_accessed": false,
+  "candidates": [
+    {
+      "candidate_id": "RFATM-0001",
+      "pattern": "SJ01 pressure level associated with later DL RSSI/SNR degradation",
+      "status": "SCREENED_OUT",
+      "failed_gate": "characterization_replication",
+      "reason": "Discovery association did not preserve magnitude or sign in characterization."
+    },
+    {
+      "candidate_id": "RFATM-0002",
+      "pattern": "CU01 humidity level inversely associated with DL MCS",
+      "status": "SCREENED_OUT",
+      "failed_gate": "temporal_cycle_control",
+      "reason": "Association was not stable after trend and diurnal-cycle screening."
+    },    {
+      "candidate_id": "RFATM-0003",
+      "pattern": "Cold-humid-calm atmospheric regime associated with degraded RF state",
+      "status": "SCREENED_OUT",
+      "failed_gate": "temporal_independence",
+      "reason": "30-minute block-level risk reversed between discovery and characterization."
+    },
+    {
+      "candidate_id": "RFATM-0004",
+      "pattern": "Multivariate atmospheric transition followed by sharp RF-quality drop",
+      "status": "SCREENED_OUT",
+      "failed_gate": "strict_temporal_direction",
+      "reason": "Block-level enrichment was robust across many thresholds, but RF drops were not more frequent after atmospheric transitions than before them."
+    }
+  ],
+  "frozen_hypotheses": 0,
+  "current_state": "DISCOVERY_CONTINUES_WITHOUT_OPENING_VALIDATION"
+}

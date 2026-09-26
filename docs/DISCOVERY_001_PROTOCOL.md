@@ -54,3 +54,24 @@ Repeated 5-minute rows are not treated as independent evidence. Candidate patter
 - RFATM-0003: recurrent cold-humid-calm regime; screened out after 30-minute block-level replication reversed in characterization.
 
 No candidate has been frozen. D_validation remains embargoed.
+
+## Version 3: event and trajectory screening
+
+DISCOVERY-001 v3 introduces event-level temporal analysis. A candidate must no longer rely only on row-level association or block-level enrichment.
+
+### Dynamic feature eligibility
+CU01 pressure is quarantined from transition derivatives for this experiment because the existing quality report contains 388 `PRESS_JUMP` alerts during the prevalidation period, including extreme jumps that can dominate standardized temporal derivatives. The pressure level may remain contextual, but its short-term derivative is not eligible for candidate generation in v3.
+
+### Atmospheric transition event
+A transition event is defined from 15-minute standardized changes across multiple atmospheric variables. At least two variables must exceed the activity threshold, extreme standardized values are clipped, local maxima are selected, and a 30-minute refractory period prevents repeated rows from representing one event multiple times.
+
+### RF transition event
+RF response is represented as a robust quality index derived from DL/UL RSSI, SNR and MCS. Version 3 studies sharp 15-minute drops in that index rather than only absolute low-quality states.
+
+### Sensitivity and directionality
+The sequence engine evaluates multiple atmospheric-event quantiles, RF-drop quantiles and future horizons. A block-level risk ratio greater than one is not sufficient for promotion. The RF event must occur strictly after the atmospheric event, and future-event risk must exceed past-event risk in both discovery and characterization.
+
+### RFATM-0004
+An apparent multivariate atmospheric-transition -> RF-drop relationship produced RR > 1 in both cohorts in 35 of 45 sensitivity cells. At the central exploratory setting, block-level RR was 1.263 in discovery and 2.006 in characterization. However, within a strict 60-minute temporal window, discovery contained 30 future versus 38 past RF-drop events, while characterization contained 13 future versus 14 past events. Therefore temporal direction failed and `RFATM-0004` was classified `SCREENED_OUT`.
+
+This result demonstrates that threshold robustness alone is insufficient. Sequence candidates must satisfy independent temporal directionality before they can become hypotheses. D_validation and the external replication cohorts remain untouched.

@@ -1,0 +1,118 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "3.0-sequence-engine",
+  "source_snapshot_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "validation_accessed": false,
+  "external_replication_accessed": false,
+  "cu01_pressure_dynamic_quarantined": true,
+  "cu01_pressure_jump_alerts": 388,
+  "sensitivity_cells": 45,
+  "cells_rr_gt_1_in_both": 35,
+  "canonical_atmospheric_events": {
+    "discovery": 61,
+    "characterization": 29
+  },
+  "canonical_rf_drop_events": {
+    "discovery": 101,
+    "characterization": 25
+  },
+  "local_hour_profiles": {
+    "atmospheric_discovery": {
+      "00-02": 1,
+      "03-05": 0,
+      "06-08": 2,
+      "09-11": 10,
+      "12-14": 21,
+      "15-17": 25,
+      "18-20": 1,
+      "21-23": 1
+    },
+    "rf_drop_discovery": {
+      "00-02": 14,
+      "03-05": 8,
+      "06-08": 11,
+      "09-11": 11,
+      "12-14": 14,
+      "15-17": 18,
+      "18-20": 14,
+      "21-23": 11
+    },
+    "atmospheric_characterization": {
+      "00-02": 0,
+      "03-05": 0,
+      "06-08": 2,
+      "09-11": 4,
+      "12-14": 11,
+      "15-17": 12,
+      "18-20": 0,
+      "21-23": 0
+    },
+    "rf_drop_characterization": {
+      "00-02": 3,
+      "03-05": 1,
+      "06-08": 2,
+      "09-11": 2,
+      "12-14": 6,
+      "15-17": 5,
+      "18-20": 4,
+      "21-23": 2
+    }
+  },
+  "candidate": {
+    "candidate_id": "RFATM-0004",
+    "candidate_pattern": "multivariate atmospheric transition followed by 15-minute RF-quality drop",
+    "stage": "EXPLORATORY_SCREENING",
+    "canonical_exploratory_parameters": {
+      "atmospheric_score_quantile": 0.8,
+      "rf_drop_quantile": 0.075,
+      "horizon_minutes": 60,
+      "atmospheric_delta_minutes": 15,
+      "rf_delta_minutes": 15
+    },
+    "block_association": {
+      "discovery": {
+        "risk_ratio": 1.2628682792617216,
+        "risk_exposed": 0.5573770491803278,
+        "risk_unexposed": 0.44135802469135804,
+        "n_exposed_blocks": 61,
+        "n_unexposed_blocks": 324,
+        "outcomes_exposed": 34,
+        "outcomes_unexposed": 143
+      },
+      "characterization": {
+        "risk_ratio": 2.0064655172413794,
+        "risk_exposed": 0.4827586206896552,
+        "risk_unexposed": 0.24060150375939848,
+        "n_exposed_blocks": 29,
+        "n_unexposed_blocks": 133,
+        "outcomes_exposed": 14,
+        "outcomes_unexposed": 32
+      }
+    },
+    "strict_temporal_direction": {
+      "discovery": {
+        "n_atmospheric_events": 61,
+        "future_events": 30,
+        "past_events": 38,
+        "future_risk": 0.4918032786885246,
+        "past_risk": 0.6229508196721312,
+        "future_minus_past": -0.13114754098360656,
+        "direction_pass": false
+      },
+      "characterization": {
+        "n_atmospheric_events": 29,
+        "future_events": 13,
+        "past_events": 14,
+        "future_risk": 0.4482758620689655,
+        "past_risk": 0.4827586206896552,
+        "future_minus_past": -0.034482758620689655,
+        "direction_pass": false
+      }
+    },
+    "direction_pass_both": false,
+    "status": "SCREENED_OUT",
+    "reason": "Block association did not survive strict temporal ordering: RF drops were not more frequent after atmospheric transitions than before them."
+  },
+  "hypothesis_ready": false,
+  "next_gate": "No validation access until a candidate survives QC, sensitivity, strict temporal direction, characterization replication, physical plausibility and human review."
+}

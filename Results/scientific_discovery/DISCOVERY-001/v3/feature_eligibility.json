@@ -1,0 +1,17 @@
+{
+  "cu01_local_press_hpa": {
+    "level_context_allowed": true,
+    "dynamic_transition_feature": false,
+    "qc_issue": "PRESS_JUMP",
+    "qc_events_in_prevalidation_period": 388,
+    "reason": "Quarantined from dynamic discovery because recurrent instrument jump alerts can dominate derivatives."
+  },
+  "dynamic_features_used": [
+    "cu01_local_temp_avg_c",
+    "cu01_local_hum_avg_pct",
+    "sj01_local_temp_avg_c",
+    "sj01_local_hum_avg_pct",
+    "sj01_local_press_hpa",
+    "sj01_local_wind_speed_ms"
+  ]
+}
