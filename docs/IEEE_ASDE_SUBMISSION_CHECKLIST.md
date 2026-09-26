@@ -60,7 +60,7 @@ Before submission:
 2. structured novelty search completed;
 3. DOI archive created;
 4. full manuscript checked against IEEE_ASDE_CLAIM_LEDGER.md;
-5. Reviewer A inferential calibration either demonstrated with an independently specified null/field design or all claims explicitly restricted to conditional benchmark behavior; adversarial Reviewer B and C audits completed;
+5. Reviewer A statistical **PASS** required for field-wide FWER claims. If calibration remains open, any conditional Methods submission requires a documented scope decision, renewed adversarial review, and explicit acceptance of the OPEN (Major) limitation; Reviewer B and C audits completed;
 6. references checked for accuracy/retraction status;
 7. AI disclosure finalized;
 8. final Word/LaTeX and PDF content verified identical.

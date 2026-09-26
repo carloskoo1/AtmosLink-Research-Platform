@@ -1,6 +1,6 @@
 # ASDE — IEEE Access Methods Manuscript — Full Draft v1
 
-> Working draft. Not submission-ready. Title remains conditional on the blinded AI-contribution pilot.
+> Working draft. Not submission-ready. Reviewer A inferential calibration remains OPEN (Major); the present results are conditional benchmark estimates. Title remains conditional on the blinded AI-contribution pilot.
 
 ## Conditional title
 **AI-retained route:** ASDE: An Auditable AI-Assisted Scientific Discovery Workflow for Long-Duration Environmental–Radio Telemetry

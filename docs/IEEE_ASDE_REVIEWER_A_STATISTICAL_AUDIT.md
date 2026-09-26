@@ -1,7 +1,7 @@
 # Reviewer A — statistical and methodological audit
 
 **Date:** 2026-09-26 (America/Lima)
-**Disposition:** **Claim audit completed; inferential calibration remains open.** The present Methods-paper wording is bounded to a conditional benchmark. This is not a statistical endorsement of field-wide Type-I control, natural atmospheric causality, cross-link generalization, or submission readiness.
+**Disposition:** **REVIEWER A — OPEN (Major).** Computational reconstruction and claim restriction are complete; inferential calibration of the field null and directional test remains unverified. The manuscript is **not cleared for submission by Reviewer A**. A conditional Methods-paper route may later be considered, but narrower wording alone does not turn this open objection into a statistical pass.
 
 ## Evidence inspected
 
@@ -32,6 +32,10 @@ The post-audit exhaustive diagnostic evaluated all 3,132 offsets allowed by the 
 | Weak long-lag and driver-specific power | Major | Results stratified; 1.0-SD/60-min rates can be as low as 2%. Aggregate recovery is not a universal detection claim. |
 | Leakage from D_validation | No demonstrated issue | Audit records analytic isolation and runner source hash; this does not assert raw bytes were never historically seen. Holdout remains unopened here. |
 | AI incremental benefit | Outside Reviewer A; pending | No statistical or title-level benefit claimed from the unfinished blinded pilot. |
+
+## Closure criteria
+
+A statistical **PASS** requires a prespecified, independently justified null and dependence-aware calibration of the directional test on suitable physical temporal blocks, with uncertainty at the block/episode level. A narrower Methods paper may instead be evaluated on conditional benchmark operating characteristics after an explicit scope decision and renewed adversarial review; that route accepts a disclosed limitation and **does not convert Reviewer A into a statistical PASS**. Until calibration is demonstrated, the inferential objection remains **OPEN (Major)**.
 
 ## Authorized conclusion
 
