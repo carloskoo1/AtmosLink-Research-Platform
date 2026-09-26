@@ -1,5 +1,7 @@
 # IEEE ASDE Draft v1 — Claim Audit
 
+> Historical pre-Reviewer-A audit note. The current executable claim audit checks conditional surrogate-null wording and interval scope. See `IEEE_ASDE_REVIEWER_A_STATISTICAL_AUDIT.md` for the updated inferential assessment.
+
 ## Outcome
 Automated claim audit: **PASS**.
 

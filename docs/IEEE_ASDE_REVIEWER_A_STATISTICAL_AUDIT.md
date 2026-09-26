@@ -1,7 +1,7 @@
 # Reviewer A — statistical and methodological audit
 
 **Date:** 2026-09-26 (America/Lima)
-**Disposition:** CLOSED for a **bounded Methods-paper claim** after corrections below. This is not approval of field-wide Type-I control, natural atmospheric causality, cross-link generalization, or submission readiness.
+**Disposition:** **Claim audit completed; inferential calibration remains open.** The present Methods-paper wording is bounded to a conditional benchmark. This is not a statistical endorsement of field-wide Type-I control, natural atmospheric causality, cross-link generalization, or submission readiness.
 
 ## Evidence inspected
 
@@ -15,7 +15,7 @@
 
 The v23 CSV has 18,400 rows: four methods × (3,600 injected settings/realizations + 1,000 surrogate-null draws), representing **4,600 paired trial keys**, not 18,400 independent physical observations. Each of the four atmospheric drivers has 23–28 events on the same 2,860-row development snapshot. The 5-min resampling creates 3,276 grid bins, of which 2,858 have all required variables.
 
-Under the registered 1,000 sampled circular shifts, at least one driver was selected 217 times for M0 and 17 times for each of M1, M2, and M3. Selected-driver sets for M1–M3 agreed in all 4,600 paired trials. The 1.0-SD, 60-min exclusive-truth rate under M1 varies by planted driver: 49%, 25%, 2%, and 8% (CU01 temperature rise, SJ01 temperature fall, SJ01 humidity fall, SJ01 pressure rise). The aggregate 21% obscures this heterogeneity.
+Under the registered 1,000 sampled circular shifts, at least one driver was selected 217 times for M0 and 17 times for each of M1, M2, and M3. Selected-driver sets for M1–M3 agreed in all 4,600 paired trials. An independent re-evaluation of the sampled nulls reproduced all 4,000 recorded method-by-seed selected sets exactly (zero mismatches). The 1.0-SD, 60-min exclusive-truth rate under M1 varies by planted driver: 49%, 25%, 2%, and 8% (CU01 temperature rise, SJ01 temperature fall, SJ01 humidity fall, SJ01 pressure rise). The aggregate 21% obscures this heterogeneity.
 
 The post-audit exhaustive diagnostic evaluated all 3,132 offsets allowed by the v23 shift rule on the same fixed background: M0 selected in 649/3,132 (20.72%); M1–M3 in 50/3,132 (1.60%) each; M1–M3 never disagreed. The 1,000-draw rates are thus not an obvious Monte Carlo sampling accident **within this finite shift orbit**. This diagnostic is exploratory and cannot validate the orbit as a scientifically appropriate null.
 

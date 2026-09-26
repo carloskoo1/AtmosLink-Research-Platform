@@ -1,5 +1,7 @@
 # IEEE ASDE Evidence Package
 
+> Historical evidence snapshot. Its original FWER/CI and full-gate wording predates the Reviewer A audit. For current claims use `IEEE_ASDE_FULL_DRAFT_V1.md`, `IEEE_ASDE_CLAIM_LEDGER.md`, and `IEEE_ASDE_REVIEWER_A_STATISTICAL_AUDIT.md`; do not reuse the abstract or statistical interpretation below without those corrections.
+
 ## Working title
 **ASDE: An Auditable AI-Assisted Scientific Discovery Engine for Atmospheric–Radioelectric Pattern Screening in a Rural High-Altitude 6 GHz Link**
 

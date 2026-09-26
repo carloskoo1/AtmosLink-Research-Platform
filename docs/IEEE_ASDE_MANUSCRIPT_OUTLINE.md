@@ -1,5 +1,7 @@
 # IEEE ASDE Manuscript Outline
 
+> Historical planning outline, superseded for claims and abstract wording by `IEEE_ASDE_FULL_DRAFT_V1.md` and the Reviewer A audit. The FWER, independence, validation, and Wilson-interval wording below is not authorized for submission.
+
 ## Target
 IEEE Access — Methods manuscript (primary option). The paper focuses on a new auditable scientific-discovery workflow and its quantitative validation. The natural-link analysis is a case study, not the primary causal claim.
 
