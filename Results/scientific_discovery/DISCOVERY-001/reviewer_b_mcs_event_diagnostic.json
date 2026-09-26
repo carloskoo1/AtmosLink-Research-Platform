@@ -1,0 +1,30 @@
+{
+  "classification": "post-audit descriptive diagnostic; no causal or null calibration",
+  "source_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "development_rows": 2860,
+  "grid_bins": 3276,
+  "all6_threshold": -0.5620817932460992,
+  "analog4_threshold": -0.6745000000000001,
+  "all6_events": 158,
+  "analog4_events": 161,
+  "all6_analog_exact_overlap": 109,
+  "all6_analog_within_15min": 121,
+  "all6_events_with_mcs_90_jump": 36,
+  "mcs_jump_events_analog_nonnegative": 17,
+  "mcs_jump_events_mcs_dominant": 36,
+  "mcs_jump_events_no_analog_within_15min": 22,
+  "all6_scale": {
+    "dl_rssi_dbm": 0.7412898443291327,
+    "ul_rssi_dbm": 0.7412898443291327,
+    "dl_snr_db": 0.7412898443291327,
+    "ul_snr_db": 1.4826,
+    "dl_mcs": 5.896045450988336,
+    "ul_mcs": 1.4826
+  },
+  "analog4_scale": {
+    "dl_rssi_dbm": 0.7412898443291327,
+    "ul_rssi_dbm": 0.7412898443291327,
+    "dl_snr_db": 0.7412898443291327,
+    "ul_snr_db": 1.4826
+  }
+}
