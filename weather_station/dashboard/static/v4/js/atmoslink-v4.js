@@ -87,7 +87,10 @@
     }
 
 
-    function stationFreshness(data) {
+    function stationFreshness(
+        data,
+        stationId
+    ) {
         if (!data) {
             return {
                 level: "stale",
@@ -107,7 +110,23 @@
             };
         }
 
-        if (age <= 180) {
+        /*
+         * CU01 se publica desde el maestro multisitio,
+         * cuyo ciclo nominal es de 15 minutos.
+         * SJ01 conserva umbrales estrictos porque su
+         * sincronización remota opera cada 2 minutos.
+         */
+        const freshLimit =
+            stationId === "CU01"
+                ? 1200
+                : 180;
+
+        const delayedLimit =
+            stationId === "CU01"
+                ? 2100
+                : 600;
+
+        if (age <= freshLimit) {
             return {
                 level: "fresh",
                 text: "DATO FRESCO",
@@ -115,7 +134,7 @@
             };
         }
 
-        if (age <= 600) {
+        if (age <= delayedLimit) {
             return {
                 level: "delayed",
                 text: "RETRASADO",
@@ -429,10 +448,16 @@
 
     function renderHealth() {
         const cu =
-            stationFreshness(state.CU01);
+            stationFreshness(
+                state.CU01,
+                "CU01"
+            );
 
         const sj =
-            stationFreshness(state.SJ01);
+            stationFreshness(
+                state.SJ01,
+                "SJ01"
+            );
 
         setStatus(
             "cu01-health",
