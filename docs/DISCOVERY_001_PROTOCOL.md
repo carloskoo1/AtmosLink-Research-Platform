@@ -75,3 +75,13 @@ The sequence engine evaluates multiple atmospheric-event quantiles, RF-drop quan
 An apparent multivariate atmospheric-transition -> RF-drop relationship produced RR > 1 in both cohorts in 35 of 45 sensitivity cells. At the central exploratory setting, block-level RR was 1.263 in discovery and 2.006 in characterization. However, within a strict 60-minute temporal window, discovery contained 30 future versus 38 past RF-drop events, while characterization contained 13 future versus 14 past events. Therefore temporal direction failed and `RFATM-0004` was classified `SCREENED_OUT`.
 
 This result demonstrates that threshold robustness alone is insufficient. Sequence candidates must satisfy independent temporal directionality before they can become hypotheses. D_validation and the external replication cohorts remain untouched.
+
+## Version 3 trajectory discovery
+
+The trajectory engine detects independent multivariate atmospheric transition events and tests whether specific transition archetypes precede entries into a robust RF-degradation state.
+
+Rapid derivatives of CU01 pressure are currently excluded from trajectory discovery because the quality report contains 388 PRESS_JUMP warnings within the prevalidation interval. The pressure level may remain contextual, but its short-term derivative cannot generate a candidate until signal eligibility is restored.
+
+A new intermediate status is introduced: EVIDENCE_ACCUMULATING. This state is used when a pattern preserves direction and relevant effect magnitude across discovery and characterization but the confidence intervals remain too wide for hypothesis promotion.
+
+RFATM-0006 is currently EVIDENCE_ACCUMULATING. It represents an atmospheric transition archetype dominated by rapid warming and drying at SJ01. Approximate 15-minute physical changes at its center are +1.83 C temperature, -8.01 percentage points relative humidity, -0.08 hPa pressure and +0.38 m/s wind at SJ01, with little simultaneous change at CU01. At a 60-minute horizon, block-level RF degradation risk ratios are approximately 1.38 in discovery and 1.60 in characterization. However, both 95% confidence intervals include 1, so the candidate is not frozen and D_validation remains embargoed.
