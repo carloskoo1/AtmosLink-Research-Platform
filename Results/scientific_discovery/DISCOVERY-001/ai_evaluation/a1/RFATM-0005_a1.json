@@ -1,0 +1,25 @@
+{
+  "candidate_id": "RFATM-0005",
+  "proposal_type": "CRITIQUE",
+  "description": "The lower-humidity-variability pattern should remain screened out because the matched trajectory evidence did not satisfy the registered robustness and negative-control requirements.",
+  "mechanistic_interpretations": [
+    "Reduced humidity variability may characterize an environmental context around RF events rather than act as a directional precursor."
+  ],
+  "alternative_explanations": [
+    "The same context may persist before and after RF events, which would weaken temporal precedence.",
+    "The association may depend on the RF outcome definition used to identify degradation events.",
+    "Matched controls may have insufficient support in some temporal regions, making the apparent trajectory difference unstable."
+  ],
+  "falsification_tests": [
+    "post_event_negative_control: require the candidate to weaken or disappear after the RF event if it is to be interpreted as a precursor.",
+    "outcome_definition_sensitivity: repeat the prespecified analysis across alternative RF event definitions.",
+    "multiplicity_controlled_retest: evaluate the full registered feature family under the same multiple-testing correction rather than selecting the favorable trajectory alone."
+  ],
+  "uncertainties": [
+    "The current evidence cannot distinguish a persistent context marker from an unstable matched-control artifact."
+  ],
+  "novelty_class": "LITERATURE_REVIEW_REQUIRED",
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated_by_ai": false,
+  "validation_status_claimed_by_ai": false
+}

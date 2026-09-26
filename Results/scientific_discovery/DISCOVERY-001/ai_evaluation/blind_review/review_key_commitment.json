@@ -1,0 +1,6 @@
+{
+  "key_sha256": "b96d5e30f386d71d9439999c777dadae5db15e30bcab0a0e6d90e7518f504337",
+  "key_location_during_blind_review": "outside repository",
+  "reveal_policy": "Commit the exact key only after all reviewer forms are finalized.",
+  "candidate_count": 6
+}

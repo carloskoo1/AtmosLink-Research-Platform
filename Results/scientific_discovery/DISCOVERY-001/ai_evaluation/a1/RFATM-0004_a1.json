@@ -1,0 +1,25 @@
+{
+  "candidate_id": "RFATM-0004",
+  "proposal_type": "CRITIQUE",
+  "description": "The multivariate transition should remain screened out because robust enrichment without preserved temporal precedence is insufficient for a precursor claim.",
+  "mechanistic_interpretations": [
+    "The atmospheric transition and RF drop may be different manifestations of a shared regime rather than an antecedent–response pair."
+  ],
+  "alternative_explanations": [
+    "RF degradation may occur before, during, or after the atmospheric transition with no stable ordering.",
+    "Temporal clustering may create enrichment around transitions without directional dependence.",
+    "A broad event window may capture coincident processes that cannot be causally ordered from the current evidence."
+  ],
+  "falsification_tests": [
+    "strict_pre_post_directionality: compare independent pre-event and post-event RF entries using a frozen event window.",
+    "event_refractory_independence: repeat the directionality test using only temporally independent atmospheric transition episodes.",
+    "post_event_negative_control: test whether the same atmospheric signature remains associated after the RF event, which would favor a shared-context interpretation."
+  ],
+  "uncertainties": [
+    "The evidence supports temporal co-occurrence more strongly than temporal precedence."
+  ],
+  "novelty_class": "LITERATURE_REVIEW_REQUIRED",
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated_by_ai": false,
+  "validation_status_claimed_by_ai": false
+}

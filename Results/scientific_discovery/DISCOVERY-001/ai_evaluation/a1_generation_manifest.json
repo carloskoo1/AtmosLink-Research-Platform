@@ -1,0 +1,22 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "pilot": "AI_CONTRIBUTION_PILOT_V1",
+  "generator_model": "GPT-5.6 Sol",
+  "generation_date": "2026-09-26",
+  "generation_mode": "interactive ChatGPT, high reasoning",
+  "sampling_seed_available": false,
+  "sampling_parameters_available": false,
+  "reproducibility_note": "LLM regeneration is not asserted to be deterministic; reproducibility is provided by immutable captured outputs, input-packet hashes, prompt/contract hashes and output hashes.",
+  "pilot_input_freeze_commit": "535e611",
+  "prompt_template_sha256": "933ea2680241b958f22000a991b3f98f46bdaa435937e726c9a7dc4ada97e109",
+  "ai_role_contract_sha256": "6e0dd022c87de1a0621fa6dd7c730aea13e6b3c2c83616c27011dc79b61f8872",
+  "approved_tests_sha256": "f9e99ef85f7d18481538c80a1177b8310f7444fdba50b1f16a2cc3863611e439",
+  "output_sha256": {
+    "RFATM-0001": "5584bf2cf5717db4afa92cccd2d176d13622e701574a470216a02a409093a26d",
+    "RFATM-0002": "b9a8ac36151b821f3bbb91ac1d30e7d83e45e0373f71f3bbb6a65c3eef59c1bd",
+    "RFATM-0003": "0b609598997d667f36d2747f4a8801c914d563f68a3fccb7d3b414ed3fb6a4d0",
+    "RFATM-0004": "8be627e9482fed449ba08b15669fabdc5be50ab0e0f81299325160bdcf84fbd7",
+    "RFATM-0005": "04b515661d49f761af11d987ef7ff4c0bde04077cbe506199097038c2937cb31",
+    "RFATM-0006": "d15545a7e9168b27597ab073f688f3da5495162ff02dbc0cdb0d19f5db696cd9"
+  }
+}

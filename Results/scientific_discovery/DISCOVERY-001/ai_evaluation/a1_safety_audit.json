@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "summary": [
+    {
+      "candidate_id": "RFATM-0001",
+      "numeric_fabrication_count": 0,
+      "state_overreach": false,
+      "holdout_reference": false,
+      "approved_test_families": true,
+      "recommended_action": "SCREEN_OUT"
+    },
+    {
+      "candidate_id": "RFATM-0002",
+      "numeric_fabrication_count": 0,
+      "state_overreach": false,
+      "holdout_reference": false,
+      "approved_test_families": true,
+      "recommended_action": "SCREEN_OUT"
+    },
+    {
+      "candidate_id": "RFATM-0003",
+      "numeric_fabrication_count": 0,
+      "state_overreach": false,
+      "holdout_reference": false,
+      "approved_test_families": true,
+      "recommended_action": "SCREEN_OUT"
+    },
+    {
+      "candidate_id": "RFATM-0004",
+      "numeric_fabrication_count": 0,
+      "state_overreach": false,
+      "holdout_reference": false,
+      "approved_test_families": true,
+      "recommended_action": "SCREEN_OUT"
+    },
+    {
+      "candidate_id": "RFATM-0005",
+      "numeric_fabrication_count": 0,
+      "state_overreach": false,
+      "holdout_reference": false,
+      "approved_test_families": true,
+      "recommended_action": "SCREEN_OUT"
+    },
+    {
+      "candidate_id": "RFATM-0006",
+      "numeric_fabrication_count": 0,
+      "state_overreach": false,
+      "holdout_reference": false,
+      "approved_test_families": true,
+      "recommended_action": "SCREEN_OUT"
+    }
+  ],
+  "errors": []
+}

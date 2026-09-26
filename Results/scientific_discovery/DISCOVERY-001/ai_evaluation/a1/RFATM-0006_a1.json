@@ -1,0 +1,25 @@
+{
+  "candidate_id": "RFATM-0006",
+  "proposal_type": "CRITIQUE",
+  "description": "The warming-and-drying transition should remain screened out because apparent enrichment did not preserve pre/post temporal ordering.",
+  "mechanistic_interpretations": [
+    "The atmospheric transition may belong to the same broader regime as RF degradation without consistently preceding it."
+  ],
+  "alternative_explanations": [
+    "Temporal clustering may create enrichment even when the RF event is not downstream of the atmospheric transition.",
+    "The transition may be coincident with, rather than antecedent to, the RF degradation process.",
+    "A broader environmental regime may generate both transition signatures and RF events without a direct directional link."
+  ],
+  "falsification_tests": [
+    "strict_pre_post_directionality: require post-event RF entries to exceed pre-event entries under the frozen event definition.",
+    "event_refractory_independence: repeat the test using only temporally independent transition episodes.",
+    "blocked_temporal_replication: require the direction of the pre/post contrast to remain stable across contiguous development blocks."
+  ],
+  "uncertainties": [
+    "The failed directionality gate prevents distinguishing a shared regime from a true antecedent effect using the current formulation."
+  ],
+  "novelty_class": "LITERATURE_REVIEW_REQUIRED",
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated_by_ai": false,
+  "validation_status_claimed_by_ai": false
+}

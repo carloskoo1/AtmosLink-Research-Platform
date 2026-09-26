@@ -1,0 +1,212 @@
+[
+  {
+    "candidate_id": "RFATM-0001",
+    "evidence": {
+      "pattern": "SJ01 pressure level associated with later DL RSSI/SNR degradation",
+      "failed_gate": "characterization_replication",
+      "reason": "Discovery association did not preserve magnitude or sign in characterization.",
+      "status": "SCREENED_OUT"
+    },
+    "option_A": {
+      "interpretation": "The pressure\u2013RF association should remain screened out because it did not reproduce with stable direction and magnitude across development periods.",
+      "alternative_explanations": [
+        "The original association may be a development-period fluctuation that does not generalize across time.",
+        "The pressure variable may be acting as a proxy for a broader time-varying environmental regime rather than as the relevant physical driver.",
+        "The apparent relation may depend on how RF degradation is defined, even if the original exploratory association looked coherent."
+      ],
+      "falsification_tests": [
+        "require a newly registered formulation to preserve effect direction across prespecified contiguous temporal blocks.",
+        "test whether the qualitative association persists under prespecified alternative RF outcome definitions.",
+        "only a newly frozen formulation may be tested on future data; the failed formulation remains screened out."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    },
+    "option_B": {
+      "interpretation": "The exploratory association is not stable across development periods and should not be promoted.",
+      "alternative_explanations": [
+        "The initial association may be a development-period fluctuation.",
+        "The relationship may depend on an unmodeled time-varying regime."
+      ],
+      "falsification_tests": [
+        "Require sign and effect-direction stability across prespecified contiguous temporal blocks.",
+        "Retain the candidate as screened out unless a newly registered formulation is tested without reusing failed evidence as confirmation."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    }
+  },
+  {
+    "candidate_id": "RFATM-0002",
+    "evidence": {
+      "pattern": "CU01 humidity level inversely associated with DL MCS",
+      "failed_gate": "temporal_cycle_control",
+      "reason": "Association was not stable after trend and diurnal-cycle screening.",
+      "status": "SCREENED_OUT"
+    },
+    "option_A": {
+      "interpretation": "The humidity\u2013DL MCS association should remain screened out because it was not robust to temporal-cycle control.",
+      "alternative_explanations": [
+        "A shared time-of-day structure may create the inverse association.",
+        "A slow temporal trend may make humidity and DL MCS appear related even when their short-term variations are not linked.",
+        "The discrete RF outcome may respond to other time-varying conditions that happen to co-occur with humidity changes."
+      ],
+      "falsification_tests": [
+        "compare candidate events with controls matched to the same clock-time structure.",
+        "test the residual association after a prespecified temporal-trend and diurnal adjustment.",
+        "require the adjusted direction to remain stable across contiguous temporal blocks."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    },
+    "option_B": {
+      "interpretation": "The apparent association is not robust to temporal trend or diurnal-cycle control and should not be promoted.",
+      "alternative_explanations": [
+        "Shared time-of-day structure may explain both atmospheric and RF variation.",
+        "Slow temporal drift may create an association without a direct atmospheric-to-RF relationship."
+      ],
+      "falsification_tests": [
+        "Use same-clock or seasonally matched controls.",
+        "Test residual association after prespecified temporal-trend adjustment."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    }
+  },
+  {
+    "candidate_id": "RFATM-0003",
+    "evidence": {
+      "pattern": "Cold-humid-calm atmospheric regime associated with degraded RF state",
+      "failed_gate": "temporal_independence",
+      "reason": "30-minute block-level risk reversed between discovery and characterization.",
+      "status": "SCREENED_OUT"
+    },
+    "option_A": {
+      "interpretation": "The candidate lacks stable event-level temporal independence and should not be promoted.",
+      "alternative_explanations": [
+        "Serial dependence may inflate block-level support.",
+        "Repeated observations from the same regime may create pseudoreplication."
+      ],
+      "falsification_tests": [
+        "Re-express support using refractory event episodes rather than row counts.",
+        "Require directionally consistent results across contiguous temporal folds."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    },
+    "option_B": {
+      "interpretation": "The cold\u2013humid\u2013calm regime should remain screened out because block-level association did not survive an event-level temporal-independence requirement.",
+      "alternative_explanations": [
+        "Serial dependence may inflate apparent support within long-lived regimes.",
+        "The regime label may pool heterogeneous episodes whose RF behavior differs across time.",
+        "Block-level enrichment may arise from repeated sampling of the same episode rather than reproducible event-level coupling."
+      ],
+      "falsification_tests": [
+        "rebuild support from independent regime episodes separated by a prespecified refractory interval.",
+        "require event-level direction to remain stable across contiguous temporal folds.",
+        "compare independent regime episodes with temporally matched non-event controls."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    }
+  },
+  {
+    "candidate_id": "RFATM-0004",
+    "evidence": {
+      "pattern": "Multivariate atmospheric transition followed by sharp RF-quality drop",
+      "failed_gate": "strict_temporal_direction",
+      "reason": "Block-level enrichment was robust across many thresholds, but RF drops were not more frequent after atmospheric transitions than before them.",
+      "status": "SCREENED_OUT"
+    },
+    "option_A": {
+      "interpretation": "The candidate fails temporal precedence and should not be promoted as a precursor.",
+      "alternative_explanations": [
+        "The atmospheric and RF events may reflect a shared regime.",
+        "The atmospheric transition may be coincident with or downstream of RF change."
+      ],
+      "falsification_tests": [
+        "Compare prespecified pre-event and post-event RF entry counts around independent atmospheric events.",
+        "Require post-event excess to preserve direction across temporal folds."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    },
+    "option_B": {
+      "interpretation": "The multivariate transition should remain screened out because robust enrichment without preserved temporal precedence is insufficient for a precursor claim.",
+      "alternative_explanations": [
+        "RF degradation may occur before, during, or after the atmospheric transition with no stable ordering.",
+        "Temporal clustering may create enrichment around transitions without directional dependence.",
+        "A broad event window may capture coincident processes that cannot be causally ordered from the current evidence."
+      ],
+      "falsification_tests": [
+        "compare independent pre-event and post-event RF entries using a frozen event window.",
+        "repeat the directionality test using only temporally independent atmospheric transition episodes.",
+        "test whether the same atmospheric signature remains associated after the RF event, which would favor a shared-context interpretation."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    }
+  },
+  {
+    "candidate_id": "RFATM-0005",
+    "evidence": {
+      "pattern": "Lower 60-minute SJ01 humidity variability before RF-quality drops relative to same-clock controls",
+      "failed_gate": "matched_trajectory_screening",
+      "reason": "The signal preserved sign but failed FDR replication, post-event negative control, and characterization control-support requirements.",
+      "status": "SCREENED_OUT"
+    },
+    "option_A": {
+      "interpretation": "The matched trajectory association fails the registered robustness controls and should not be promoted.",
+      "alternative_explanations": [
+        "The association may reflect persistent context rather than a directional precursor.",
+        "The result may be sensitive to outcome definition or control support."
+      ],
+      "falsification_tests": [
+        "Apply prespecified same-clock matched controls and multiplicity correction.",
+        "Use post-event trajectories as a negative-control check for temporal precedence."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    },
+    "option_B": {
+      "interpretation": "The lower-humidity-variability pattern should remain screened out because the matched trajectory evidence did not satisfy the registered robustness and negative-control requirements.",
+      "alternative_explanations": [
+        "The same context may persist before and after RF events, which would weaken temporal precedence.",
+        "The association may depend on the RF outcome definition used to identify degradation events.",
+        "Matched controls may have insufficient support in some temporal regions, making the apparent trajectory difference unstable."
+      ],
+      "falsification_tests": [
+        "require the candidate to weaken or disappear after the RF event if it is to be interpreted as a precursor.",
+        "repeat the prespecified analysis across alternative RF event definitions.",
+        "evaluate the full registered feature family under the same multiple-testing correction rather than selecting the favorable trajectory alone."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    }
+  },
+  {
+    "candidate_id": "RFATM-0006",
+    "evidence": {
+      "pattern": "Rapid warming and drying transition at SJ01 followed by apparent RF degradation enrichment",
+      "failed_gate": "strict_pre_post_temporal_direction",
+      "reason": "Block-level enrichment did not preserve temporal ordering: discovery had more RF entries before than after the atmospheric transition.",
+      "status": "SCREENED_OUT"
+    },
+    "option_A": {
+      "interpretation": "The warming-and-drying transition should remain screened out because apparent enrichment did not preserve pre/post temporal ordering.",
+      "alternative_explanations": [
+        "Temporal clustering may create enrichment even when the RF event is not downstream of the atmospheric transition.",
+        "The transition may be coincident with, rather than antecedent to, the RF degradation process.",
+        "A broader environmental regime may generate both transition signatures and RF events without a direct directional link."
+      ],
+      "falsification_tests": [
+        "require post-event RF entries to exceed pre-event entries under the frozen event definition.",
+        "repeat the test using only temporally independent transition episodes.",
+        "require the direction of the pre/post contrast to remain stable across contiguous development blocks."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    },
+    "option_B": {
+      "interpretation": "The apparent enrichment does not preserve pre/post temporal ordering and should not be promoted.",
+      "alternative_explanations": [
+        "A shared environmental regime may create enrichment without directional precedence.",
+        "Temporal clustering may produce apparent block-level association."
+      ],
+      "falsification_tests": [
+        "Require post-only RF entries to exceed pre-only entries under the registered event window.",
+        "Do not access the confirmatory holdout for a candidate that already fails development directionality."
+      ],
+      "recommended_action": "SCREEN_OUT"
+    }
+  }
+]

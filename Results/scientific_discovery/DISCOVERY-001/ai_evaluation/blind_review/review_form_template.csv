@@ -1,0 +1,7 @@
+candidate_id,reviewer_id,option_A_interpretive_completeness,option_A_alternative_usefulness,option_A_falsifiability,option_A_confounder_coverage,option_A_actionability,option_B_interpretive_completeness,option_B_alternative_usefulness,option_B_falsifiability,option_B_confounder_coverage,option_B_actionability,preferred_option,option_A_unsupported_speculation,option_B_unsupported_speculation,comments
+RFATM-0001,,,,,,,,,,,,,,,
+RFATM-0002,,,,,,,,,,,,,,,
+RFATM-0003,,,,,,,,,,,,,,,
+RFATM-0004,,,,,,,,,,,,,,,
+RFATM-0005,,,,,,,,,,,,,,,
+RFATM-0006,,,,,,,,,,,,,,,

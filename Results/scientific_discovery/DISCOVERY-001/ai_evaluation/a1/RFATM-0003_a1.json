@@ -1,0 +1,25 @@
+{
+  "candidate_id": "RFATM-0003",
+  "proposal_type": "CRITIQUE",
+  "description": "The cold–humid–calm regime should remain screened out because block-level association did not survive an event-level temporal-independence requirement.",
+  "mechanistic_interpretations": [
+    "A persistent environmental state may create many correlated observations that look like repeated evidence while representing only a small number of independent episodes."
+  ],
+  "alternative_explanations": [
+    "Serial dependence may inflate apparent support within long-lived regimes.",
+    "The regime label may pool heterogeneous episodes whose RF behavior differs across time.",
+    "Block-level enrichment may arise from repeated sampling of the same episode rather than reproducible event-level coupling."
+  ],
+  "falsification_tests": [
+    "event_refractory_independence: rebuild support from independent regime episodes separated by a prespecified refractory interval.",
+    "blocked_temporal_replication: require event-level direction to remain stable across contiguous temporal folds.",
+    "same_clock_matched_control: compare independent regime episodes with temporally matched non-event controls."
+  ],
+  "uncertainties": [
+    "The failed gate leaves open whether any narrower, independently defined regime component has reproducible RF relevance."
+  ],
+  "novelty_class": "LITERATURE_REVIEW_REQUIRED",
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated_by_ai": false,
+  "validation_status_claimed_by_ai": false
+}

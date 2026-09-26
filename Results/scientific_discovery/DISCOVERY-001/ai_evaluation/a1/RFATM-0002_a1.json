@@ -1,0 +1,25 @@
+{
+  "candidate_id": "RFATM-0002",
+  "proposal_type": "CRITIQUE",
+  "description": "The humidity–DL MCS association should remain screened out because it was not robust to temporal-cycle control.",
+  "mechanistic_interpretations": [
+    "Humidity may co-vary with a recurring environmental cycle that also affects the RF state, without being the direct explanatory variable."
+  ],
+  "alternative_explanations": [
+    "A shared time-of-day structure may create the inverse association.",
+    "A slow temporal trend may make humidity and DL MCS appear related even when their short-term variations are not linked.",
+    "The discrete RF outcome may respond to other time-varying conditions that happen to co-occur with humidity changes."
+  ],
+  "falsification_tests": [
+    "same_clock_matched_control: compare candidate events with controls matched to the same clock-time structure.",
+    "trend_diurnal_adjustment: test the residual association after a prespecified temporal-trend and diurnal adjustment.",
+    "blocked_temporal_replication: require the adjusted direction to remain stable across contiguous temporal blocks."
+  ],
+  "uncertainties": [
+    "The present evidence cannot separate a humidity-specific relationship from shared temporal structure."
+  ],
+  "novelty_class": "LITERATURE_REVIEW_REQUIRED",
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated_by_ai": false,
+  "validation_status_claimed_by_ai": false
+}

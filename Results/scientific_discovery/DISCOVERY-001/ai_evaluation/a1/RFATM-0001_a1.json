@@ -1,0 +1,25 @@
+{
+  "candidate_id": "RFATM-0001",
+  "proposal_type": "CRITIQUE",
+  "description": "The pressure–RF association should remain screened out because it did not reproduce with stable direction and magnitude across development periods.",
+  "mechanistic_interpretations": [
+    "The candidate may reflect a conditionally active environmental regime rather than a stable pressure-linked RF mechanism."
+  ],
+  "alternative_explanations": [
+    "The original association may be a development-period fluctuation that does not generalize across time.",
+    "The pressure variable may be acting as a proxy for a broader time-varying environmental regime rather than as the relevant physical driver.",
+    "The apparent relation may depend on how RF degradation is defined, even if the original exploratory association looked coherent."
+  ],
+  "falsification_tests": [
+    "blocked_temporal_replication: require a newly registered formulation to preserve effect direction across prespecified contiguous temporal blocks.",
+    "outcome_definition_sensitivity: test whether the qualitative association persists under prespecified alternative RF outcome definitions.",
+    "prospective_new_data_replication: only a newly frozen formulation may be tested on future data; the failed formulation remains screened out."
+  ],
+  "uncertainties": [
+    "The failed replication does not distinguish between a false exploratory association and a real effect that is strongly regime-dependent."
+  ],
+  "novelty_class": "LITERATURE_REVIEW_REQUIRED",
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated_by_ai": false,
+  "validation_status_claimed_by_ai": false
+}
