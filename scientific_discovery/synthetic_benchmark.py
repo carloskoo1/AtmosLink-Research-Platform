@@ -174,3 +174,35 @@ def detect_drop_indices_fixed_threshold(rf_array, med, scale, threshold,
         if i-last>=refractory_steps:
             events.append(int(i)); last=int(i)
     return np.asarray(events,dtype=int)
+
+def inject_morphology(base_array,event_idx,lag_steps,effect_sd,scale,morphology,
+                      activation_prob=.70,seed=0):
+    rng=np.random.default_rng(seed)
+    arr=np.array(base_array,copy=True)
+    activated=[]
+    masks={
+        "joint_step":np.array([1,1,1,1,1,1],dtype=float),
+        "dl_only_step":np.array([1,0,1,0,1,0],dtype=float),
+        "ul_only_step":np.array([0,1,0,1,0,1],dtype=float),
+        "analog_only_step":np.array([1,1,1,1,0,0],dtype=float),
+        "mcs_only_step":np.array([0,0,0,0,1,1],dtype=float),
+    }
+    for e in np.asarray(event_idx,dtype=int):
+        if rng.random()>activation_prob:
+            continue
+        s=e+lag_steps
+        if s>=len(arr):
+            continue
+        if morphology=="gradual_joint":
+            duration=6
+            ee=min(len(arr),s+duration)
+            for j,i in enumerate(range(s,ee),start=1):
+                frac=j/duration
+                arr[i,:]-=effect_sd*frac*scale
+        else:
+            if morphology not in masks:
+                raise ValueError(f"Unknown morphology: {morphology}")
+            ee=min(len(arr),s+3)
+            arr[s:ee,:]-=effect_sd*scale*masks[morphology]
+        activated.append(int(e))
+    return arr,np.asarray(activated,dtype=int)

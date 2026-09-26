@@ -1,0 +1,46 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "19.0-temporal-identifiability-audit",
+  "validation_accessed": false,
+  "status": "EXPLORATORY_IDENTIFIABILITY",
+  "driver_count": 10,
+  "proximity_tolerances_min": [
+    10,
+    30,
+    60,
+    120
+  ],
+  "equivalence_graph": {
+    "tolerance_min": 60,
+    "overlap_threshold": 0.35,
+    "components": [
+      [
+        "sj01_local_wind_speed_ms__fall",
+        "cu01_local_hum_avg_pct__fall",
+        "cu01_local_hum_avg_pct__rise",
+        "sj01_local_wind_speed_ms__rise",
+        "sj01_local_press_hpa__rise",
+        "sj01_local_hum_avg_pct__fall",
+        "cu01_local_temp_avg_c__fall",
+        "sj01_local_hum_avg_pct__rise",
+        "sj01_local_press_hpa__fall",
+        "cu01_local_temp_avg_c__rise"
+      ]
+    ],
+    "nontrivial_components": [
+      [
+        "sj01_local_wind_speed_ms__fall",
+        "cu01_local_hum_avg_pct__fall",
+        "cu01_local_hum_avg_pct__rise",
+        "sj01_local_wind_speed_ms__rise",
+        "sj01_local_press_hpa__rise",
+        "sj01_local_hum_avg_pct__fall",
+        "cu01_local_temp_avg_c__fall",
+        "sj01_local_hum_avg_pct__rise",
+        "sj01_local_press_hpa__fall",
+        "cu01_local_temp_avg_c__rise"
+      ]
+    ]
+  },
+  "interpretation": "Drivers linked by substantial temporal proximity are observationally difficult to attribute uniquely under event-window analysis. Such candidates should be treated as an equivalence class until additional independent variation or intervention resolves them."
+}

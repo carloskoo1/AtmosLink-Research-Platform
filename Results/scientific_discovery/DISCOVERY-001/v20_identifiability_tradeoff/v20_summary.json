@@ -1,0 +1,192 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "20.0-identifiability-power-tradeoff",
+  "validation_accessed": false,
+  "status": "EXPLORATORY_DESIGN",
+  "minimum_events_per_driver": 12,
+  "proximity_window_min": 60,
+  "max_allowed_pair_overlap": 0.35,
+  "designs": [
+    {
+      "quantile": 0.975,
+      "refractory_min": 240,
+      "valid_driver_count": 11,
+      "max_identifiable_driver_count": 5,
+      "min_events_selected": 13,
+      "median_events_selected": 25.0,
+      "selected_drivers": "cu01_local_hum_avg_pct__rise;cu01_local_hum_avg_pct__fall;sj01_local_hum_avg_pct__fall;sj01_local_press_hpa__rise;sj01_local_press_hpa__fall"
+    },
+    {
+      "quantile": 0.975,
+      "refractory_min": 360,
+      "valid_driver_count": 9,
+      "max_identifiable_driver_count": 5,
+      "min_events_selected": 12,
+      "median_events_selected": 23.0,
+      "selected_drivers": "cu01_local_temp_avg_c__fall;cu01_local_hum_avg_pct__rise;cu01_local_hum_avg_pct__fall;sj01_local_hum_avg_pct__fall;sj01_local_press_hpa__rise"
+    },
+    {
+      "quantile": 0.975,
+      "refractory_min": 300,
+      "valid_driver_count": 10,
+      "max_identifiable_driver_count": 5,
+      "min_events_selected": 12,
+      "median_events_selected": 17.0,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;cu01_local_temp_avg_c__fall;cu01_local_hum_avg_pct__rise;sj01_local_press_hpa__rise;sj01_local_press_hpa__fall"
+    },
+    {
+      "quantile": 0.85,
+      "refractory_min": 360,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 4,
+      "min_events_selected": 23,
+      "median_events_selected": 28.0,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;sj01_local_temp_avg_c__fall;sj01_local_hum_avg_pct__fall;sj01_local_press_hpa__rise"
+    },
+    {
+      "quantile": 0.9,
+      "refractory_min": 360,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 4,
+      "min_events_selected": 21,
+      "median_events_selected": 26.0,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;cu01_local_temp_avg_c__fall;cu01_local_hum_avg_pct__rise;sj01_local_wind_speed_ms__rise"
+    },
+    {
+      "quantile": 0.925,
+      "refractory_min": 360,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 4,
+      "min_events_selected": 21,
+      "median_events_selected": 22.0,
+      "selected_drivers": "sj01_local_hum_avg_pct__rise;sj01_local_hum_avg_pct__fall;sj01_local_press_hpa__rise;sj01_local_press_hpa__fall"
+    },
+    {
+      "quantile": 0.925,
+      "refractory_min": 300,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 4,
+      "min_events_selected": 20,
+      "median_events_selected": 27.0,
+      "selected_drivers": "sj01_local_temp_avg_c__rise;sj01_local_hum_avg_pct__rise;sj01_local_press_hpa__rise;sj01_local_wind_speed_ms__rise"
+    },
+    {
+      "quantile": 0.95,
+      "refractory_min": 300,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 4,
+      "min_events_selected": 17,
+      "median_events_selected": 23.5,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;cu01_local_hum_avg_pct__rise;sj01_local_temp_avg_c__fall;sj01_local_press_hpa__rise"
+    },
+    {
+      "quantile": 0.95,
+      "refractory_min": 360,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 4,
+      "min_events_selected": 17,
+      "median_events_selected": 19.5,
+      "selected_drivers": "sj01_local_hum_avg_pct__rise;sj01_local_hum_avg_pct__fall;sj01_local_press_hpa__rise;sj01_local_press_hpa__fall"
+    },
+    {
+      "quantile": 0.85,
+      "refractory_min": 180,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 3,
+      "min_events_selected": 35,
+      "median_events_selected": 44.0,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;sj01_local_press_hpa__rise;sj01_local_press_hpa__fall"
+    },
+    {
+      "quantile": 0.925,
+      "refractory_min": 240,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 3,
+      "min_events_selected": 29,
+      "median_events_selected": 36.0,
+      "selected_drivers": "cu01_local_hum_avg_pct__fall;sj01_local_hum_avg_pct__fall;sj01_local_press_hpa__rise"
+    },
+    {
+      "quantile": 0.95,
+      "refractory_min": 180,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 3,
+      "min_events_selected": 26,
+      "median_events_selected": 39.0,
+      "selected_drivers": "cu01_local_hum_avg_pct__rise;sj01_local_temp_avg_c__rise;sj01_local_press_hpa__rise"
+    },
+    {
+      "quantile": 0.85,
+      "refractory_min": 300,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 3,
+      "min_events_selected": 25,
+      "median_events_selected": 32.0,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;sj01_local_temp_avg_c__fall;sj01_local_press_hpa__rise"
+    },
+    {
+      "quantile": 0.9,
+      "refractory_min": 300,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 3,
+      "min_events_selected": 21,
+      "median_events_selected": 24.0,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;sj01_local_temp_avg_c__fall;sj01_local_press_hpa__rise"
+    },
+    {
+      "quantile": 0.95,
+      "refractory_min": 240,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 3,
+      "min_events_selected": 19,
+      "median_events_selected": 20.0,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;sj01_local_temp_avg_c__fall;sj01_local_press_hpa__rise"
+    },
+    {
+      "quantile": 0.975,
+      "refractory_min": 180,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 3,
+      "min_events_selected": 18,
+      "median_events_selected": 30.0,
+      "selected_drivers": "cu01_local_hum_avg_pct__rise;sj01_local_temp_avg_c__rise;sj01_local_press_hpa__rise"
+    },
+    {
+      "quantile": 0.9,
+      "refractory_min": 180,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 2,
+      "min_events_selected": 37,
+      "median_events_selected": 40.0,
+      "selected_drivers": "cu01_local_temp_avg_c__fall;sj01_local_hum_avg_pct__fall"
+    },
+    {
+      "quantile": 0.925,
+      "refractory_min": 180,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 2,
+      "min_events_selected": 29,
+      "median_events_selected": 38.5,
+      "selected_drivers": "cu01_local_hum_avg_pct__rise;sj01_local_temp_avg_c__rise"
+    },
+    {
+      "quantile": 0.85,
+      "refractory_min": 240,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 2,
+      "min_events_selected": 29,
+      "median_events_selected": 32.0,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;sj01_local_temp_avg_c__fall"
+    },
+    {
+      "quantile": 0.9,
+      "refractory_min": 240,
+      "valid_driver_count": 12,
+      "max_identifiable_driver_count": 2,
+      "min_events_selected": 25,
+      "median_events_selected": 28.0,
+      "selected_drivers": "cu01_local_temp_avg_c__rise;cu01_local_temp_avg_c__fall"
+    }
+  ],
+  "interpretation": "Increasing event sparsity can improve temporal attribution but reduces event support. The design must be frozen based on an explicit identifiability/power criterion before an audit-grade end-to-end benchmark."
+}

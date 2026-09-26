@@ -27,7 +27,7 @@ The contribution is not a claimed meteorological cause of RF degradation. The co
 ## Real-data discovery outcome
 Six atmospheric–RF candidates were generated and subsequently screened out before validation. Failures included lack of temporal replication, diurnal/trend confounding, pseudoreplication, strict directionality failure, and multiplicity/control-support failure.
 
-One internally reproducible context marker (CTX-0001) was retained: lower 60-minute SJ01 humidity variability around RF-quality drop episodes relative to same-clock controls. Because the association persists after the RF event, it is classified as a context marker rather than a precursor.
+One exploratory context association (CTX-0001) was retained for sensitivity analysis: lower 60-minute SJ01 humidity variability around RF-quality drop episodes relative to same-clock controls. Subsequent outcome-definition sensitivity showed that the association is present under the all-metric, analog-only, and UL-oriented RF event definitions but absent under the DL-only definition. CTX-0001 is therefore classified as an outcome-definition-sensitive context association, not as a robust marker or precursor.
 
 ## Audit-grade synthetic benchmark
 Frozen protocol commit: **1e49129**.
@@ -87,7 +87,7 @@ IX. Limitations
 X. Conclusion
 
 ## Claim discipline
-The paper may claim quantitative performance of ASDE on the frozen synthetic benchmark and describe internally reproducible real-data context associations. It must not claim that weather causes RF degradation in the natural data unless a future frozen hypothesis succeeds on D_validation and subsequent external replication.
+The paper may claim quantitative performance of ASDE on the frozen synthetic benchmark and may describe CTX-0001 only as an exploratory, outcome-definition-sensitive real-data association. It must not claim that weather causes RF degradation in the natural data unless a future frozen hypothesis succeeds on D_validation and subsequent external replication.
 
 ## Audit-grade safeguard ablation
 Using the same audit-grade trials, the naive uncorrected rule produced an empirical family-wise false-positive rate of **0.079**, whereas the full ASDE gate produced **0.025**. For a 1.0 robust-SD injected effect, the full gate retained recovery of 1.00, 1.00, and 0.94 at lags of 15, 30, and 60 minutes, respectively. This supports the claim that the safeguards reduce false alarms without materially sacrificing moderate-effect sensitivity in the tested regime.
@@ -97,3 +97,6 @@ Generated ablation figure:
 
 ## Editorial positioning
 IEEE Access currently defines a Methods article as work reporting a new experimental, measurement, or mathematical technique. This is the recommended manuscript type for ASDE. The manuscript should emphasize the auditable method and quantitative benchmark, with the AtmosLink natural-data analysis presented as a case study and stress test rather than as a causal weather result.
+
+## Out-of-family robustness stress test
+A post-audit exploratory stress test challenged the primary detector with alternative RF perturbation morphologies. At 1.0 robust SD per affected metric, recovery for analog RSSI/SNR-only changes was 1.00, 1.00 and 0.94 at 15/30/60 min; DL-only and UL-only changes were 0.96, 0.82 and 0.52; gradual joint changes were 1.00, 1.00 and 0.60; MCS-only changes were 0.70, 0.50 and 0.06. These values are supportive robustness evidence, not part of the preregistered audit benchmark. They define the current operating envelope and show that the detector is less sensitive to partial, discrete and slowly evolving degradation morphologies.

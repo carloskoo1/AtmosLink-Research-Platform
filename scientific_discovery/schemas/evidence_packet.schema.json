@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASDE Evidence Packet",
+  "type": "object",
+  "required": ["experiment_id","candidate_id","dataset_sha256","git_commit","status","evidence"],
+  "properties": {
+    "experiment_id": {"type":"string"},
+    "candidate_id": {"type":"string"},
+    "dataset_sha256": {"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "git_commit": {"type":"string"},
+    "status": {"enum":["CANDIDATE","SCREENED_OUT","EVIDENCE_ACCUMULATING","HUMAN_REVIEWED","HYPOTHESIS","FROZEN","VALIDATING","CONFIRMED","REJECTED","INCONCLUSIVE"]},
+    "configuration": {"type":"object"},
+    "qc_eligibility": {"type":"object"},
+    "feature_definitions": {"type":"array","items":{"type":"string"}},
+    "evidence": {
+      "type":"object",
+      "required":["independent_event_count"],
+      "properties":{
+        "independent_event_count":{"type":"integer","minimum":0},
+        "effect_estimate":{"type":["number","null"]},
+        "confidence_interval":{"type":["array","null"],"items":{"type":"number"},"minItems":2,"maxItems":2},
+        "raw_p":{"type":["number","null"],"minimum":0,"maximum":1},
+        "adjusted_p":{"type":["number","null"],"minimum":0,"maximum":1},
+        "pre_post_direction":{"type":["string","null"]},
+        "fold_consistency":{"type":["string","null"]},
+        "negative_controls":{"type":"object"}
+      }
+    },
+    "known_confounders":{"type":"array","items":{"type":"string"}},
+    "provenance_files":{"type":"array","items":{"type":"string"}}
+  },
+  "additionalProperties": true
+}

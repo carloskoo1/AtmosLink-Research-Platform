@@ -1,0 +1,94 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "17.0-candidate-library-audit",
+  "validation_accessed": false,
+  "status": "EXPLORATORY_LIBRARY_DESIGN",
+  "candidate_driver_count": 14,
+  "identifiable_driver_count": 10,
+  "overlap_tolerance_minutes": 10,
+  "max_pair_overlap_for_identifiable_library": 0.35,
+  "selected_drivers": [
+    "sj01_local_wind_speed_ms__fall",
+    "cu01_local_hum_avg_pct__fall",
+    "cu01_local_hum_avg_pct__rise",
+    "sj01_local_wind_speed_ms__rise",
+    "sj01_local_press_hpa__rise",
+    "sj01_local_hum_avg_pct__fall",
+    "cu01_local_temp_avg_c__fall",
+    "sj01_local_hum_avg_pct__rise",
+    "sj01_local_press_hpa__fall",
+    "cu01_local_temp_avg_c__rise"
+  ],
+  "event_counts": [
+    {
+      "driver": "cu01_local_temp_avg_c__rise",
+      "events": 35,
+      "threshold": 1.5308007671599377
+    },
+    {
+      "driver": "cu01_local_temp_avg_c__fall",
+      "events": 47,
+      "threshold": 1.0263989818122177
+    },
+    {
+      "driver": "cu01_local_hum_avg_pct__rise",
+      "events": 61,
+      "threshold": 1.0282236911132077
+    },
+    {
+      "driver": "cu01_local_hum_avg_pct__fall",
+      "events": 61,
+      "threshold": 1.2965211265494603
+    },
+    {
+      "driver": "sj01_local_temp_avg_c__rise",
+      "events": 40,
+      "threshold": 1.6249095569208976
+    },
+    {
+      "driver": "sj01_local_temp_avg_c__fall",
+      "events": 45,
+      "threshold": 1.2876641771825945
+    },
+    {
+      "driver": "sj01_local_hum_avg_pct__rise",
+      "events": 46,
+      "threshold": 1.5271488893809615
+    },
+    {
+      "driver": "sj01_local_hum_avg_pct__fall",
+      "events": 48,
+      "threshold": 1.6365945597866016
+    },
+    {
+      "driver": "sj01_local_press_hpa__rise",
+      "events": 50,
+      "threshold": 0.8993210126363124
+    },
+    {
+      "driver": "sj01_local_press_hpa__fall",
+      "events": 44,
+      "threshold": 1.0492078480755558
+    },
+    {
+      "driver": "sj01_local_wind_speed_ms__rise",
+      "events": 61,
+      "threshold": 1.064196531618615
+    },
+    {
+      "driver": "sj01_local_wind_speed_ms__fall",
+      "events": 62,
+      "threshold": 1.124151265794326
+    },
+    {
+      "driver": "sj01_warming_drying",
+      "events": 47,
+      "threshold": 2.175421686915581
+    },
+    {
+      "driver": "sj01_cooling_humidifying",
+      "events": 43,
+      "threshold": 1.8732252477058098
+    }
+  ]
+}

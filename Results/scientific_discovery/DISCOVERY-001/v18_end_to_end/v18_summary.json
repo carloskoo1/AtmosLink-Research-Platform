@@ -1,0 +1,194 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "18.0-end-to-end-exploratory",
+  "validation_accessed": false,
+  "status": "EXPLORATORY_END_TO_END",
+  "candidate_library_size": 10,
+  "horizons_min": [
+    30,
+    60,
+    120
+  ],
+  "familywise_alpha_per_driver_horizon": 0.0016666666666666668,
+  "effects_sd": [
+    0.5,
+    1.0
+  ],
+  "lags_min": [
+    15,
+    30,
+    60
+  ],
+  "trials_per_truth_effect_lag": 50,
+  "null_trials": 500,
+  "library_false_selection_rate": 0.016,
+  "library_false_selection_ci95": [
+    0.008129155320203278,
+    0.03125147541771118
+  ],
+  "important_limit": "Candidate library and benchmark design were developed adaptively on D_development; results are exploratory until protocol is frozen and rerun with reserved seeds.",
+  "aggregate": [
+    {
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "metric": "true_selected",
+      "trials": 500,
+      "rate": 0.658,
+      "ci95_low": 0.6153554148443917,
+      "ci95_high": 0.698235205699843
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "metric": "top1_correct",
+      "trials": 500,
+      "rate": 0.858,
+      "ci95_low": 0.8246696706783865,
+      "ci95_high": 0.8858711024534867
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "metric": "false_driver_selected",
+      "trials": 500,
+      "rate": 0.04,
+      "ci95_low": 0.026040593951356387,
+      "ci95_high": 0.06097405509707471
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "metric": "true_selected",
+      "trials": 500,
+      "rate": 0.456,
+      "ci95_low": 0.41284403669724773,
+      "ci95_high": 0.4998269297334718
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "metric": "top1_correct",
+      "trials": 500,
+      "rate": 0.67,
+      "ci95_low": 0.627624826873818,
+      "ci95_high": 0.709782802825675
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "metric": "false_driver_selected",
+      "trials": 500,
+      "rate": 0.138,
+      "ci95_low": 0.11051755348949738,
+      "ci95_high": 0.17100267032687666
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "metric": "true_selected",
+      "trials": 500,
+      "rate": 0.168,
+      "ci95_low": 0.13778772464256234,
+      "ci95_high": 0.20327502206195752
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "metric": "top1_correct",
+      "trials": 500,
+      "rate": 0.334,
+      "ci95_low": 0.2940631065718404,
+      "ci95_high": 0.37646826678041956
+    },
+    {
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "metric": "false_driver_selected",
+      "trials": 500,
+      "rate": 0.06,
+      "ci95_low": 0.042348086000950205,
+      "ci95_high": 0.08436157830624476
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "metric": "true_selected",
+      "trials": 500,
+      "rate": 0.968,
+      "ci95_low": 0.9486546984063574,
+      "ci95_high": 0.980208658648717
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "metric": "top1_correct",
+      "trials": 500,
+      "rate": 0.996,
+      "ci95_low": 0.9855339859585811,
+      "ci95_high": 0.9989023924587627
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "metric": "false_driver_selected",
+      "trials": 500,
+      "rate": 0.128,
+      "ci95_low": 0.10152638796079462,
+      "ci95_high": 0.1601463282261975
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "metric": "true_selected",
+      "trials": 500,
+      "rate": 0.914,
+      "ci95_low": 0.8861596159077154,
+      "ci95_high": 0.9355271999486967
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "metric": "top1_correct",
+      "trials": 500,
+      "rate": 0.94,
+      "ci95_low": 0.9156384216937552,
+      "ci95_high": 0.9576519139990498
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "metric": "false_driver_selected",
+      "trials": 500,
+      "rate": 0.128,
+      "ci95_low": 0.10152638796079462,
+      "ci95_high": 0.1601463282261975
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "metric": "true_selected",
+      "trials": 500,
+      "rate": 0.69,
+      "ci95_low": 0.6481408712280013,
+      "ci95_high": 0.7289617737302553
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "metric": "top1_correct",
+      "trials": 500,
+      "rate": 0.826,
+      "ci95_low": 0.790317702710052,
+      "ci95_high": 0.856711046007799
+    },
+    {
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "metric": "false_driver_selected",
+      "trials": 500,
+      "rate": 0.142,
+      "ci95_low": 0.1141288975465133,
+      "ci95_high": 0.17533032932161352
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "candidate_id": "RFATM-0006",
+  "dataset_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "git_commit": "2cfbed6",
+  "status": "SCREENED_OUT",
+  "configuration": {"frequency_mhz": 7000, "bandwidth_mhz": 20},
+  "qc_eligibility": {
+    "eligible": true,
+    "cu01_pressure_derivative_excluded": true,
+    "reason": "388 PRESS_JUMP warnings in the prevalidation interval"
+  },
+  "feature_definitions": [
+    "15-minute multivariate atmospheric transition archetype",
+    "RF degradation entry from robust composite RSSI/SNR/MCS quality index",
+    "60-minute pre/post temporal direction audit"
+  ],
+  "evidence": {
+    "independent_event_count": 50,
+    "effect_estimate": null,
+    "confidence_interval": null,
+    "raw_p": null,
+    "adjusted_p": null,
+    "pre_post_direction": "Discovery: post-only 2 vs pre-only 5; later development block: post-only 3 vs pre-only 1; direction inconsistent.",
+    "fold_consistency": "Failed strict temporal-direction consistency.",
+    "negative_controls": {
+      "block_level_enrichment": "Initially positive but insufficient to establish temporal precedence."
+    }
+  },
+  "known_confounders": [
+    "serial dependence",
+    "possible shared environmental regime",
+    "adaptive development history"
+  ],
+  "provenance_files": [
+    "Results/scientific_discovery/DISCOVERY-001/v3/RFATM-0006.json",
+    "Results/scientific_discovery/DISCOVERY-001/v5/directionality_grid.csv"
+  ]
+}

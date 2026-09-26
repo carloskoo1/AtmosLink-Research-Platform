@@ -1,0 +1,15 @@
+driver,events,threshold
+cu01_local_temp_avg_c__rise,35,1.5308007671599377
+cu01_local_temp_avg_c__fall,47,1.0263989818122177
+cu01_local_hum_avg_pct__rise,61,1.0282236911132077
+cu01_local_hum_avg_pct__fall,61,1.2965211265494603
+sj01_local_temp_avg_c__rise,40,1.6249095569208976
+sj01_local_temp_avg_c__fall,45,1.2876641771825945
+sj01_local_hum_avg_pct__rise,46,1.5271488893809615
+sj01_local_hum_avg_pct__fall,48,1.6365945597866016
+sj01_local_press_hpa__rise,50,0.8993210126363124
+sj01_local_press_hpa__fall,44,1.0492078480755558
+sj01_local_wind_speed_ms__rise,61,1.064196531618615
+sj01_local_wind_speed_ms__fall,62,1.124151265794326
+sj01_warming_drying,47,2.175421686915581
+sj01_cooling_humidifying,43,1.8732252477058098

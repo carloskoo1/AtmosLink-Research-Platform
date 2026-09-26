@@ -1,0 +1,516 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "15.0-out-of-family-morphology-stress",
+  "validation_accessed": false,
+  "status": "EXPLORATORY_ROBUSTNESS",
+  "frozen_rf_drop_threshold": -0.5620817932460992,
+  "driver_spacing_min": 180,
+  "morphologies": [
+    "joint_step",
+    "dl_only_step",
+    "ul_only_step",
+    "analog_only_step",
+    "mcs_only_step",
+    "gradual_joint"
+  ],
+  "effects_sd_per_affected_metric": [
+    0.5,
+    1.0,
+    1.5
+  ],
+  "lags_min": [
+    15,
+    30,
+    60
+  ],
+  "trials_per_cell": 50,
+  "important_limit": "This stress test was designed after viewing the primary audit benchmark and is therefore supportive, not confirmatory.",
+  "recovery_table": [
+    {
+      "morphology": "analog_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.7,
+      "ci95_low": 0.562493877226366,
+      "ci95_high": 0.8089661091039063
+    },
+    {
+      "morphology": "analog_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.5,
+      "ci95_low": 0.36644286412332855,
+      "ci95_high": 0.6335571358766714
+    },
+    {
+      "morphology": "analog_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.06,
+      "ci95_low": 0.020614596364630478,
+      "ci95_high": 0.16217343370877002
+    },
+    {
+      "morphology": "analog_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "analog_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "analog_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.94,
+      "ci95_low": 0.8378265662912299,
+      "ci95_high": 0.9793854036353695
+    },
+    {
+      "morphology": "analog_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "analog_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "analog_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "dl_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.7,
+      "ci95_low": 0.562493877226366,
+      "ci95_high": 0.8089661091039063
+    },
+    {
+      "morphology": "dl_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.5,
+      "ci95_low": 0.36644286412332855,
+      "ci95_high": 0.6335571358766714
+    },
+    {
+      "morphology": "dl_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.06,
+      "ci95_low": 0.020614596364630478,
+      "ci95_high": 0.16217343370877002
+    },
+    {
+      "morphology": "dl_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "morphology": "dl_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.82,
+      "ci95_low": 0.6920368054529739,
+      "ci95_high": 0.902299172675462
+    },
+    {
+      "morphology": "dl_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.52,
+      "ci95_low": 0.3851151225880844,
+      "ci95_high": 0.6520308760449429
+    },
+    {
+      "morphology": "dl_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "dl_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "dl_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "morphology": "gradual_joint",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.86,
+      "ci95_low": 0.738135428014719,
+      "ci95_high": 0.9304925473797714
+    },
+    {
+      "morphology": "gradual_joint",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.26,
+      "ci95_low": 0.15871379651367384,
+      "ci95_high": 0.3955342198899992
+    },
+    {
+      "morphology": "gradual_joint",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.07135003417431873
+    },
+    {
+      "morphology": "gradual_joint",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "gradual_joint",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "gradual_joint",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.6,
+      "ci95_low": 0.4618118910275937,
+      "ci95_high": 0.7239181021375425
+    },
+    {
+      "morphology": "gradual_joint",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "gradual_joint",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "gradual_joint",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.86,
+      "ci95_low": 0.738135428014719,
+      "ci95_high": 0.9304925473797714
+    },
+    {
+      "morphology": "joint_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "morphology": "joint_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.82,
+      "ci95_low": 0.6920368054529739,
+      "ci95_high": 0.902299172675462
+    },
+    {
+      "morphology": "joint_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.52,
+      "ci95_low": 0.3851151225880844,
+      "ci95_high": 0.6520308760449429
+    },
+    {
+      "morphology": "joint_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "joint_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "joint_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "joint_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "joint_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "joint_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "mcs_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.07135003417431873
+    },
+    {
+      "morphology": "mcs_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.07135003417431873
+    },
+    {
+      "morphology": "mcs_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.07135003417431873
+    },
+    {
+      "morphology": "mcs_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.7,
+      "ci95_low": 0.562493877226366,
+      "ci95_high": 0.8089661091039063
+    },
+    {
+      "morphology": "mcs_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.5,
+      "ci95_low": 0.36644286412332855,
+      "ci95_high": 0.6335571358766714
+    },
+    {
+      "morphology": "mcs_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.06,
+      "ci95_low": 0.020614596364630478,
+      "ci95_high": 0.16217343370877002
+    },
+    {
+      "morphology": "mcs_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "morphology": "mcs_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.82,
+      "ci95_low": 0.6920368054529739,
+      "ci95_high": 0.902299172675462
+    },
+    {
+      "morphology": "mcs_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.52,
+      "ci95_low": 0.3851151225880844,
+      "ci95_high": 0.6520308760449429
+    },
+    {
+      "morphology": "ul_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.7,
+      "ci95_low": 0.562493877226366,
+      "ci95_high": 0.8089661091039063
+    },
+    {
+      "morphology": "ul_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.5,
+      "ci95_low": 0.36644286412332855,
+      "ci95_high": 0.6335571358766714
+    },
+    {
+      "morphology": "ul_only_step",
+      "effect_sd_per_affected_metric": 0.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.06,
+      "ci95_low": 0.020614596364630478,
+      "ci95_high": 0.16217343370877002
+    },
+    {
+      "morphology": "ul_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    },
+    {
+      "morphology": "ul_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 0.82,
+      "ci95_low": 0.6920368054529739,
+      "ci95_high": 0.902299172675462
+    },
+    {
+      "morphology": "ul_only_step",
+      "effect_sd_per_affected_metric": 1.0,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.52,
+      "ci95_low": 0.3851151225880844,
+      "ci95_high": 0.6520308760449429
+    },
+    {
+      "morphology": "ul_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 15,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "ul_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 30,
+      "trials": 50,
+      "recovery_rate": 1.0,
+      "ci95_low": 0.9286499658256813,
+      "ci95_high": 1.0
+    },
+    {
+      "morphology": "ul_only_step",
+      "effect_sd_per_affected_metric": 1.5,
+      "lag_min": 60,
+      "trials": 50,
+      "recovery_rate": 0.96,
+      "ci95_low": 0.8653966212204534,
+      "ci95_high": 0.9889613473391734
+    }
+  ]
+}

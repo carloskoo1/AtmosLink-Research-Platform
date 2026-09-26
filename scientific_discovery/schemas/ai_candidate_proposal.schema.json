@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASDE AI Candidate Proposal",
+  "type": "object",
+  "required": ["candidate_id","proposal_type","description","falsification_tests","uncertainties","recommended_action"],
+  "properties": {
+    "candidate_id":{"type":"string"},
+    "proposal_type":{"enum":["PATTERN_DESCRIPTION","HYPOTHESIS_CANDIDATE","CRITIQUE","NOVELTY_REVIEW_REQUEST"]},
+    "description":{"type":"string"},
+    "mechanistic_interpretations":{"type":"array","items":{"type":"string"}},
+    "alternative_explanations":{"type":"array","items":{"type":"string"}},
+    "falsification_tests":{"type":"array","items":{"type":"string"}},
+    "uncertainties":{"type":"array","items":{"type":"string"}},
+    "novelty_class":{"enum":["KNOWN_EXPECTED","CONTEXTUALLY_INTERESTING","UNUSUAL","LITERATURE_REVIEW_REQUIRED"]},
+    "recommended_action":{"enum":["SCREEN_OUT","HUMAN_REVIEW","ACCUMULATE_EVIDENCE","REQUEST_ADDITIONAL_TEST"]},
+    "numeric_claims_generated_by_ai":{"const":false},
+    "validation_status_claimed_by_ai":{"const":false}
+  },
+  "additionalProperties": false
+}

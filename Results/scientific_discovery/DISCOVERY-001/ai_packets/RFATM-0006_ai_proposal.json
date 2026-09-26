@@ -1,0 +1,23 @@
+{
+  "candidate_id": "RFATM-0006",
+  "proposal_type": "CRITIQUE",
+  "description": "The candidate should not be promoted because the apparent block-level association does not preserve temporal ordering across development periods.",
+  "mechanistic_interpretations": [
+    "The atmospheric transition may share a broader regime with RF degradation without preceding it consistently."
+  ],
+  "alternative_explanations": [
+    "Temporal clustering and shared regime effects can create block-level enrichment without directional precedence.",
+    "The initial enrichment may be a development-sample fluctuation."
+  ],
+  "falsification_tests": [
+    "Require stable post-event excess over pre-event RF entries across blocked development periods.",
+    "Do not access D_validation for a candidate that already fails the development directionality gate."
+  ],
+  "uncertainties": [
+    "The current evidence does not distinguish shared-regime association from a downstream or coincident process."
+  ],
+  "novelty_class": "LITERATURE_REVIEW_REQUIRED",
+  "recommended_action": "SCREEN_OUT",
+  "numeric_claims_generated_by_ai": false,
+  "validation_status_claimed_by_ai": false
+}
