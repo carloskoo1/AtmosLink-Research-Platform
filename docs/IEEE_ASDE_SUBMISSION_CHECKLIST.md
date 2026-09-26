@@ -60,7 +60,7 @@ Before submission:
 2. structured novelty search completed;
 3. DOI archive created;
 4. full manuscript checked against IEEE_ASDE_CLAIM_LEDGER.md;
-5. Reviewer A statistical **PASS** required for field-wide FWER claims; Reviewer B RF audit **PASS** required for physically calibrated RF sensitivity or mechanism claims. Both remain OPEN (Major). A narrower conditional Methods submission would require a documented scope decision, renewed adversarial review and explicit acceptance of both limitations. Reviewer C audit and Meta-Reviewer adjudication remain pending;
+5. Reviewer A remains **OPEN (Major)**: field-wide FWER claims require independent null calibration. Reviewer B is **closed only for bounded operational-telemetry Methods claims** after its separately frozen analog stress and later same-link measured-goodput analysis; any physical fade, mechanism or cross-link claim reopens it and requires independent physical validation. Final narrow-scope acceptance requires Reviewer C and Meta-Reviewer adjudication, both pending;
 6. references checked for accuracy/retraction status;
 7. AI disclosure finalized;
 8. final Word/LaTeX and PDF content verified identical.

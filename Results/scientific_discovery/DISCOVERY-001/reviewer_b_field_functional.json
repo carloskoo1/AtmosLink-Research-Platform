@@ -1,0 +1,532 @@
+{
+  "classification": "post-audit descriptive, same physical link; no p-values",
+  "source_sha256": "bcd2e0391ff86b3e3cf0e9a428b1de8355b354f60c32d56735f5085f48b85722",
+  "development_source_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "protocol_sha256": "9c53c7946ddc2f3c8ba1b9f2c8c95598b46bb69ee820c18b1134beb1d9323530",
+  "code_sha256": "45f127d1a168331d986f542579bc894c73c0cf4b4bf1ea93a7aac4b0cb65a9f5",
+  "episodes": {
+    "later_6475_20": {
+      "raw_rows": 570,
+      "start_utc": "2026-09-21 05:15:04+00:00",
+      "end_utc": "2026-09-24 05:00:30+00:00",
+      "directions": {
+        "DL": {
+          "raw_rows": 285,
+          "exclusions_sequential": {
+            "status": 1,
+            "tcp_route": 0,
+            "test_settings": 0,
+            "tx_powers": 0,
+            "rf_offset": 0,
+            "goodput": 0,
+            "analog": 0
+          },
+          "reference": {
+            "dl_rssi_dbm": {
+              "median": -77.0,
+              "scale": 1.4826
+            },
+            "dl_snr_db": {
+              "median": 22.0,
+              "scale": 1.4826
+            }
+          },
+          "summary": {
+            "n": 284,
+            "rho_spearman": 0.8774402358063249,
+            "score_q1": -0.6744907594765952,
+            "score_q3": 0.6744907594765952,
+            "bottom_n": 91,
+            "top_n": 97,
+            "bottom_median_mbps": 20.225882470478396,
+            "top_median_mbps": 38.91479654648406,
+            "top_minus_bottom_mbps": 18.688914076005666,
+            "bottom_top_ratio": 0.5197478662471845
+          },
+          "by_utc_day": {
+            "2026-09-21": {
+              "n": 74,
+              "rho_spearman": 0.7493290113350044,
+              "score_q1": 0.3372453797382976,
+              "score_q3": 1.3489815189531904,
+              "bottom_n": 25,
+              "top_n": 21,
+              "bottom_median_mbps": 31.83140555301343,
+              "top_median_mbps": 89.2432035698956,
+              "top_minus_bottom_mbps": 57.41179801688217,
+              "bottom_top_ratio": 0.3566815654268054
+            },
+            "2026-09-22": {
+              "n": 96,
+              "rho_spearman": 0.8404617866513789,
+              "score_q1": 0.0,
+              "score_q3": 1.3489815189531904,
+              "bottom_n": 47,
+              "top_n": 29,
+              "bottom_median_mbps": 31.5309357490091,
+              "top_median_mbps": 37.9491104008028,
+              "top_minus_bottom_mbps": 6.418174651793702,
+              "bottom_top_ratio": 0.8308741737551264
+            },
+            "2026-09-23": {
+              "n": 94,
+              "rho_spearman": 0.759993187730739,
+              "score_q1": -2.023472278429786,
+              "score_q3": 0.0,
+              "bottom_n": 37,
+              "top_n": 36,
+              "bottom_median_mbps": 20.14306665770204,
+              "top_median_mbps": 31.523153434467233,
+              "top_minus_bottom_mbps": 11.380086776765193,
+              "bottom_top_ratio": 0.6389927549468363
+            },
+            "2026-09-24": {
+              "n": 20,
+              "rho_spearman": 0.1946118037345729,
+              "score_q1": -2.3607176581680833,
+              "score_q3": -2.023472278429786,
+              "bottom_n": 6,
+              "top_n": 14,
+              "bottom_median_mbps": 20.15948559382499,
+              "top_median_mbps": 20.15647611905618,
+              "top_minus_bottom_mbps": -0.003009474768809639,
+              "bottom_top_ratio": 1.0001493056003954
+            }
+          }
+        },
+        "UL": {
+          "raw_rows": 285,
+          "exclusions_sequential": {
+            "status": 1,
+            "tcp_route": 0,
+            "test_settings": 0,
+            "tx_powers": 0,
+            "rf_offset": 0,
+            "goodput": 0,
+            "analog": 0
+          },
+          "reference": {
+            "ul_rssi_dbm": {
+              "median": -84.0,
+              "scale": 0.7412898443291327
+            },
+            "ul_snr_db": {
+              "median": 18.0,
+              "scale": 0.9093237425232713
+            }
+          },
+          "summary": {
+            "n": 284,
+            "rho_spearman": 0.7519467623000108,
+            "score_q1": 0.0,
+            "score_q3": 0.6745,
+            "bottom_n": 159,
+            "top_n": 125,
+            "bottom_median_mbps": 9.441213037663823,
+            "top_median_mbps": 15.204488840399565,
+            "top_minus_bottom_mbps": 5.763275802735741,
+            "bottom_top_ratio": 0.6209490589764354
+          },
+          "by_utc_day": {
+            "2026-09-21": {
+              "n": 74,
+              "rho_spearman": 0.8829983438218972,
+              "score_q1": 0.6745,
+              "score_q3": 2.4487183436837494,
+              "bottom_n": 28,
+              "top_n": 27,
+              "bottom_median_mbps": 15.204355801317252,
+              "top_median_mbps": 44.04003235488272,
+              "top_minus_bottom_mbps": 28.835676553565467,
+              "bottom_top_ratio": 0.34523943304123267
+            },
+            "2026-09-22": {
+              "n": 96,
+              "rho_spearman": 0.6624196839329125,
+              "score_q1": 0.0,
+              "score_q3": 0.6745,
+              "bottom_n": 53,
+              "top_n": 43,
+              "bottom_median_mbps": 11.664797056254178,
+              "top_median_mbps": 15.203306772659378,
+              "top_minus_bottom_mbps": 3.5385097164051995,
+              "bottom_top_ratio": 0.7672539422299481
+            },
+            "2026-09-23": {
+              "n": 94,
+              "rho_spearman": 0.4778992725169657,
+              "score_q1": -0.5498591718418746,
+              "score_q3": 0.0,
+              "bottom_n": 37,
+              "top_n": 57,
+              "bottom_median_mbps": 4.4572235568989,
+              "top_median_mbps": 9.56841268275768,
+              "top_minus_bottom_mbps": 5.11118912585878,
+              "bottom_top_ratio": 0.46582685181742167
+            },
+            "2026-09-24": {
+              "n": 20,
+              "rho_spearman": null,
+              "score_q1": 0.0,
+              "score_q3": 0.0,
+              "bottom_n": 20,
+              "top_n": 20,
+              "bottom_median_mbps": 4.457162845489325,
+              "top_median_mbps": 4.457162845489325,
+              "top_minus_bottom_mbps": 0.0,
+              "bottom_top_ratio": 1.0
+            }
+          }
+        }
+      }
+    },
+    "development_7000_20": {
+      "raw_rows": 1963,
+      "start_utc": "2026-09-02 02:40:56+00:00",
+      "end_utc": "2026-09-13 03:15:19+00:00",
+      "directions": {
+        "DL": {
+          "raw_rows": 983,
+          "exclusions_sequential": {
+            "status": 1,
+            "tcp_route": 0,
+            "test_settings": 22,
+            "tx_powers": 0,
+            "rf_offset": 0,
+            "goodput": 0,
+            "analog": 0
+          },
+          "reference": {
+            "dl_rssi_dbm": {
+              "median": -74.0,
+              "scale": 0.7412898443291327
+            },
+            "dl_snr_db": {
+              "median": 23.0,
+              "scale": 0.7412898443291327
+            }
+          },
+          "summary": {
+            "n": 960,
+            "rho_spearman": 0.7710796085951868,
+            "score_q1": -0.6745,
+            "score_q3": 0.6745,
+            "bottom_n": 250,
+            "top_n": 269,
+            "bottom_median_mbps": 43.949241462363375,
+            "top_median_mbps": 65.3771760993673,
+            "top_minus_bottom_mbps": 21.42793463700393,
+            "bottom_top_ratio": 0.6722413552332784
+          },
+          "by_utc_day": {
+            "2026-09-02": {
+              "n": 87,
+              "rho_spearman": 0.24913614866989556,
+              "score_q1": -1.349,
+              "score_q3": 0.0,
+              "bottom_n": 31,
+              "top_n": 46,
+              "bottom_median_mbps": 44.20763423144558,
+              "top_median_mbps": 44.51512333604791,
+              "top_minus_bottom_mbps": 0.30748910460232537,
+              "bottom_top_ratio": 0.9930924800032325
+            },
+            "2026-09-03": {
+              "n": 96,
+              "rho_spearman": 0.341235419897015,
+              "score_q1": -1.349,
+              "score_q3": 0.0,
+              "bottom_n": 29,
+              "top_n": 53,
+              "bottom_median_mbps": 44.23150567791824,
+              "top_median_mbps": 44.57796741937436,
+              "top_minus_bottom_mbps": 0.3464617414561175,
+              "bottom_top_ratio": 0.9922279600997344
+            },
+            "2026-09-04": {
+              "n": 66,
+              "rho_spearman": 0.49169389701390553,
+              "score_q1": -1.349,
+              "score_q3": 0.0,
+              "bottom_n": 22,
+              "top_n": 41,
+              "bottom_median_mbps": 44.330626040355696,
+              "top_median_mbps": 51.84302552530522,
+              "top_minus_bottom_mbps": 7.512399484949526,
+              "bottom_top_ratio": 0.8550933436305211
+            },
+            "2026-09-05": {
+              "n": 95,
+              "rho_spearman": 0.5342108090365765,
+              "score_q1": 0.0,
+              "score_q3": 1.349,
+              "bottom_n": 45,
+              "top_n": 42,
+              "bottom_median_mbps": 62.352412895572144,
+              "top_median_mbps": 65.81968367121789,
+              "top_minus_bottom_mbps": 3.467270775645744,
+              "bottom_top_ratio": 0.9473216736658074
+            },
+            "2026-09-06": {
+              "n": 96,
+              "rho_spearman": 0.48579886351708984,
+              "score_q1": 0.0,
+              "score_q3": 1.349,
+              "bottom_n": 53,
+              "top_n": 34,
+              "bottom_median_mbps": 64.40401536843393,
+              "top_median_mbps": 65.73714563677657,
+              "top_minus_bottom_mbps": 1.333130268342643,
+              "bottom_top_ratio": 0.979720289717039
+            },
+            "2026-09-07": {
+              "n": 96,
+              "rho_spearman": 0.439700041741715,
+              "score_q1": 0.0,
+              "score_q3": 1.349,
+              "bottom_n": 52,
+              "top_n": 36,
+              "bottom_median_mbps": 63.18537931069767,
+              "top_median_mbps": 65.73603641989175,
+              "top_minus_bottom_mbps": 2.550657109194077,
+              "bottom_top_ratio": 0.9611984955572672
+            },
+            "2026-09-08": {
+              "n": 93,
+              "rho_spearman": 0.8114066725245168,
+              "score_q1": -0.6745,
+              "score_q3": 1.349,
+              "bottom_n": 27,
+              "top_n": 33,
+              "bottom_median_mbps": 43.6516535394279,
+              "top_median_mbps": 65.78279047117704,
+              "top_minus_bottom_mbps": 22.13113693174914,
+              "bottom_top_ratio": 0.6635725427086286
+            },
+            "2026-09-09": {
+              "n": 96,
+              "rho_spearman": 0.7978115510700021,
+              "score_q1": -8.7685,
+              "score_q3": 0.0,
+              "bottom_n": 50,
+              "top_n": 31,
+              "bottom_median_mbps": 30.999086532470606,
+              "top_median_mbps": 63.89844834749026,
+              "top_minus_bottom_mbps": 32.89936181501965,
+              "bottom_top_ratio": 0.48513050526504936
+            },
+            "2026-09-10": {
+              "n": 96,
+              "rho_spearman": 0.8091601184955453,
+              "score_q1": -0.6745,
+              "score_q3": 1.349,
+              "bottom_n": 25,
+              "top_n": 31,
+              "bottom_median_mbps": 43.673524592911264,
+              "top_median_mbps": 65.42283530316385,
+              "top_minus_bottom_mbps": 21.749310710252587,
+              "bottom_top_ratio": 0.6675578089902687
+            },
+            "2026-09-11": {
+              "n": 29,
+              "rho_spearman": 0.6357789824343598,
+              "score_q1": -0.6745,
+              "score_q3": 0.0,
+              "bottom_n": 10,
+              "top_n": 19,
+              "bottom_median_mbps": 46.38679167183292,
+              "top_median_mbps": 54.037076880849845,
+              "top_minus_bottom_mbps": 7.650285209016928,
+              "bottom_top_ratio": 0.858425258163287
+            },
+            "2026-09-12": {
+              "n": 96,
+              "rho_spearman": 0.43628037770114564,
+              "score_q1": 0.0,
+              "score_q3": 0.0,
+              "bottom_n": 75,
+              "top_n": 88,
+              "bottom_median_mbps": 58.05002003592905,
+              "top_median_mbps": 60.00007664941961,
+              "top_minus_bottom_mbps": 1.9500566134905597,
+              "bottom_top_ratio": 0.967499097961412
+            }
+          }
+        },
+        "UL": {
+          "raw_rows": 980,
+          "exclusions_sequential": {
+            "status": 1,
+            "tcp_route": 0,
+            "test_settings": 22,
+            "tx_powers": 0,
+            "rf_offset": 0,
+            "goodput": 0,
+            "analog": 0
+          },
+          "reference": {
+            "ul_rssi_dbm": {
+              "median": -80.0,
+              "scale": 0.7412898443291327
+            },
+            "ul_snr_db": {
+              "median": 18.0,
+              "scale": 1.4826
+            }
+          },
+          "summary": {
+            "n": 957,
+            "rho_spearman": 0.19019782649142156,
+            "score_q1": -0.6745,
+            "score_q3": 0.3372453797382976,
+            "bottom_n": 307,
+            "top_n": 331,
+            "bottom_median_mbps": 32.10737037783674,
+            "top_median_mbps": 32.11262394368803,
+            "top_minus_bottom_mbps": 0.005253565851290887,
+            "bottom_top_ratio": 0.9998364018505462
+          },
+          "by_utc_day": {
+            "2026-09-02": {
+              "n": 87,
+              "rho_spearman": -0.2689703854349991,
+              "score_q1": -0.6745,
+              "score_q3": 0.3372453797382976,
+              "bottom_n": 27,
+              "top_n": 37,
+              "bottom_median_mbps": 32.112660070412545,
+              "top_median_mbps": 31.98183584787522,
+              "top_minus_bottom_mbps": -0.13082422253732418,
+              "bottom_top_ratio": 1.0040905788885792
+            },
+            "2026-09-03": {
+              "n": 95,
+              "rho_spearman": 0.022236234699050162,
+              "score_q1": 0.0,
+              "score_q3": 0.3372453797382976,
+              "bottom_n": 60,
+              "top_n": 35,
+              "bottom_median_mbps": 32.110504652165076,
+              "top_median_mbps": 31.98195578121385,
+              "top_minus_bottom_mbps": -0.1285488709512279,
+              "bottom_top_ratio": 1.0040194186944231
+            },
+            "2026-09-04": {
+              "n": 66,
+              "rho_spearman": -0.03658430791224826,
+              "score_q1": -0.6745,
+              "score_q3": 0.3372453797382976,
+              "bottom_n": 18,
+              "top_n": 27,
+              "bottom_median_mbps": 32.1075898692174,
+              "top_median_mbps": 32.09686038101518,
+              "top_minus_bottom_mbps": -0.010729488202215975,
+              "bottom_top_ratio": 1.0003342846644454
+            },
+            "2026-09-05": {
+              "n": 95,
+              "rho_spearman": 0.1609911617720654,
+              "score_q1": 0.0,
+              "score_q3": 0.3372453797382976,
+              "bottom_n": 55,
+              "top_n": 40,
+              "bottom_median_mbps": 32.11094614759071,
+              "top_median_mbps": 32.112704225408955,
+              "top_minus_bottom_mbps": 0.0017580778182448853,
+              "bottom_top_ratio": 0.9999452528878944
+            },
+            "2026-09-06": {
+              "n": 96,
+              "rho_spearman": 0.12880351375602556,
+              "score_q1": -0.6745,
+              "score_q3": 0.3372453797382976,
+              "bottom_n": 26,
+              "top_n": 34,
+              "bottom_median_mbps": 32.112621936650285,
+              "top_median_mbps": 32.11272429590127,
+              "top_minus_bottom_mbps": 0.00010235925098811549,
+              "bottom_top_ratio": 0.999996812501797
+            },
+            "2026-09-07": {
+              "n": 95,
+              "rho_spearman": -0.27829316011543465,
+              "score_q1": 0.0,
+              "score_q3": 0.3372453797382976,
+              "bottom_n": 50,
+              "top_n": 45,
+              "bottom_median_mbps": 32.11266207747036,
+              "top_median_mbps": 31.998763335447386,
+              "top_minus_bottom_mbps": -0.11389874202297534,
+              "bottom_top_ratio": 1.0035594732467927
+            },
+            "2026-09-08": {
+              "n": 93,
+              "rho_spearman": 0.5607002381633212,
+              "score_q1": -1.0117453797382976,
+              "score_q3": 0.0,
+              "bottom_n": 29,
+              "top_n": 50,
+              "bottom_median_mbps": 31.85052785052785,
+              "top_median_mbps": 32.11281059930944,
+              "top_minus_bottom_mbps": 0.2622827487815904,
+              "bottom_top_ratio": 0.9918324573935852
+            },
+            "2026-09-09": {
+              "n": 96,
+              "rho_spearman": 0.7823203043475523,
+              "score_q1": -3.709736139214893,
+              "score_q3": -0.6745,
+              "bottom_n": 35,
+              "top_n": 32,
+              "bottom_median_mbps": 9.700141599376646,
+              "top_median_mbps": 32.7681699849106,
+              "top_minus_bottom_mbps": 23.068028385533953,
+              "bottom_top_ratio": 0.29602329345347816
+            },
+            "2026-09-10": {
+              "n": 96,
+              "rho_spearman": 0.5352928936717447,
+              "score_q1": -1.0117453797382976,
+              "score_q3": 0.0,
+              "bottom_n": 31,
+              "top_n": 41,
+              "bottom_median_mbps": 32.10737037783674,
+              "top_median_mbps": 32.76794675208653,
+              "top_minus_bottom_mbps": 0.6605763742497928,
+              "bottom_top_ratio": 0.9798407761326171
+            },
+            "2026-09-11": {
+              "n": 29,
+              "rho_spearman": 0.04889687224191386,
+              "score_q1": 0.0,
+              "score_q3": 0.3372453797382976,
+              "bottom_n": 18,
+              "top_n": 11,
+              "bottom_median_mbps": 32.11275640877409,
+              "top_median_mbps": 32.10975814920611,
+              "top_minus_bottom_mbps": -0.0029982595679811652,
+              "bottom_top_ratio": 1.0000933753394856
+            },
+            "2026-09-12": {
+              "n": 95,
+              "rho_spearman": 0.14209785233744412,
+              "score_q1": 0.0,
+              "score_q3": 0.3372453797382976,
+              "bottom_n": 45,
+              "top_n": 50,
+              "bottom_median_mbps": 32.11225866692833,
+              "top_median_mbps": 32.11267211267412,
+              "top_minus_bottom_mbps": 0.00041344574579227356,
+              "bottom_top_ratio": 0.9999871251528262
+            }
+          }
+        }
+      }
+    }
+  },
+  "directional_consistency": {
+    "DL": true,
+    "UL": true
+  },
+  "all_four_consistent": true
+}
