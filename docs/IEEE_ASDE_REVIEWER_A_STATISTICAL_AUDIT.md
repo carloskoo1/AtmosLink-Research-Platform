@@ -9,6 +9,7 @@
 - v23 row-level `gate_ablation_trials.csv`, `gate_ablation_metrics.csv`, `v23_summary.json`, and reconstruction verifier.
 - Partition manifest, adaptive-analysis ledger, holdout-isolation audit, manuscript Draft v1 and claim ledger.
 - Post-audit read-only diagnostic `scripts/audit_asde_reviewer_a_shift_orbit.py`; output `Results/scientific_discovery/DISCOVERY-001/reviewer_a_shift_orbit.json`.
+- Separately frozen post-audit RF-window observability protocol (`7afefe2`), runner and JSON diagnostic reported below.
 - D_validation and external replication cohorts were not opened for this audit.
 
 ## Verified counts and comparisons
@@ -19,6 +20,25 @@ Under the registered 1,000 sampled circular shifts, at least one driver was sele
 
 The post-audit exhaustive diagnostic evaluated all 3,132 offsets allowed by the v23 shift rule on the same fixed background: M0 selected in 649/3,132 (20.72%); M1–M3 in 50/3,132 (1.60%) each; M1–M3 never disagreed. The 1,000-draw rates are thus not an obvious Monte Carlo sampling accident **within this finite shift orbit**. This diagnostic is exploratory and cannot validate the orbit as a scientifically appropriate null.
 
+## New post-audit observability sensitivity
+
+Protocol frozen in commit `7afefe2` before this diagnostic; runner `scripts/audit_asde_reviewer_a_observability.py`; result `Results/scientific_discovery/DISCOVERY-001/reviewer_a_observability.json` (SHA-256 `d482bc1049c08bc2556e503f0b7c33bedac75e070c648c5bf8d06d682de4c8ec`). The same hashed D_development source was used; D_validation and later configuration RF outcomes were not analyzed. This is post-audit sensitivity, not a replacement for v23.
+
+The detector's three-bin RF-quality difference is calculable in only **2,753/3,276** grid bins, fewer than the 2,858 bins with complete contemporaneous RF/weather variables. The original directional test does not require ascertainable RF-detector bins on both sides of a driver event. Under the prospectively stated complete-window policy, the retained driver events by horizon are:
+
+| Driver | 30 min | 60 min | 120 min | Original events |
+|---|---:|---:|---:|---:|
+| CU01 temperature rise | 16 | 8 | 8 | 23 |
+| SJ01 temperature fall | 21 | 6 | 3 | 28 |
+| SJ01 humidity fall | 16 | 12 | 3 | 28 |
+| SJ01 pressure rise | 17 | 10 | 4 | 28 |
+
+Between 6 and 24 of the original 23–28 driver events per driver/horizon have unequal pre/post observable-bin counts. Requiring complete bilateral windows leaves fewer than eight discordant events in **11/12** original driver–horizon cells, versus **2/12** under v23. None of the four natural-background drivers passes M1 or M3 under either policy, so no natural hypothesis is rescued by the check.
+
+Over all 3,132 historical circular offsets, M1 and M3 select at 50 offsets each under the original rule, but only **4** each under complete-window eligibility. Only **2** selected offsets overlap; the selected set differs at **50** offsets. Across the 37,584 driver–horizon cells of this orbit, the count below eight discordant events rises from **6,856** to **33,350**. The lower selection rate is inseparable from severe event-support loss; it is **not** evidence that the complete-window rule improves field Type-I control. This comparison also does not prove that the original test is anti-conservative: missingness and true event occurrence may be dependent. The new finding is that ascertainment and effective support materially change the benchmark operating point.
+
+The diagnostic checks the calculability of RF-drop differences inside each event window. It does not fully model detector refractory-state history, adaptive threshold selection, or missingness mechanisms. A valid repair would specify the observation policy *before* a new evaluation, retain adequate event support, and calibrate the directional null on independently justified physical temporal blocks. Historical v23 results remain unchanged and conditional on their original policy.
+
 ## Objection disposition
 
 | Objection | Severity at review | Resolution / residual boundary |
@@ -27,6 +47,7 @@ The post-audit exhaustive diagnostic evaluated all 3,132 offsets allowed by the 
 | Multiplicity attribution | Major | Confirmed: M0→M1 accounts for the observed change; M2/M3 add no selection benefit in 4,600 paired trials or the complete shift orbit. Full-stack efficacy claim prohibited. |
 | Circular-shift null validity | Major; fatal to an unconditional FWER claim | Reframed as surrogate-null selection rate. Gaps, wraparound, nonstationarity, and pre/post asymmetry are not ruled out. No field-wide Type-I guarantee authorized. |
 | Binomial directional-test assumptions | Major | 360-min refractory spacing mitigates local repeats but does not prove independent, symmetric discordant events. Bonferroni is conditional on valid constituent p-values. |
+| RF observation eligibility | **Major, newly quantified** | The original test counts atmospheric events with incompletely observed pre/post RF windows. A strict complete-window sensitivity changes the M1/M3 finite-orbit selections 50→4, primarily because support collapses. No post-hoc substitution or false-positive improvement claim is authorized. |
 | Wilson interval interpretation | Major | Manuscript now labels intervals conditional Monte Carlo; no between-episode/link confidence claim. |
 | Adaptive library selection and v21/v23 reuse | Major | Ledger records development reuse; post-freeze seeds test a frozen library on the same physical background. Both audits remain conditional; no external-replication claim. |
 | Weak long-lag and driver-specific power | Major | Results stratified; 1.0-SD/60-min rates can be as low as 2%. Aggregate recovery is not a universal detection claim. |
@@ -35,7 +56,7 @@ The post-audit exhaustive diagnostic evaluated all 3,132 offsets allowed by the 
 
 ## Closure criteria
 
-A statistical **PASS** requires a prespecified, independently justified null and dependence-aware calibration of the directional test on suitable physical temporal blocks, with uncertainty at the block/episode level. A narrower Methods paper may instead be evaluated on conditional benchmark operating characteristics after an explicit scope decision and renewed adversarial review; that route accepts a disclosed limitation and **does not convert Reviewer A into a statistical PASS**. Until calibration is demonstrated, the inferential objection remains **OPEN (Major)**.
+A statistical **PASS** requires a prespecified RF-window observation policy with adequate event support, an independently justified null, and dependence-aware calibration of the directional test on suitable physical temporal blocks, with uncertainty at the block/episode level. A narrower Methods paper may instead be evaluated on conditional benchmark operating characteristics after an explicit scope decision and renewed adversarial review; that route accepts a disclosed limitation and **does not convert Reviewer A into a statistical PASS**. Until calibration is demonstrated, the inferential objection remains **OPEN (Major)**.
 
 ## Authorized conclusion
 
@@ -47,11 +68,12 @@ A stronger inferential claim requires a prespecified null family representing in
 
 ## Reproduction
 
-Run the frozen v23 verifier, then the separate post-audit diagnostic:
+Run the frozen v23 verifier, then the separate post-audit diagnostics:
 
 ```bash
 python3 scripts/verify_discovery_001_v23_audit.py
 python3 scripts/audit_asde_reviewer_a_shift_orbit.py
+python3 scripts/audit_asde_reviewer_a_observability.py
 ```
 
-The diagnostic writes only its own JSON output. It does not change the frozen v23 artifacts.
+Each diagnostic writes only its own JSON output. It does not change the frozen v23 artifacts.
