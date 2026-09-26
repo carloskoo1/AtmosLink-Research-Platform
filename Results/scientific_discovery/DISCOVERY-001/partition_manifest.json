@@ -1,0 +1,31 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "status": "REGISTERED",
+  "source_file": "Data/exports/scientific_campaign_6g_integrated.csv",
+  "source_sha256": "2c19cc4ee1a66d23765bb79cc9eb840c1c531b3833ea72e8ffba848a0c96ff6c",
+  "primary_configuration": {"frequency_mhz": 7000, "bandwidth_mhz": 20},
+  "core_complete_rows": 3576,
+  "split_policy": "chronological_60_20_20",
+  "discovery": {
+    "rows": 2145,
+    "start_utc": "2026-09-01T18:30:52Z",
+    "end_utc": "2026-09-09T18:41:57Z"
+  },
+  "characterization": {
+    "rows": 715,
+    "start_utc": "2026-09-09T18:46:58Z",
+    "end_utc": "2026-09-13T03:29:49Z"
+  },  "validation": {
+    "rows": 716,
+    "start_utc": "2026-09-13T03:34:50Z",
+    "end_utc": "2026-09-16T03:51:31Z",
+    "embargoed_for_discovery": true
+  },
+  "replication_cohorts": [
+    {"frequency_mhz": 6475, "bandwidth_mhz": 20, "rows": 855},
+    {"frequency_mhz": 6655, "bandwidth_mhz": 20, "rows": 583},
+    {"frequency_mhz": 7000, "bandwidth_mhz": 40, "rows": 623},
+    {"frequency_mhz": 6655, "bandwidth_mhz": 40, "rows": 582}
+  ],
+  "principle": "AI proposes patterns; independent data and the scientific method determine whether they are real."
+}

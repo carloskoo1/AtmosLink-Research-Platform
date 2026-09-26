@@ -1,0 +1,45 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "validation_accessed": false,
+  "screening_stage": "discovery_plus_characterization",
+  "candidates": [
+    {
+      "discovery_id": "RFATM-0001",
+      "pattern": "SJ01 pressure level associated with later DL RSSI/SNR degradation",
+      "discovery_metric": {
+        "feature": "sj01_local_press_hpa",
+        "response": "dl_rssi_dbm",
+        "lag_minutes": 120,
+        "spearman_rho": -0.47468039218423624,
+        "n": 2030
+      },
+      "characterization_metric": {
+        "spearman_rho": 0.01421869629632232,
+        "n": 641
+      },
+      "status": "SCREENED_OUT",
+      "reason": "Effect did not preserve magnitude or sign in characterization."
+    },    {
+      "discovery_id": "RFATM-0002",
+      "pattern": "CU01 humidity level inversely associated with DL MCS",
+      "discovery_metric": {
+        "feature": "cu01_local_hum_avg_pct",
+        "response": "dl_mcs",
+        "lag_minutes": 0,
+        "spearman_rho": -0.359320
+      },
+      "characterization_metric": {
+        "spearman_rho": -0.125916,
+        "n": 714
+      },
+      "confounder_screen": {
+        "discovery_residual_correlation": 0.010373274765978095,
+        "characterization_residual_correlation": -0.2427203347053529,
+        "controls": "linear time trend plus 24 h sine/cosine components"
+      },
+      "status": "SCREENED_OUT",
+      "reason": "Association was not stable after temporal-cycle screening."
+    }
+  ],
+  "conclusion": "No candidate has yet been promoted to a frozen hypothesis; D_validation remains untouched."
+}

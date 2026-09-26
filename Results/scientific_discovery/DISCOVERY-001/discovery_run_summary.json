@@ -1,0 +1,18 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "stage": "DISCOVERY_ONLY",
+  "validation_accessed": false,
+  "source_sha256": "2c19cc4ee1a66d23765bb79cc9eb840c1c531b3833ea72e8ffba848a0c96ff6c",
+  "discovery_rows": 2145,
+  "resampled_5min_rows": 2307,
+  "candidate_tests": 3024,
+  "top_candidate": {
+    "atmospheric_feature": "sj01_local_press_hpa",
+    "rf_response": "dl_rssi_dbm",
+    "lag_minutes": 120,
+    "n": 2030,
+    "spearman_rho": -0.47468039218423624,
+    "abs_rho": 0.47468039218423624
+  },
+  "interpretation": "Exploratory ranking only; not statistical confirmation."
+}
