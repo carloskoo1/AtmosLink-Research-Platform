@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "scope": "post-hoc exhaustive diagnostic of the v23 circular-shift orbit on one fixed development background",
+  "source_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "grid_bins": 3276,
+  "complete_bins": 2858,
+  "rf_events": 158,
+  "admissible_offsets": 3132,
+  "selected_offsets": {
+    "M0": 649,
+    "M1": 50,
+    "M2": 50,
+    "M3": 50
+  },
+  "selection_rates": {
+    "M0": 0.20721583652618136,
+    "M1": 0.015964240102171137,
+    "M2": 0.015964240102171137,
+    "M3": 0.015964240102171137
+  },
+  "m1_m2_m3_discordant_offsets": 0,
+  "warning": "This checks finite-orbit Monte Carlo stability, not null exchangeability, physical replication, or field-wide FWER."
+}

@@ -53,9 +53,11 @@ for rendered,val in expected.items():
     if rendered not in text:
         errors.append(f"headline v21 metric missing from draft: {rendered}")
 
-# Check primary null FWER wording is present and bounded to the finite library.
-if "library-wide null false-positive rate was 2.0%" not in text:
-    errors.append("v21 library-wide null FWER not stated in Abstract")
+# Check primary surrogate-null wording and conditional interval in the Abstract.
+if "circular-shift surrogate-null selection rate was 2.0%" not in text:
+    errors.append("v21 surrogate-null selection rate not stated in Abstract")
+if "conditional on this development background and shift scheme" not in text:
+    errors.append("v21 conditional Monte Carlo scope absent from Abstract")
 if "four competing prespecified hypotheses" not in text:
     errors.append("finite hidden-driver library scope missing from Abstract")
 
@@ -94,6 +96,12 @@ for token in ["21.7%","1.7%","4,600 paired audit trials"]:
 
 if re.search(r"(full|complete)\s+(ASDE\s+)?gate.{0,80}(caused|accounted for).{0,80}(21\.7|1\.7)",text,re.I|re.S):
     errors.append("v23 improvement incorrectly attributed to the full gate")
+
+# Reviewer A: finite-orbit result cannot be promoted to universal Type-I control.
+if "3,132 offsets" not in text or "does not validate the shift null" not in text:
+    errors.append("Reviewer A finite-orbit qualification absent")
+if "Wilson intervals quantify simulation variation conditional on one background" not in text:
+    errors.append("Reviewer A interval qualification absent")
 
 # Holdout scope wording.
 if "analytically isolated" not in text and "analytically embargoed" not in text:
