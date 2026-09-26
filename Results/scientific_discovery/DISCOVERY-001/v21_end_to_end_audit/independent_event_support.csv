@@ -1,0 +1,5 @@
+driver,total,fold1,fold2,fold3,fold4,min_fold,max_fold
+cu01_local_temp_avg_c__rise,23,6,7,5,5,5,7
+sj01_local_temp_avg_c__fall,28,8,7,6,7,6,8
+sj01_local_hum_avg_pct__fall,28,8,8,5,7,5,8
+sj01_local_press_hpa__rise,28,8,8,6,6,6,8

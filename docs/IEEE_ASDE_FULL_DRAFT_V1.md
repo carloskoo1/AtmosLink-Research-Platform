@@ -48,9 +48,9 @@ Scientific-discovery systems are intrinsically adaptive: each observed pattern c
 This distinction also applies to benchmarks. Time-series anomaly-detection research has shown that benchmark construction can materially distort apparent progress [TSAD-BENCHMARKS-2023]. ASDE therefore separates exploratory benchmark development from post-freeze audit runs, records the protocol and randomization state before confirmatory simulation, and retains failed or superseded benchmark variants as provenance.
 
 ## C. Wireless/Environmental Analytics
-Wireless anomaly detection and environmental sensing already use radio-derived variables such as RSSI and SNR. For example, recent digital-twin work evaluates machine-learning anomaly detection in simulated radio environments [RADIO-DT-2025]. Commercial microwave-link research similarly uses radio measurements for precipitation and attenuation estimation. These studies establish that environmental–radio dependence is not a new research premise.
+Wireless anomaly detection and opportunistic environmental sensing already use radio-derived variables such as RSSI, SNR, received signal level, and attenuation. Recent digital-twin work evaluates machine-learning anomaly detection in simulated radio environments [RADIO-DT-2025]. Separately, microwave-link environmental sensing has a substantial prior literature: commercial communication links have been used to infer rainfall and other atmospheric information from signal attenuation and received-power measurements [MESSER-2006, LEIJNSE-2007, UIJLENHOET-2018]. Recent work has also examined the information contribution of environmental variables to commercial-microwave-link rainfall estimation [SPACKOVA-2025]. Therefore, ASDE does not claim novelty from the premise that atmospheric state and radio measurements can be statistically related.
 
-The methodological distinction in ASDE is that the target relationship is not assumed in advance. Candidate atmospheric–RF relations may emerge from exploratory analysis, but they must then pass QC, independence, directionality, multiplicity, and provenance gates before they can become hypotheses. This creates a different evaluation problem from conventional supervised prediction or anomaly classification.
+The methodological distinction proposed in ASDE is narrower. Rather than beginning from a fixed target such as rainfall retrieval, anomaly class, or a prespecified propagation response, the workflow manages candidate relationships that emerge during adaptive analysis and subjects them to QC eligibility, event-level independence, temporal-direction tests, multiplicity control, provenance constraints, and hypothesis freezing before protected validation. This creates a different evaluation problem from conventional supervised prediction, fixed-target retrieval, or anomaly classification.
 
 ## D. Domain Structure and Controlled Ablation
 Equi-mRNA provides a useful methodological analogy from a different domain: domain structure is encoded explicitly and evaluated through controlled comparison rather than left as implicit model behavior [EQUI-MRNA-2025]. ASDE applies a related principle at the workflow level. RF and atmospheric structure enters through event definitions, QC eligibility, time ordering, configuration metadata, and explicit scientific states. Ablations then quantify the cost and benefit of safeguards rather than treating the entire workflow as an opaque AI system.
@@ -145,7 +145,16 @@ The final library was selected using atmospheric data only. Candidate driver eve
 - SJ01 relative-humidity fall;
 - SJ01 pressure rise.
 
-The final event counts are 23, 28, 28, and 28, respectively. The maximum pairwise event overlap within the registered temporal-proximity window is close to, but does not exceed, the admissibility threshold. This limitation is reported explicitly rather than described as wide separation.
+The final event counts are 23, 28, 28, and 28, respectively. Because inference is event-based rather than row-based, these counts are more relevant than the 2,860 development rows for understanding effective support. Their distribution across the four contiguous development folds is:
+
+| Frozen driver | Total events | Fold 1 | Fold 2 | Fold 3 | Fold 4 |
+|---|---:|---:|---:|---:|---:|
+| CU01 temperature rise | 23 | 6 | 7 | 5 | 5 |
+| SJ01 temperature fall | 28 | 8 | 7 | 6 | 7 |
+| SJ01 relative-humidity fall | 28 | 8 | 8 | 5 | 7 |
+| SJ01 pressure rise | 28 | 8 | 8 | 6 | 6 |
+
+Thus, every frozen driver contributes events to every temporal fold, with 5–8 events per fold. This mitigates row-level pseudoreplication but does not imply complete statistical independence between atmospheric processes. The maximum pairwise event overlap within the registered temporal-proximity window is close to, but does not exceed, the admissibility threshold. This limitation is reported explicitly rather than described as wide separation.
 
 For each simulation trial, exactly one candidate driver is designated as hidden truth. Joint RF degradation is injected after that driver's events using registered effect magnitudes, lags, duration, and activation probability. The search algorithm receives all four driver event sets plus the resulting RF event series, but not the planted identity.
 
@@ -359,3 +368,8 @@ The citation keys in Draft v0 are placeholders tied to verified sources. They wi
 - TSAD-BENCHMARKS-2023 — Wu and Keogh, Current Time Series Anomaly Detection Benchmarks are Flawed and are Creating the Illusion of Progress, IEEE TKDE 35(3), DOI 10.1109/TKDE.2021.3112126.
 - RADIO-DT-2025 — Moharam et al., Anomaly detection using machine learning and adopted digital twin concepts in radio environments, Scientific Reports, DOI 10.1038/s41598-025-02759-5.
 - EQUI-MRNA-2025 — Yazdani-Jahromi, Khodabandeh Yalabadi, and Ozmen Garibay, Equi-mRNA: Protein Translation Equivariant Encoding for mRNA Language Models, arXiv:2508.15103.
+
+- MESSER-2006 — Messer, Zinevich, and Alpert, Environmental monitoring by wireless communication networks, Science 312(5774), 713, DOI 10.1126/science.1120034.
+- LEIJNSE-2007 — Leijnse, Uijlenhoet, and Stricker, Rainfall measurement using radio links from cellular communication networks, Water Resources Research 43(3), W03201, DOI 10.1029/2006WR005631.
+- UIJLENHOET-2018 — Uijlenhoet, Overeem, and Leijnse, Opportunistic remote sensing of rainfall using microwave links from cellular communication networks, WIREs Water 5, e1289, DOI 10.1002/wat2.1289.
+- SPACKOVA-2025 — Špačková, Fencl, and Bareš, Information-theoretic analysis of commercial microwave link and environmental variables in rainfall estimation, Atmospheric Measurement Techniques 18, 7445–7463, DOI 10.5194/amt-18-7445-2025.

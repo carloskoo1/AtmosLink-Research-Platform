@@ -25,6 +25,7 @@ A manuscript claim is allowed only if it maps to a versioned artifact and stays 
 | C18 | AI incremental value | blinded pilot pending | Not yet authorized. | "AI improves scientific reasoning" before blinded human review |
 | C19 | Novelty | comparator matrix + literature search log | "The candidate contribution is the implemented integration and quantitative evaluation of validity safeguards for autocorrelated environmental–RF discovery." | "First", "unique", or "unprecedented" before structured database review |
 | C20 | Cross-link generalization | single AtmosLink physical link | "The current empirical case study is one rural high-altitude 6 GHz link." | Generalization to all 6 GHz, microwave, high-altitude, or rural links |
+| C21 | Independent event support | v21 frozen library + independent_event_support.csv | "The four frozen drivers contain 23–28 refractory events total, with 5–8 events represented in each contiguous development fold." | Treat 2860 development rows as independent inferential units or claim complete independence between atmospheric event families |
 
 ## Manuscript enforcement
 Before submission, every sentence in Abstract, Contributions, Results conclusions, Discussion and Conclusion that contains a quantitative, causal, novelty, validation or generalization claim must map to one or more Claim IDs above.
