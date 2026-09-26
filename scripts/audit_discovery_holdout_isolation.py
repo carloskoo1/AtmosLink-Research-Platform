@@ -19,6 +19,7 @@ ACTIVE=[
     ROOT/"scripts/run_discovery_001_v19_temporal_identifiability.py",
     ROOT/"scripts/run_discovery_001_v20_identifiability_tradeoff.py",
     ROOT/"scripts/run_discovery_001_v21_end_to_end_audit.py",
+    ROOT/"scripts/run_discovery_001_v23_hidden_driver_gate_ablation.py",
 ]
 FORBIDDEN=[
     "D_validation",

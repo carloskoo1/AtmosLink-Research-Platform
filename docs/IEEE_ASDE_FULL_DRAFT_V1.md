@@ -8,7 +8,7 @@
 **Default route:** ASDE: An Auditable Scientific Discovery Workflow for Long-Duration Environmental–Radio Telemetry
 
 ## Abstract
-Long-duration wireless measurement campaigns create opportunities for scientific discovery, but serial dependence, multiple testing, sensor artifacts, adaptive data reuse, and post hoc hypothesis formation can convert exploratory associations into unreliable claims. This paper presents the AtmosLink Scientific Discovery Engine (ASDE), an auditable human-in-the-loop workflow for atmospheric–radioelectric pattern discovery in operational wireless telemetry. The optional language-model layer is restricted to candidate formulation, mechanistic alternatives, confounder identification, and structured criticism; numerical evidence, multiplicity control, candidate promotion, and validation gates are executed by deterministic versioned procedures. ASDE combines quality-control-based feature eligibility, temporally blocked development analysis, event-level independence, pre/post directionality, multiplicity correction, pattern ontology, hash-bound versioned provenance, hypothesis freezing, and an analytically isolated real-data holdout. The framework is evaluated on the background of a rural high-altitude 6 GHz link. In natural development data, six apparently promising atmospheric–RF candidates were screened out, and one additional association remained only an outcome-definition-sensitive context signal. A frozen known-driver benchmark first evaluated the screening gate, yielding an empirical family-wise false-positive rate of 2.5% and 94–100% recovery for the registered 1.0 robust-SD joint RF perturbation at 15–60 min lags. A separate post-freeze hidden-driver benchmark then required ASDE to recover the planted atmospheric driver from four competing prespecified hypotheses. Its library-wide null false-positive rate was 2.0% (95% CI: 1.30–3.07%). For 1.0 robust-SD effects, exact-driver selection was 85.3%, 79.0%, and 21.3% at 15, 30, and 60 min, while unique top-1 ranking was 94.5%, 89.5%, and 59.5%, respectively. These results quantify both the operating envelope and the conservatism of the workflow: a candidate may rank first yet remain unpromoted when evidence is insufficient. The study quantitatively evaluates a bounded discovery-and-screening process under frozen synthetic-ground-truth audits; it does not establish a natural atmospheric causal effect.
+Long-duration wireless measurement campaigns create opportunities for scientific discovery, but serial dependence, multiple testing, sensor artifacts, adaptive data reuse, and post hoc hypothesis formation can convert exploratory associations into unreliable claims. This paper presents the AtmosLink Scientific Discovery Engine (ASDE), an auditable human-in-the-loop workflow for atmospheric–radioelectric pattern discovery in operational wireless telemetry. The optional language-model layer is restricted to candidate formulation, mechanistic alternatives, confounder identification, and structured criticism; numerical evidence, multiplicity control, candidate promotion, and validation gates are executed by deterministic versioned procedures. ASDE combines quality-control-based feature eligibility, temporally blocked development analysis, event-level independence, pre/post directionality, multiplicity correction, pattern ontology, hash-bound versioned provenance, hypothesis freezing, and an analytically isolated real-data holdout. The framework is evaluated on the background of a rural high-altitude 6 GHz link. In natural development data, six apparently promising atmospheric–RF candidates were screened out, and one additional association remained only an outcome-definition-sensitive context signal. A frozen known-driver benchmark first evaluated the screening gate, yielding an empirical family-wise false-positive rate of 2.5% and 94–100% recovery for the registered 1.0 robust-SD joint RF perturbation at 15–60 min lags. A separate post-freeze hidden-driver benchmark then required ASDE to recover the planted atmospheric driver from four competing prespecified hypotheses. Its library-wide null false-positive rate was 2.0% (95% CI: 1.30–3.07%). For 1.0 robust-SD effects, exact-driver selection was 85.3%, 79.0%, and 21.3% at 15, 30, and 60 min, while unique top-1 ranking was 94.5%, 89.5%, and 59.5%, respectively. A separately frozen hidden-driver gate ablation showed that uncorrected testing produced a 21.7% library-wide null FWER, whereas Bonferroni correction reduced it to 1.7%; the subsequent minimum-support and fold-direction gates changed no selected-driver set across the 4,600 paired audit trials. Thus, in this finite-library benchmark, multiplicity control—not the complete gate stack—accounted for the observed reduction in false selection. The study quantitatively evaluates a bounded discovery-and-screening process under frozen synthetic-ground-truth audits; it does not establish a natural atmospheric causal effect.
 
 ## Index Terms
 scientific discovery; wireless measurements; 6 GHz; environmental sensing; reproducibility; multiple testing; time-series analysis; human-in-the-loop AI; hypothesis validation; experimental methodology.
@@ -30,7 +30,7 @@ The contributions of this work are implementation and evaluation contributions r
 1. an implemented validity-constrained discovery workflow for autocorrelated environmental–RF field telemetry that operationalizes adaptive-analysis accounting, QC-based feature eligibility, event-level support, temporal-direction screening, multiplicity control, hypothesis freezing, and analytically protected validation;
 2. a frozen known-driver audit that quantifies the operating characteristics of the temporal screening gate on the real AtmosLink RF/weather background;
 3. a separately frozen hidden-driver audit that measures exact selection, top-1 ranking, distractor co-selection, and library-wide null FWER when the planted atmospheric driver is concealed within a finite prespecified hypothesis library;
-4. explicit characterization of the workflow's limits through safeguard ablation, morphology stress, RF-outcome sensitivity, event-support accounting, and driver-specific background-hardness analysis;
+4. explicit characterization of the workflow's limits through a nested hidden-driver gate ablation, morphology stress, RF-outcome sensitivity, event-support accounting, and driver-specific background-hardness analysis; the gate ablation identifies multiplicity correction as the only component that changed finite-library selections beyond uncorrected testing in the registered v23 audit;
 5. a natural-data falsification case study in which six apparently promising atmospheric–RF candidates are retained in provenance but screened out before protected validation;
 6. a reproducibility and claim-discipline layer that binds protocols, data snapshots, trial artifacts, manuscript claims, and audit checks through versioned hashes and reconstruction scripts; and
 7. a constrained language-model interface evaluated separately from the deterministic scientific core, with its title-level prominence conditioned on a preregistered blinded human-utility pilot.
@@ -168,7 +168,18 @@ The primary endpoints are exact-driver selection, exclusive exact-driver selecti
 
 The audit uses independent reserved simulation seeds after a clean Git freeze. A library-wide circular-shift null jointly shifts all four atmospheric event sets so that their cross-driver temporal structure is preserved relative to one another while their relation to the RF background is broken.
 
-## C. Post-Audit Stress and Diagnostic Analyses
+## C. Hidden-Driver Gate Ablation
+A separately frozen audit was designed after the v21 hidden-driver benchmark to quantify which nested statistical safeguards actually change finite-library selection behavior. The same four-driver library, real development background, RF outcome definition, effect family, lags, and response horizons are retained, but new reserved simulation seeds are used.
+
+Four nested selectors are evaluated on exactly the same trials:
+- M0: uncorrected one-sided directional p < 0.05;
+- M1: Bonferroni correction over the 4-driver × 3-horizon family;
+- M2: M1 plus a minimum of 8 discordant events;
+- M3: M2 plus positive post>pre direction in at least 3 of 4 temporal folds.
+
+Primary endpoints are library-wide null FWER, exact-truth selection, exclusive exact-truth selection, distractor co-selection, and mean selected-driver count. The purpose is not to declare one rule universally superior but to quantify the false-selection/sensitivity trade-off attributable to each nested gate within the registered hidden-driver problem.
+
+## D. Post-Audit Stress and Diagnostic Analyses
 Several analyses are intentionally classified as exploratory because they were designed after observing the primary audits.
 
 First, morphology stress testing changes the synthetic RF perturbation from the registered joint abrupt degradation to alternative forms, including gradual joint changes and perturbations affecting only a subset of RF metrics. These experiments characterize the detector's operating envelope but are not used to redefine the primary audit.
@@ -179,7 +190,7 @@ Third, outcome-definition sensitivity evaluates how selected real-data associati
 
 Finally, a post-audit background-hardness diagnostic measures natural pre/post RF-event asymmetry around each frozen hidden-driver event family. This diagnostic helps interpret heterogeneous recovery but does not retune the audit.
 
-## D. AI Contribution Pilot
+## E. AI Contribution Pilot
 The scientific AI layer is evaluated separately from the statistical engine. Six already-screened-out natural candidates are used in a prospective pilot. A deterministic rule-based baseline and a constrained language-model output receive equivalent bounded candidate evidence. The AI output is forbidden from inventing numbers, claiming validation, accessing the holdout, changing failed-gate decisions, or proposing tests outside a registered vocabulary.
 
 Hard safety endpoints are checked automatically. Incremental scientific utility is assessed by at least two blinded domain-competent human reviewers using frozen scoring dimensions for interpretive completeness, alternative-explanation usefulness, falsifiability, confounder coverage, and actionability. The final manuscript title retains the phrase AI-Assisted only if the preregistered utility rule is satisfied. At the time of this draft, the safety audit is complete and the blinded utility review remains pending.
@@ -257,7 +268,27 @@ The difference between exact selection and top-1 ranking is scientifically infor
 
 This behavior is consistent with the intended design. The engine is not optimized to maximize the number of declared discoveries; it is designed to restrict promotion when the evidence budget, directionality, or multiplicity-controlled threshold is insufficient.
 
-## E. Driver-Specific Heterogeneity and Background Hardness
+## E. Hidden-Driver Gate Ablation
+The v23 audit compared the four nested selectors under new reserved seeds while holding the hidden-driver library, RF detector, perturbation family, background, and response horizons fixed.
+
+Under 1000 library-wide null shifts, empirical FWER was 0.217 for M0 and 0.017 for M1, M2, and M3. Thus, the observed null-control improvement occurred when family-wise multiplicity correction was introduced.
+
+For the registered 1.0 robust-SD perturbation, the more informative endpoint is exclusive truth selection because uncorrected testing frequently selected the true driver together with one or more distractors:
+
+| Selector | Null FWER | Exclusive truth, 15 min | Exclusive truth, 30 min | Exclusive truth, 60 min | Distractor co-selection, 15/30/60 min |
+|---|---:|---:|---:|---:|---:|
+| M0: uncorrected p<0.05 | 0.217 | 0.4250 | 0.2400 | 0.0925 | 0.575 / 0.760 / 0.9075 |
+| M1: Bonferroni | 0.017 | 0.8500 | 0.8175 | 0.2100 | 0 / 0 / 0 |
+| M2: M1 + support | 0.017 | 0.8500 | 0.8175 | 0.2100 | 0 / 0 / 0 |
+| M3: M2 + fold direction | 0.017 | 0.8500 | 0.8175 | 0.2100 | 0 / 0 / 0 |
+
+M0 retained high raw truth-detection rates at 1.0 SD, but that apparent sensitivity was frequently accompanied by distractor selection. M1 converted much of this behavior into either exclusive correct selection or abstention. At 15 and 30 min, exclusive truth selection increased from 42.5% to 85.0% and from 24.0% to 81.75%, respectively; at 60 min it increased from 9.25% to 21.0%.
+
+A reconstruction audit showed that M1, M2, and M3 produced identical selected-driver sets in all 4,600 paired trials (3,600 injected-condition trials plus 1,000 null trials). Therefore, this benchmark provides no evidence that the minimum-support or temporal-fold-direction gates add incremental selection benefit after Bonferroni correction. Their scientific motivation remains relevant to natural-data screening and pseudoreplication control, but their necessity is not demonstrated by v23.
+
+The M3 results also remained consistent with the earlier v21 audit under new simulation seeds: at 1.0 SD, exact-truth selection differed from v21 by -0.25, +2.75, and -0.25 percentage points at 15, 30, and 60 min, respectively. This is a Monte Carlo consistency check on the same physical background, not an external replication.
+
+## F. Driver-Specific Heterogeneity and Background Hardness
 Aggregate end-to-end recovery conceals substantial driver heterogeneity. At 1.0 robust SD, exact-driver selection by truth driver was:
 
 | Hidden truth driver | 15 min | 30 min | 60 min |
@@ -271,7 +302,7 @@ A post-audit diagnostic showed that this heterogeneity is partly attributable to
 
 This diagnostic was performed after the v21 audit and was not used to alter thresholds, driver definitions, or promotion rules. Results are therefore reported as an explanation of benchmark hardness rather than as a calibration step.
 
-## F. Constrained AI Pilot: Safety Result
+## G. Constrained AI Pilot: Safety Result
 The prospective six-candidate AI pilot has completed its automated safety phase. Across RFATM-0001 through RFATM-0006, the constrained language-model outputs produced:
 - zero detected fabricated numeric claims;
 - zero detected validation/causality state overreach;
@@ -306,26 +337,33 @@ This distinction is desirable for a scientific workflow. Ranking answers, "which
 
 This design also clarifies the appropriate role of language models. A language model may help expand, organize, or critique candidate explanations, but it should not be given authority to convert ranking or narrative plausibility into validated scientific status.
 
-## D. The Real Background Is Part of the Benchmark
+## D. Multiplicity Control Dominated the Hidden-Driver Gate Ablation
+The v23 nested-gate audit challenges an intuitive but unsupported assumption: adding more scientific gates does not necessarily improve selection behavior in every benchmark. In the frozen four-driver library, the transition from M0 to Bonferroni-corrected M1 accounted for the entire observed reduction in null FWER, from 0.217 to 0.017. Adding the minimum-discordant support rule and fold-direction requirement produced no further selected-driver changes in any paired trial.
+
+This result has two implications. First, multiplicity control is indispensable in the tested finite-library setting: uncorrected testing often selected the true driver together with distractors and produced a high null family-wise error rate. Second, the benchmark does not justify claiming that every component of the full ASDE gate is necessary for this task. The support and fold-direction rules remain motivated by pseudoreplication and temporal-stability concerns in natural-data screening, but v23 provides no incremental evidence for them after Bonferroni correction.
+
+A simpler selector should therefore remain the reference comparator in future audits. If additional gates continue to produce identical decisions across broader benchmarks and external datasets, the workflow should be simplified rather than preserving complexity for architectural reasons.
+
+## E. The Real Background Is Part of the Benchmark
 Synthetic injection on a real field background has an advantage and a cost. It preserves nonstationarity, missingness patterns, natural RF events, and environmental structure that would be difficult to reproduce in white-noise or fully simulated data. However, candidate drivers do not encounter equivalent backgrounds.
 
 The v22 diagnostic demonstrates this directly. Some event families start from a favorable post-event RF asymmetry, whereas others start from neutral or adverse asymmetry. Consequently, recovery is a joint property of the injected signal, the detector, the decision gate, and the structured background.
 
 Rather than normalize this heterogeneity away after seeing the audit, ASDE reports per-driver recovery. Future multi-link evaluation should test whether similar background-hardness effects recur across environments.
 
-## E. Morphology Robustness Defines an Operating Envelope
+## F. Morphology Robustness Defines an Operating Envelope
 The v15 stress test prevents a broad interpretation of the strong v12 numbers. The primary composite detector is well matched to coherent multi-metric degradation. When only one RF subsystem is perturbed, the composite quality representation dilutes the signal. The exploratory multi-view extension partly recovers some sparse effects but introduces a larger multiplicity burden and does not dominate the primary detector.
 
 This result argues against a single universal RF-degradation detector. A future ASDE version may use a preregistered family of physically interpretable RF views or hierarchical testing procedure, but such a redesign must be frozen and evaluated on new audit seeds or external data rather than tuned retrospectively on the current benchmark.
 
-## F. What the AI Layer Does—and Does Not Do
+## G. What the AI Layer Does—and Does Not Do
 ASDE is intentionally AI-assisted rather than AI-authoritative. The language model does not compute the reported p-values, confidence intervals, event counts, or benchmark metrics. It cannot alter the holdout, thresholds, multiplicity corrections, or candidate state.
 
 Its proposed role is narrower: translate bounded evidence packets into scientific interpretations, alternative explanations, confounders, and falsification suggestions. This design reduces the surface area over which an LLM can silently modify evidence.
 
 The safety pilot shows that the frozen interface can obey these boundaries across the six tested candidates. Whether the language model contributes enough incremental scientific utility to justify prominence in the title is intentionally left to blinded human evaluation. If that preregistered criterion is not met, ASDE remains scientifically intact as a deterministic auditable workflow and the AI layer will be described as optional.
 
-## G. Reproducibility as Part of the Scientific Method
+## H. Reproducibility as Part of the Scientific Method
 Git provenance is used not merely for software engineering but as part of the inferential record. Protocol freezes precede audit seeds, hashes bind results to source snapshots, failed candidates remain in the registry, and headline v21 metrics can be reconstructed from the stored trial table.
 
 A one-command verifier checks the development snapshot, frozen protocol, audit artifacts, recorded package versions, headline metric reconstruction, and analytical isolation of the holdout. This does not eliminate every reproducibility problem, especially for stochastic language-model outputs, but it makes the deterministic scientific core independently inspectable.
@@ -348,17 +386,19 @@ Seventh, D_validation remains analytically embargoed from scientific analysis an
 
 Eighth, external configuration cohorts are registered but not yet used as confirmatory replication in this paper. Cross-configuration and cross-link replication remain future tests of generality.
 
-Ninth, the AI-utility pilot is not yet complete at Draft v0. The constrained outputs passed automated safety checks, but incremental scientific utility relative to the deterministic baseline requires blinded human scoring. The final title and AI contribution statement will follow the preregistered result rather than being decided editorially after the fact.
+Ninth, the AI-utility pilot is not yet complete at Draft v1. The constrained outputs passed automated safety checks, but incremental scientific utility relative to the deterministic baseline requires blinded human scoring. The final title and AI contribution statement will follow the preregistered result rather than being decided editorially after the fact.
+
+Tenth, the v23 gate ablation found no incremental selection difference among M1, M2, and M3. Therefore, the current benchmark does not establish that minimum-support or fold-direction gates are necessary once multiplicity correction is applied. Their continued inclusion should be justified by natural-data validity concerns or by future benchmarks that demonstrate incremental benefit.
 
 # IX. Conclusion
 ASDE addresses a methodological problem that becomes more important as automated systems make scientific candidate generation cheaper: plausible patterns can be generated faster than they can be validated. The workflow therefore treats discovery as a sequence of state transitions governed by evidence, not as a ranking problem.
 
-On a real rural high-altitude 6 GHz measurement background, six natural atmospheric–RF candidates were screened out before confirmatory validation. A known-driver audit quantified the behavior of the statistical gate, while a stricter hidden-driver benchmark quantified recovery when the generating atmospheric hypothesis was concealed within a competing finite library. The results show both useful recovery and substantial limits, particularly at longer lags and for difficult background conditions.
+On a real rural high-altitude 6 GHz measurement background, six natural atmospheric–RF candidates were screened out before confirmatory validation. A known-driver audit quantified the behavior of the statistical gate, while a stricter hidden-driver benchmark quantified recovery when the generating atmospheric hypothesis was concealed within a competing finite library. A separately frozen gate ablation showed that multiplicity correction accounted for the observed reduction in hidden-driver false selection, while the additional support and fold-direction gates made no further decisions in that benchmark. The results therefore show both useful recovery and substantial limits, including longer-lag sensitivity loss, structured-background effects, and gate components whose incremental value remains unproven in the audited finite library.
 
 The central methodological lesson is that an auditable discovery system should make it easy to generate candidates but difficult to promote them. AI may assist hypothesis formulation and criticism, but scientific status should remain tied to deterministic evidence, explicit multiplicity and temporal controls, protected validation data, reproducible provenance, and human scientific responsibility.
 
 # Working Reference Key Map
-The citation keys in Draft v0 are placeholders tied to verified sources. They will be converted to IEEE numbered references only after bibliographic metadata are independently checked.
+The citation keys in Draft v1 are placeholders tied to verified sources. They will be converted to IEEE numbered references only after bibliographic metadata are independently checked.
 
 - AI-SCIENTIST-2024 — Lu et al., The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery, arXiv:2408.06292.
 - AI-SCIENTIST-V2-2025 — Yamada et al., The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via Agentic Tree Search, arXiv:2504.08066.

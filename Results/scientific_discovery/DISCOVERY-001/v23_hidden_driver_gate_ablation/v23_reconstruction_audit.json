@@ -1,0 +1,18 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "audit": "v23 hidden-driver gate ablation reconstruction",
+  "status": "PASS",
+  "trial_counts": {
+    "total": 18400,
+    "injected": 14400,
+    "null": 4000
+  },
+  "null_fwer": {
+    "M0": 0.217,
+    "M1": 0.017,
+    "M2": 0.017,
+    "M3": 0.017
+  },
+  "m1_m2_m3_selected_sets_identical": true,
+  "errors": []
+}

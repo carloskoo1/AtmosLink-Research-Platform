@@ -24,7 +24,16 @@ if sha256(ROOT/protocol["path"])!=protocol["sha256"]:
 for name,expected in manifest["v21_artifacts"].items():
     path=ROOT/"Results/scientific_discovery/DISCOVERY-001/v21_end_to_end_audit"/name
     if sha256(path)!=expected:
-        errors.append(f"{name} SHA-256 mismatch")
+        errors.append(f"v21 {name} SHA-256 mismatch")
+
+protocol23=manifest["v23_protocol"]
+if sha256(ROOT/protocol23["path"])!=protocol23["sha256"]:
+    errors.append("v23 protocol SHA-256 mismatch")
+
+for name,expected in manifest["v23_artifacts"].items():
+    path=ROOT/"Results/scientific_discovery/DISCOVERY-001/v23_hidden_driver_gate_ablation"/name
+    if sha256(path)!=expected:
+        errors.append(f"v23 {name} SHA-256 mismatch")
 
 versions={
     "numpy":numpy.__version__,"pandas":pandas.__version__,
@@ -36,6 +45,7 @@ for pkg,expected in manifest["packages"].items():
 
 checks=[
     [sys.executable,str(ROOT/"scripts/verify_discovery_001_v21_audit.py")],
+    [sys.executable,str(ROOT/"scripts/verify_discovery_001_v23_audit.py")],
     [sys.executable,str(ROOT/"scripts/audit_discovery_holdout_isolation.py")],
 ]
 outputs=[]

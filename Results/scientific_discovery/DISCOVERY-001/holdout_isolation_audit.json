@@ -15,7 +15,8 @@
     "scripts/run_discovery_001_v18_end_to_end_exploratory.py",
     "scripts/run_discovery_001_v19_temporal_identifiability.py",
     "scripts/run_discovery_001_v20_identifiability_tradeoff.py",
-    "scripts/run_discovery_001_v21_end_to_end_audit.py"
+    "scripts/run_discovery_001_v21_end_to_end_audit.py",
+    "scripts/run_discovery_001_v23_hidden_driver_gate_ablation.py"
   ],
   "issues": [],
   "status": "PASS",

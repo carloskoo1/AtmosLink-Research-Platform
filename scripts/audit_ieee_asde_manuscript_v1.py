@@ -67,6 +67,34 @@ for s in ["2.5%","94–100%"]:
     if s not in text:
         warnings.append(f"expected Abstract known-driver summary token absent: {s}")
 
+# v23 hidden-driver gate ablation must remain correctly scoped.
+v23dir=ROOT/"Results/scientific_discovery/DISCOVERY-001/v23_hidden_driver_gate_ablation"
+v23metrics=pd.read_csv(v23dir/"gate_ablation_metrics.csv",keep_default_na=False)
+def v23_fwer(method):
+    g=v23metrics[(v23metrics["mode"]=="null")&
+                 (v23metrics["metric"]=="library_wide_fwer")&
+                 (v23metrics["method"]==method)]
+    if len(g)!=1:
+        raise RuntimeError(f"v23 FWER lookup failed: {method}")
+    return float(g.iloc[0]["rate"])
+
+if abs(v23_fwer("M0")-0.217)>1e-12:
+    errors.append("v23 M0 FWER artifact changed")
+for method in ["M1","M2","M3"]:
+    if abs(v23_fwer(method)-0.017)>1e-12:
+        errors.append(f"v23 {method} FWER artifact changed")
+
+v23audit=json.loads((v23dir/"v23_reconstruction_audit.json").read_text())
+if v23audit.get("m1_m2_m3_selected_sets_identical") is not True:
+    errors.append("v23 M1/M2/M3 selected-set identity audit no longer passes")
+
+for token in ["21.7%","1.7%","4,600 paired audit trials"]:
+    if token not in text:
+        errors.append(f"headline v23 token missing from draft: {token}")
+
+if re.search(r"(full|complete)\s+(ASDE\s+)?gate.{0,80}(caused|accounted for).{0,80}(21\.7|1\.7)",text,re.I|re.S):
+    errors.append("v23 improvement incorrectly attributed to the full gate")
+
 # Holdout scope wording.
 if "analytically isolated" not in text and "analytically embargoed" not in text:
     errors.append("holdout analytical-isolation language missing")

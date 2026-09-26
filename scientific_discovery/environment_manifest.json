@@ -21,5 +21,16 @@
     "end_to_end_trials.csv": "37a1d2dc9a626635dc7619b4ec0d5359b39219b11b65f0560ca11a0bf972c331",
     "end_to_end_metrics.csv": "a52b4cb5b4f3dc5fbe450a7aef18ac291b32858a94dc66b84468484e350a41c7",
     "v21_summary.json": "0e28d033d8099920f802c445e80a0964793387d1ab17104e35cf3140f7ca429f"
+  },
+  "v23_protocol": {
+    "path": "docs/ASDE_HIDDEN_DRIVER_GATE_ABLATION_PROTOCOL.md",
+    "sha256": "001857071d035e3bd5f30a5d3da5a2e3006cef5048d6394c32e4338b1ac2ebb7",
+    "freeze_commit": "36d9f329b6e3f77ad9ec3546f2bde65428308eca"
+  },
+  "v23_artifacts": {
+    "gate_ablation_trials.csv": "9b4df46ffe6fc9352551cdef8e59fc292f3a01dbf685b9c573701e6e129f9a6a",
+    "gate_ablation_metrics.csv": "dd253d6836df1c8958020ea67c4b2e45a08e39441a5f5beb3ec4978a41c17f4f",
+    "v23_summary.json": "659ccb05374580d65f2d95b06a9fb34b03539ba9cfb0ef3cd0b1dc2742166ccd",
+    "v23_reconstruction_audit.json": "67358e1779c64eb2562cae8aa50e1c0c3a8954579feffa9a3ebeec7b93760011"
   }
 }

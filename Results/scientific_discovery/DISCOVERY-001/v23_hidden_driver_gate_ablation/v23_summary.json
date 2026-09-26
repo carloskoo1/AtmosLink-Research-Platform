@@ -1,0 +1,94 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "23.0-audit-grade-hidden-driver-gate-ablation",
+  "protocol_git_commit": "36d9f329b6e3f77ad9ec3546f2bde65428308eca",
+  "protocol_sha256": "001857071d035e3bd5f30a5d3da5a2e3006cef5048d6394c32e4338b1ac2ebb7",
+  "development_snapshot_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "validation_accessed": false,
+  "external_replication_accessed": false,
+  "candidate_library": {
+    "cu01_local_temp_avg_c__rise": {
+      "threshold": 1.5308007671599377,
+      "event_count": 23
+    },
+    "sj01_local_temp_avg_c__fall": {
+      "threshold": 1.2876641771825945,
+      "event_count": 28
+    },
+    "sj01_local_hum_avg_pct__fall": {
+      "threshold": 1.6365945597866016,
+      "event_count": 28
+    },
+    "sj01_local_press_hpa__rise": {
+      "threshold": 0.8993210126363124,
+      "event_count": 28
+    }
+  },
+  "methods": {
+    "M0": "p < 0.05 only",
+    "M1": "p < 0.05/12",
+    "M2": "M1 + discordant >= 8",
+    "M3": "M2 + positive direction in >= 3/4 folds"
+  },
+  "effects_sd": [
+    0.5,
+    1.0,
+    1.5
+  ],
+  "lags_min": [
+    15,
+    30,
+    60
+  ],
+  "trials_per_truth_effect_lag": 100,
+  "injection_seed_range": "420000-420099",
+  "null_trials": 1000,
+  "null_rng_seed": 2026092607,
+  "frozen_rf_drop_threshold": -0.5620817932460992,
+  "null_fwer": [
+    {
+      "mode": "null",
+      "method": "M0",
+      "effect_sd": 0.0,
+      "lag_min": NaN,
+      "metric": "library_wide_fwer",
+      "trials": 1000,
+      "rate": 0.217,
+      "ci95_low": 0.19256037369509343,
+      "ci95_high": 0.24360565090480363
+    },
+    {
+      "mode": "null",
+      "method": "M1",
+      "effect_sd": 0.0,
+      "lag_min": NaN,
+      "metric": "library_wide_fwer",
+      "trials": 1000,
+      "rate": 0.017,
+      "ci95_low": 0.010640599663218203,
+      "ci95_high": 0.027056184371235047
+    },
+    {
+      "mode": "null",
+      "method": "M2",
+      "effect_sd": 0.0,
+      "lag_min": NaN,
+      "metric": "library_wide_fwer",
+      "trials": 1000,
+      "rate": 0.017,
+      "ci95_low": 0.010640599663218203,
+      "ci95_high": 0.027056184371235047
+    },
+    {
+      "mode": "null",
+      "method": "M3",
+      "effect_sd": 0.0,
+      "lag_min": NaN,
+      "metric": "library_wide_fwer",
+      "trials": 1000,
+      "rate": 0.017,
+      "ci95_low": 0.010640599663218203,
+      "ci95_high": 0.027056184371235047
+    }
+  ]
+}
