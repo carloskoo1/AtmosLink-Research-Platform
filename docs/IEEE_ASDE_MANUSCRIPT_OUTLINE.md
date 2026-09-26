@@ -10,7 +10,7 @@ IEEE Access — Methods manuscript (primary option). The paper focuses on a new 
 **Auditable AI-Assisted Scientific Discovery for Long-Duration 6 GHz Wireless Measurements**
 
 ## Draft abstract
-Long-duration wireless measurement campaigns create an attractive setting for AI-assisted scientific discovery, but serial dependence, multiple testing, adaptive overfitting, sensor artifacts, and post hoc hypothesis formation can transform exploratory associations into false scientific claims. This paper presents the AtmosLink Scientific Discovery Engine (ASDE), an auditable human-in-the-loop workflow for discovering and screening atmospheric–radioelectric patterns in operational wireless-link measurements. ASDE separates exploratory candidate generation from data-quality eligibility, temporal blocking, pre/post directionality, multiplicity control, context-marker classification, hypothesis freezing, and independent holdout validation. The framework is evaluated on the real background of a rural high-altitude 6 GHz link. In the natural development data, six apparently promising atmospheric–RF candidates were rejected before validation. One additional humidity-variability association was retained only as an exploratory, outcome-definition-sensitive context association because it lacked stable temporal precedence and disappeared under a DL-only RF event definition. To quantify discovery performance under known ground truth without using the real holdout for scientific analysis, a benchmark protocol was frozen in Git before an audit-grade synthetic injection experiment. Across 100 trials per effect-lag condition and 1000 circular-shift null trials, the full ASDE gate achieved a family-wise false-positive rate of 2.5% (95% CI: 1.70–3.66%). For injected effects of 1.0 robust standard deviation, recovery was 100%, 100%, and 94% at lags of 15, 30, and 60 min, respectively. An ablation showed that an uncorrected screening rule increased the false-positive rate to 7.9%. These results demonstrate that AI-assisted discovery can be coupled to explicit statistical and provenance safeguards that prioritize falsification and reproducibility over candidate generation.
+Long-duration wireless measurement campaigns create opportunities for AI-assisted scientific discovery, but serial dependence, multiple testing, sensor artifacts, adaptive data reuse, and post hoc hypothesis formation can convert exploratory associations into unreliable scientific claims. This paper presents the AtmosLink Scientific Discovery Engine (ASDE), an auditable human-in-the-loop workflow for atmospheric–radioelectric pattern discovery in operational wireless telemetry. The AI component is restricted to candidate formulation, mechanistic alternatives, confounder identification, and structured criticism; numerical evidence, multiplicity control, candidate promotion, and validation gates are executed by deterministic versioned procedures. ASDE combines quality-control-based feature eligibility, temporally blocked development analysis, event-level independence, pre/post directionality, multiplicity correction, pattern ontology, immutable provenance, hypothesis freezing, and an analytically isolated real-data holdout. The framework is evaluated on the background of a rural high-altitude 6 GHz link. In natural development data, six apparently promising atmospheric–RF candidates were screened out, and one additional association remained only an outcome-definition-sensitive context signal. A frozen known-driver benchmark first evaluated the screening gate, yielding a family-wise false-positive rate of 2.5% and 94–100% recovery for 1.0 robust-SD joint RF effects at 15–60 min lags. More importantly, a post-freeze hidden-driver benchmark required ASDE to recover the planted atmospheric driver from four competing prespecified hypotheses. Its library-wide null false-positive rate was 2.0% (95% CI: 1.30–3.07%). For 1.0 robust-SD effects, exact-driver selection was 85.3%, 79.0%, and 21.3% at 15, 30, and 60 min, while unique top-1 ranking was 94.5%, 89.5%, and 59.5%, respectively. These results quantify both the operating envelope and the conservatism of the workflow: ASDE can often identify the most plausible candidate while refusing promotion when evidence is insufficient. The study validates a bounded discovery-and-screening process, not a natural atmospheric causal effect.
 
 ## Index terms
 AI-assisted scientific discovery; wireless measurements; 6 GHz; high-altitude radio links; reproducibility; multiple testing; time-series analysis; environmental sensing; human-in-the-loop AI; experimental methodology.
@@ -20,17 +20,18 @@ AI-assisted scientific discovery; wireless measurements; 6 GHz; high-altitude ra
 2. **Adaptive-analysis protection.** Explicit recognition that repeatedly inspected data become development data; a separate 716-observation real holdout remains analytically isolated from candidate selection, tuning, screening, and benchmark development.
 3. **Temporal-causality safeguards.** Pseudoreplication control, pre/post directionality tests, blocked temporal robustness, and separation of precursors from persistent context markers.
 4. **QC-aware feature eligibility.** Sensor-quality events can disqualify derived features from discovery, preventing instrumental artifacts from becoming scientific candidates.
-5. **Ground-truth benchmark on real background data.** Frozen synthetic injections quantify family-wise false positives and recovery across effect sizes and lags.
-6. **Ablation of safeguards.** The naive uncorrected rule produces 7.9% false positives versus 2.5% for the full ASDE gate on the audit-grade benchmark, while moderate-signal recovery remains high.
+5. **Two-level ground-truth evaluation on real background data.** A frozen known-driver benchmark isolates screening-gate behavior, while a separately frozen hidden-driver benchmark tests exact recovery from a finite prespecified hypothesis library.
+6. **Quantified conservatism and failure modes.** Safeguard ablation, morphology stress tests, outcome-definition sensitivity, per-driver recovery, and post-audit background-hardness diagnostics explicitly map where ASDE succeeds and where it loses sensitivity.
 
 ## Key quantitative results
-- Frozen benchmark protocol commit: 1e49129.
-- Audit-grade result commit: 975bcf7.
-- Null trials: 1000.
-- Family-wise ASDE false-positive rate: 0.025; Wilson 95% CI [0.0170, 0.0366].
-- Naive uncorrected false-positive rate: 0.079.
-- 1.0-SD recovery: 1.00 at 15 min, 1.00 at 30 min, 0.94 at 60 min.
-- 0.5-SD recovery: 1.00 at 15 min, 0.84 at 30 min, 0.62 at 60 min.
+- Known-driver screening protocol commit: 1e49129; audit result commit: 975bcf7.
+- Known-driver screening null trials: 1000; family-wise FPR = 0.025, Wilson 95% CI [0.0170, 0.0366].
+- Known-driver 1.0-SD recovery = 1.00, 1.00, 0.94 at 15/30/60 min; naive uncorrected FPR = 0.079.
+- Hidden-driver frozen benchmark commit: 63839e8; 4-driver x 3-horizon hypothesis family; 1000 library-wide null trials.
+- Hidden-driver library-wide null FWER = 0.020, Wilson 95% CI [0.0130, 0.0307].
+- Hidden-driver 1.0-SD exact selection = 0.8525, 0.7900, 0.2125 at 15/30/60 min.
+- Hidden-driver 1.0-SD unique top-1 ranking = 0.9450, 0.8950, 0.5950 at 15/30/60 min.
+- Aggregate distractor co-selection = 0 in the audited injected cells; per-cell 0/400 upper Wilson bound is approximately 0.0095.
 - Natural-data candidate attrition: 6 RFATM candidates screened out before validation; 1 exploratory outcome-definition-sensitive context association retained; 0 frozen natural hypotheses.
 - Real D_validation: 716 observations, still embargoed from scientific analysis and candidate evaluation.
 
@@ -112,3 +113,19 @@ ASDE demonstrates a reproducible way to integrate AI-assisted candidate generati
 - Provide source code and machine-readable benchmark results as supplemental/repository material.
 - Include the required disclosure of AI-generated text/code assistance in the acknowledgments, identifying the AI system and the parts of the work for which it was used.
 - Authors retain responsibility for all scientific claims, analyses, code, and final manuscript content.
+
+## End-to-end hidden-driver audit (v21)
+A second frozen benchmark evaluates discovery rather than screening alone. The candidate library contains four prespecified atmospheric drivers selected using atmospheric-only identifiability criteria before audit execution. For each trial, one driver is hidden as the synthetic truth and ASDE must select it from the competing library under Bonferroni correction across 4 drivers x 3 horizons.
+
+Audit commit: `63839e8`.
+
+Primary end-to-end results:
+- library-wide circular-shift null FWER: **0.020**, Wilson 95% CI **[0.0130, 0.0307]**;
+- 1.0 robust-SD exact-driver selection: **0.8525** at 15 min, **0.7900** at 30 min, **0.2125** at 60 min;
+- 1.0 robust-SD unique top-1 ranking: **0.9450**, **0.8950**, **0.5950** at 15/30/60 min;
+- no distractor co-selection was observed in any aggregate injected cell; the 95% upper Wilson bound is approximately 0.0095 for 0/400 trials per cell.
+
+The large difference between ranking accuracy and gate-passing selection at 60 minutes is scientifically important: ASDE often identifies the most plausible driver but correctly refuses to promote it when evidence is insufficient under the frozen statistical gate.
+
+## Background-hardness diagnostic (v22)
+Post-audit analysis shows that the real RF background is not exchangeable across candidate drivers. For example, before synthetic injection, CU01 temperature-rise events show 10 post-only versus 2 pre-only RF entries within 30 min, whereas SJ01 pressure-rise events show 3 post-only versus 5 pre-only. Therefore end-to-end recovery is partly a property of both the method and the natural background surrounding each driver. Aggregate recovery must always be accompanied by per-driver results.

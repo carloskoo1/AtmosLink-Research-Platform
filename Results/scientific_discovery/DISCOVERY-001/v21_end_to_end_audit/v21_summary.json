@@ -1,0 +1,650 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "21.0-audit-grade-hidden-driver",
+  "protocol_git_commit": "63839e88405cf0479b21d8b98c1f21de57064899",
+  "protocol_sha256": "8b81d904dce6fa1636f3bbf39edcc80081ce1a48a09001a1cb3fd9da2de1487d",
+  "development_snapshot_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "validation_accessed": false,
+  "external_replication_accessed": false,
+  "candidate_library": {
+    "cu01_local_temp_avg_c__rise": {
+      "threshold": 1.5308007671599377,
+      "event_count": 23
+    },
+    "sj01_local_temp_avg_c__fall": {
+      "threshold": 1.2876641771825945,
+      "event_count": 28
+    },
+    "sj01_local_hum_avg_pct__fall": {
+      "threshold": 1.6365945597866016,
+      "event_count": 28
+    },
+    "sj01_local_press_hpa__rise": {
+      "threshold": 0.8993210126363124,
+      "event_count": 28
+    }
+  },
+  "candidate_library_size": 4,
+  "horizons_min": [
+    30,
+    60,
+    120
+  ],
+  "bonferroni_alpha_per_driver_horizon": 0.004166666666666667,
+  "frozen_rf_drop_threshold": -0.5620817932460992,
+  "effects_sd": [
+    0.5,
+    1.0,
+    1.5
+  ],
+  "lags_min": [
+    15,
+    30,
+    60
+  ],
+  "trials_per_truth_effect_lag": 100,
+  "injection_seed_range": "310000-310099",
+  "null_trials": 1000,
+  "null_rng_seed": 2026092605,
+  "library_wide_null_fwer": 0.02,
+  "library_wide_null_fwer_ci95": [
+    0.012983581129037627,
+    0.03069024151389728
+  ],
+  "aggregate_metrics": [
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "metric": "truth_selected",
+      "trials": 400,
+      "rate": 0.675,
+      "ci95_low": 0.6276230707321651,
+      "ci95_high": 0.7190475050579468
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "metric": "exclusive_truth_selected",
+      "trials": 400,
+      "rate": 0.675,
+      "ci95_low": 0.6276230707321651,
+      "ci95_high": 0.7190475050579468
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "metric": "unique_top1_correct",
+      "trials": 400,
+      "rate": 0.7425,
+      "ci95_low": 0.6974839488186009,
+      "ci95_high": 0.7829024204905541
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "metric": "ranking_ambiguous",
+      "trials": 400,
+      "rate": 0.01,
+      "ci95_low": 0.0038954207932788126,
+      "ci95_high": 0.02542696699440824
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "metric": "distractor_coselected",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 15.0,
+      "metric": "mean_selected_count",
+      "trials": 400,
+      "rate": 0.675,
+      "ci95_low": NaN,
+      "ci95_high": NaN
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "metric": "truth_selected",
+      "trials": 400,
+      "rate": 0.385,
+      "ci95_low": 0.33862235992471207,
+      "ci95_high": 0.43356554741321446
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "metric": "exclusive_truth_selected",
+      "trials": 400,
+      "rate": 0.385,
+      "ci95_low": 0.33862235992471207,
+      "ci95_high": 0.43356554741321446
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "metric": "unique_top1_correct",
+      "trials": 400,
+      "rate": 0.6625,
+      "ci95_low": 0.6148092449935679,
+      "ci95_high": 0.7070991468115359
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "metric": "ranking_ambiguous",
+      "trials": 400,
+      "rate": 0.155,
+      "ci95_low": 0.12283205544731421,
+      "ci95_high": 0.19373166656646548
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "metric": "distractor_coselected",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 30.0,
+      "metric": "mean_selected_count",
+      "trials": 400,
+      "rate": 0.385,
+      "ci95_low": NaN,
+      "ci95_high": NaN
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "metric": "truth_selected",
+      "trials": 400,
+      "rate": 0.115,
+      "ci95_low": 0.08733247792422089,
+      "ci95_high": 0.14999225533753324
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "metric": "exclusive_truth_selected",
+      "trials": 400,
+      "rate": 0.115,
+      "ci95_low": 0.08733247792422089,
+      "ci95_high": 0.14999225533753324
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "metric": "unique_top1_correct",
+      "trials": 400,
+      "rate": 0.25,
+      "ci95_low": 0.21007832849376823,
+      "ci95_high": 0.29467799180607207
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "metric": "ranking_ambiguous",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "metric": "distractor_coselected",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 0.5,
+      "lag_min": 60.0,
+      "metric": "mean_selected_count",
+      "trials": 400,
+      "rate": 0.115,
+      "ci95_low": NaN,
+      "ci95_high": NaN
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "metric": "truth_selected",
+      "trials": 400,
+      "rate": 0.8525,
+      "ci95_low": 0.8143991454822668,
+      "ci95_high": 0.8838944428949584
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "metric": "exclusive_truth_selected",
+      "trials": 400,
+      "rate": 0.8525,
+      "ci95_low": 0.8143991454822668,
+      "ci95_high": 0.8838944428949584
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "metric": "unique_top1_correct",
+      "trials": 400,
+      "rate": 0.945,
+      "ci95_low": 0.9181319717303434,
+      "ci95_high": 0.9634017781359406
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "metric": "ranking_ambiguous",
+      "trials": 400,
+      "rate": 0.0075,
+      "ci95_low": 0.0025538429629852373,
+      "ci95_high": 0.02181610802770022
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "metric": "distractor_coselected",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 15.0,
+      "metric": "mean_selected_count",
+      "trials": 400,
+      "rate": 0.8525,
+      "ci95_low": NaN,
+      "ci95_high": NaN
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "metric": "truth_selected",
+      "trials": 400,
+      "rate": 0.79,
+      "ci95_low": 0.7474197657946615,
+      "ci95_high": 0.8270629026575238
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "metric": "exclusive_truth_selected",
+      "trials": 400,
+      "rate": 0.79,
+      "ci95_low": 0.7474197657946615,
+      "ci95_high": 0.8270629026575238
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "metric": "unique_top1_correct",
+      "trials": 400,
+      "rate": 0.895,
+      "ci95_low": 0.861108321155689,
+      "ci95_high": 0.9213766927705632
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "metric": "ranking_ambiguous",
+      "trials": 400,
+      "rate": 0.045,
+      "ci95_low": 0.028651223384090457,
+      "ci95_high": 0.07000527956161895
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "metric": "distractor_coselected",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 30.0,
+      "metric": "mean_selected_count",
+      "trials": 400,
+      "rate": 0.79,
+      "ci95_low": NaN,
+      "ci95_high": NaN
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "metric": "truth_selected",
+      "trials": 400,
+      "rate": 0.2125,
+      "ci95_low": 0.17524287819884765,
+      "ci95_high": 0.2552268901459687
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "metric": "exclusive_truth_selected",
+      "trials": 400,
+      "rate": 0.2125,
+      "ci95_low": 0.17524287819884765,
+      "ci95_high": 0.2552268901459687
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "metric": "unique_top1_correct",
+      "trials": 400,
+      "rate": 0.595,
+      "ci95_low": 0.5462097118377427,
+      "ci95_high": 0.6419828864483179
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "metric": "ranking_ambiguous",
+      "trials": 400,
+      "rate": 0.045,
+      "ci95_low": 0.028651223384090457,
+      "ci95_high": 0.07000527956161895
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "metric": "distractor_coselected",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.0,
+      "lag_min": 60.0,
+      "metric": "mean_selected_count",
+      "trials": 400,
+      "rate": 0.2125,
+      "ci95_low": NaN,
+      "ci95_high": NaN
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "metric": "truth_selected",
+      "trials": 400,
+      "rate": 0.8525,
+      "ci95_low": 0.8143991454822668,
+      "ci95_high": 0.8838944428949584
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "metric": "exclusive_truth_selected",
+      "trials": 400,
+      "rate": 0.8525,
+      "ci95_low": 0.8143991454822668,
+      "ci95_high": 0.8838944428949584
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "metric": "unique_top1_correct",
+      "trials": 400,
+      "rate": 0.945,
+      "ci95_low": 0.9181319717303434,
+      "ci95_high": 0.9634017781359406
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "metric": "ranking_ambiguous",
+      "trials": 400,
+      "rate": 0.0075,
+      "ci95_low": 0.0025538429629852373,
+      "ci95_high": 0.02181610802770022
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "metric": "distractor_coselected",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 15.0,
+      "metric": "mean_selected_count",
+      "trials": 400,
+      "rate": 0.8525,
+      "ci95_low": NaN,
+      "ci95_high": NaN
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "metric": "truth_selected",
+      "trials": 400,
+      "rate": 0.91,
+      "ci95_low": 0.877916547675384,
+      "ci95_high": 0.9342830870328781
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "metric": "exclusive_truth_selected",
+      "trials": 400,
+      "rate": 0.91,
+      "ci95_low": 0.877916547675384,
+      "ci95_high": 0.9342830870328781
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "metric": "unique_top1_correct",
+      "trials": 400,
+      "rate": 0.97,
+      "ci95_low": 0.9483009668703324,
+      "ci95_high": 0.9827571509659678
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "metric": "ranking_ambiguous",
+      "trials": 400,
+      "rate": 0.015,
+      "ci95_low": 0.006892197870136998,
+      "ci95_high": 0.03233506351155325
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "metric": "distractor_coselected",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 30.0,
+      "metric": "mean_selected_count",
+      "trials": 400,
+      "rate": 0.91,
+      "ci95_low": NaN,
+      "ci95_high": NaN
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "metric": "truth_selected",
+      "trials": 400,
+      "rate": 0.2825,
+      "ci95_low": 0.24060954581038724,
+      "ci95_high": 0.3285284528504738
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "metric": "exclusive_truth_selected",
+      "trials": 400,
+      "rate": 0.2825,
+      "ci95_low": 0.24060954581038724,
+      "ci95_high": 0.3285284528504738
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "metric": "unique_top1_correct",
+      "trials": 400,
+      "rate": 0.8075,
+      "ci95_low": 0.766010151768214,
+      "ci95_high": 0.8431395742629825
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "metric": "ranking_ambiguous",
+      "trials": 400,
+      "rate": 0.03,
+      "ci95_low": 0.017242849034032177,
+      "ci95_high": 0.05169903312966765
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "metric": "distractor_coselected",
+      "trials": 400,
+      "rate": 0.0,
+      "ci95_low": 0.0,
+      "ci95_high": 0.009512640599680667
+    },
+    {
+      "scope": "aggregate",
+      "truth_driver": "ALL",
+      "effect_sd": 1.5,
+      "lag_min": 60.0,
+      "metric": "mean_selected_count",
+      "trials": 400,
+      "rate": 0.2825,
+      "ci95_low": NaN,
+      "ci95_high": NaN
+    }
+  ]
+}

@@ -100,3 +100,15 @@ IEEE Access currently defines a Methods article as work reporting a new experime
 
 ## Out-of-family robustness stress test
 A post-audit exploratory stress test challenged the primary detector with alternative RF perturbation morphologies using 100 trials per cell. At 1.0 robust SD per affected metric, an abrupt joint 15-minute degradation was recovered at 1.00, 1.00 and 0.98 for 15/30/60-minute lags; a 60-minute sustained joint degradation also yielded 1.00, 1.00 and 0.98; a 30-minute joint ramp yielded 1.00, 1.00 and 0.77. By contrast, RSSI-only, SNR-only and MCS-only 15-minute perturbations each yielded 0.74, 0.50 and 0.08. These values are supportive robustness evidence, not part of the preregistered primary audit benchmark. They show that the current composite RF detector is substantially less sensitive to single-subsystem perturbations and to longer-lag gradual effects.
+
+## Audit-grade hidden-driver benchmark (v21)
+The known-driver v12 benchmark validates the statistical screening gate but does not by itself establish discovery performance. v21 therefore freezes a finite four-driver atmospheric hypothesis library and hides the planted true driver from the search procedure.
+
+Frozen execution commit: **63839e8**. Development snapshot SHA-256: `eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387`. Protocol SHA-256 recorded by the audit: `8b81d904dce6fa1636f3bbf39edcc80081ce1a48a09001a1cb3fd9da2de1487d`.
+
+Library-wide circular-shift null FWER = **0.020**, Wilson 95% CI **[0.0130, 0.0307]**. For 1.0 robust-SD joint RF effects, exact-driver selection was **0.8525**, **0.7900**, and **0.2125** at 15/30/60-min lags, while unique top-1 ranking was **0.9450**, **0.8950**, and **0.5950**. No distractor co-selection occurred in the 400 trials of each aggregate effect-lag cell.
+
+The difference between ranking and gate-passing selection is intentional evidence of conservatism: at longer lags the true driver may rank first but still fail the prespecified evidence threshold. v21 supports claims only for recovery within this finite, prespecified, temporally screened library; it does not establish arbitrary hypothesis discovery.
+
+## Post-audit background-hardness diagnostic (v22)
+Recovery is heterogeneous across drivers because the real RF background is not neutral around all atmospheric event families. Baseline pre/post RF-event asymmetry is favorable for some drivers and adverse for others. Therefore aggregate recovery is accompanied by per-driver results, and v22 is diagnostic only; it is not used to retune v21.

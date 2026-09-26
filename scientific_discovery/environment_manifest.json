@@ -1,0 +1,25 @@
+{
+  "captured_at_context": "2026-09-26",
+  "python": "3.12.3",
+  "platform": "Linux 6.14.0-37-generic x86_64 glibc 2.39",
+  "packages": {
+    "numpy": "1.26.4",
+    "pandas": "2.1.4",
+    "scipy": "1.11.4",
+    "matplotlib": "3.6.3"
+  },
+  "primary_development_snapshot": {
+    "path": "Results/scientific_discovery/DISCOVERY-001/prevalidation_7000_20.csv",
+    "sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387"
+  },
+  "v21_protocol": {
+    "path": "docs/ASDE_END_TO_END_BENCHMARK_PROTOCOL.md",
+    "sha256": "8b81d904dce6fa1636f3bbf39edcc80081ce1a48a09001a1cb3fd9da2de1487d",
+    "freeze_commit": "63839e88405cf0479b21d8b98c1f21de57064899"
+  },
+  "v21_artifacts": {
+    "end_to_end_trials.csv": "37a1d2dc9a626635dc7619b4ec0d5359b39219b11b65f0560ca11a0bf972c331",
+    "end_to_end_metrics.csv": "a52b4cb5b4f3dc5fbe450a7aef18ac291b32858a94dc66b84468484e350a41c7",
+    "v21_summary.json": "0e28d033d8099920f802c445e80a0964793387d1ab17104e35cf3140f7ca429f"
+  }
+}

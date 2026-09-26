@@ -1,0 +1,13 @@
+truth_driver,lag_min,truth_selected,unique_top1_correct
+cu01_local_temp_avg_c__rise,15.0,1.0,1.0
+cu01_local_temp_avg_c__rise,30.0,1.0,1.0
+cu01_local_temp_avg_c__rise,60.0,0.46,0.98
+sj01_local_hum_avg_pct__fall,15.0,0.99,1.0
+sj01_local_hum_avg_pct__fall,30.0,0.98,1.0
+sj01_local_hum_avg_pct__fall,60.0,0.07,0.11
+sj01_local_press_hpa__rise,15.0,0.42,0.78
+sj01_local_press_hpa__rise,30.0,0.19,0.58
+sj01_local_press_hpa__rise,60.0,0.07,0.51
+sj01_local_temp_avg_c__fall,15.0,1.0,1.0
+sj01_local_temp_avg_c__fall,30.0,0.99,1.0
+sj01_local_temp_avg_c__fall,60.0,0.25,0.78

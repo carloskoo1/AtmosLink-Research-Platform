@@ -1,0 +1,239 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "version": "22.0-background-hardness-diagnostic",
+  "status": "POST_AUDIT_DIAGNOSTIC",
+  "validation_accessed": false,
+  "interpretation": "Natural RF-event background differs across frozen atmospheric drivers. This affects directional-test headroom and must be reported when interpreting end-to-end recovery.",
+  "baseline": [
+    {
+      "driver": "cu01_local_temp_avg_c__rise",
+      "horizon_min": 30,
+      "event_count": 23,
+      "fold1_events": 6,
+      "fold2_events": 7,
+      "fold3_events": 5,
+      "fold4_events": 5,
+      "baseline_post_only": 10,
+      "baseline_pre_only": 2,
+      "baseline_post_minus_pre": 8,
+      "baseline_directional_p": 0.019287109375
+    },
+    {
+      "driver": "cu01_local_temp_avg_c__rise",
+      "horizon_min": 60,
+      "event_count": 23,
+      "fold1_events": 6,
+      "fold2_events": 7,
+      "fold3_events": 5,
+      "fold4_events": 5,
+      "baseline_post_only": 7,
+      "baseline_pre_only": 2,
+      "baseline_post_minus_pre": 5,
+      "baseline_directional_p": 0.08984375
+    },
+    {
+      "driver": "cu01_local_temp_avg_c__rise",
+      "horizon_min": 120,
+      "event_count": 23,
+      "fold1_events": 6,
+      "fold2_events": 7,
+      "fold3_events": 5,
+      "fold4_events": 5,
+      "baseline_post_only": 8,
+      "baseline_pre_only": 2,
+      "baseline_post_minus_pre": 6,
+      "baseline_directional_p": 0.0546875
+    },
+    {
+      "driver": "sj01_local_temp_avg_c__fall",
+      "horizon_min": 30,
+      "event_count": 28,
+      "fold1_events": 8,
+      "fold2_events": 7,
+      "fold3_events": 6,
+      "fold4_events": 7,
+      "baseline_post_only": 9,
+      "baseline_pre_only": 3,
+      "baseline_post_minus_pre": 6,
+      "baseline_directional_p": 0.072998046875
+    },
+    {
+      "driver": "sj01_local_temp_avg_c__fall",
+      "horizon_min": 60,
+      "event_count": 28,
+      "fold1_events": 8,
+      "fold2_events": 7,
+      "fold3_events": 6,
+      "fold4_events": 7,
+      "baseline_post_only": 11,
+      "baseline_pre_only": 7,
+      "baseline_post_minus_pre": 4,
+      "baseline_directional_p": 0.2403411865234375
+    },
+    {
+      "driver": "sj01_local_temp_avg_c__fall",
+      "horizon_min": 120,
+      "event_count": 28,
+      "fold1_events": 8,
+      "fold2_events": 7,
+      "fold3_events": 6,
+      "fold4_events": 7,
+      "baseline_post_only": 4,
+      "baseline_pre_only": 2,
+      "baseline_post_minus_pre": 2,
+      "baseline_directional_p": 0.34375
+    },
+    {
+      "driver": "sj01_local_hum_avg_pct__fall",
+      "horizon_min": 30,
+      "event_count": 28,
+      "fold1_events": 8,
+      "fold2_events": 8,
+      "fold3_events": 5,
+      "fold4_events": 7,
+      "baseline_post_only": 7,
+      "baseline_pre_only": 4,
+      "baseline_post_minus_pre": 3,
+      "baseline_directional_p": 0.2744140625
+    },
+    {
+      "driver": "sj01_local_hum_avg_pct__fall",
+      "horizon_min": 60,
+      "event_count": 28,
+      "fold1_events": 8,
+      "fold2_events": 8,
+      "fold3_events": 5,
+      "fold4_events": 7,
+      "baseline_post_only": 8,
+      "baseline_pre_only": 8,
+      "baseline_post_minus_pre": 0,
+      "baseline_directional_p": 0.5981903076171875
+    },
+    {
+      "driver": "sj01_local_hum_avg_pct__fall",
+      "horizon_min": 120,
+      "event_count": 28,
+      "fold1_events": 8,
+      "fold2_events": 8,
+      "fold3_events": 5,
+      "fold4_events": 7,
+      "baseline_post_only": 6,
+      "baseline_pre_only": 7,
+      "baseline_post_minus_pre": -1,
+      "baseline_directional_p": 0.70947265625
+    },
+    {
+      "driver": "sj01_local_press_hpa__rise",
+      "horizon_min": 30,
+      "event_count": 28,
+      "fold1_events": 8,
+      "fold2_events": 8,
+      "fold3_events": 6,
+      "fold4_events": 6,
+      "baseline_post_only": 3,
+      "baseline_pre_only": 5,
+      "baseline_post_minus_pre": -2,
+      "baseline_directional_p": 0.85546875
+    },
+    {
+      "driver": "sj01_local_press_hpa__rise",
+      "horizon_min": 60,
+      "event_count": 28,
+      "fold1_events": 8,
+      "fold2_events": 8,
+      "fold3_events": 6,
+      "fold4_events": 6,
+      "baseline_post_only": 3,
+      "baseline_pre_only": 6,
+      "baseline_post_minus_pre": -3,
+      "baseline_directional_p": 0.91015625
+    },
+    {
+      "driver": "sj01_local_press_hpa__rise",
+      "horizon_min": 120,
+      "event_count": 28,
+      "fold1_events": 8,
+      "fold2_events": 8,
+      "fold3_events": 6,
+      "fold4_events": 6,
+      "baseline_post_only": 3,
+      "baseline_pre_only": 4,
+      "baseline_post_minus_pre": -1,
+      "baseline_directional_p": 0.7734375
+    }
+  ],
+  "audit_recovery_1sd": [
+    {
+      "truth_driver": "cu01_local_temp_avg_c__rise",
+      "lag_min": 15.0,
+      "truth_selected": 1.0,
+      "unique_top1_correct": 1.0
+    },
+    {
+      "truth_driver": "cu01_local_temp_avg_c__rise",
+      "lag_min": 30.0,
+      "truth_selected": 1.0,
+      "unique_top1_correct": 1.0
+    },
+    {
+      "truth_driver": "cu01_local_temp_avg_c__rise",
+      "lag_min": 60.0,
+      "truth_selected": 0.46,
+      "unique_top1_correct": 0.98
+    },
+    {
+      "truth_driver": "sj01_local_hum_avg_pct__fall",
+      "lag_min": 15.0,
+      "truth_selected": 0.99,
+      "unique_top1_correct": 1.0
+    },
+    {
+      "truth_driver": "sj01_local_hum_avg_pct__fall",
+      "lag_min": 30.0,
+      "truth_selected": 0.98,
+      "unique_top1_correct": 1.0
+    },
+    {
+      "truth_driver": "sj01_local_hum_avg_pct__fall",
+      "lag_min": 60.0,
+      "truth_selected": 0.07,
+      "unique_top1_correct": 0.11
+    },
+    {
+      "truth_driver": "sj01_local_press_hpa__rise",
+      "lag_min": 15.0,
+      "truth_selected": 0.42,
+      "unique_top1_correct": 0.78
+    },
+    {
+      "truth_driver": "sj01_local_press_hpa__rise",
+      "lag_min": 30.0,
+      "truth_selected": 0.19,
+      "unique_top1_correct": 0.58
+    },
+    {
+      "truth_driver": "sj01_local_press_hpa__rise",
+      "lag_min": 60.0,
+      "truth_selected": 0.07,
+      "unique_top1_correct": 0.51
+    },
+    {
+      "truth_driver": "sj01_local_temp_avg_c__fall",
+      "lag_min": 15.0,
+      "truth_selected": 1.0,
+      "unique_top1_correct": 1.0
+    },
+    {
+      "truth_driver": "sj01_local_temp_avg_c__fall",
+      "lag_min": 30.0,
+      "truth_selected": 0.99,
+      "unique_top1_correct": 1.0
+    },
+    {
+      "truth_driver": "sj01_local_temp_avg_c__fall",
+      "lag_min": 60.0,
+      "truth_selected": 0.25,
+      "unique_top1_correct": 0.78
+    }
+  ]
+}

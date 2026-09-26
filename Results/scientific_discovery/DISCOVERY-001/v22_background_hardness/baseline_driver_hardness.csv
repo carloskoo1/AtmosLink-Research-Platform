@@ -1,0 +1,13 @@
+driver,horizon_min,event_count,fold1_events,fold2_events,fold3_events,fold4_events,baseline_post_only,baseline_pre_only,baseline_post_minus_pre,baseline_directional_p
+cu01_local_temp_avg_c__rise,30,23,6,7,5,5,10,2,8,0.019287109375
+cu01_local_temp_avg_c__rise,60,23,6,7,5,5,7,2,5,0.08984375
+cu01_local_temp_avg_c__rise,120,23,6,7,5,5,8,2,6,0.0546875
+sj01_local_temp_avg_c__fall,30,28,8,7,6,7,9,3,6,0.072998046875
+sj01_local_temp_avg_c__fall,60,28,8,7,6,7,11,7,4,0.2403411865234375
+sj01_local_temp_avg_c__fall,120,28,8,7,6,7,4,2,2,0.34375
+sj01_local_hum_avg_pct__fall,30,28,8,8,5,7,7,4,3,0.2744140625
+sj01_local_hum_avg_pct__fall,60,28,8,8,5,7,8,8,0,0.5981903076171875
+sj01_local_hum_avg_pct__fall,120,28,8,8,5,7,6,7,-1,0.70947265625
+sj01_local_press_hpa__rise,30,28,8,8,6,6,3,5,-2,0.85546875
+sj01_local_press_hpa__rise,60,28,8,8,6,6,3,6,-3,0.91015625
+sj01_local_press_hpa__rise,120,28,8,8,6,6,3,4,-1,0.7734375
