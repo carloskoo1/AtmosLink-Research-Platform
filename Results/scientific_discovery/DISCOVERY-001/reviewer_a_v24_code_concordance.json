@@ -8,7 +8,7 @@
   "validator_sha256": "212e6d8d73a22eabcc01710f574f37b577c7b9c45bdf542d82ef10176ed53940",
   "runner_sha256": "b05d6676e110553d19d8c82ff8a129a8c4d2685a395b830b6be2606be85cccf2",
   "template_validator_stdout": "{\n  \"manifest\": \"/home/carlos/Proyectos/EstacionMeteorologica/scientific_discovery/v24_start_manifest_TEMPLATE.json\",\n  \"status\": \"PASS\",\n  \"manifest_status\": \"DRAFT_TEMPLATE\",\n  \"prospective_execution_authorized\": false,\n  \"errors\": []\n}",
-  "runner_refusal_stdout": "{\n  \"status\": \"REFUSED\",\n  \"errors\": [\n    \"manifest_not_active\",\n    \"inferential_execution_not_enabled\",\n    \"missing_calibration_start_utc\",\n    \"missing_calibration_end_utc\",\n    \"missing_freeze_commit\",\n    \"schema_sha256\",\n    \"protocol_sha256\",\n    \"module_sha256\",\n    \"unit_test_sha256\",\n    \"concordance_audit_sha256\",\n    \"validator_sha256\",\n    \"runner_sha256\",\n    \"git_tree_not_clean\",\n    \"calibration_time_validation\",\n    \"prospective_source_missing\"\n  ]\n}",
+  "runner_refusal_stdout": "{\n  \"status\": \"REFUSED\",\n  \"errors\": [\n    \"manifest_not_active\",\n    \"inferential_execution_not_enabled\",\n    \"missing_calibration_start_utc\",\n    \"missing_calibration_end_utc\",\n    \"missing_freeze_commit\",\n    \"schema_sha256\",\n    \"protocol_sha256\",\n    \"module_sha256\",\n    \"unit_test_sha256\",\n    \"concordance_audit_sha256\",\n    \"validator_sha256\",\n    \"runner_sha256\",\n    \"calibration_time_validation\",\n    \"prospective_source_missing\"\n  ]\n}",
   "cell_family_size": 12,
   "rf_drop_threshold": -0.5620817932460992,
   "driver_specs": {
