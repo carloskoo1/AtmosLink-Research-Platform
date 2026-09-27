@@ -1,7 +1,7 @@
 # Reviewer A — statistical and methodological audit
 
 **Date:** 2026-09-26 (America/Lima)
-**Disposition:** **REVIEWER A — OPEN (Major).** Computational reconstruction and claim restriction are complete; inferential calibration of the field null and directional test remains unverified. The manuscript is **not cleared for submission by Reviewer A**. A conditional Methods-paper route may later be considered, but narrower wording alone does not turn this open objection into a statistical pass.
+**Disposition:** **REVIEWER A — DESIGN PASS / PROSPECTIVE CALIBRATION PENDING.** The historical v21/v23 inferential objection remains unresolved as a field-calibration result, but the v24 prospective design has now survived pre-freeze adversarial review, code/protocol concordance, regression tests, source-isolation safeguards, and an inactive-manifest execution barrier. No known pre-freeze design defect remains open at this checkpoint. This is **not** a statistical PASS on field outcomes and does not clear the manuscript for an unconditional calibration claim; the remaining requirement is prospective execution of v24 exactly as frozen later, without using D_validation as a repair set.
 
 ## Evidence inspected
 
@@ -99,3 +99,66 @@ python3 scripts/audit_asde_reviewer_a_paired_observation.py
 ```
 
 Each diagnostic writes only its own JSON output. It does not change the frozen v23 artifacts.
+
+
+## v24 pre-freeze design-closure update
+
+Checkpoint: `a3098dd` — **harden Reviewer A v24 prefreeze calibration design**.  
+Follow-up repository hygiene: `24a1f04` — preserves the earlier metadata-readiness helper as a hash-pinned historical tool rather than silently retargeting it to the live export.
+
+The v24 prospective design now includes:
+
+- fixed 7000 MHz / 20 MHz primary configuration and frozen RF/weather normalization constants;
+- immutable 60-calendar-day prospective window after `CALIBRATION_START_UTC`;
+- matched-offset RF observation policy fixed before future outcomes;
+- joint daily weather-profile sham generator plus prespecified 48-h dependence sensitivity;
+- strict A -> B temporal ordering: first 30 days calibrate, next 30 evaluate;
+- A1 cellwise empirical calibration and independent A2 family-wise min-p calibration;
+- fixed 12-cell family with support-ineligible cells retained as nonselectable rather than dropped;
+- 0.04 preregistered operating cutoff with external conditional-calibration ceiling 0.05;
+- 2500 A1, 2500 A2 and 5000 B-test schedules with disjoint seed families;
+- explicit separation of randomized-sham N1 calibration from natural-weather N2 claims;
+- natural-driver RF scores sealed until N1 disposition;
+- machine-readable start-manifest schema and inactive template;
+- validator and runner barriers that refuse prospective execution while the manifest remains inactive;
+- explicit prohibition of D_validation and historical integrated/prevalidation CSVs as v24 prospective sources.
+
+### Adversarial bugs found and fixed before prospective freeze
+
+**Support-shift bug.** The first A1 implementation retained support-ineligible schedules in the empirical-p denominator. A controlled case with zero eligible A1 references yielded raw p=0.0003998401 and family-wise p=0.0043982407, which would have selected an unsupported cell. The procedure now conditions the cellwise empirical reference on support-eligible A1 schedules; zero-reference cells receive p=1. The same counterexample now returns raw p=1 and family-wise p=1.
+
+**Exact-grid bug.** The first day-eligibility implementation checked only that a day contained 288 rows. A day with one duplicated 5-min timestamp and one missing bin could therefore pass the row-count condition. V24 now requires exact equality to the unique 288-bin America/Lima 5-min grid; a regression test verifies rejection of the duplicate/missing-bin case.
+
+**Adaptive restart risk.** An earlier draft allowed a failed day to be replaced by starting a later clean 60-day run under the same experiment. The final draft prohibits this: once `CALIBRATION_START_UTC` is frozen, the next 60 calendar days are immutable. Any ineligible day makes that experiment `NOT_CALIBRATED`; a retry requires a new experiment ID and a new prospective freeze.
+
+**Invisible-test provenance.** The v24 regression test was initially hidden by the repository rule `test_*.py`. It is now explicitly forced into Git, and the concordance auditor fails if any protected protocol/code/test/manifest/validator/runner artifact is not present in the Git index.
+
+### Current machine-audited status
+
+The pre-freeze concordance artifact reports:
+
+- `status = PASS`;
+- four-driver × three-horizon family = 12 cells;
+- historical weather-event reproduction = 23 / 28 / 28 / 28;
+- historical frozen RF-event reproduction = 158 events;
+- template validation = PASS;
+- `prospective_execution_authorized = false`;
+- inactive-template runner test = REFUSED as required;
+- `calibration_start_utc = null`.
+
+Thus no prospective v24 outcome has been inspected or analyzed.
+
+### Reviewer-A status interpretation
+
+**DESIGN PASS** means the current v24 protocol/implementation checkpoint has no known unresolved pre-freeze statistical-design objection from this audit.
+
+It does **not** mean:
+
+- field null calibration has passed;
+- natural weather has calibrated Type-I error;
+- 60 calendar days are 60 independent physical episodes;
+- N1 randomized-sham calibration substitutes for N2 natural negative controls;
+- D_validation may be opened;
+- v21/v23 historical limitations disappear.
+
+A final statistical PASS remains conditional on executing the future cohort without protocol drift and satisfying the preregistered N1/N2 disposition rules.
