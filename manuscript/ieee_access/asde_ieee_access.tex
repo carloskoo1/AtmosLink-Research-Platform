@@ -1,0 +1,756 @@
+\documentclass{ieeeaccess}
+\def\thevol{14}
+\def\theyear{2026}
+% Official IEEE Access template revision: 2026-05-13.
+% Generated from docs/IEEE_ASDE_FULL_DRAFT_V2.md
+% Source SHA-256: 30772b84c1ab6058a2476e6f633ef4f22bc755840547b90d22ed275286606299
+\usepackage[utf8]{inputenc}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{array,booktabs,tabularx}
+\usepackage{url}
+\usepackage{bm}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\makeatletter
+\AtBeginDocument{\DeclareMathVersion{bold}
+\SetSymbolFont{operators}{bold}{T1}{times}{b}{n}
+\SetSymbolFont{NewLetters}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathrm}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathit}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathbf}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathtt}{bold}{OT1}{pcr}{b}{n}
+\SetSymbolFont{symbols}{bold}{OMS}{cmsy}{b}{n}
+\renewcommand\boldmath{\@nomath\boldmath\mathversion{bold}}}
+\makeatother
+\begin{document}
+\title{ASDE: An Auditable Workflow for Hypothesis Screening in Long-Duration Environmental--Radio Telemetry}
+\author{\uppercase{Carlos Jes\'us Koo Labr\'in}\authorrefmark{1},
+\uppercase{V\'ictor S\'anchez C\'aceres}\authorrefmark{1},
+\uppercase{N\'estor E. Mu\~noz Abanto}\authorrefmark{1},
+\uppercase{Marisol Tapia Romero}\authorrefmark{1}, AND
+\uppercase{Carlos Enrique Koo Bartra}\authorrefmark{2}}
+\address[1]{Universidad Nacional de Cajamarca, Cajamarca, Peru (e-mail: ckoo@unc.edu.pe)}
+\address[2]{Universidad Privada del Norte, Trujillo, Peru}
+\markboth{Koo Labr\'in \headeretal: ASDE: An Auditable Workflow for Hypothesis Screening}
+{Koo Labr\'in \headeretal: ASDE: An Auditable Workflow for Hypothesis Screening}
+\corresp{Corresponding author: Carlos Jes\'us Koo Labr\'in (e-mail: ckoo@unc.edu.pe).}
+
+\begin{abstract}
+Long-duration environmental--radio telemetry can produce plausible but unstable patterns because temporal dependence, adaptive exploration, heterogeneous observation support, and repeated testing blur the boundary between candidate generation and evidence. This article presents the AtmosLink Scientific Discovery Engine (ASDE), an auditable workflow for bounded hypothesis screening. Its deterministic core records adaptations, enforces quality-control and event-support rules, applies temporally ordered tests and multiplicity correction, freezes eligible hypotheses, and protects a validation block. A constrained language-model interface may formulate or critique candidates but cannot calculate evidence or change scientific states. ASDE was evaluated on telemetry from one approximately 12-km rural high-altitude 6-GHz link. Six natural atmospheric--RF candidates were screened out before validation. In a frozen four-driver hidden-driver audit conditional on one development background and a finite prespecified library, exact-driver selection at a registered 1.0 reference-scale shift was 85.3\%, 79.0\%, and 21.3\% at 15, 30, and 60 min, respectively. A nested ablation reduced circular-shift surrogate-null selection from 21.7\% without multiplicity correction to 1.7\% with Bonferroni correction; subsequent support and fold-direction gates changed no selected sets in 4,600 paired trials. A separately frozen 2-dB RSSI/SNR stress and a later same-link goodput analysis bounded the physical interpretation of the original composite perturbation. Post-audit diagnostics further showed that RF observation policies and outcome representations materially changed event support and recovery. These results characterize a reproducible screening workflow, not a natural propagation mechanism: they do not establish field-wide error control, cross-link transportability, atmospheric causality, or incremental AI utility.
+\end{abstract}
+\begin{keywords}
+adaptive data analysis; environmental monitoring; hypothesis screening; human-in-the-loop artificial intelligence; multiple hypothesis testing; radio telemetry; reproducible research; time-series analysis; wireless measurement
+\end{keywords}
+\doi{}
+\titlepgskip=-21pt
+\maketitle
+\section{Introduction}\label{introduction}
+
+\PARstart{O}{perational} wireless links increasingly expose long telemetry records containing received signal strength, signal-to-noise ratio, modulation state, throughput, latency, retransmissions, availability, and, in instrumented deployments, colocated environmental measurements. These records can support scientific investigation in addition to network monitoring. They also create a methodological hazard: a plausible association found after many transformations, thresholds, time windows, and candidate comparisons can appear more stable and more explanatory than the evidence warrants.
+
+The difficulty is not only predictive. Environmental--radio telemetry is temporally dependent, its variables are observed under changing configurations and quality conditions, and a sustained episode can generate many correlated rows without providing many independent events. Moreover, each exploratory result can change the next query or representation. Repeated adaptive analysis therefore compromises naive holdout interpretations, while post-selection inference requires explicit accounting for exploration and selection \cite{REUSABLE-HOLDOUT-2015,POST-SELECTION-2022}. Benchmark design can likewise create apparent progress when temporal structure, event boundaries, or anomaly definitions are inadequately controlled \cite{TSAD-BENCHMARKS-2023}.
+
+The emergence of AI-assisted science makes this distinction more consequential. The AI Scientist, The AI Scientist-v2, Co-Scientist, and Robin demonstrate automated or agentic support for ideation, experimentation, critique, analysis, and manuscript generation \cite{AI-SCIENTIST-2024,AI-SCIENTIST-V2-2025,CO-SCIENTIST-2026,ROBIN-2026}. POPPER couples agentic falsification with sequential Type-I-error control, and ControlA introduces workflow- and agent-level safeguards in provenance-aware infrastructure \cite{POPPER-2025,CONTROLA-2025}. These advances establish that hypothesis generation, critique, validation gates, and provenance are prior art. They also sharpen the unresolved engineering question: how should such capabilities be constrained when the evidence consists of autocorrelated operational field telemetry and the hypothesis space evolves during investigation?
+
+Wireless research provides complementary foundations. Radio-derived variables have been used for anomaly detection, propagation analysis, and environmental sensing; commercial microwave-link studies, in particular, show that received signal measurements can contain information about atmospheric conditions \cite{RADIO-DT-2025,MESSER-2006,LEIJNSE-2007,UIJLENHOET-2018}. Most such studies begin with a predefined target, such as an anomaly class, precipitation, or attenuation, and then evaluate retrieval or prediction. The present problem is different: candidates emerge during adaptive analysis, observation support may vary across RF variables, temporal order matters, and a scientifically responsible outcome may be to screen out every apparently promising candidate.
+
+The research gap is therefore not the absence of another hypothesis-generating agent or another isolated statistical safeguard. What remains insufficiently characterized in the cited literature is a field-oriented, executable account of how adaptive candidate generation, quality-control eligibility, event-level support, temporal falsification, multiplicity control, hypothesis freezing, protected validation, and failure provenance behave together on long-duration environmental--radio telemetry. In particular, the operating characteristics of such a combined workflow must be measured under frozen protocols, and the resulting claims must remain conditional on the background data, perturbation model, observation policy, and finite candidate library used in the audit.
+
+This article addresses that gap through ASDE, a validity-constrained workflow implemented and evaluated on telemetry from one rural high-altitude 6-GHz link. The study asks whether the workflow can (i) reject unsupported natural candidates before validation, (ii) recover a concealed planted driver within a prespecified library under controlled temporal stresses, (iii) identify which gates materially change selection behavior, and (iv) expose sensitivity to RF outcome definitions and observation support. The core principle is: \textbf{candidate generation is not evidence, and ranking is not validation}. ASDE therefore separates a bounded language-model interface from deterministic evidence calculation and state transitions, freezes eligible hypotheses before protected-data use, and retains rejected candidates as scientific provenance.
+
+The contributions are implementation and evaluation contributions; ASDE does not claim that its individual safeguards are new primitives:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Validity-constrained workflow:} an implemented procedure for autocorrelated environmental--RF telemetry that records adaptive analysis, enforces QC-based eligibility and event-level support, applies temporal-direction screening and multiplicity control, freezes eligible hypotheses, and preserves an analytically protected validation block.
+\item
+  \textbf{Frozen operating-characteristic audits:} a known-driver audit and a bounded hidden-driver attribution audit that quantify recovery, ranking, distractor co-selection, and circular-shift surrogate-null selection on one real AtmosLink development background and within a finite prespecified driver library.
+\item
+  \textbf{Failure-mode characterization:} nested gate ablation, morphology and analog RF stresses, RF-outcome sensitivity, observation-policy sensitivity, event-support accounting, and driver-specific background-hardness analyses that delimit what the audited benchmark does and does not support.
+\item
+  \textbf{Negative-candidate provenance:} a natural-data case study in which six apparently promising atmospheric--RF candidates were screened out before protected validation and retained in the scientific record, demonstrating that candidate attrition is an intended workflow outcome.
+\item
+  \textbf{Reproducibility and claim discipline:} versioned protocols, data snapshots, hashes, raw trial artifacts, reconstruction scripts, claim-to-evidence constraints, and executable audits that connect reported results to their generating evidence.
+\item
+  \textbf{Bounded language-model role:} a constrained interface that may formulate and critique candidates but remains separate from the deterministic evidence engine; the current pilot supports contract compliance only and does not establish incremental scientific utility.
+\end{enumerate}
+
+\section{Related Work}\label{related-work}
+
+\subsection{AI-Assisted and Autonomous Scientific Discovery}\label{ai-assisted-and-autonomous-scientific-discovery}
+
+The AI Scientist introduced an end-to-end framework that generates research ideas, implements experiments, analyzes results, and writes research papers in machine-learning domains \cite{AI-SCIENTIST-2024}. The AI Scientist-v2 extended this approach using agentic tree search and a dedicated experiment manager \cite{AI-SCIENTIST-V2-2025}. Co-Scientist uses specialized agents for hypothesis generation, reflection, ranking, and evolution, and has been evaluated in biomedical settings with downstream experimental validation \cite{CO-SCIENTIST-2026}. Robin integrates literature search, hypothesis generation, experimental strategy, and analysis of laboratory results in an iterative multi-agent workflow \cite{ROBIN-2026}.
+
+POPPER is especially relevant because it treats free-form hypothesis validation as an agentic falsification problem and couples agent-generated tests to sequential statistical control \cite{POPPER-2025}. ControlA is similarly relevant from the reliability side: it proposes workflow instrumentation, agent-level safeguards, and provenance-aware control mechanisms for reliable scientific workflows \cite{CONTROLA-2025}. PROV-AGENT further formalizes agent-centric provenance, including prompts, responses, and decisions, within end-to-end scientific workflows \cite{PROV-AGENT-2025}. Human--AI hypothesis construction is also established prior art: HypoChainer combines experts, LLM reasoning, knowledge graphs, and validation-oriented prioritization \cite{HYPOCHAINER-2026}, while Lin et al.~integrate LLM-driven hypothesis generation with statistically supported meta-analytic evidence \cite{LLM-META-2025}. Agentic AI has also entered the wireless domain for autonomous network/antenna optimization \cite{AGENTIC-WIRELESS-2026}.
+
+Recent work narrows the architectural claim still further. THREAD-Bio proposes consequence-sensitive validation gates, decision-rights profiles, and claim-to-evidence traceability for trustworthy agentic bioinformatics \cite{THREAD-BIO-2026}. Sargsyan proposes structural enforcement of statistical rigor in AI-driven discovery, including online false-discovery-rate control and declarative separation of exploration from validation data \cite{SARGSYAN-RIGOR-2025}. Emerging preprints also describe verification-first workflow states and publication gates (Plato-Bio), Git-like research protocols with failed-branch and claim-to-evidence provenance (XScientist), and claim-to-evidence trace graphs for agent auditing (LEDGER) \cite{PLATO-BIO-2026,XSCIENTIST-2026,LEDGER-2026}.
+
+Recent benchmark work also makes the semantics of ``scientific discovery'' more demanding. TruthInsightBench withholds source conclusions and analysis paths in blind real-data tasks and evaluates evidence maturity, controls, robustness, falsifiability, and cross-dataset generalization \cite{TRUTHINSIGHT-2026}. SDABench separates descriptive, exploratory, inferential, predictive, causal, and mechanistic capabilities \cite{SDABENCH-2026}. BioDSA-1K includes hypotheses for which the available data are insufficient to support or refute a claim \cite{BIODSA-2025}, while BLADE evaluates open-ended data-science decisions with multiple valid analytical paths \cite{BLADE-2024}. Agentic hypothesization with downstream experimentation and expert review is also established prior art \cite{EXPERIGEN-2026}, and abstention itself has become an explicit agent-evaluation target \cite{ABSTENTION-2026}.
+
+Consequently, ASDE does not claim to invent agentic falsification, validation gates, scientific state machines, claim-to-evidence provenance, protected validation, abstention, statistically supported LLM hypotheses, human--AI hypothesis construction, or agentic AI for wireless systems. It also does not present its four-driver benchmark as open-ended scientific discovery. The defensible contribution is empirical and domain-constrained: an implemented workflow that combines validity controls with event-level temporal falsification for autocorrelated environmental--RF telemetry and evaluates screening and bounded attribution behavior on a real field-measurement background.
+
+\subsection{Adaptive Analysis, Post-Selection Inference, and Benchmark Validity}\label{adaptive-analysis-post-selection-inference-and-benchmark-validity}
+
+Scientific-discovery systems are intrinsically adaptive: each observed pattern can change the next query, model, threshold, or representation. The reusable-holdout literature formalized the general danger of repeated adaptive reuse of data, while post-selection inference provides a broader framework for inference after exploration or model selection \cite{REUSABLE-HOLDOUT-2015,POST-SELECTION-2022}. Audits of AI-scientist systems further identify benchmark selection, data leakage, metric misuse, and post-hoc selection as workflow-level failure modes that may be hidden by a polished final report \cite{AI-SCIENTIST-PITFALLS-2025}. ASDE incorporates this concern operationally. Once the originally designated characterization block had been repeatedly inspected during development, it was formally reclassified as development data rather than continuing to be described as independent replication.
+
+This distinction also applies to benchmarks. Time-series anomaly-detection research has shown that benchmark construction can materially distort apparent progress \cite{TSAD-BENCHMARKS-2023}. ASDE therefore separates exploratory benchmark development from post-freeze audit runs, records the protocol and randomization state before confirmatory simulation, and retains failed or superseded benchmark variants as provenance.
+
+\subsection{Wireless/Environmental Analytics}\label{wirelessenvironmental-analytics}
+
+Wireless anomaly detection and opportunistic environmental sensing already use radio-derived variables such as RSSI, SNR, received signal level, and attenuation. Recent digital-twin work evaluates machine-learning anomaly detection in simulated radio environments \cite{RADIO-DT-2025}. Separately, microwave-link environmental sensing has a substantial prior literature: commercial communication links have been used to infer rainfall and other atmospheric information from signal attenuation and received-power measurements \cite{MESSER-2006,LEIJNSE-2007,UIJLENHOET-2018}. Recent work has also examined the information contribution of environmental variables to commercial-microwave-link rainfall estimation \cite{SPACKOVA-2025}. Therefore, ASDE does not claim novelty from the premise that atmospheric state and radio measurements can be statistically related.
+
+The methodological distinction proposed in ASDE is narrower. Rather than beginning from a fixed target such as rainfall retrieval, anomaly class, or a prespecified propagation response, the workflow manages candidate relationships that emerge during adaptive analysis and subjects them to QC eligibility, event-level independence, temporal-direction tests, multiplicity control, provenance constraints, and hypothesis freezing before protected validation. This creates a different evaluation problem from conventional supervised prediction, fixed-target retrieval, or anomaly classification.
+
+\subsection{Domain Structure and Controlled Ablation}\label{domain-structure-and-controlled-ablation}
+
+Equi-mRNA provides a useful methodological analogy from a different domain: domain structure is encoded explicitly and evaluated through controlled comparison rather than left as implicit model behavior \cite{EQUI-MRNA-2025}. ASDE applies a related principle at the workflow level. RF and atmospheric structure enters through event definitions, QC eligibility, time ordering, configuration metadata, and explicit scientific states. Ablations then quantify the cost and benefit of safeguards rather than treating the entire workflow as an opaque AI system.
+
+\section{Experimental Platform and Data Governance}\label{experimental-platform-and-data-governance}
+
+\subsection{AtmosLink Field Platform}\label{atmoslink-field-platform}
+
+AtmosLink is a rural high-altitude wireless research platform deployed in Cajamarca, Peru. The link connects CU01 at approximately 2,730 m above sea level and SJ01 at approximately 3,650 m above sea level over an approximately 12-km line-of-sight path. The 6 GHz experimental link uses Cambium ePMP 4600C equipment, with CU01 operating as the access-point/master side and SJ01 as the subscriber side.
+
+Local meteorological sensing is available at both sites. The core DISCOVERY-001 variables include CU01 temperature, relative humidity, and pressure; SJ01 temperature, relative humidity, pressure, and wind speed; and RF variables comprising DL/UL RSSI, DL/UL SNR, and DL/UL MCS. External products such as ERA5-Land and NASA POWER are maintained by the broader AtmosLink platform for contextual and reconciliation tasks but are not required for the primary DISCOVERY-001 benchmark described here. Table I summarizes the field platform and analytical role of each component.
+
+\begin{table*}[t]
+\caption{ATMOSLINK FIELD PLATFORM AND PRIMARY ANALYTICAL VARIABLES}
+\label{tab:i}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\toprule
+Component & Role and approximate elevation & Variables used in DISCOVERY-001 \\
+\midrule
+CU01 & Access-point/master site; 2,730 m above sea level & Temperature, relative humidity, pressure; DL/UL RF telemetry \\
+SJ01 & Subscriber site; 3,650 m above sea level & Temperature, relative humidity, pressure, wind speed; DL/UL RF telemetry \\
+6-GHz link & Approximately 12-km line-of-sight path & RSSI, SNR, and encoded MCS in both directions \\
+Primary cohort & 7000 MHz / 20 MHz configuration & 3,576 complete-core observations partitioned chronologically \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Primary Cohort and Configuration}\label{primary-cohort-and-configuration}
+
+The primary DISCOVERY-001 cohort uses the 7000 MHz / 20 MHz configuration from the integrated 6 GHz campaign export. The registered source file contains 3,576 complete-core observations for this configuration and is identified by SHA-256 in the experiment manifest.
+
+The original chronological partition was:
+
+\begin{itemize}
+\tightlist
+\item
+  discovery: 2,145 observations;
+\item
+  characterization: 715 observations;
+\item
+  validation: 716 observations.
+\end{itemize}
+
+No random row split was used. The validation block spans the final registered interval and is marked as embargoed for scientific discovery.
+
+\subsection{Adaptive Reclassification of Development Data}\label{adaptive-reclassification-of-development-data}
+
+During v1--v5, both the original discovery and characterization blocks were repeatedly inspected while choosing representations, thresholds, event definitions, clustering structures, and screening rules. Continued description of the characterization block as independent replication would therefore overstate its inferential status. ASDE formally reclassified the first 2,860 observations as D\_development and reserved the final 716 observations as D\_validation.
+
+The development set is evaluated using four contiguous temporal folds of 715 observations each. These folds support robustness analysis but are not described as external confirmation. This policy explicitly treats repeated human/AI inspection as a source of adaptive overfitting.
+
+The 716-observation D\_validation block remains analytically isolated from candidate selection, tuning, screening, and benchmark development. ASDE does not claim that the underlying source-file bytes were never historically read when the partition was first constructed; the scientific claim is narrower and auditable: validation values have not been used as evidence in the active candidate-development pipeline.
+
+Additional 6 GHz configuration cohorts are registered for future cross-configuration replication, including 6475/20 MHz, 6655/20 MHz, 7000/40 MHz, and 6655/40 MHz. Only 6475/20 is used below for a separately frozen post-audit goodput association on the same physical link; it is not confirmatory evidence for the original weather-hypothesis or six-field benchmark claims. The other alternate configurations remain unused.
+
+\section{ASDE Architecture}\label{asde-architecture}
+
+\subsection{Scientific State Machine}\label{scientific-state-machine}
+
+ASDE uses an explicit state model rather than treating every high-scoring association as a result:
+
+\begin{center}\small\texttt{CANDIDATE} $\rightarrow$ \texttt{SCREENED\_OUT}\\[2pt]\textit{or}\\[2pt]\texttt{CANDIDATE} $\rightarrow$ \texttt{HUMAN\_REVIEWED} $\rightarrow$ \texttt{HYPOTHESIS} $\rightarrow$ \texttt{FROZEN}\\$\rightarrow$ \texttt{VALIDATING} $\rightarrow$ \{\texttt{CONFIRMED},\texttt{REJECTED},\texttt{INCONCLUSIVE}\}\end{center}
+
+An intermediate EVIDENCE\_ACCUMULATING state may be used during development when a pattern is directionally persistent but remains too uncertain for hypothesis promotion. Candidate identifiers are immutable, and screened-out candidates remain in the registry.
+
+The state machine is intentionally asymmetric: promotion requires additional evidence, while falsification can occur at any registered screening gate. No language-model output can directly execute a promotion transition. Fig. 1 shows the separation among candidate formulation, deterministic screening, human freezing, protected validation, and the versioned provenance layer.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{figures/fig1_asde_workflow.png}
+\caption{ASDE validity-constrained hypothesis-screening workflow. The language-model interface may formulate or critique candidates but cannot calculate evidence, alter thresholds, access protected validation for exploration, or execute scientific-state transitions.}
+\label{fig:1}
+\end{figure*}
+
+\subsection{QC-Aware Feature Eligibility}\label{qc-aware-feature-eligibility}
+
+A scientific-discovery engine can easily mistake instrumentation artifacts for physical structure. ASDE therefore treats quality-control status as part of the hypothesis space itself. Features can remain eligible as contextual levels while their derivatives are quarantined from candidate generation if rapid changes are known to be unreliable.
+
+A concrete example occurred for CU01 pressure. The prevalidation quality report contained repeated PRESS\_\allowbreak JUMP warnings, including extreme short-term changes capable of dominating standardized derivatives. ASDE retained pressure level as contextual information but excluded its rapid derivative from transition discovery until signal eligibility could be restored. This is not a post hoc deletion of inconvenient data; it is a registered feature-eligibility rule tied to a documented sensor-quality condition.
+
+\subsection{Temporal Event Representation}\label{temporal-event-representation}
+
+Repeated telemetry rows are not treated as independent scientific evidence. ASDE constructs event or episode representations with refractory intervals so that a persistent state cannot contribute dozens of nominally independent observations.
+
+Atmospheric transitions are derived from short-window changes in meteorological variables, while RF response is represented through robust standardized combinations of DL/UL RSSI, SNR, and MCS. Depending on the experiment version, the engine studies absolute degradation state, transition into degradation, or sharp quality drop.
+
+The composite RF quality score is an operational telemetry surrogate, not a calibrated measurement of path attenuation, availability, or throughput. The export's MCS fields contain integer 1xx/2xx codes whose vendor mapping has not yet been independently verified. Temporal claims are directional. If an atmospheric event is proposed as a precursor, ASDE compares RF events before and after that event. Block-level enrichment alone is insufficient.
+
+For atmospheric event \(i\) at time \(t_i\) and analysis horizon \(h\), let \(A_i^-\) indicate at least one RF event in \([t_i-h,t_i)\) and \(A_i^+\) indicate at least one RF event in \((t_i,t_i+h]\). The discordant counts are
+
+\[
+n_{+}=\sum_i A_i^+(1-A_i^-), \qquad
+n_{-}=\sum_i A_i^-(1-A_i^+),
+\]
+
+with \(n_d=n_{+}+n_{-}\). Conditional on the registered symmetry null, the one-sided directional p-value is
+
+\[
+p_h=\Pr\{X\ge n_{+}\}, \qquad X\sim\mathrm{Binomial}(n_d,0.5).
+\]
+
+For the four-driver hidden-driver library and three horizons, the corrected per-test threshold is \(\alpha^\star=0.05/(4\times3)\). The complete M3 rule selects a driver if at least one horizon satisfies \(p_h<\alpha^\star\), \(n_d\ge8\), and \(n_{+,f}>n_{-,f}\) in at least three of four contiguous temporal folds. These conditions define the implemented decision rule; they do not establish conditional symmetry or independence for every field regime.
+
+\subsection{Pattern Ontology}\label{pattern-ontology}
+
+ASDE separates four scientific interpretations:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  PRECURSOR\_CANDIDATE --- a temporally asymmetric pattern that occurs before an RF event, survives blocked robustness analysis, and is not equivalently present after the event;
+\item
+  CONTEXT\_MARKER --- a reproducible association present around RF events without evidence of temporal precedence;
+\item
+  CONSEQUENCE\_OR\_RECOVERY --- a pattern primarily detectable after an RF event;
+\item
+  SCREENED\_OUT --- a candidate that fails a registered scientific gate.
+\end{enumerate}
+
+This ontology prevents a common semantic error in exploratory analysis: labeling any association near an event as a precursor or cause.
+
+\subsection{Constrained AI Layer}\label{constrained-ai-layer}
+
+The language-model component is intentionally bounded. It receives machine-generated evidence packets rather than unrestricted raw telemetry whenever possible. It may describe candidate patterns, propose mechanistic alternatives, identify potential confounders, propose registered falsification tests, and recommend continued screening or human review.
+
+It may not invent statistics, alter thresholds, change holdout boundaries, remove failed candidates, declare validation, or promote a candidate. Statistical evidence and state transitions are implemented by deterministic versioned code plus human scientific review.
+
+Because this design makes the AI non-authoritative, the incremental value of the language-model layer is evaluated separately from the statistical engine through a frozen blinded pilot described later.
+
+\section{Quantitative Evaluation Design}\label{quantitative-evaluation-design}
+
+\subsection{Known-Driver Screening Audit}\label{known-driver-screening-audit}
+
+The first audit isolates the behavior of the statistical screening gate when the atmospheric driver is already defined. The driver is constructed from rapid SJ01 warming combined with relative-humidity decrease. Eligible local peaks are temporally separated to reduce event overlap. A mathematical six-variable telemetry perturbation is then injected into a copy of the real development background; the original telemetry is never modified.
+
+The registered perturbation family subtracts a scaled amount jointly from DL/UL RSSI, SNR, and MCS. Effect magnitudes are expressed in feature-specific robust-reference units derived from the unmodified RF background. Registered magnitudes are 0.5, 1.0, 1.5, and 2.0 reference-scale units; lags are 15, 30, and 60 min; duration is 15 min; and an eligible atmospheric event activates the synthetic perturbation probabilistically. For DL MCS, zero central dispersion causes the scale rule to fall back to ordinary standard deviation (5.896045 code units on the frozen 5-min grid); at 1.0 unit, code 204 becomes 198.103955. The resulting fractional MCS values are not physically admissible telemetry codes. Consequently, this frozen benchmark tests algorithmic response to a specified mathematical perturbation, not recovery of a physically calibrated radio fade.
+
+The RF-drop detector is frozen from the unmodified development background before simulation. Candidate analysis horizons are 30, 60, and 120 min. Family-wise alpha is divided across these horizons. A trial is recovered only when the directional test is significant under the corrected threshold, sufficient discordant events are available, and the post-event direction is preserved in at least three of four contiguous development folds.
+
+The empirical null is generated by circularly shifting the atmospheric driver timing relative to the unchanged RF background. The audit uses reserved simulation seeds after the protocol is frozen in Git. This benchmark answers a screening question; it does not measure open-ended discovery because the driver is known to the analysis.
+
+\subsection{Bounded Hidden-Driver Attribution Audit}\label{bounded-hidden-driver-attribution-audit}
+
+A second benchmark was designed specifically to address the known-driver limitation. The search procedure is given a finite library of competing atmospheric drivers but is not told which driver generated the synthetic RF response.
+
+The final library was selected using atmospheric data only. Candidate driver events are defined from short-window robust standardized changes with an event threshold and refractory interval frozen before the audit. Drivers must satisfy a minimum event-support requirement and a pairwise temporal-proximity constraint. Under the registered selection rule, the final library contains four drivers:
+
+\begin{itemize}
+\tightlist
+\item
+  CU01 temperature rise;
+\item
+  SJ01 temperature fall;
+\item
+  SJ01 relative-humidity fall;
+\item
+  SJ01 pressure rise.
+\end{itemize}
+
+The final event counts are 23, 28, 28, and 28, respectively. Because inference is event-based rather than row-based, these counts are more relevant than the 2,860 development rows for understanding effective support. Their distribution across the four contiguous development folds is given in Table II.
+
+\begin{table*}[t]
+\caption{EVENT SUPPORT FOR THE FROZEN HIDDEN-DRIVER LIBRARY}
+\label{tab:ii}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+\toprule
+Frozen driver & Total events & Fold 1 & Fold 2 & Fold 3 & Fold 4 \\
+\midrule
+CU01 temperature rise & 23 & 6 & 7 & 5 & 5 \\
+SJ01 temperature fall & 28 & 8 & 7 & 6 & 7 \\
+SJ01 relative-humidity fall & 28 & 8 & 8 & 5 & 7 \\
+SJ01 pressure rise & 28 & 8 & 8 & 6 & 6 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+Thus, every frozen driver contributes events to every temporal fold, with 5--8 events per fold. This mitigates row-level pseudoreplication but does not imply complete statistical independence between atmospheric processes. The maximum pairwise event overlap within the registered temporal-proximity window is close to, but does not exceed, the admissibility threshold. This limitation is reported explicitly rather than described as wide separation.
+
+For each simulation trial, exactly one candidate driver is designated as hidden truth. A joint six-field mathematical telemetry shift is injected after that driver's events using registered effect magnitudes, lags, duration, and activation probability. The search algorithm receives all four driver event sets plus the resulting RF event series, but not the planted identity.
+
+Every driver is tested at three response horizons, producing a 4-by-3 family of directional tests. Bonferroni correction is applied over the full family. The directional binomial test treats discordant atmospheric events as conditionally symmetric and sufficiently independent; 360-min refractory spacing reduces nearby repeats but does not establish these assumptions under all RF regimes. Thus Bonferroni controls the family-wise rate only if the constituent p-values are valid under the specified null. A driver is selected only if at least one horizon passes the corrected directional test, minimum discordant-event support, and temporal-fold direction requirement.
+
+The primary endpoints are exact-driver selection, exclusive exact-driver selection, unique top-1 ranking, distractor co-selection, mean selected-driver count, and library-wide null family-wise error. Unique top-1 ranking is reported separately from statistical selection: ranking first does not promote a candidate.
+
+The audit uses reserved simulation seeds after a clean Git freeze. All injections and shifts reuse one physical development background; seeds are Monte Carlo realizations, not independent field episodes. A library-wide circular-shift surrogate jointly shifts all four atmospheric event sets to preserve their cross-driver temporal structure while altering their alignment with the unchanged RF background. The 5-min grid contains gaps, and the wraparound and nonstationarity may affect exchangeability. The quoted Wilson intervals describe Monte Carlo variation conditional on this fixed background and shift mechanism; they are not confidence intervals for performance on independent links or future periods.
+
+\subsection{Hidden-Driver Gate Ablation}\label{hidden-driver-gate-ablation}
+
+A separately frozen audit was designed after the v21 hidden-driver benchmark to quantify which nested statistical safeguards actually change finite-library selection behavior. The same four-driver library, real development background, RF outcome definition, effect family, lags, and response horizons are retained, but new reserved simulation seeds are used.
+
+Four nested selectors are evaluated on exactly the same trials:
+
+\begin{itemize}
+\tightlist
+\item
+  M0: uncorrected one-sided directional p \textless{} 0.05;
+\item
+  M1: Bonferroni correction over the 4-driver × 3-horizon family;
+\item
+  M2: M1 plus a minimum of 8 discordant events;
+\item
+  M3: M2 plus positive post\textgreater pre direction in at least 3 of 4 temporal folds.
+\end{itemize}
+
+Primary endpoints are library-wide selection under the specified circular-shift surrogate, exact-truth selection, exclusive exact-truth selection, distractor co-selection, and mean selected-driver count. The purpose is not to declare one rule universally superior but to quantify the false-selection/sensitivity trade-off attributable to each nested gate within the registered hidden-driver problem.
+
+\subsection{Post-Audit Stress and Diagnostic Analyses}\label{post-audit-stress-and-diagnostic-analyses}
+
+Several analyses are intentionally classified as exploratory because they were designed after observing the primary audits.
+
+First, morphology stress testing changes the synthetic RF perturbation from the registered joint abrupt degradation to alternative forms, including gradual joint changes and perturbations affecting only a subset of RF metrics. These experiments characterize the detector's operating envelope but are not used to redefine the primary audit.
+
+Second, a multi-view detector using global, RSSI, SNR, and MCS views was evaluated as a possible remedy for sparse-subsystem perturbations. Multiplicity was corrected across views and horizons. Because the extension did not uniformly improve recovery, it was not adopted as the primary detector.
+
+Third, outcome-definition sensitivity evaluates how selected real-data associations depend on alternative RF degradation definitions. This analysis is exploratory because it was performed after candidate identification.
+
+Finally, a post-audit background-hardness diagnostic measures natural pre/post RF-event asymmetry around each frozen hidden-driver event family. This diagnostic helps interpret heterogeneous recovery but does not retune the audit.
+
+A further Reviewer B protocol, frozen before its RF and goodput outcomes were inspected, examines a later 6475 MHz / 20 MHz configuration episode on the same physical link. Its eligible eight-second, one-stream TCP tests have direction-matched RSSI/SNR telemetry within 300 s, stable recorded AP/SM transmit powers, and verified routing. The direction-specific score averages robust standardized RSSI/SNR without MCS. Prespecified descriptive endpoints are Spearman correlation with measured goodput and top-versus-bottom score-quartile median goodput, reported also on the development interval and by UTC day. No p-value, propagation attribution or independent-link claim is derived from serially dependent tests.
+
+\subsection{AI Contribution Pilot}\label{ai-contribution-pilot}
+
+The scientific AI layer is evaluated separately from the statistical engine. Six already-screened-out natural candidates are used in a prospective pilot. A deterministic rule-based baseline and a constrained language-model output receive equivalent bounded candidate evidence. The AI output is forbidden from inventing numbers, claiming validation, accessing the holdout, changing failed-gate decisions, or proposing tests outside a registered vocabulary.
+
+Hard safety endpoints are checked automatically. A blinded utility comparison was preregistered, but Reviewer C identified an output-budget asymmetry: the deterministic B0 baseline produces fewer alternatives/tests and substantially shorter outputs than A1. The existing pilot is therefore retained as a safety/\allowbreak feasibility study rather than used to justify title-level AI prominence. A future matched-budget utility study would be required for a stronger incremental-AI claim.
+
+\section{Results}\label{results}
+
+\subsection{Natural-Data Candidate Attrition}\label{natural-data-candidate-attrition}
+
+DISCOVERY-001 generated multiple apparently plausible atmospheric--RF relationships during adaptive development. None reached the frozen-hypothesis state (Table III).
+
+\begin{table*}[t]
+\caption{NATURAL-DATA CANDIDATE ATTRITION BEFORE PROTECTED VALIDATION}
+\label{tab:iii}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\toprule
+Candidate & Exploratory pattern & Final development decision \\
+\midrule
+RFATM-0001 & SJ01 pressure level associated with later DL RSSI/SNR degradation & SCREENED\_OUT: association did not preserve magnitude or sign across development periods \\
+RFATM-0002 & CU01 humidity inversely associated with DL MCS & SCREENED\_OUT: association was not stable after temporal trend/diurnal screening \\
+RFATM-0003 & Cold--humid--calm regime associated with degraded RF state & SCREENED\_OUT: block-level risk reversed under temporally independent replication \\
+RFATM-0004 & Multivariate atmospheric transition followed by sharp RF-quality drop & SCREENED\_OUT: RF drops were not more frequent after transitions than before them \\
+RFATM-0005 & Lower SJ01 humidity variability before RF drops & SCREENED\_OUT: failed multiplicity/replication and post-event negative-control requirements \\
+RFATM-0006 & Rapid SJ01 warming/drying followed by apparent RF degradation enrichment & SCREENED\_OUT: pre/post temporal direction was inconsistent \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+This attrition is a central result of the methodology. Several candidates looked promising under weaker analyses, including block-level enrichment or row-level association, but were rejected when subjected to stronger temporal or multiplicity controls. D\_validation was not used to rescue any failed candidate.
+
+An additional humidity-variability association, CTX-0001, was retained only as an exploratory context signal. Later outcome-definition sensitivity showed that the association appeared under the all-metric, analog-oriented, and UL-oriented event definitions but not under a DL-only event definition. It is therefore not presented as a robust precursor or validated marker.
+
+\subsection{Known-Driver Screening Audit}\label{known-driver-screening-audit-1}
+
+Under the frozen known-driver benchmark, the full ASDE screening gate selected a driver in 0.025 of 1000 registered circular-shift surrogate trials, with a conditional Wilson 95\% Monte Carlo interval {[}0.0170, 0.0366{]}. This interval does not incorporate uncertainty about new physical periods, links, or the validity of the shift null. Table IV and Fig. 2 summarize recovery across the registered perturbation family.
+
+\begin{table*}[t]
+\caption{KNOWN-DRIVER FAMILY-WISE RECOVERY RATE}
+\label{tab:iv}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+\toprule
+Injected effect & Lag 15 min & Lag 30 min & Lag 60 min \\
+\midrule
+0.5 robust SD & 1.00 & 0.84 & 0.62 \\
+1.0 robust SD & 1.00 & 1.00 & 0.94 \\
+1.5 robust SD & 1.00 & 1.00 & 0.97 \\
+2.0 robust SD & 1.00 & 1.00 & 0.97 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{figures/fig2_known_driver_recovery.png}
+\caption{Known-driver family-wise recovery across injected effect magnitude and lag. Error bars are conditional Wilson 95\% Monte Carlo intervals on the fixed development background.}
+\label{fig:2}
+\end{figure*}
+
+Thus, within the registered joint RF perturbation family, recovery was high at short and intermediate lags and lower at the longest registered lag; this statement is restricted to the frozen perturbation family and benchmark design.
+
+An earlier safeguard ablation showed a lower circular-shift surrogate-null selection rate for the complete frozen gate than for a naive uncorrected rule on the same audit-grade trials: 0.025 versus 0.079. This earlier comparison did not identify the contribution of each safeguard; the later nested v23 ablation attributes its observed selection difference to Bonferroni correction.
+
+\subsection{Morphology Stress Test}\label{morphology-stress-test}
+
+The strong known-driver result is not morphology-invariant. A post-audit exploratory stress test challenged the detector with perturbations outside the registered joint abrupt family.
+
+At 1.0 robust SD per affected metric, Table V shows the recovery envelope.
+
+\begin{table*}[t]
+\caption{POST-AUDIT MORPHOLOGY-STRESS RECOVERY AT 1.0 ROBUST SD}
+\label{tab:v}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+\toprule
+Morphology & 15 min & 30 min & 60 min \\
+\midrule
+Joint abrupt 15-min step & 1.00 & 1.00 & 0.98 \\
+Joint 30-min ramp & 1.00 & 1.00 & 0.77 \\
+Joint sustained 60-min step & 1.00 & 1.00 & 0.98 \\
+RSSI-only 15-min step & 0.74 & 0.50 & 0.08 \\
+SNR-only 15-min step & 0.74 & 0.50 & 0.08 \\
+MCS-only 15-min step & 0.74 & 0.50 & 0.08 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The composite detector has an operating envelope under these mathematical perturbations: it is sensitive to matched joint multi-field shifts but can dilute isolated field shifts, especially at longer lags.
+
+An exploratory multi-view extension attempted to address this weakness by testing global, RSSI, SNR, and MCS views under multiplicity correction across views and horizons. The empirical null detection rate remained low (0.024 over the registered exploratory null shifts), but recovery improved inconsistently: SNR-only perturbations improved at short lags, while some long-lag RSSI/SNR conditions collapsed and MCS-only recovery remained limited. The multi-view extension was therefore not adopted as the primary detector.
+
+A separately frozen \textbf{post-audit} RF stress test (v25) removed the fractional-MCS injection from a new experiment while leaving v12/v21/v23 intact. It applied a 2-dB reduction to RSSI and SNR for 15 min in both directions or in DL/UL alone, held encoded MCS at observed values, and recalibrated three outcome definitions on the same development background. Exact-driver selection over 400 conditional trials per cell is reported in Table VI.
+
+\begin{table*}[t]
+\caption{EXACT-DRIVER SELECTION UNDER THE FROZEN 2-dB ANALOG RF STRESS}
+\label{tab:vi}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+\toprule
+Injected direction / outcome & 15 min & 30 min & 60 min \\
+\midrule
+BOTH / analog BOTH & 0.6850 & 0.7825 & 0.1000 \\
+DL / analog BOTH & 0.6850 & 0.7125 & 0.0325 \\
+UL / analog BOTH & 0.6500 & 0.5525 & 0.0300 \\
+DL / analog DL & 0.5175 & 0.8550 & 0.1300 \\
+UL / analog UL & 0.6150 & 0.7375 & 0.2300 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The opposite-direction detector selected the planted driver in none of its conditional trials. Circular-shift surrogate selection was 19/1000 (BOTH), 8/1000 (DL) and 11/1000 (UL). The same four event families and one physical development background were reused, so these rates neither validate the field null nor demonstrate independent RF transportability. The 2-dB paired RSSI/SNR shift is a numerically admissible telemetry stress, not a calibrated propagation event or a complete adaptive-radio response. Recovery remains weak at 60 min and heterogeneous by planted driver.
+
+A further post-audit decomposition of the original six-field event detector found 158 RF events on the development grid. Thirty-six had a three-bin change of at least 90 in an encoded DL/UL MCS field; the MCS term dominated the analog RSSI/SNR terms in each of those 36 events. In 17, the combined analog term was nonnegative, and 22 lacked an analog-only RF event within ±15 min. These are not necessarily false radio events: a change of code family may reflect a real adaptation. They show that the original composite event definition depends materially on treating the unverified MCS code as an interval-valued measurement. The analog-only sensitivity results therefore complement the historical all-six benchmark rather than validating its physical semantics.
+
+\subsubsection{Post-audit measured-goodput corroboration}\label{post-audit-measured-goodput-corroboration}
+
+The source throughput export had 570 tests in the later 6475/20 episode; two ERROR tests were excluded, leaving 284 per direction. The registered eight-second TCP/route/power/RF-alignment rules excluded no further later-episode tests. In development, the same rules retained 960 DL and 957 UL tests after excluding failed and longer-duration tests. The later interval was September 21--24, 2026 UTC, separate from the 7000/20 development interval of September 2--13. These tests are on the same physical link under a changed frequency, not a new site or link. Table VII reports the prespecified descriptive endpoints.
+
+\begin{table*}[t]
+\caption{ANALOG RF-SCORE ASSOCIATION WITH MEASURED TCP GOODPUT}
+\label{tab:vii}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+\toprule
+Episode and direction & Eligible tests & Spearman analog-score/goodput $\rho$ & Bottom-score median Mbps & Top-score median Mbps \\
+\midrule
+Later 6475/20, DL & 284 & 0.877 & 20.226 & 38.915 \\
+Later 6475/20, UL & 284 & 0.752 & 9.441 & 15.204 \\
+Development 7000/20, DL & 960 & 0.771 & 43.949 & 65.377 \\
+Development 7000/20, UL & 957 & 0.190 & 32.107 & 32.113 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The prespecified sign/difference consistency rule was met in both directions and episodes, but development UL has a practically negligible quartile contrast (0.005 Mbps). Later DL and UL correlations remain positive on each of the three near-full UTC days; the brief fourth-day UL score is constant, so its rank correlation is undefined. These descriptive observations support a direction-dependent functional association between analog telemetry and TCP goodput in this one link. Goodput depends on test and transport behavior as well as radio operation; contemporaneous telemetry and throughput cannot identify a propagation mechanism or establish that the original six-field score measures natural RF degradation.
+
+\subsection{Bounded Hidden-Driver Attribution Audit}\label{bounded-hidden-driver-attribution-audit-1}
+
+The hidden-driver audit is more demanding because the search procedure must choose among competing atmospheric hypotheses. Under 1000 joint circular-shift surrogate trials on the fixed development background, the four-driver library produced a library-wide selection rate of 0.020, with a conditional Wilson 95\% Monte Carlo interval {[}0.0130, 0.0307{]}.
+
+The primary recovery results are shown in Table VIII and, for the registered 1.0-SD condition, in Fig. 3.
+
+\begin{table*}[t]
+\caption{BOUNDED HIDDEN-DRIVER ATTRIBUTION PERFORMANCE}
+\label{tab:viii}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+\toprule
+Effect & Lag & Exact driver selected & Unique top-1 correct \\
+\midrule
+0.5 SD & 15 min & 0.6750 & 0.7425 \\
+0.5 SD & 30 min & 0.3850 & 0.6625 \\
+0.5 SD & 60 min & 0.1150 & 0.2500 \\
+1.0 SD & 15 min & 0.8525 & 0.9450 \\
+1.0 SD & 30 min & 0.7900 & 0.8950 \\
+1.0 SD & 60 min & 0.2125 & 0.5950 \\
+1.5 SD & 15 min & 0.8525 & 0.9450 \\
+1.5 SD & 30 min & 0.9100 & 0.9700 \\
+1.5 SD & 60 min & 0.2825 & 0.8075 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{figures/fig3_hidden_driver_recovery.png}
+\caption{Hidden-driver exact selection and unique top-1 ranking at the registered 1.0-SD mathematical telemetry shift. Error bars are conditional Wilson 95\% Monte Carlo intervals.}
+\label{fig:3}
+\end{figure*}
+
+No distractor co-selection was observed in the aggregate injected cells. For an observed 0/400 distractor rate within an effect-lag cell, the conditional Wilson upper 95\% Monte Carlo bound is approximately 0.0095; repeated trials share the same physical background and event sets, so this is not a bound on independent field episodes. Co-selection was absent in the registered audit, not impossible.
+
+The difference between exact selection and top-1 ranking is scientifically informative. For example, under the registered 1.0-SD / 60-min condition, the true driver was the unique top-ranked candidate in 59.5\% of trials but crossed the full promotion gate in only 21.25\%. ASDE therefore often identified the most plausible candidate without treating that ranking as sufficient evidence for promotion.
+
+This behavior is consistent with the intended design. The engine is not optimized to maximize the number of declared discoveries; it is designed to restrict promotion when the evidence budget, directionality, or multiplicity-controlled threshold is insufficient.
+
+\subsection{Hidden-Driver Gate Ablation}\label{hidden-driver-gate-ablation-1}
+
+The v23 audit compared the four nested selectors under new reserved seeds while holding the hidden-driver library, RF detector, perturbation family, background, and response horizons fixed.
+
+Under 1000 circular-shift surrogate trials on the same development background, the library-wide selection rate was 0.217 for M0 and 0.017 for M1, M2, and M3. An exhaustive post-audit diagnostic over all 3,132 offsets allowed by the v23 shift rule found rates of 649/3,132 (0.2072) for M0 and 50/3,132 (0.0160) for each of M1--M3, with no M1--M3 selection differences. This diagnostic checks Monte Carlo stability within the specified shift orbit; it does not validate the shift null for nonstationary field data. Thus, the observed null-control improvement occurred when family-wise multiplicity correction was introduced.
+
+For the registered 1.0 robust-SD perturbation, the more informative endpoint is exclusive truth selection because uncorrected testing frequently selected the true driver together with one or more distractors (Table IX). Fig. 4 shows the corresponding shift-null selection rates.
+
+\begin{table*}[t]
+\caption{NESTED HIDDEN-DRIVER GATE ABLATION}
+\label{tab:ix}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+\toprule
+Selector & Shift-null selection rate & Exclusive truth, 15 min & Exclusive truth, 30 min & Exclusive truth, 60 min & Distractor co-selection, 15/30/60 min \\
+\midrule
+M0: uncorrected p<0.05 & 0.217 & 0.4250 & 0.2400 & 0.0925 & 0.575 / 0.760 / 0.9075 \\
+M1: Bonferroni & 0.017 & 0.8500 & 0.8175 & 0.2100 & 0 / 0 / 0 \\
+M2: M1 + support & 0.017 & 0.8500 & 0.8175 & 0.2100 & 0 / 0 / 0 \\
+M3: M2 + fold direction & 0.017 & 0.8500 & 0.8175 & 0.2100 & 0 / 0 / 0 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{figures/fig4_gate_ablation.png}
+\caption{Library-wide circular-shift surrogate-null selection under nested gates. M1--M3 are identical in all registered v23 null trials; the dashed line marks 0.05 as a visual reference, not a demonstrated field-wide error guarantee.}
+\label{fig:4}
+\end{figure*}
+
+M0 retained high raw truth-detection rates at 1.0 SD, but that apparent sensitivity was frequently accompanied by distractor selection. M1 converted much of this behavior into either exclusive correct selection or abstention. At 15 and 30 min, exclusive truth selection increased from 42.5\% to 85.0\% and from 24.0\% to 81.75\%, respectively; at 60 min it increased from 9.25\% to 21.0\%.
+
+A reconstruction audit showed that M1, M2, and M3 produced identical selected-driver sets in all 4,600 paired trials (3,600 injected-condition trials plus 1,000 null trials). Therefore, this benchmark provides no evidence that the minimum-support or temporal-fold-direction gates add incremental selection benefit after Bonferroni correction. Their scientific motivation remains relevant to natural-data screening and pseudoreplication control, but their necessity is not demonstrated by v23.
+
+The M3 results also remained consistent with the earlier v21 audit under new simulation seeds: at 1.0 SD, exact-truth selection differed from v21 by -0.25, +2.75, and -0.25 percentage points at 15, 30, and 60 min, respectively. This is a Monte Carlo consistency check on the same physical background, not an external replication.
+
+A further \textbf{post-audit} observability diagnostic identified a methodological sensitivity. The three-bin RF-drop difference was calculable in 2,753/3,276 grid bins. Requiring all detector-difference bins to be observed on both sides of each atmospheric event retained only 3--21 of the original 23--28 driver events per driver/horizon; 11/12 natural-background driver--horizon cells then had fewer than eight discordant events. M1/M3 surrogate selections over the historical 3,132 circular offsets changed from 50 to 4 offsets under this strict eligibility rule, with only two selected offsets shared. The reduction coincides with substantial loss of effective event support and cannot be interpreted as better Type-I control. A separately frozen paired-offset rule retained 20--28 driver events per driver/horizon, and M1/M3 selected at 47/3,132 historical shifts versus 50/3,132 originally; only 22 offsets were selected by both rules. Reused-seed 1.0-unit planted-truth selection fell from 0.850/0.8175/0.210 to 0.8075/0.745/0.095 at 15/30/60 min. This restores much of the observation support while revealing a power cost, especially at longer lag. Neither post-audit rule is independently calibrated as a field null or replaces v23.
+
+\subsection{Driver-Specific Heterogeneity and Background Hardness}\label{driver-specific-heterogeneity-and-background-hardness}
+
+Aggregate end-to-end recovery conceals substantial driver heterogeneity. At 1.0 robust SD, exact-driver selection by truth driver is reported in Table X and visualized in Fig. 5.
+
+\begin{table*}[t]
+\caption{EXACT-DRIVER SELECTION BY HIDDEN-TRUTH DRIVER AT 1.0 ROBUST SD}
+\label{tab:x}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+\toprule
+Hidden truth driver & 15 min & 30 min & 60 min \\
+\midrule
+CU01 temperature rise & 1.00 & 1.00 & 0.46 \\
+SJ01 temperature fall & 1.00 & 0.99 & 0.25 \\
+SJ01 humidity fall & 0.99 & 0.98 & 0.07 \\
+SJ01 pressure rise & 0.42 & 0.19 & 0.07 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{figures/fig5_driver_heterogeneity.png}
+\caption{Driver-specific exact selection at 1.0 robust SD. Heterogeneity reflects the joint influence of the planted perturbation, detector, selection rule, and structured RF background.}
+\label{fig:5}
+\end{figure*}
+
+A post-audit diagnostic showed that this heterogeneity is partly attributable to the unmodified real RF background around each atmospheric event family. Before any synthetic injection, CU01 temperature-rise events already exhibited a favorable post-versus-pre RF asymmetry within the short response horizon, whereas SJ01 pressure-rise events exhibited an adverse pre/post asymmetry. The benchmark therefore measures detection on a realistic structured background rather than homogeneous abstract noise.
+
+This diagnostic was performed after the v21 audit and was not used to alter thresholds, driver definitions, or promotion rules. Results are therefore reported as an explanation of benchmark hardness rather than as a calibration step.
+
+\subsection{Constrained AI Pilot: Safety Result}\label{constrained-ai-pilot-safety-result}
+
+The prospective six-candidate AI pilot has completed its automated safety phase. Across RFATM-0001 through RFATM-0006, the constrained language-model outputs produced:
+
+\begin{itemize}
+\tightlist
+\item
+  zero detected fabricated numeric claims;
+\item
+  zero detected validation/causality state overreach;
+\item
+  zero references recommending access to D\_validation;
+\item
+  zero falsification-test families outside the registered vocabulary;
+\item
+  SCREEN\_OUT as the recommendation for all candidates that had already failed deterministic scientific gates.
+\end{itemize}
+
+These results support a narrow claim: the frozen constrained interface respected the registered safety contract in this six-candidate pilot. They do not establish that the model cannot hallucinate, and they do not yet establish incremental scientific value.
+
+A blinded comparison against the deterministic B0 template has been generated with a cryptographic commitment to the hidden option mapping. However, the comparator has lower output capacity than A1, so any eventual preference score is not sufficient by itself to establish incremental scientific reasoning. Consequently, no AI-improvement claim is included and the current manuscript title does not foreground AI.
+
+\section{Discussion}\label{discussion}
+
+\subsection{A Discovery Engine Should Be Judged by What It Rejects}\label{a-discovery-engine-should-be-judged-by-what-it-rejects}
+
+The natural-data analysis illustrates why scientific-discovery systems should not be evaluated only by the number or apparent novelty of generated patterns. Each RFATM candidate was plausible under at least one exploratory view. Several exhibited attractive correlations, state enrichment, threshold robustness, or temporal structure. Yet none survived the complete sequence of replication, independence, directionality, multiplicity, and control requirements needed for hypothesis freezing.
+
+From a conventional pattern-mining perspective, six rejected candidates may look unproductive. From a scientific-validity perspective, the attrition is informative: the workflow prevented multiple attractive exploratory findings from being converted into stronger claims than their evidence supported.
+
+This distinction is especially relevant for AI-assisted research. Modern language models can generate large numbers of plausible explanations quickly. The bottleneck therefore shifts from hypothesis generation to disciplined elimination, evidence budgeting, and provenance-preserving validation.
+
+\subsection{Screening Performance Is Not Discovery Performance}\label{screening-performance-is-not-discovery-performance}
+
+The known-driver and hidden-driver audits answer different questions. The first asks whether a frozen screening gate can recover a prespecified injected relationship while controlling empirical null detections. The second asks whether the same scientific logic can identify the generating driver among competing hypotheses.
+
+The difference in performance between v12 and v21 is expected and important. A known-driver test does not pay the statistical and attribution cost of searching a hypothesis family. Once the driver is hidden, ASDE must control multiplicity across candidate drivers and response horizons and must contend with natural temporal overlap among candidate event families.
+
+For this reason, the hidden-driver audit should be treated as stronger evidence for \textbf{bounded attribution within a frozen hypothesis family}. It does not constitute evidence of open-ended scientific discovery. The library is finite, prespecified before the audit, and deliberately selected for temporal identifiability.
+
+\subsection{Ranking and Scientific Promotion Are Different Operations}\label{ranking-and-scientific-promotion-are-different-operations}
+
+One of the clearest v21 results is the separation between top-1 ranking and gate-passing selection. At longer lags, the planted driver can frequently remain the best-ranked explanation while failing the multiplicity-controlled evidence threshold.
+
+This distinction is desirable for a scientific workflow. Ranking answers, ``which candidate currently looks best?'' Promotion asks a stronger question: ``is the evidence sufficient, under the registered decision rule, to advance this candidate in the scientific state machine?'' ASDE deliberately permits the first answer to be positive while the second remains negative.
+
+This design also clarifies the appropriate role of language models. A language model may help expand, organize, or critique candidate explanations, but it should not be given authority to convert ranking or narrative plausibility into validated scientific status.
+
+\subsection{Multiplicity Control Dominated the Hidden-Driver Gate Ablation}\label{multiplicity-control-dominated-the-hidden-driver-gate-ablation}
+
+The v23 nested-gate audit challenges an intuitive but unsupported assumption: adding more scientific gates does not necessarily improve selection behavior in every benchmark. In the frozen four-driver library, the transition from M0 to Bonferroni-corrected M1 accounted for the entire observed reduction in circular-shift surrogate-null selection, from 0.217 to 0.017. Adding the minimum-discordant support rule and fold-direction requirement produced no further selected-driver changes in any paired trial.
+
+This result has two implications. First, multiplicity correction changed decisions substantially in this finite-library benchmark: uncorrected testing often selected the true driver together with distractors and selected candidates much more often under the specified shift surrogate. Second, the benchmark does not justify claiming that every component of the full ASDE gate is necessary for this task. The support and fold-direction rules remain motivated by pseudoreplication and temporal-stability concerns in natural-data screening, but v23 provides no incremental evidence for them after Bonferroni correction.
+
+A simpler selector should therefore remain the reference comparator in future audits. If additional gates continue to produce identical decisions across broader benchmarks and external datasets, the workflow should be simplified rather than preserving complexity for architectural reasons.
+
+\subsection{The Real Background Is Part of the Benchmark}\label{the-real-background-is-part-of-the-benchmark}
+
+Synthetic injection on a real field background has an advantage and a cost. It preserves nonstationarity, missingness patterns, natural RF events, and environmental structure that would be difficult to reproduce in white-noise or fully simulated data. However, candidate drivers do not encounter equivalent backgrounds.
+
+The v22 diagnostic demonstrates this directly. Some event families start from a favorable post-event RF asymmetry, whereas others start from neutral or adverse asymmetry. Consequently, recovery is a joint property of the injected signal, the detector, the decision gate, and the structured background.
+
+Rather than normalize this heterogeneity away after seeing the audit, ASDE reports per-driver recovery. Future multi-link evaluation should test whether similar background-hardness effects recur across environments.
+
+\subsection{Morphology Robustness Defines an Operating Envelope}\label{morphology-robustness-defines-an-operating-envelope}
+
+The v15 stress test prevents a broad interpretation of the strong v12 numbers. The original composite detector is well matched to the registered joint six-field mathematical shift. When only one RF subsystem is perturbed, the composite quality representation dilutes the signal. The exploratory multi-view extension partly recovers some sparse effects but introduces a larger multiplicity burden and does not dominate the primary detector.
+
+The v25 analog stress also shows that a 2-dB direction-specific change has materially different recovery under the pooled and direction-specific scores, especially at 60 min. This result argues against a single universal RF-event detector. A future ASDE version may use a preregistered family of physically interpretable RF views or hierarchical testing procedure, but such a redesign must be frozen and evaluated on independent field episodes rather than tuned retrospectively on the current background.
+
+\subsection{What the AI Layer Does---and Does Not Do}\label{what-the-ai-layer-doesand-does-not-do}
+
+The optional language-model layer is intentionally non-authoritative. It does not compute the reported p-values, confidence intervals, event counts, or benchmark metrics and cannot alter the holdout, thresholds, multiplicity corrections, or candidate state.
+
+Its proposed role is narrower: translate bounded evidence packets into scientific interpretations, alternative explanations, confounders, and falsification suggestions. This design reduces the surface area over which an LLM can silently modify evidence.
+
+The safety pilot shows that the frozen interface respected these boundaries across the six tested candidates. It does not establish incremental scientific utility. ASDE therefore remains scientifically defined by the deterministic auditable workflow; the language-model layer is described as an optional constrained interface.
+
+\subsection{Reproducibility as Part of the Scientific Method}\label{reproducibility-as-part-of-the-scientific-method}
+
+Git provenance is used not merely for software engineering but as part of the inferential record. Protocol freezes precede audit seeds, hashes bind results to source snapshots, failed candidates remain in the registry, and headline v21 metrics can be reconstructed from the stored trial table.
+
+A one-command verifier checks the development snapshot, frozen protocol, audit artifacts, recorded package versions, headline metric reconstruction, and analytical isolation of the holdout. This does not eliminate every reproducibility problem, especially for stochastic language-model outputs, but it makes the deterministic scientific core independently inspectable.
+
+\section{Limitations}\label{limitations}
+
+First, the empirical field case comes from a single approximately 12-km rural high-altitude 6 GHz link. The current results do not establish generalization to other 6 GHz links, frequency bands, climates, terrains, radio vendors, or network architectures.
+
+Second, the strongest benchmark results concern synthetic RF perturbations injected into a real background. Synthetic recovery quantifies the behavior of the discovery/screening machinery under registered ground-truth perturbations; it does not demonstrate that any natural atmospheric variable caused an RF degradation event.
+
+Third, the v21 hidden-driver benchmark is bounded to four prespecified atmospheric drivers. The candidate library was developed adaptively on D\_development through atmospheric-only identifiability analysis before its final freeze. The audit uses new reserved simulation seeds but the same physical background. The result therefore measures reproducibility under the frozen library, not independent replication on a new physical dataset.
+
+Fourth, candidate event families remain temporally related. The final library satisfies the registered overlap rule, but the maximum pairwise overlap lies close to the admissibility boundary. Unique attribution may become harder in richer libraries with more strongly coupled atmospheric variables.
+
+Fifth, the primary RF outcome is a composite of RSSI, SNR, and encoded MCS. Its equal-weight standardization and fractional MCS injections are mathematical constructs, not a physical link-quality or propagation model. Post-audit morphology testing demonstrates reduced sensitivity to sparse subsystem-specific perturbations, and real-data outcome sensitivity shows that at least one exploratory context association depends on the RF event definition. The reduced analysis snapshot omits operational covariates. A read-only match to the source export found AP Tx power fixed at 10 dBm (2,860/2,860), SM Tx power at 3 dBm (2,858/2,860 available), and dual-link status in 2,858/2,860 rows. Interference, antenna alignment, maintenance history and path conditions remain unmeasured, so operational and propagation explanations cannot be excluded. The frozen v25 post-audit analog stress avoids fractional MCS values and quantifies direction-specific sensitivity, but holds MCS fixed and is not a radio adaptation or propagation model. A separately frozen goodput analysis on a later 6475/20 episode of the same link provides direction-matched functional corroboration for RSSI/SNR only, with development UL showing negligible quartile contrast. Vendor mapping of the 1xx/2xx codes, operational interference, path evidence and independent-link validation are still needed before claiming sensitivity to natural radio degradation or transportability.
+
+Sixth, the 1,000 circular-shift trials sample a finite orbit of 3,132 admissible offsets on a 3,276-bin development grid with 418 bins missing at least one required variable. The post-audit exhaustive orbit check confirms the Monte Carlo estimate within this scheme but cannot establish stationarity, exchangeability, or valid binomial event-level p-values. A further observability diagnostic found incomplete or asymmetric RF ascertainment around many driver events; strict complete-window eligibility changed orbit selections while leaving too few discordant events in most original natural driver/horizon cells. A paired-offset sensitivity retains event support but changes individual shift-orbit decisions and weakens 60-min recovery. Thus event support, missingness policy and directional-test calibration remain coupled unresolved issues. Wilson intervals quantify simulation variation conditional on one background, not physical-sampling uncertainty. Null families based on independently adjudicated stable field episodes and dependence-aware surrogates are needed before asserting general Type-I error control; they must be specified without tuning to these results.
+
+Seventh, the prospective v24 N1 calibration has not been completed. Accordingly, the manuscript reports conditional historical operating characteristics only and makes no claim of field-wide Type-I error or family-wise error control. Completing v24 or an equivalent independently specified calibration would materially strengthen the statistical evidence but is not used as a premise for the bounded Methods conclusions reported here.
+
+Eighth, D\_validation remains analytically embargoed from scientific analysis and candidate evaluation because no natural candidate met the freeze gate. This preserves the registered protection against post-selection bias but means that the present paper does not report an independently confirmed natural atmospheric--RF hypothesis.
+
+Ninth, one registered alternate configuration (6475/20) was used for a prospectively specified post-audit functional corroboration on the same link. This is not a new-link replication, a natural weather-hypothesis confirmation, or validation of the six-field encoded-MCS benchmark. Other configuration cohorts and cross-link replication remain future tests of generality.
+
+Tenth, the constrained-AI pilot supports only a safety/\allowbreak feasibility claim in the current manuscript. Although automated safety checks passed, the A1-vs-B0 utility comparison has unequal output opportunity and is not sufficient for title-level AI attribution. A stronger utility claim would require a new matched-budget prospective comparison.
+
+Eleventh, the v23 gate ablation found no incremental selection difference among M1, M2, and M3. Therefore, the current benchmark does not establish that minimum-support or fold-direction gates are necessary once multiplicity correction is applied. Their continued inclusion should be justified by natural-data validity concerns or by future benchmarks that demonstrate incremental benefit.
+
+\section{Conclusion}\label{conclusion}
+
+ASDE addresses a methodological problem that becomes more important as automated systems make scientific candidate generation cheaper: plausible patterns can be generated faster than they can be screened rigorously. The workflow therefore treats candidate generation, falsification, bounded attribution, and hypothesis promotion as distinct operations rather than collapsing them into a ranking problem.
+
+On a real rural high-altitude 6 GHz measurement background, six natural atmospheric--RF candidates were screened out before confirmatory validation. A known-driver audit quantified the behavior of the statistical gate, while a bounded hidden-driver attribution audit quantified recovery when the generating atmospheric hypothesis was concealed within a competing finite library. A separately frozen gate ablation showed that multiplicity correction accounted for the observed reduction in hidden-driver false selection, while the additional support and fold-direction gates made no further decisions in that benchmark. The results therefore show both useful recovery and substantial limits, including longer-lag sensitivity loss, structured-background effects, and gate components whose incremental value remains unproven in the audited finite library.
+
+The central methodological lesson is that an auditable hypothesis-screening workflow should make candidate generation inexpensive but promotion evidentially demanding. A constrained language model may assist formulation and criticism, but the present results do not require or establish incremental AI utility. Scientific status remains tied to deterministic evidence, explicit multiplicity and temporal controls, protected validation data, reproducible provenance, and human scientific responsibility. The next evidential steps are prospective N1 calibration under the frozen v24 design, evaluation on independently adjudicated field episodes, and cross-link replication.
+
+\section*{Data and Code Availability}\label{data-and-code-availability}
+\addcontentsline{toc}{section}{Data and Code Availability}
+
+The version-controlled research package contains the frozen protocols, source-snapshot hashes, audit scripts, raw Monte Carlo trial tables, figure-generation scripts, claim checks, and reconstruction tools used for the reported benchmark results. A DOI-bearing immutable archive and manuscript-matched release tag will be created before submission. The analytically protected D\_validation block was not used as evidence in this study and is not included as a reported result. Any restrictions on releasing operational field telemetry will be stated explicitly in the archived data-access record.
+
+\section*{Acknowledgment and Generative-AI Disclosure}\label{acknowledgment-and-generative-ai-disclosure}
+\addcontentsline{toc}{section}{Acknowledgment and Generative-AI Disclosure}
+
+Generative AI systems, including OpenAI ChatGPT, were used for code assistance, structured scientific criticism, candidate-interpretation drafting, literature-search support, and language/manuscript editing across the article. AI-generated suggestions did not determine statistical thresholds, alter protected-data boundaries, promote scientific candidates, or replace author review. All analyses, numerical results, citations, code changes, and manuscript claims included in the article were reviewed and accepted by the human authors. The exact disclosure wording and model citations will be rechecked against the IEEE Access policy in force at submission.
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\begin{IEEEbiographynophoto}{CARLOS JESÚS KOO LABRÍN}
+received the B.S. degree in Electronic Engineering from Universidad Ricardo Palma, Peru, in 1996, and the M.S. degree in Telecommunications and Networking Engineering from Universidad Tecnológica del Perú, Peru, in 2015. He is currently a Principal Professor at Universidad Nacional de Cajamarca, where he also serves as Coordinator of the Advanced Telecommunications Research Laboratory. His work focuses on teaching and research in networking and telecommunications. He was a National Robotics Champion in 2015 and achieved sixth place at the World Robot Olympiad held in Qatar in 2015. He has experience as a telecommunications network simulation specialist and as a consultant for telecommunications projects. His research interests include wireless communications, radio propagation in high-altitude environments, microwave-link design, and machine learning applications in telecommunications systems.
+\end{IEEEbiographynophoto}
+
+\begin{IEEEbiographynophoto}{VÍCTOR SÁNCHEZ CÁCERES}
+received the B.S. degree in Statistics and the M.S. degree in Systems Engineering from Universidad Nacional de Ingeniería, Peru, in 1992 and 2004, respectively. He is currently a Principal Professor and a collaborator of the Advanced Telecommunications Research Laboratory at Universidad Nacional de Cajamarca. He has extensive experience in predictive analytics and has participated as a speaker in academic and professional conferences. His research interests include statistical modeling, predictive analytics, data analysis, and machine learning applications in engineering and telecommunications systems.
+\end{IEEEbiographynophoto}
+
+\begin{IEEEbiographynophoto}{NÉSTOR E. MUÑOZ ABANTO}
+received the B.S. degree in Systems Engineering from Universidad Alas Peruanas, Peru, in 2010. He is currently an Associate Professor at Universidad Nacional de Cajamarca and a researcher at the Telecommunications Research Laboratory. He has experience in Internet of Things (IoT) technologies and radio links in high-altitude environments. His research interests include IoT systems, wireless communications, radio-link design in mountainous regions, and the integration of emerging technologies for rural connectivity.
+\end{IEEEbiographynophoto}
+
+\begin{IEEEbiographynophoto}{MARISOL TAPIA ROMERO}
+received the B.S. degree in Systems Engineering from Universidad Nacional de Cajamarca and the Ph.D.~degree in Systems Engineering from Universidad Nacional de Piura, Peru, in 1998 and 2022, respectively. She is currently an Associate Professor at Universidad Nacional de Cajamarca, where she is actively involved in research on emerging telecommunications technologies. Her work focuses on the integration of advanced communication systems and innovative technological solutions for complex environments. Her research interests include emerging telecommunications technologies, wireless systems, data-driven approaches, and innovative solutions for improving connectivity in challenging scenarios.
+\end{IEEEbiographynophoto}
+
+\begin{IEEEbiographynophoto}{CARLOS ENRIQUE KOO BARTRA}
+received the B.S. degree in Communications from Universidad Privada del Norte, Peru, in 2025. He is currently a Research Assistant at the Advanced Telecommunications Research Laboratory at Universidad Nacional de Cajamarca. He has experience in emerging technologies, including unmanned aerial systems and Linux-based systems. His technical interests include wireless communications, embedded systems, and the application of emerging technologies in telecommunications.
+\end{IEEEbiographynophoto}
+\EOD
+\end{document}
