@@ -527,4 +527,11 @@ interests include emerging telecommunications technologies, wireless
 systems, data-driven approaches, and innovative solutions for improving
 connectivity in challenging scenarios.
 
-**CARLOS ENRIQUE KOO BARTRA** — biography pending author confirmation.
+**CARLOS ENRIQUE KOO BARTRA** received the B.S. degree in
+Communications from Universidad Privada del Norte, Peru, in 2025. He
+is currently a Research Assistant at the Advanced Telecommunications
+Research Laboratory at Universidad Nacional de Cajamarca. He has
+experience in emerging technologies, including unmanned aerial systems
+and Linux-based systems. His technical interests include wireless
+communications, embedded systems, and the application of emerging
+technologies in telecommunications.
