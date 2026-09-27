@@ -1,0 +1,39 @@
+{
+  "experiment_id": "DISCOVERY-001-V24",
+  "status": "DRAFT_TEMPLATE",
+  "timezone": "America/Lima",
+  "calibration_start_utc": null,
+  "calibration_end_utc": null,
+  "freeze_commit": null,
+  "inferential_execution_enabled": false,
+  "schema": {"path":"scientific_discovery/schemas/v24_calibration_start.schema.json","sha256":null},
+  "protocol": {"path":"docs/ASDE_REVIEWER_A_V24_PROSPECTIVE_CALIBRATION_PROTOCOL_DRAFT.md","sha256":null},
+  "module": {"path":"scientific_discovery/v24_calibration.py","sha256":null},
+  "unit_test": {"path":"scripts/test_asde_v24_calibration.py","sha256":null},
+  "concordance_audit": {"path":"Results/scientific_discovery/DISCOVERY-001/reviewer_a_v24_code_concordance.json","sha256":null},
+  "validator": {"path":"scripts/validate_asde_v24_start_manifest.py","sha256":null},
+  "runner": {"path":"scripts/run_asde_v24_prospective.py","sha256":null},
+  "prospective_source": {
+    "path": null,
+    "prospective_only": true,
+    "historical_sources_forbidden": [
+      "Data/exports/scientific_campaign_6g_integrated.csv",
+      "Results/scientific_discovery/DISCOVERY-001/prevalidation_7000_20.csv",
+      "D_validation"
+    ]
+  },
+  "radio_configuration": {
+    "frequency_mhz":7000,"bandwidth_mhz":20,"ap_tx_power_dbm":10,"sm_tx_power_dbm":3,
+    "tdd_dl_pct":null,"tdd_ul_pct":null,"tdd_frame_ms":null
+  },
+  "eligibility": {"calendar_days":60,"min_good_bins_per_day":274,"exact_5min_grid":true,"immutable_window":true},
+  "statistics": {
+    "family_size":12,"operating_cutoff":0.04,"calibration_ceiling":0.05,
+    "a1_schedules":2500,"a2_schedules":2500,"b_test_schedules":5000,"proposal_cap":1000000
+  },
+  "seeds": {
+    "a1_24h":2026092601,"a2_24h":2026092602,"b_24h":2026092603,
+    "a1_48h":2026092604,"a2_48h":2026092605,"b_48h":2026092606
+  },
+  "prohibitions": {"d_validation":true,"historical_integrated_csv":true,"natural_driver_rf_before_n1":true}
+}

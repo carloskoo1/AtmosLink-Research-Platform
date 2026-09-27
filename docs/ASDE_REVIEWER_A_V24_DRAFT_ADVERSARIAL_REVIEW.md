@@ -173,3 +173,69 @@ The v24 draft now additionally fixes:
 **STATISTICAL DESIGN READY FOR IMPLEMENTATION, NOT READY FOR PROSPECTIVE FREEZE.**
 
 The remaining work is code concordance, unit testing, source isolation and creation of the future CALIBRATION_START manifest. No prospective RF outcome may be inspected during that work.
+
+## Additional implementation-adversarial findings
+
+### V24-M5 — support-shift vulnerability in the first A1 implementation — **RESOLVED before freeze**
+
+The first implementation represented A1 support-ineligible cell scores as `-inf` but retained all 2500 schedules in the empirical-p denominator. Under an extreme but legitimate support shift (a cell never eligible in A1 and eligible in B), this produced an artificially small p-value and could select the cell.
+
+Controlled counterexample before the fix:
+- raw cellwise p = 0.0003998401;
+- family-wise p = 0.0043982407;
+- selected at the 0.04 operating cutoff despite zero eligible A1 references.
+
+The implementation and protocol were corrected before any prospective execution:
+
+- cellwise empirical tails are now conditioned on **support-eligible A1 schedules for that cell**;
+- an ineligible target receives p=1;
+- if a cell has zero eligible A1 references, it also receives p=1 and is nonselectable;
+- the registered family remains 12 cells;
+- a regression test reproduces the historical 23/28/28/28 weather-event counts and 158 RF events and verifies the zero-reference guard.
+
+Post-fix counterexample:
+- raw p = 1;
+- family-wise p = 1;
+- no selection.
+
+This was an implementation bug discovered by adversarial review; no v24 prospective result existed and no historical v21/v23 artifact was modified.
+
+### V24-M6 — exact 5-min grid integrity — **RESOLVED before freeze**
+
+The initial `local_day_eligibility` implementation required 288 rows but did not prove that they were the exact 288 unique 5-min bins. A duplicated timestamp plus a missing bin could therefore pass the row-count check.
+
+The implementation now requires exact equality to the America/Lima 288-bin local-day grid and timestamp uniqueness. A regression test constructs a 288-row day containing one duplicated bin and one missing bin; the day is correctly rejected.
+
+### V24-M7 — adaptive cohort restart after an ineligible day — **RESOLVED in protocol**
+
+An earlier draft allowed a new 60-day run to begin from a later eligible day after a day failed eligibility. That could select a cleaner future window using post-start metadata/weather-QC information.
+
+The revised rule is stricter:
+- CALIBRATION_START_UTC fixes the next 60 local calendar days;
+- any ineligible day makes that experiment NOT_CALIBRATED;
+- days cannot be deleted or replaced;
+- the same experiment identifier cannot restart;
+- any retry requires a new experiment identifier, new prospective manifest and new freeze before its first sample.
+
+### V24-M8 — 0.04 operating cutoff versus 0.05 calibration ceiling — **RESOLVED as design distinction**
+
+The 0.04 cutoff is not a claimed Type-I level. It is a preregistered conservative operating margin used so that the held-out 5000-sham audit has reasonable probability of satisfying the external conditional ceiling of 0.05.
+
+Exact planning calculation:
+- K=224/5000 gives one-sided 95% Clopper-Pearson upper = 0.049913;
+- K=225/5000 gives upper = 0.050123;
+- if the true conditional sham-selection probability is 0.05, P(K<=224) ≈ 0.0472;
+- if it is 0.04, P(K<=224) ≈ 0.9596.
+
+The manuscript/protocol must describe 0.04 as an operating cutoff and 0.05 as the calibration ceiling. Neither number is a natural-weather Type-I claim.
+
+## Updated pre-freeze verdict
+
+The statistical core is now substantially stronger than the 8a57bd1 draft, but **prospective freeze is still not authorized** until:
+
+1. code/protocol concordance passes after the M5/M6/M7/M8 changes;
+2. the machine-readable CALIBRATION_START manifest schema is implemented;
+3. the actual prospective runner is written so that it cannot read D_validation and cannot alter frozen constants;
+4. a final source-isolation audit confirms that dry runs use development/toy data only.
+
+No prospective RF outcome has been used in these fixes.

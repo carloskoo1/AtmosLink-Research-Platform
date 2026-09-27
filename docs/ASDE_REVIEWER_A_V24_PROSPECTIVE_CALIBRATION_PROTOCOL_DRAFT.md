@@ -52,6 +52,10 @@ Before the first included sample, freeze a machine-readable start manifest conta
 
 Primary v24 data must occur strictly after `CALIBRATION_START_UTC`.
 
+The primary v24 radio configuration is fixed to **7000 MHz center frequency / 20 MHz channel bandwidth**, matching the DISCOVERY-001 development configuration from which the RF outcome detector was frozen. A different frequency or bandwidth cannot be substituted into v24. It requires a separately preregistered detector and a different experiment identifier.
+
+The start manifest must also freeze AP/SM transmit-power settings, TDD/frame settings, firmware/configuration identifiers and dual-association requirements. Any change during the 60-day run breaks cohort continuity.
+
 Excluded from v24 primary calibration:
 
 - D_validation;
@@ -68,6 +72,28 @@ Before RF/weather outcomes of a candidate future segment are used for v24 calibr
 
 The existing readiness specification remains separate and necessary but not sufficient. Passing it does not imply statistical calibration.
 
+### 5A. Frozen local-day eligibility rule
+
+Day eligibility is determined without using RF magnitude or RF-event outcomes.
+
+For each America/Lima local calendar day, construct the expected 288-bin 5-min grid.
+
+A day is eligible only when all are true:
+
+1. the frozen primary radio configuration is 7000 MHz / 20 MHz for the entire day;
+2. AP transmit power is 10 dBm and SM transmit power is 3 dBm for every available configuration record;
+3. collection status is `LINK_OPERATIONAL_DUAL` for every available operational-status record;
+4. `tdd_dl_pct`, `tdd_ul_pct` and `tdd_frame_ms` match the exact non-null values recorded in the future CALIBRATION_START manifest throughout the day;
+5. no maintenance, outage, recovery incident or configuration-transition exclusion overlaps the day;
+6. at least 274/288 bins (>=95%) have the required operational metadata available and matching the frozen regime;
+7. at least 274/288 bins (>=95%) pass the frozen weather-QC eligibility for all four atmospheric driver variables.
+
+RF RSSI, SNR, MCS, RF-drop status and RF numerical availability are **not** part of day eligibility.
+
+A day that fails any criterion makes the preregistered v24 cohort **NOT_CALIBRATED**. It cannot be deleted, replaced, or used to shift the cohort start. After CALIBRATION_START_UTC, the 60 calendar days are immutable. Any later retry requires a new experiment identifier, a new prospective start manifest, and a new freeze before its first included sample.
+
+The weather-QC implementation/version and operational-metadata field definitions must be hashed in the CALIBRATION_START manifest.
+
 ## 6. Primary observation rule
 
 The primary v24 observation policy is the **matched-offset rule** developed in commit `eb25a18`, applied unchanged to the new cohort:
@@ -82,6 +108,45 @@ For atmospheric anchor bin e and one-sided horizon h in {6, 12, 24} five-minute 
 The >=50% rule is development-informed and therefore cannot retroactively validate historical results. It is fixed prospectively only for v24.
 
 The strict complete-window rule is retained as a **secondary, prespecified sensitivity** and cannot replace the primary rule after results are known.
+
+## 6A. Frozen RF outcome definition
+
+V24 inherits the v23 six-field RF composite without recalibration on prospective data.
+
+Feature order:
+
+1. dl_rssi_dbm
+2. ul_rssi_dbm
+3. dl_snr_db
+4. ul_snr_db
+5. dl_mcs
+6. ul_mcs
+
+Frozen D_development robust centers:
+
+- dl_rssi_dbm = -74.0
+- ul_rssi_dbm = -80.0
+- dl_snr_db = 23.0
+- ul_snr_db = 18.0
+- dl_mcs = 204.0
+- ul_mcs = 202.0
+
+Frozen robust scales:
+
+- dl_rssi_dbm = 0.7412898443291327
+- ul_rssi_dbm = 0.7412898443291327
+- dl_snr_db = 0.7412898443291327
+- ul_snr_db = 1.4826
+- dl_mcs = 5.896045450988336
+- ul_mcs = 1.4826
+
+Frozen RF-drop threshold:
+
+`-0.5620817932460992`
+
+These values are copied from the hashed D_development/v23 definition. They may not be recomputed, updated, normalized or re-estimated from Fold A or Fold B.
+
+RF ascertainability may depend on whether the required prospective RF fields are finite, but event magnitude and threshold remain frozen.
 
 ## 7. Primary physical time unit
 
@@ -100,13 +165,19 @@ A 48-h block analysis is prespecified as a dependence-sensitivity check.
 
 ## 8. Minimum prospective volume
 
-The primary cohort requires at least:
+The primary cohort requires one continuous run of:
 
-- **60 eligible local-day blocks**, equivalent to at least **1440 eligible hours** under a fixed v24-eligible configuration.
+- **60 consecutive local calendar days** under one fixed v24-eligible radio configuration;
+- each local day individually satisfying the frozen day-eligibility/metadata criteria;
+- no day skipped to bridge an outage, maintenance interval, configuration change or ineligible regime.
 
-This is a **necessary volume gate, not a claim of 60 independent physical episodes**.
+This corresponds to a 1440-h calendar span. Minor missing samples are handled only through the frozen day-eligibility and matched-offset rules; days themselves are not removed and concatenated.
 
-At 720 eligible hours (30 days), v24 may issue a blinded/readiness interim report limited to:
+If any local day fails the frozen eligibility rule, the preregistered 60-day cohort is not patched by omission and is labeled NOT_CALIBRATED. The same experiment identifier cannot restart from a later day.
+
+The 60-day requirement is a **necessary volume/continuity gate, not a claim of 60 independent physical episodes**.
+
+After the first 30 consecutive eligible days (720 h of calendar span), v24 may issue a blinded/readiness interim report limited to:
 
 - metadata completeness;
 - number of eligible days;
@@ -134,6 +205,23 @@ Primary horizons remain 30, 60, and 120 min.
 Therefore the primary family contains 4 × 3 = 12 driver-horizon cells.
 
 No fifth driver, alternative threshold, new horizon, or revised refractory interval may enter the primary v24 analysis after CALIBRATION_START_UTC.
+
+### 9A. Frozen atmospheric-event normalization
+
+Prospective v24 event detection must **not** recompute robust centers/scales from Fold A or Fold B.
+
+Frozen D_development 15-min difference references:
+
+| Driver variable | diff15 median | robust scale | frozen z-direction threshold | equivalent physical 15-min threshold |
+|---|---:|---:|---:|---:|
+| CU01 temperature | -0.07000000000000028 °C | 0.34099799999999536 | z >= 1.5308007671599377 | Δ15 >= +0.452 °C |
+| SJ01 temperature | -0.020000000000000462 °C | 0.3261719999999983 | z <= -1.2876641771825945 | Δ15 <= -0.440 °C |
+| SJ01 relative humidity | 0.0 pp | 1.5715560000000033 | z <= -1.6365945597866016 | Δ15 <= -2.572 pp |
+| SJ01 pressure | 0.009999999999990905 hPa | 0.13343399999987862 | z >= 0.8993210126363124 | Δ15 >= +0.130 hPa |
+
+The physical thresholds above are algebraically equivalent to the frozen robust-z rules and are included for auditability. The implementation must use the frozen constants, not future-distribution normalization.
+
+Peak selection remains the frozen local-maximum rule with the 360-min same-driver refractory interval.
 
 ## 10. Primary N1 sham generator: joint daily-profile permutation
 
@@ -163,6 +251,8 @@ It deliberately randomizes which physical RF day receives each joint weather-eve
 No RF numerical value, RF-event outcome or RF-availability field may be consulted when proposing or accepting the permutation. The matched-offset RF observation rule is applied **after** the sham schedule exists, identically to sham and real atmospheric anchors.
 
 N1 does not require sham profiles to avoid real atmospheric events on the target day. Such overlap belongs to the real physical background and is reported as a diagnostic. N1 remains a randomized-label calibration, not a natural no-weather null.
+
+The uniform day-profile permutation **defines an artificial conditional null by design**. V24 does not assume or claim that naturally observed weather-day labels are exchangeable in a causal or physical sense. The A -> B evaluation asks only whether a procedure calibrated under the frozen Fold-A sham generator maintains its registered conditional false-selection behavior on a later physical RF background under the same sham-generating rule. The 48-h analysis probes sensitivity to the chosen temporal unit but does not prove natural-day exchangeability.
 
 Accepted permutations are sampled **with replacement** from the rejection sampler. Repeated schedules are permitted and their frequency is reported; this preserves a well-defined IID Monte Carlo sampling interpretation conditional on the fold.
 
@@ -210,16 +300,20 @@ Fold A sham schedules are divided **before execution** into two disjoint seed fa
 - A1: 2500 sham schedules for cellwise empirical calibration;
 - A2: 2500 sham schedules for family-wise calibration.
 
-For every cell j and observed score s, define the A1 empirical one-sided tail probability:
+For every cell j, let m_j be the number of A1 sham schedules in which that cell satisfies the frozen support-eligibility rule. For an **eligible** target score s, define the A1 empirical one-sided tail probability conditional on cellwise support eligibility:
 
-p_j(s) = (1 + number of A1 sham scores S_j >= s) / (2500 + 1).
+p_j(s) = (1 + number of support-eligible A1 sham scores S_j >= s) / (m_j + 1).
+
+If the target cell is support-ineligible, assign p_j = 1. If m_j = 0, also assign p_j = 1; a cell with no eligible A1 reference is therefore nonselectable rather than spuriously extreme.
+
+This conditioning is required because support eligibility can vary across sham schedules. Ineligible A1 schedules do not enter the numerical score reference for that cell.
 
 For every A2 sham schedule r:
 
-1. compute p_j for all inferentially eligible cells using only the A1 reference;
-2. assign p_j = 1 to every support-ineligible cell so the registered family always contains exactly 12 cells;
+1. compute p_j for all inferentially eligible cells using only the cell's support-eligible A1 reference schedules;
+2. assign p_j = 1 to every support-ineligible cell, and to any cell with m_j = 0, so the registered family always contains exactly 12 cells;
 3. define U_r = minimum p_j across the fixed 12-cell family;
-4. retain U_r, the full vector of p_j values and every cell's support state.
+4. retain U_r, the full vector of p_j values, m_j, and every cell's support state.
 
 The family size never shrinks schedule by schedule.
 
@@ -229,8 +323,10 @@ p_FWER,j = (1 + number of A2 schedules with U_r <= p_j(s*)) / (2500 + 1).
 
 A primary cell is selected only when:
 
-- p_FWER,j <= 0.05; and
+- p_FWER,j <= **0.04**; and
 - its support eligibility rule is satisfied.
+
+The 0.04 value is a **pre-freeze operating cutoff**, not the claimed calibration level and not a post-result correction. The external conditional-calibration ceiling remains 0.05. With 5000 held-out sham schedules, the pass boundary is 224 selections: 224/5000 = 0.0448 has a one-sided 95% Clopper-Pearson upper bound of approximately 0.049913, whereas 225/5000 exceeds 0.05. Under a Binomial design calculation used only for planning the Monte Carlo audit, a true conditional selection probability of 0.05 has approximately 0.0472 probability of satisfying K<=224, while a true rate of 0.04 has approximately 0.9596 probability. The 0.04 cutoff is therefore an intentionally conservative operating margin chosen before prospective execution; it is not evidence that the natural-weather Type-I error is 4%.
 
 This nested empirical procedure allows the 12 cells to have different null scales while using their joint A2 distribution for family-wise adjustment.
 
@@ -273,7 +369,7 @@ Primary direction:
 1. A1 and A2 are generated on Fold A and define the complete calibration procedure;
 2. 5000 independent accepted B-test sham schedules are generated on Fold B;
 3. each B-test schedule is scored using A1/A2 only;
-4. a B-test schedule is counted as a family-wise false selection if any registered cell has p_FWER <= 0.05.
+4. a B-test schedule is counted as a family-wise false selection if any registered cell has p_FWER <= 0.04.
 
 The **Fold A -> Fold B** sham-selection rate is the sole primary N1 endpoint.
 

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASDE v24 prospective calibration start manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "experiment_id","status","timezone","calibration_start_utc","calibration_end_utc",
+    "freeze_commit","inferential_execution_enabled","schema","protocol","module","unit_test",
+    "concordance_audit","validator","runner","prospective_source","radio_configuration",
+    "eligibility","statistics","seeds","prohibitions"
+  ],
+  "properties": {
+    "experiment_id": {"const": "DISCOVERY-001-V24"},
+    "status": {"enum": ["DRAFT_TEMPLATE","FROZEN_ACTIVE","CLOSED"]},
+    "timezone": {"const": "America/Lima"},
+    "calibration_start_utc": {"type": ["string","null"]},
+    "calibration_end_utc": {"type": ["string","null"]},
+    "freeze_commit": {"type": ["string","null"]},
+    "inferential_execution_enabled": {"type": "boolean"},
+    "schema": {"$ref":"#/$defs/hashref"},
+    "protocol": {"$ref":"#/$defs/hashref"},
+    "module": {"$ref":"#/$defs/hashref"},
+    "unit_test": {"$ref":"#/$defs/hashref"},
+    "concordance_audit": {"$ref":"#/$defs/hashref"},
+    "validator": {"$ref":"#/$defs/hashref"},
+    "runner": {"$ref":"#/$defs/hashref"},
+    "prospective_source": {
+      "type":"object","additionalProperties":false,
+      "required":["path","prospective_only","historical_sources_forbidden"],
+      "properties":{
+        "path":{"type":["string","null"]},
+        "prospective_only":{"const":true},
+        "historical_sources_forbidden":{"type":"array","items":{"type":"string"},"minItems":3}
+      }
+    },
+    "radio_configuration":{
+      "type":"object","additionalProperties":false,
+      "required":["frequency_mhz","bandwidth_mhz","ap_tx_power_dbm","sm_tx_power_dbm",
+                  "tdd_dl_pct","tdd_ul_pct","tdd_frame_ms"],
+      "properties":{
+        "frequency_mhz":{"const":7000},"bandwidth_mhz":{"const":20},
+        "ap_tx_power_dbm":{"const":10},"sm_tx_power_dbm":{"const":3},
+        "tdd_dl_pct":{"type":["number","null"]},"tdd_ul_pct":{"type":["number","null"]},
+        "tdd_frame_ms":{"type":["number","null"]}
+      }
+    },
+    "eligibility":{
+      "type":"object","additionalProperties":false,
+      "required":["calendar_days","min_good_bins_per_day","exact_5min_grid","immutable_window"],
+      "properties":{
+        "calendar_days":{"const":60},"min_good_bins_per_day":{"const":274},
+        "exact_5min_grid":{"const":true},"immutable_window":{"const":true}
+      }
+    },
+    "statistics":{
+      "type":"object","additionalProperties":false,
+      "required":["family_size","operating_cutoff","calibration_ceiling","a1_schedules",
+                  "a2_schedules","b_test_schedules","proposal_cap"],
+      "properties":{
+        "family_size":{"const":12},"operating_cutoff":{"const":0.04},
+        "calibration_ceiling":{"const":0.05},"a1_schedules":{"const":2500},
+        "a2_schedules":{"const":2500},"b_test_schedules":{"const":5000},
+        "proposal_cap":{"const":1000000}
+      }
+    },
+    "seeds":{
+      "type":"object","additionalProperties":false,
+      "required":["a1_24h","a2_24h","b_24h","a1_48h","a2_48h","b_48h"],
+      "properties":{
+        "a1_24h":{"const":2026092601},"a2_24h":{"const":2026092602},"b_24h":{"const":2026092603},
+        "a1_48h":{"const":2026092604},"a2_48h":{"const":2026092605},"b_48h":{"const":2026092606}
+      }
+    },
+    "prohibitions":{
+      "type":"object","additionalProperties":false,
+      "required":["d_validation","historical_integrated_csv","natural_driver_rf_before_n1"],
+      "properties":{
+        "d_validation":{"const":true},"historical_integrated_csv":{"const":true},
+        "natural_driver_rf_before_n1":{"const":true}
+      }
+    }
+  },
+  "$defs":{
+    "hashref":{
+      "type":"object","additionalProperties":false,
+      "required":["path","sha256"],
+      "properties":{"path":{"type":"string"},"sha256":{"type":["string","null"]}}
+    }
+  }
+}
