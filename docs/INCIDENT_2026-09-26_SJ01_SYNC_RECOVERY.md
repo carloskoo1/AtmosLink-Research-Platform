@@ -104,3 +104,25 @@ database configuration was changed during the recovery.
 
 The incident is technically closed. AtmosLink remains in continuous
 acquisition mode.
+
+---
+
+### 7. Post-incident update — 27 September 2026
+
+The SJ01 synchronization failure recurred on 27 September 2026 under
+the same Tailscale SSH interactive-authorization condition.
+
+Consequently, the closure documented above represents successful
+operational restoration on 26 September, but not permanent elimination
+of the recurrence mechanism.
+
+On 27 September, the unattended scientific synchronization path was
+migrated to the direct operational LAN using standard OpenSSH,
+ED25519 public-key authentication and `BatchMode=yes`. Multiple
+consecutive automatic synchronization cycles subsequently completed
+successfully.
+
+The recurrence analysis and validated corrective mitigation are
+documented separately in:
+
+`docs/INCIDENT_2026-09-27_SJ01_SYNC_RECURRENCE_AND_PERMANENT_MITIGATION.md`
