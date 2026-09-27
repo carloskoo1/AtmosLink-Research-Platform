@@ -1,0 +1,59 @@
+{
+  "meta_reviewer": "A+B+C integrated",
+  "status": "PASS",
+  "meta_disposition": "PROCEED \u2014 NO FATAL TECHNICAL REJECTION REASON DETECTED FOR BOUNDED METHODS CLAIMS",
+  "technical_scope_pass": true,
+  "submission_ready": false,
+  "fatal_technical_rejection_reason_detected": false,
+  "external_submission_blockers": [
+    "final_structured_novelty_search",
+    "doi_bearing_immutable_release",
+    "final_ieee_ai_disclosure",
+    "final_reference_version_retraction_check"
+  ],
+  "scientific_pending": [
+    "v24_prospective_N1_calibration"
+  ],
+  "warnings": [
+    "v24 completion is recommended before submission if operationally feasible; current manuscript must not claim field-wide calibration."
+  ],
+  "errors": [],
+  "reviewer_b_artifact_hashes": {
+    "Results/scientific_discovery/DISCOVERY-001/reviewer_b_field_functional.json": "ee94c82d7a520446ef6dcd33d4f25ba278a0ea94323b0399d189f639f9583bbe",
+    "Results/scientific_discovery/DISCOVERY-001/v25_reviewer_b_analog_stress/trials.csv": "efb013c13ee0c868f07313b29b988f44cdeaf560a2cbb5caa307617a0aa8ca72",
+    "Results/scientific_discovery/DISCOVERY-001/v25_reviewer_b_analog_stress/metrics.csv": "9d212810c49d176b9fee0330ca1a1e9904096aaa394dd123caf5aa503c1dcf0c",
+    "Results/scientific_discovery/DISCOVERY-001/v25_reviewer_b_analog_stress/summary.json": "8d5365feb7ae9ccb6d039d814200b6a48496ed1132b6f9a0b553b5018af7ed00"
+  },
+  "checks": [
+    {
+      "script": "scripts/audit_ieee_asde_citations.py",
+      "returncode": 0,
+      "stdout": "{\n  \"draft\": \"docs/IEEE_ASDE_FULL_DRAFT_V1.md\",\n  \"bibliography\": \"docs/IEEE_ASDE_REFERENCES_WORKING.bib\",\n  \"used_key_count\": 31,\n  \"bib_key_count\": 31,\n  \"missing_from_bib\": [],\n  \"unused_bib\": [],\n  \"status\": \"PASS\"\n}",
+      "stderr": ""
+    },
+    {
+      "script": "scripts/audit_ieee_asde_manuscript_v1.py",
+      "returncode": 0,
+      "stdout": "{\n  \"draft\": \"IEEE_ASDE_FULL_DRAFT_V1.md\",\n  \"status\": \"PASS\",\n  \"errors\": [],\n  \"warnings\": []\n}",
+      "stderr": ""
+    },
+    {
+      "script": "scripts/audit_asde_reviewer_c.py",
+      "returncode": 0,
+      "stdout": "{\n  \"reviewer\": \"C\",\n  \"status\": \"PASS\",\n  \"disposition\": \"DESIGN PASS / FINAL NOVELTY SEARCH & SUBMISSION COMPLIANCE PENDING\",\n  \"errors\": [],\n  \"warnings\": [],\n  \"ai_comparator_artifact\": \"Results/scientific_discovery/DISCOVERY-001/reviewer_c_ai_comparator_audit.json\",\n  \"comparators_checked\": [\n    \"TRUTHINSIGHT-2026\",\n    \"SDABENCH-2026\",\n    \"BIODSA-2025\",\n    \"BLADE-2024\",\n    \"EXPERIGEN-2026\",\n    \"ABSTENTION-2026\"\n  ]\n}",
+      "stderr": ""
+    },
+    {
+      "script": "scripts/audit_asde_v24_code_concordance.py",
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"protocol_sha256\": \"833520ab5167d2a1c64d0c7561a9e61df70bcd2c2b8b15d453c5b11ae3f20126\",\n  \"module_sha256\": \"4326c8a6704dc4e6d7e230f19311a6b369989ddf5b67c7194176e90294eabfcb\",\n  \"test_sha256\": \"771833618c9d1076a25c86ab298b4d7198405b2ce2dd900d4e70442f9fca00c8\",\n  \"schema_sha256\": \"841d9dbe36434ce3044fa2731eec9944ab83f62421fa08c2a7a6eb7b6b55ae2f\",\n  \"template_sha256\": \"dcaf4c80dab249d0afd9ea02b155e56e5a3941d4c0499d57084aa513fb89e883\",\n  \"validator_sha256\": \"212e6d8d73a22eabcc01710f574f37b577c7b9c45bdf542d82ef10176ed53940\",\n  \"runner_sha256\": \"b05d6676e110553d19d8c82ff8a129a8c4d2685a395b830b6be2606be85cccf2\",\n  \"template_validator_stdout\": \"{\\n  \\\"manifest\\\": \\\"/home/carlos/Proyectos/EstacionMeteorologica/scientific_discovery/v24_start_manifest_TEMPLATE.json\\\",\\n  \\\"status\\\": \\\"PASS\\\",\\n  \\\"manifest_status\\\": \\\"DRAFT_TEMPLATE\\\",\\n  \\\"prospective_execution_authorized\\\": false,\\n  \\\"errors\\\": []\\n}\",\n  \"runner_refusal_stdout\": \"{\\n  \\\"status\\\": \\\"REFUSED\\\",\\n  \\\"errors\\\": [\\n    \\\"manifest_not_active\\\",\\n    \\\"inferential_execution_not_enabled\\\",\\n    \\\"missing_calibration_start_utc\\\",\\n    \\\"missing_calibration_end_utc\\\",\\n    \\\"missing_freeze_commit\\\",\\n    \\\"schema_sha256\\\",\\n    \\\"protocol_sha256\\\",\\n    \\\"module_sha256\\\",\\n    \\\"unit_test_sha256\\\",\\n    \\\"concordance_audit_sha256\\\",\\n    \\\"validator_sha256\\\",\\n    \\\"runner_sha256\\\",\\n    \\\"git_tree_not_clean\\\",\\n    \\\"calibration_time_validation\\\",\\n    \\\"prospective_source_missing\\\"\\n  ]\\n}\",\n  \"cell_family_size\": 12,\n  \"rf_drop_threshold\": -0.5620817932460992,\n  \"driver_specs\": {\n    \"cu01_local_temp_avg_c__rise\": {\n      \"column\": \"cu01_local_temp_avg_c\",\n      \"way\": \"rise\",\n      \"diff15_median\": -0.07000000000000028,\n      \"diff15_scale\": 0.34099799999999536,\n      \"z_threshold\": 1.5308007671599377\n    },\n    \"sj01_local_temp_avg_c__fall\": {\n      \"column\": \"sj01_local_temp_avg_c\",\n      \"way\": \"fall\",\n      \"diff15_median\": -0.020000000000000462,\n      \"diff15_scale\": 0.3261719999999983,\n      \"z_threshold\": 1.2876641771825945\n    },\n    \"sj01_local_hum_avg_pct__fall\": {\n      \"column\": \"sj01_local_hum_avg_pct\",\n      \"way\": \"fall\",\n      \"diff15_median\": 0.0,\n      \"diff15_scale\": 1.5715560000000033,\n      \"z_threshold\": 1.6365945597866016\n    },\n    \"sj01_local_press_hpa__rise\": {\n      \"column\": \"sj01_local_press_hpa\",\n      \"way\": \"rise\",\n      \"diff15_median\": 0.009999999999990905,\n      \"diff15_scale\": 0.13343399999987862,\n      \"z_threshold\": 0.8993210126363124\n    }\n  },\n  \"test_stdout\": \"ASDE_V24_CALIBRATION_TEST_PASS\\nweather_event_counts {'cu01_local_temp_avg_c__rise': 23, 'sj01_local_temp_avg_c__fall': 28, 'sj01_local_hum_avg_pct__fall': 28, 'sj01_local_press_hpa__rise': 28}\\nrf_event_count 158\\nrf_observable_bins 2753\\ntoy_24h_proposals 64\\ntoy_48h_proposals 16\\ncp_upper_224 0.04991312935925728\\ncp_upper_225 0.0501232460268398\\nday_eligibility [True, False, False]\",\n  \"errors\": [],\n  \"warnings\": [],\n  \"calibration_start_utc\": null,\n  \"prospective_execution_authorized\": false\n}",
+      "stderr": ""
+    },
+    {
+      "script": "scripts/verify_asde_publication_artifacts.py",
+      "returncode": 0,
+      "stdout": "ASDE_PUBLICATION_ARTIFACT_VERIFICATION\nV21_AUDIT_RECONSTRUCTION_PASS\nlibrary_wide_null_fwer=0.020000\neffect=1.0, lag=15 min, truth_selected=0.8525, top1=0.9450, distractor=0.0000\neffect=1.0, lag=30 min, truth_selected=0.7900, top1=0.8950, distractor=0.0000\neffect=1.0, lag=60 min, truth_selected=0.2125, top1=0.5950, distractor=0.0000\n{\n  \"experiment_id\": \"DISCOVERY-001\",\n  \"audit\": \"v23 hidden-driver gate ablation reconstruction\",\n  \"status\": \"PASS\",\n  \"trial_counts\": {\n    \"total\": 18400,\n    \"injected\": 14400,\n    \"null\": 4000\n  },\n  \"null_fwer\": {\n    \"M0\": 0.217,\n    \"M1\": 0.017,\n    \"M2\": 0.017,\n    \"M3\": 0.017\n  },\n  \"m1_m2_m3_selected_sets_identical\": true,\n  \"errors\": []\n}\n{\n  \"policy\": \"No D_validation values may be used for candidate selection, tuning, screening, benchmark calibration, or development evaluation.\",\n  \"development_snapshot\": \"Results/scientific_discovery/DISCOVERY-001/prevalidation_7000_20.csv\",\n  \"active_scripts_checked\": [\n    \"scripts/run_discovery_001_v7_synthetic_benchmark.py\",\n    \"scripts/run_discovery_001_v8_detection_surface.py\",\n    \"scripts/run_discovery_001_v9_identifiability.py\",\n    \"scripts/run_discovery_001_v10_confirmatory_benchmark.py\",\n    \"scripts/run_discovery_001_v12_audit_confirmatory.py\",\n    \"scripts/run_discovery_001_v14_audit_ablation.py\",\n    \"scripts/run_discovery_001_v15_morphology_stress.py\",\n    \"scripts/run_discovery_001_v16_outcome_sensitivity.py\",\n    \"scripts/run_discovery_001_v16b_multiview_exploratory.py\",\n    \"scripts/run_discovery_001_v17_candidate_library_audit.py\",\n    \"scripts/run_discovery_001_v18_end_to_end_exploratory.py\",\n    \"scripts/run_discovery_001_v19_temporal_identifiability.py\",\n    \"scripts/run_discovery_001_v20_identifiability_tradeoff.py\",\n    \"scripts/run_discovery_001_v21_end_to_end_audit.py\",\n    \"scripts/run_discovery_001_v23_hidden_driver_gate_ablation.py\"\n  ],\n  \"issues\": [],\n  \"status\": \"PASS\",\n  \"scope_note\": \"This audit establishes analytical isolation of the active development pipeline. It does not claim that the original source file bytes were never read during historical partition construction.\"\n}\nSTATUS=PASS",
+      "stderr": ""
+    }
+  ]
+}

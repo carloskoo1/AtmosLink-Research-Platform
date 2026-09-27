@@ -56,11 +56,16 @@ Still required before submission:
 
 ## Final internal gates
 Before submission:
-1. blinded AI-utility pilot completed and title rule applied;
-2. structured novelty search completed;
-3. DOI archive created;
-4. full manuscript checked against IEEE_ASDE_CLAIM_LEDGER.md;
-5. Reviewer A remains **OPEN (Major)**: field-wide FWER claims require independent null calibration. Reviewer B is **closed only for bounded operational-telemetry Methods claims** after its separately frozen analog stress and later same-link measured-goodput analysis; any physical fade, mechanism or cross-link claim reopens it and requires independent physical validation. Final narrow-scope acceptance requires Reviewer C and Meta-Reviewer adjudication, both pending;
-6. references checked for accuracy/retraction status;
-7. AI disclosure finalized;
-8. final Word/LaTeX and PDF content verified identical.
+1. preserve the current non-AI title and treat the existing A1-vs-B0 comparison as safety/feasibility only; a new AI-utility study is not required for this paper;
+2. complete the structured novelty search in IEEE Xplore and Scopus/Web of Science (or equivalent institutional databases), including backward/forward citation chasing and version/retraction checks;
+3. create the DOI-bearing immutable archive and manuscript tag;
+4. run the full manuscript against IEEE_ASDE_CLAIM_LEDGER.md and the integrated Meta-Reviewer audit;
+5. preserve Reviewer A's boundary: v21/v23 are conditional historical benchmarks; v24 is a prospective calibration design and field-wide Type-I/FWER claims remain prohibited unless v24 or equivalent independent calibration succeeds;
+6. preserve Reviewer B's boundary: bounded operational-telemetry Methods claims only; no natural fade, propagation mechanism, encoded-MCS physical severity, or cross-link transportability claim;
+7. preserve Reviewer C's boundary: bounded hidden-driver attribution, non-AI title, no generic AI-scientist novelty claim;
+8. references checked for accuracy/retraction status;
+9. AI-generated-text disclosure finalized under the then-current IEEE Access policy;
+10. final Word/LaTeX and PDF content verified identical.
+
+### v24 timing decision
+Completion of v24 is **not logically required** for a manuscript whose claims remain restricted to conditional benchmark operating characteristics and explicitly disclaim field-wide calibration. However, the absence of prospective N1 calibration remains the strongest plausible Reviewer-A major-revision vector. If schedule permits, the Meta-Reviewer recommends completing v24 before submission to materially reduce statistical-review risk.
