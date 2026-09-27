@@ -1,0 +1,255 @@
+{
+  "classification": "pre-freeze design-feasibility diagnostic; weather/time only",
+  "source_sha256": "eed7df2621f6952b9ea2eaa7524f735a706b69494d3d272fd2dd828b52a97387",
+  "grid_bins": 3276,
+  "rf_columns_read": false,
+  "d_validation_accessed": false,
+  "constraints": {
+    "edge_margin_min": 120,
+    "sham_refractory_min": 360
+  },
+  "drivers": {
+    "cu01_local_temp_avg_c__rise": {
+      "target_event_count": 23,
+      "hour_histogram_1h": {
+        "1": 1,
+        "5": 1,
+        "6": 3,
+        "7": 4,
+        "8": 2,
+        "11": 1,
+        "13": 5,
+        "14": 2,
+        "15": 2,
+        "16": 1,
+        "17": 1
+      },
+      "hour_histogram_2h": {
+        "0": 1,
+        "2": 1,
+        "3": 7,
+        "4": 2,
+        "5": 1,
+        "6": 5,
+        "7": 4,
+        "8": 2
+      },
+      "designs": {
+        "all_driver_exclusion_1h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "same_driver_exclusion_1h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "no_weather_exclusion_1h": {
+          "feasible": true,
+          "reason": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "selected": 23
+        },
+        "all_driver_exclusion_2h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "same_driver_exclusion_2h": {
+          "feasible": false,
+          "reason": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is At lower/fixed bound)",
+          "selected": 0
+        },
+        "no_weather_exclusion_2h": {
+          "feasible": true,
+          "reason": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "selected": 23
+        }
+      }
+    },
+    "sj01_local_temp_avg_c__fall": {
+      "target_event_count": 28,
+      "hour_histogram_1h": {
+        "2": 2,
+        "4": 1,
+        "8": 1,
+        "9": 4,
+        "10": 2,
+        "11": 2,
+        "13": 1,
+        "14": 1,
+        "15": 4,
+        "17": 5,
+        "22": 1,
+        "23": 4
+      },
+      "hour_histogram_2h": {
+        "1": 2,
+        "2": 1,
+        "4": 5,
+        "5": 4,
+        "6": 1,
+        "7": 5,
+        "8": 5,
+        "11": 5
+      },
+      "designs": {
+        "all_driver_exclusion_1h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "same_driver_exclusion_1h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "no_weather_exclusion_1h": {
+          "feasible": true,
+          "reason": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "selected": 28
+        },
+        "all_driver_exclusion_2h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "same_driver_exclusion_2h": {
+          "feasible": true,
+          "reason": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "selected": 28
+        },
+        "no_weather_exclusion_2h": {
+          "feasible": true,
+          "reason": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "selected": 28
+        }
+      }
+    },
+    "sj01_local_hum_avg_pct__fall": {
+      "target_event_count": 28,
+      "hour_histogram_1h": {
+        "0": 1,
+        "3": 1,
+        "4": 1,
+        "5": 2,
+        "7": 2,
+        "8": 3,
+        "10": 1,
+        "11": 2,
+        "12": 1,
+        "13": 1,
+        "14": 6,
+        "16": 1,
+        "17": 1,
+        "21": 3,
+        "22": 1,
+        "23": 1
+      },
+      "hour_histogram_2h": {
+        "0": 1,
+        "1": 1,
+        "2": 3,
+        "3": 2,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 6,
+        "8": 2,
+        "10": 3,
+        "11": 2
+      },
+      "designs": {
+        "all_driver_exclusion_1h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "same_driver_exclusion_1h": {
+          "feasible": false,
+          "reason": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is At lower/fixed bound)",
+          "selected": 0
+        },
+        "no_weather_exclusion_1h": {
+          "feasible": false,
+          "reason": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is At lower/fixed bound)",
+          "selected": 0
+        },
+        "all_driver_exclusion_2h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "same_driver_exclusion_2h": {
+          "feasible": false,
+          "reason": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is At lower/fixed bound)",
+          "selected": 0
+        },
+        "no_weather_exclusion_2h": {
+          "feasible": true,
+          "reason": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "selected": 28
+        }
+      }
+    },
+    "sj01_local_press_hpa__rise": {
+      "target_event_count": 28,
+      "hour_histogram_1h": {
+        "3": 1,
+        "4": 3,
+        "5": 6,
+        "10": 1,
+        "11": 3,
+        "12": 1,
+        "14": 1,
+        "15": 1,
+        "16": 2,
+        "17": 6,
+        "18": 2,
+        "20": 1
+      },
+      "hour_histogram_2h": {
+        "1": 1,
+        "2": 9,
+        "5": 4,
+        "6": 1,
+        "7": 2,
+        "8": 8,
+        "9": 2,
+        "10": 1
+      },
+      "designs": {
+        "all_driver_exclusion_1h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "same_driver_exclusion_1h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "no_weather_exclusion_1h": {
+          "feasible": true,
+          "reason": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "selected": 28
+        },
+        "all_driver_exclusion_2h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "same_driver_exclusion_2h": {
+          "feasible": false,
+          "reason": "insufficient_stratum_candidates",
+          "selected": 0
+        },
+        "no_weather_exclusion_2h": {
+          "feasible": true,
+          "reason": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "selected": 28
+        }
+      }
+    }
+  }
+}
