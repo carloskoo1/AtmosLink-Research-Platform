@@ -98,3 +98,16 @@ These additions further narrow the admissible novelty statement. The working cla
 - **Plato-Bio**, arXiv:2607.23975; **XScientist**, arXiv:2607.12301; and **LEDGER**, arXiv:2608.18398 further establish verification-first states, publication gates, Git-like provenance, failed-branch retention and claim-to-evidence graphing as active prior art. These are recent preprints and should be labeled as such.
 
 After these collisions, the paper-level contribution is best framed as an empirical Methods study: ASDE instantiates validity-constrained discovery for autocorrelated environmental–RF field telemetry and measures operating characteristics through frozen known-driver and hidden-driver experiments, negative candidate attrition and post-audit stress tests. The generic architecture is not claimed as novel.
+
+### Reviewer C benchmark-collision search — 2026-09-26
+
+Additional comparators surfaced during the novelty/editorial audit:
+
+- Yang Z. et al. **TruthInsightBench: An Evidence-Grounded Benchmark for Automated Evaluation of Open-Ended Scientific Discovery Agents.** arXiv:2609.05079 (2026). The benchmark explicitly distinguishes prescribed/recovery-oriented analysis from open-ended discovery and scores evidentiary maturity including controls, robustness, falsifiability and cross-dataset generalization.
+- Shi C. et al. **Are LLMs Ready for Scientific Discovery? A Capability-Oriented Benchmark for AI Scientists.** arXiv:2607.11079 (2026). SDABench separates descriptive, exploratory, inferential, predictive, causal and mechanistic scientific capabilities across real and synthetic data.
+- Wang Z., Danek B., Sun J. **BioDSA-1K: Benchmarking Data Science Agents for Biomedical Research.** arXiv:2505.16100 (2025). Includes non-verifiable hypotheses where the available data cannot support or refute the claim.
+- Gu K. et al. **BLADE: Benchmarking Language Model Agents for Data-Driven Science.** arXiv:2408.09667 (2024). Evaluates open-ended research questions with multiple valid analysis paths.
+- Sen Gupta J. et al. **Accelerating Social Science Research via Agentic Hypothesization and Experimentation.** arXiv:2602.07983 (2026). Agentic hypothesis generation/experimentation plus expert review is prior art.
+- Ojewale V., Venkatasubramanian S. **What Benchmarks Don't Measure: The Case for Evaluating Abstention Competence in Autonomous Agents.** arXiv:2606.02965 (2026). Establishes abstention as an explicit benchmark concern.
+
+Reviewer-C consequence: ASDE cannot claim novelty from open-ended scientific-agent benchmarking, insufficient-evidence handling, abstention, human expert scoring of AI hypotheses, or evidence-maturity criteria. The strongest remaining contribution is an applied, reproducible Methods evaluation of validity-constrained hypothesis screening on autocorrelated environmental–RF field telemetry.

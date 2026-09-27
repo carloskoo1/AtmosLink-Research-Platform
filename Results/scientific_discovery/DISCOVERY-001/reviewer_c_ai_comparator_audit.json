@@ -1,0 +1,147 @@
+{
+  "experiment_id": "DISCOVERY-001",
+  "audit": "Reviewer C AI comparator expressive-capacity audit",
+  "status": "PASS",
+  "candidate_count": 6,
+  "rows": [
+    {
+      "candidate_id": "RFATM-0001",
+      "B0": {
+        "alternative_explanations": 2,
+        "falsification_tests": 2,
+        "description_chars": 96,
+        "total_serialized_value_chars": 519
+      },
+      "A1": {
+        "alternative_explanations": 3,
+        "falsification_tests": 3,
+        "description_chars": 147,
+        "total_serialized_value_chars": 1289
+      },
+      "B0_sha256": "02198f9597eb7dc54a578236e4bc609f07b99e096ca61bc40c29a3821d9356ae",
+      "A1_sha256": "5584bf2cf5717db4afa92cccd2d176d13622e701574a470216a02a409093a26d"
+    },
+    {
+      "candidate_id": "RFATM-0002",
+      "B0": {
+        "alternative_explanations": 2,
+        "falsification_tests": 2,
+        "description_chars": 109,
+        "total_serialized_value_chars": 466
+      },
+      "A1": {
+        "alternative_explanations": 3,
+        "falsification_tests": 3,
+        "description_chars": 111,
+        "total_serialized_value_chars": 1079
+      },
+      "B0_sha256": "6bc127c9495d3e8ec580bb0cd6c1bb483bdfaa6d699b327043980d06f50f082f",
+      "A1_sha256": "b9a8ac36151b821f3bbb91ac1d30e7d83e45e0373f71f3bbb6a65c3eef59c1bd"
+    },
+    {
+      "candidate_id": "RFATM-0003",
+      "B0": {
+        "alternative_explanations": 2,
+        "falsification_tests": 2,
+        "description_chars": 88,
+        "total_serialized_value_chars": 429
+      },
+      "A1": {
+        "alternative_explanations": 3,
+        "falsification_tests": 3,
+        "description_chars": 151,
+        "total_serialized_value_chars": 1162
+      },
+      "B0_sha256": "64c005b11b3c5e359fa5e35b14c2df2bbd49fd96942de59d652e0035a3f95084",
+      "A1_sha256": "0b609598997d667f36d2747f4a8801c914d563f68a3fccb7d3b414ed3fb6a4d0"
+    },
+    {
+      "candidate_id": "RFATM-0004",
+      "B0": {
+        "alternative_explanations": 2,
+        "falsification_tests": 2,
+        "description_chars": 82,
+        "total_serialized_value_chars": 458
+      },
+      "A1": {
+        "alternative_explanations": 3,
+        "falsification_tests": 3,
+        "description_chars": 157,
+        "total_serialized_value_chars": 1178
+      },
+      "B0_sha256": "f00950196acaaf4e572a0490d692ce193e36685895ecc297661f21c3e4144fff",
+      "A1_sha256": "8be627e9482fed449ba08b15669fabdc5be50ab0e0f81299325160bdcf84fbd7"
+    },
+    {
+      "candidate_id": "RFATM-0005",
+      "B0": {
+        "alternative_explanations": 2,
+        "falsification_tests": 2,
+        "description_chars": 103,
+        "total_serialized_value_chars": 481
+      },
+      "A1": {
+        "alternative_explanations": 3,
+        "falsification_tests": 3,
+        "description_chars": 182,
+        "total_serialized_value_chars": 1243
+      },
+      "B0_sha256": "3607d5ff579653b25dadaea385926e0067852cbe8432dd8073f1db99fe6e049c",
+      "A1_sha256": "04b515661d49f761af11d987ef7ff4c0bde04077cbe506199097038c2937cb31"
+    },
+    {
+      "candidate_id": "RFATM-0006",
+      "B0": {
+        "alternative_explanations": 2,
+        "falsification_tests": 2,
+        "description_chars": 96,
+        "total_serialized_value_chars": 506
+      },
+      "A1": {
+        "alternative_explanations": 3,
+        "falsification_tests": 3,
+        "description_chars": 133,
+        "total_serialized_value_chars": 1158
+      },
+      "B0_sha256": "b2b1a75a46c6a257d076d0c37284bcb52b78d89354f56c334a7d3d240df160c2",
+      "A1_sha256": "d15545a7e9168b27597ab073f688f3da5495162ff02dbc0cdb0d19f5db696cd9"
+    }
+  ],
+  "summary": {
+    "B0": {
+      "mean_alternative_explanations": 2,
+      "min_alternative_explanations": 2,
+      "max_alternative_explanations": 2,
+      "mean_falsification_tests": 2,
+      "min_falsification_tests": 2,
+      "max_falsification_tests": 2,
+      "mean_description_chars": 95.66666666666667,
+      "min_description_chars": 82,
+      "max_description_chars": 109,
+      "mean_total_serialized_value_chars": 476.5,
+      "min_total_serialized_value_chars": 429,
+      "max_total_serialized_value_chars": 519
+    },
+    "A1": {
+      "mean_alternative_explanations": 3,
+      "min_alternative_explanations": 3,
+      "max_alternative_explanations": 3,
+      "mean_falsification_tests": 3,
+      "min_falsification_tests": 3,
+      "max_falsification_tests": 3,
+      "mean_description_chars": 146.83333333333334,
+      "min_description_chars": 111,
+      "max_description_chars": 182,
+      "mean_total_serialized_value_chars": 1184.8333333333333,
+      "min_total_serialized_value_chars": 1079,
+      "max_total_serialized_value_chars": 1289
+    }
+  },
+  "interpretation": {
+    "matched_alternative_slots": false,
+    "matched_test_slots": false,
+    "matched_text_budget": false,
+    "utility_claim_authorized": false,
+    "reason": "B0 and A1 do not have matched expressive opportunity; this audit supports downgrading the current utility comparison to safety/feasibility."
+  }
+}

@@ -1,8 +1,8 @@
 {
   "draft": "docs/IEEE_ASDE_FULL_DRAFT_V1.md",
   "bibliography": "docs/IEEE_ASDE_REFERENCES_WORKING.bib",
-  "used_key_count": 25,
-  "bib_key_count": 25,
+  "used_key_count": 31,
+  "bib_key_count": 31,
   "missing_from_bib": [],
   "unused_bib": [],
   "status": "PASS"

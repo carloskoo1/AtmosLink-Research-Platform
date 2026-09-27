@@ -22,12 +22,14 @@ Novelty is not claimed from a single keyword search. The statements below are pr
 | Physics-aware E-band rainfall sensing (2026) | Improve interpretable rainfall detection using physical constraints | Strong domain modeling, but task is predefined rainfall sensing rather than open-ended pattern discovery with holdout protection |
 | 6G/ISAC weather estimation (EuCNC 2026) | Classify/regress weather from radio measurements | Treats RF as a sensor with labeled outcomes, not as a scientific-discovery process over long operational telemetry |
 
-## Provisional novelty statement
+## Reviewer-C-updated contribution statement
 A defensible working claim is:
 
-> ASDE is an auditable, falsification-oriented scientific-discovery workflow for long-duration environmental–radio telemetry that couples AI-assisted candidate generation to QC-aware feature eligibility, blocked temporal evaluation, strict temporal-direction tests, multiplicity control, pattern ontology, adaptive-analysis accounting, immutable provenance, and an untouched confirmatory holdout.
+> ASDE is an implemented and quantitatively audited workflow for hypothesis screening and falsification in long-duration autocorrelated environmental–radio field telemetry. The contribution lies in the domain-specific experimental instantiation, negative candidate attrition, bounded hidden-driver attribution, failure-mode stress testing, and hash-bound reproducibility record; it is not a new generic AI-scientist architecture.
 
-Do **not** claim that ASDE is the first AI scientist, the first automated hypothesis validator, the first wireless anomaly detector, or the first use of weather/RF data.
+The current manuscript does **not** claim that ASDE is the first AI scientist, automated hypothesis validator, abstention mechanism, validation-gate architecture, scientific-discovery benchmark, provenance framework, wireless agent, anomaly detector, or use of weather/RF data.
+
+The four-driver v21 experiment is a **bounded hidden-driver attribution audit**, not an open-ended scientific-discovery benchmark. The LLM layer is secondary in the current paper because incremental scientific utility has not been established under a fair matched-output comparator.
 
 ## Evidence required before final novelty claim
 1. Documented searches in IEEE Xplore, Scopus/Web of Science or equivalent, arXiv and Google Scholar.
@@ -35,3 +37,13 @@ Do **not** claim that ASDE is the first AI scientist, the first automated hypoth
 3. At least three literature clusters covered: AI scientific discovery, adaptive/statistical inference, and environmental/wireless measurement analytics.
 4. A comparison table of the 10–20 closest methods using fixed criteria rather than narrative similarity.
 5. Any paper that combines agentic hypothesis generation with wireless time-series validation must be examined in full before claiming novelty.
+
+## Additional Reviewer C comparator families
+- TruthInsightBench (2026): open-ended discovery benchmark with hidden conclusions/analysis paths and evidence-maturity scoring.
+- SDABench (2026): separates descriptive, exploratory, inferential, predictive, causal and mechanistic capability.
+- BioDSA-1K (2025): hypothesis validation including non-verifiable/insufficient-evidence cases.
+- BLADE (2024): open-ended scientific data analysis with multiple valid analytical paths.
+- EXPERIGEN (2026): agentic hypothesization/experimentation with expert evaluation.
+- Abstention competence benchmarks (2026): explicitly evaluate whether an agent should refrain from acting.
+
+These works prevent ASDE from using open-ended discovery evaluation, evidence insufficiency, abstention, or human scoring of AI hypotheses as generic novelty claims.

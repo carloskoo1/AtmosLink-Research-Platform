@@ -50,24 +50,28 @@ for rendered,val in expected.items():
     target=pct_half_up(val)
     if rendered!=target:
         errors.append(f"hardcoded expected label {rendered} no longer matches artifact {target}")
-    if rendered not in text:
-        errors.append(f"headline v21 metric missing from draft: {rendered}")
+    decimal=f"{val:.4f}"
+    if rendered not in text and decimal not in text:
+        errors.append(f"headline v21 metric missing from draft: {rendered} / {decimal}")
 
-# Check primary surrogate-null wording and conditional interval in the Abstract.
-if "circular-shift surrogate-null selection rate was 2.0%" not in text:
-    errors.append("v21 surrogate-null selection rate not stated in Abstract")
-if "conditional on this development background and shift scheme" not in text:
-    errors.append("v21 conditional Monte Carlo scope absent from Abstract")
-if "four competing prespecified hypotheses" not in text:
-    errors.append("finite hidden-driver library scope missing from Abstract")
+# Reviewer-C scope: v21 is bounded attribution, not open-ended discovery.
+if "four-driver bounded-attribution" not in text[:8000]:
+    errors.append("finite four-driver bounded-attribution scope missing from Abstract/front matter")
+if "## B. Bounded Hidden-Driver Attribution Audit" not in text:
+    errors.append("v21 Methods heading is not bounded hidden-driver attribution")
+if "## D. Bounded Hidden-Driver Attribution Audit" not in text:
+    errors.append("v21 Results heading is not bounded hidden-driver attribution")
+if re.search(r"(end-to-end|open-ended)\s+(AI-)?discovery benchmark",text,re.I):
+    errors.append("v21/open-ended discovery benchmark overclaim detected")
+if "field-wide error control" not in text[:8000]:
+    errors.append("Abstract/front matter lacks field-wide error-control limitation")
 
 # Known-driver headline values.
 v12=json.loads((ROOT/"Results/scientific_discovery/DISCOVERY-001/v12_audit/v12_summary.json").read_text())
 if abs(v12["familywise_false_positive_rate"]-0.025)>1e-12:
     errors.append("v12 FPR artifact changed")
-for s in ["2.5%","94–100%"]:
-    if s not in text:
-        warnings.append(f"expected Abstract known-driver summary token absent: {s}")
+if "2.5%" not in text and "0.025" not in text:
+    warnings.append("known-driver surrogate-null selection summary absent from draft")
 
 # v23 hidden-driver gate ablation must remain correctly scoped.
 v23dir=ROOT/"Results/scientific_discovery/DISCOVERY-001/v23_hidden_driver_gate_ablation"
@@ -90,9 +94,11 @@ v23audit=json.loads((v23dir/"v23_reconstruction_audit.json").read_text())
 if v23audit.get("m1_m2_m3_selected_sets_identical") is not True:
     errors.append("v23 M1/M2/M3 selected-set identity audit no longer passes")
 
-for token in ["21.7%","1.7%","4,600 paired audit trials"]:
+for token in ["21.7%","1.7%"]:
     if token not in text:
         errors.append(f"headline v23 token missing from draft: {token}")
+if "4,600 paired audit trials" not in text and "4,600 paired trials" not in text:
+    errors.append("headline v23 paired-trial count missing from draft")
 
 if re.search(r"(full|complete)\s+(ASDE\s+)?gate.{0,80}(caused|accounted for).{0,80}(21\.7|1\.7)",text,re.I|re.S):
     errors.append("v23 improvement incorrectly attributed to the full gate")
@@ -107,9 +113,20 @@ if "Wilson intervals quantify simulation variation conditional on one background
 if "analytically isolated" not in text and "analytically embargoed" not in text:
     errors.append("holdout analytical-isolation language missing")
 
-# Natural causality must remain explicitly disclaimed.
-if "does not establish a natural atmospheric causal effect" not in text:
-    errors.append("Abstract natural-causality disclaimer missing")
+# Natural causality / propagation mechanism must remain explicitly disclaimed.
+front=text[:8000].lower()
+if ("natural atmospheric causal effect" not in front
+    and "natural propagation mechanism" not in front
+    and "does not establish causality" not in front):
+    errors.append("Abstract/front matter natural-causality/propagation disclaimer missing")
+
+# Reviewer C: current title is non-AI and current AI claim is safety only.
+if "**ASDE: An Auditable Workflow for Hypothesis Screening in Long-Duration Environmental–Radio Telemetry**" not in text[:4000]:
+    errors.append("Reviewer-C non-AI working title missing")
+if "## Conditional title" in text[:4000]:
+    errors.append("obsolete conditional AI title remains active")
+if "incremental scientific value is not established" not in front:
+    errors.append("Abstract does not state that incremental AI value is unestablished")
 
 # AI incremental utility is still pending.
 for m in re.finditer(r"AI (improves|enhances) scientific reasoning",text,re.I):

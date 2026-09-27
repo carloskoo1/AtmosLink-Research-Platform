@@ -62,3 +62,17 @@ The strongest current claim is not a new primitive algorithm or a new generic ag
 > ASDE is a falsification-oriented, provenance-aware workflow for bounded scientific discovery in autocorrelated environmental–radio telemetry. Its contribution is the operational integration and quantitative evaluation of adaptive-analysis accounting, QC-aware hypothesis eligibility, temporal-direction screening, multiplicity control, scientific pattern states, constrained AI assistance, and protected validation on a real field-measurement background.
 
 The words "first", "novel" and "unique" are not authorized in the final manuscript until the remaining structured searches and citation-chasing are complete.
+
+## Reviewer C benchmark collisions — 2026-09-26
+
+| Work | What it evaluates | Consequence for ASDE |
+|---|---|---|
+| TruthInsightBench (Yang et al., 2026) | Open-ended scientific discovery on 40 blind real-data tasks; source conclusions and analysis paths withheld; evaluates evidence maturity including controls, robustness, falsifiability and cross-dataset generalization | ASDE cannot equate hidden-target recovery with open-ended discovery or claim novelty from evidence-maturity evaluation itself |
+| SDABench (Shi et al., 2026) | Scientific analysis capabilities separated into descriptive, exploratory, inferential, predictive, causal and mechanistic tasks over real and synthetic data | ASDE must distinguish bounded temporal attribution/screening from broader scientific reasoning capability |
+| BioDSA-1K (Wang et al., 2025) | Realistic biomedical hypothesis-validation tasks, including non-verifiable hypotheses where available data are insufficient | Handling insufficient evidence or abstention is not a novel ASDE primitive |
+| BLADE (Gu et al., 2024) | Open-ended data-driven science with multiple valid analytical paths and expert reference analyses | Open-ended scientific data analysis by LM agents is prior art |
+| EXPERIGEN (Sen Gupta et al., 2026) | Agentic hypothesis generation and empirical experimentation with expert review of generated hypotheses | Human/expert evaluation of AI-generated hypotheses is prior art and cannot justify ASDE novelty by itself |
+| Ojewale & Venkatasubramanian (2026) | Abstention competence in autonomous-agent benchmarks | Principled abstention should be treated as a quality criterion, not an ASDE novelty claim |
+
+### Reviewer C novelty boundary
+After these comparators, the quantitative v21 benchmark is best described as a **bounded hidden-driver attribution audit**, not an open-ended discovery benchmark. The manuscript may still describe ASDE as a discovery-oriented workflow if it explicitly defines discovery as the broader adaptive process from candidate generation through falsification and hypothesis screening, rather than claiming that v21 demonstrates open-ended scientific discovery.
