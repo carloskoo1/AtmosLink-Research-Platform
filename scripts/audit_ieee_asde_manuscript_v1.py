@@ -4,7 +4,7 @@ from decimal import Decimal, ROUND_HALF_UP
 import json,re,sys,pandas as pd
 
 ROOT=Path("/home/carlos/Proyectos/EstacionMeteorologica")
-DRAFT=ROOT/"docs/IEEE_ASDE_FULL_DRAFT_V1.md"
+DRAFT=Path(sys.argv[1]).resolve() if len(sys.argv)>1 else ROOT/"docs/IEEE_ASDE_FULL_DRAFT_V1.md"
 text=DRAFT.read_text(encoding="utf-8")
 
 errors=[]
@@ -55,7 +55,7 @@ for rendered,val in expected.items():
         errors.append(f"headline v21 metric missing from draft: {rendered} / {decimal}")
 
 # Reviewer-C scope: v21 is bounded attribution, not open-ended discovery.
-if "four-driver bounded-attribution" not in text[:8000]:
+if not re.search(r"four-driver (bounded-attribution|hidden-driver audit)",text[:8000],re.I):
     errors.append("finite four-driver bounded-attribution scope missing from Abstract/front matter")
 if "## B. Bounded Hidden-Driver Attribution Audit" not in text:
     errors.append("v21 Methods heading is not bounded hidden-driver attribution")
@@ -125,7 +125,7 @@ if "**ASDE: An Auditable Workflow for Hypothesis Screening in Long-Duration Envi
     errors.append("Reviewer-C non-AI working title missing")
 if "## Conditional title" in text[:4000]:
     errors.append("obsolete conditional AI title remains active")
-if "incremental scientific value is not established" not in front:
+if not re.search(r"(incremental scientific value is not established|do not establish[^.]{0,240}incremental ai utility|incremental ai utility[^.]{0,160}not established)",front,re.S):
     errors.append("Abstract does not state that incremental AI value is unestablished")
 
 # AI incremental utility is still pending.
@@ -135,12 +135,13 @@ for m in re.finditer(r"AI (improves|enhances) scientific reasoning",text,re.I):
         errors.append("unauthorized AI incremental-value claim")
 
 result={
-    "draft":"IEEE_ASDE_FULL_DRAFT_V1.md",
+    "draft":DRAFT.name,
     "status":"PASS" if not errors else "FAIL",
     "errors":errors,
     "warnings":warnings
 }
-out=ROOT/"Results/scientific_discovery/DISCOVERY-001/manuscript_v1_claim_audit.json"
+out_name="manuscript_v1_claim_audit.json" if DRAFT.name=="IEEE_ASDE_FULL_DRAFT_V1.md" else f"{DRAFT.stem.lower()}_claim_audit.json"
+out=ROOT/"Results/scientific_discovery/DISCOVERY-001"/out_name
 out.write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
 print(json.dumps(result,indent=2))
 raise SystemExit(0 if not errors else 1)

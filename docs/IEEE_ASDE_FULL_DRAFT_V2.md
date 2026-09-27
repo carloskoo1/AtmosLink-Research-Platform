@@ -75,7 +75,17 @@ Equi-mRNA provides a useful methodological analogy from a different domain: doma
 ## A. AtmosLink Field Platform
 AtmosLink is a rural high-altitude wireless research platform deployed in Cajamarca, Peru. The link connects CU01 at approximately 2,730 m above sea level and SJ01 at approximately 3,650 m above sea level over an approximately 12-km line-of-sight path. The 6 GHz experimental link uses Cambium ePMP 4600C equipment, with CU01 operating as the access-point/master side and SJ01 as the subscriber side.
 
-Local meteorological sensing is available at both sites. The core DISCOVERY-001 variables include CU01 temperature, relative humidity, and pressure; SJ01 temperature, relative humidity, pressure, and wind speed; and RF variables comprising DL/UL RSSI, DL/UL SNR, and DL/UL MCS. External products such as ERA5-Land and NASA POWER are maintained by the broader AtmosLink platform for contextual and reconciliation tasks but are not required for the primary DISCOVERY-001 benchmark described here.
+Local meteorological sensing is available at both sites. The core DISCOVERY-001 variables include CU01 temperature, relative humidity, and pressure; SJ01 temperature, relative humidity, pressure, and wind speed; and RF variables comprising DL/UL RSSI, DL/UL SNR, and DL/UL MCS. External products such as ERA5-Land and NASA POWER are maintained by the broader AtmosLink platform for contextual and reconciliation tasks but are not required for the primary DISCOVERY-001 benchmark described here. Table I summarizes the field platform and analytical role of each component.
+
+**TABLE I**
+**ATMOSLINK FIELD PLATFORM AND PRIMARY ANALYTICAL VARIABLES**
+
+| Component | Role and approximate elevation | Variables used in DISCOVERY-001 |
+|---|---|---|
+| CU01 | Access-point/master site; 2,730 m above sea level | Temperature, relative humidity, pressure; DL/UL RF telemetry |
+| SJ01 | Subscriber site; 3,650 m above sea level | Temperature, relative humidity, pressure, wind speed; DL/UL RF telemetry |
+| 6-GHz link | Approximately 12-km line-of-sight path | RSSI, SNR, and encoded MCS in both directions |
+| Primary cohort | 7000 MHz / 20 MHz configuration | 3,576 complete-core observations partitioned chronologically |
 
 ## B. Primary Cohort and Configuration
 The primary DISCOVERY-001 cohort uses the 7000 MHz / 20 MHz configuration from the integrated 6 GHz campaign export. The registered source file contains 3,576 complete-core observations for this configuration and is identified by SHA-256 in the experiment manifest.
@@ -109,7 +119,11 @@ CANDIDATE -> HUMAN_REVIEWED -> HYPOTHESIS -> FROZEN -> VALIDATING -> CONFIRMED |
 
 An intermediate EVIDENCE_ACCUMULATING state may be used during development when a pattern is directionally persistent but remains too uncertain for hypothesis promotion. Candidate identifiers are immutable, and screened-out candidates remain in the registry.
 
-The state machine is intentionally asymmetric: promotion requires additional evidence, while falsification can occur at any registered screening gate. No language-model output can directly execute a promotion transition.
+The state machine is intentionally asymmetric: promotion requires additional evidence, while falsification can occur at any registered screening gate. No language-model output can directly execute a promotion transition. Fig. 1 shows the separation among candidate formulation, deterministic screening, human freezing, protected validation, and the versioned provenance layer.
+
+![ASDE validity-constrained hypothesis-screening workflow](../Results/scientific_discovery/DISCOVERY-001/manuscript_figures/figure_asde_workflow.png)
+
+**Fig. 1.** ASDE validity-constrained hypothesis-screening workflow. The language-model interface may formulate or critique candidates but cannot calculate evidence, alter thresholds, access protected validation for exploration, or execute scientific-state transitions.
 
 ## B. QC-Aware Feature Eligibility
 A scientific-discovery engine can easily mistake instrumentation artifacts for physical structure. ASDE therefore treats quality-control status as part of the hypothesis space itself. Features can remain eligible as contextual levels while their derivatives are quarantined from candidate generation if rapid changes are known to be unreliable.
@@ -122,6 +136,21 @@ Repeated telemetry rows are not treated as independent scientific evidence. ASDE
 Atmospheric transitions are derived from short-window changes in meteorological variables, while RF response is represented through robust standardized combinations of DL/UL RSSI, SNR, and MCS. Depending on the experiment version, the engine studies absolute degradation state, transition into degradation, or sharp quality drop.
 
 The composite RF quality score is an operational telemetry surrogate, not a calibrated measurement of path attenuation, availability, or throughput. The export's MCS fields contain integer 1xx/2xx codes whose vendor mapping has not yet been independently verified. Temporal claims are directional. If an atmospheric event is proposed as a precursor, ASDE compares RF events before and after that event. Block-level enrichment alone is insufficient.
+
+For atmospheric event $i$ at time $t_i$ and analysis horizon $h$, let $A_i^-$ indicate at least one RF event in $[t_i-h,t_i)$ and $A_i^+$ indicate at least one RF event in $(t_i,t_i+h]$. The discordant counts are
+
+$$
+n_{+}=\sum_i A_i^+(1-A_i^-), \qquad
+n_{-}=\sum_i A_i^-(1-A_i^+),
+$$
+
+with $n_d=n_{+}+n_{-}$. Conditional on the registered symmetry null, the one-sided directional p-value is
+
+$$
+p_h=\Pr\{X\ge n_{+}\}, \qquad X\sim\mathrm{Binomial}(n_d,0.5).
+$$
+
+For the four-driver hidden-driver library and three horizons, the corrected per-test threshold is $\alpha^\star=0.05/(4\times3)$. The complete M3 rule selects a driver if at least one horizon satisfies $p_h<\alpha^\star$, $n_d\ge8$, and $n_{+,f}>n_{-,f}$ in at least three of four contiguous temporal folds. These conditions define the implemented decision rule; they do not establish conditional symmetry or independence for every field regime.
 
 ## D. Pattern Ontology
 ASDE separates four scientific interpretations:
@@ -160,7 +189,10 @@ The final library was selected using atmospheric data only. Candidate driver eve
 - SJ01 relative-humidity fall;
 - SJ01 pressure rise.
 
-The final event counts are 23, 28, 28, and 28, respectively. Because inference is event-based rather than row-based, these counts are more relevant than the 2,860 development rows for understanding effective support. Their distribution across the four contiguous development folds is:
+The final event counts are 23, 28, 28, and 28, respectively. Because inference is event-based rather than row-based, these counts are more relevant than the 2,860 development rows for understanding effective support. Their distribution across the four contiguous development folds is given in Table II.
+
+**TABLE II**
+**EVENT SUPPORT FOR THE FROZEN HIDDEN-DRIVER LIBRARY**
 
 | Frozen driver | Total events | Fold 1 | Fold 2 | Fold 3 | Fold 4 |
 |---|---:|---:|---:|---:|---:|
@@ -211,7 +243,10 @@ Hard safety endpoints are checked automatically. A blinded utility comparison wa
 # VI. Results
 
 ## A. Natural-Data Candidate Attrition
-DISCOVERY-001 generated multiple apparently plausible atmospheric–RF relationships during adaptive development. None reached the frozen-hypothesis state.
+DISCOVERY-001 generated multiple apparently plausible atmospheric–RF relationships during adaptive development. None reached the frozen-hypothesis state (Table III).
+
+**TABLE III**
+**NATURAL-DATA CANDIDATE ATTRITION BEFORE PROTECTED VALIDATION**
 
 | Candidate | Exploratory pattern | Final development decision |
 |---|---|---|
@@ -227,7 +262,10 @@ This attrition is a central result of the methodology. Several candidates looked
 An additional humidity-variability association, CTX-0001, was retained only as an exploratory context signal. Later outcome-definition sensitivity showed that the association appeared under the all-metric, analog-oriented, and UL-oriented event definitions but not under a DL-only event definition. It is therefore not presented as a robust precursor or validated marker.
 
 ## B. Known-Driver Screening Audit
-Under the frozen known-driver benchmark, the full ASDE screening gate selected a driver in 0.025 of 1000 registered circular-shift surrogate trials, with a conditional Wilson 95% Monte Carlo interval [0.0170, 0.0366]. This interval does not incorporate uncertainty about new physical periods, links, or the validity of the shift null.
+Under the frozen known-driver benchmark, the full ASDE screening gate selected a driver in 0.025 of 1000 registered circular-shift surrogate trials, with a conditional Wilson 95% Monte Carlo interval [0.0170, 0.0366]. This interval does not incorporate uncertainty about new physical periods, links, or the validity of the shift null. Table IV and Fig. 2 summarize recovery across the registered perturbation family.
+
+**TABLE IV**
+**KNOWN-DRIVER FAMILY-WISE RECOVERY RATE**
 
 | Injected effect | Lag 15 min | Lag 30 min | Lag 60 min |
 |---|---:|---:|---:|
@@ -236,6 +274,10 @@ Under the frozen known-driver benchmark, the full ASDE screening gate selected a
 | 1.5 robust SD | 1.00 | 1.00 | 0.97 |
 | 2.0 robust SD | 1.00 | 1.00 | 0.97 |
 
+![Known-driver family-wise recovery](../Results/scientific_discovery/DISCOVERY-001/v12_audit/figure_familywise_recovery.png)
+
+**Fig. 2.** Known-driver family-wise recovery across injected effect magnitude and lag. Error bars are conditional Wilson 95% Monte Carlo intervals on the fixed development background.
+
 Thus, within the registered joint RF perturbation family, recovery was high at short and intermediate lags and lower at the longest registered lag; this statement is restricted to the frozen perturbation family and benchmark design.
 
 An earlier safeguard ablation showed a lower circular-shift surrogate-null selection rate for the complete frozen gate than for a naive uncorrected rule on the same audit-grade trials: 0.025 versus 0.079. This earlier comparison did not identify the contribution of each safeguard; the later nested v23 ablation attributes its observed selection difference to Bonferroni correction.
@@ -243,7 +285,10 @@ An earlier safeguard ablation showed a lower circular-shift surrogate-null selec
 ## C. Morphology Stress Test
 The strong known-driver result is not morphology-invariant. A post-audit exploratory stress test challenged the detector with perturbations outside the registered joint abrupt family.
 
-At 1.0 robust SD per affected metric:
+At 1.0 robust SD per affected metric, Table V shows the recovery envelope.
+
+**TABLE V**
+**POST-AUDIT MORPHOLOGY-STRESS RECOVERY AT 1.0 ROBUST SD**
 
 | Morphology | 15 min | 30 min | 60 min |
 |---|---:|---:|---:|
@@ -258,7 +303,10 @@ The composite detector has an operating envelope under these mathematical pertur
 
 An exploratory multi-view extension attempted to address this weakness by testing global, RSSI, SNR, and MCS views under multiplicity correction across views and horizons. The empirical null detection rate remained low (0.024 over the registered exploratory null shifts), but recovery improved inconsistently: SNR-only perturbations improved at short lags, while some long-lag RSSI/SNR conditions collapsed and MCS-only recovery remained limited. The multi-view extension was therefore not adopted as the primary detector.
 
-A separately frozen **post-audit** RF stress test (v25) removed the fractional-MCS injection from a new experiment while leaving v12/v21/v23 intact. It applied a 2-dB reduction to RSSI and SNR for 15 min in both directions or in DL/UL alone, held encoded MCS at observed values, and recalibrated three outcome definitions on the same development background. Exact-driver selection over 400 conditional trials per cell was:
+A separately frozen **post-audit** RF stress test (v25) removed the fractional-MCS injection from a new experiment while leaving v12/v21/v23 intact. It applied a 2-dB reduction to RSSI and SNR for 15 min in both directions or in DL/UL alone, held encoded MCS at observed values, and recalibrated three outcome definitions on the same development background. Exact-driver selection over 400 conditional trials per cell is reported in Table VI.
+
+**TABLE VI**
+**EXACT-DRIVER SELECTION UNDER THE FROZEN 2-dB ANALOG RF STRESS**
 
 | Injected direction / outcome | 15 min | 30 min | 60 min |
 |---|---:|---:|---:|
@@ -273,7 +321,10 @@ The opposite-direction detector selected the planted driver in none of its condi
 A further post-audit decomposition of the original six-field event detector found 158 RF events on the development grid. Thirty-six had a three-bin change of at least 90 in an encoded DL/UL MCS field; the MCS term dominated the analog RSSI/SNR terms in each of those 36 events. In 17, the combined analog term was nonnegative, and 22 lacked an analog-only RF event within ±15 min. These are not necessarily false radio events: a change of code family may reflect a real adaptation. They show that the original composite event definition depends materially on treating the unverified MCS code as an interval-valued measurement. The analog-only sensitivity results therefore complement the historical all-six benchmark rather than validating its physical semantics.
 
 ### Post-audit measured-goodput corroboration
-The source throughput export had 570 tests in the later 6475/20 episode; two ERROR tests were excluded, leaving 284 per direction. The registered eight-second TCP/route/power/RF-alignment rules excluded no further later-episode tests. In development, the same rules retained 960 DL and 957 UL tests after excluding failed and longer-duration tests. The later interval was September 21–24, 2026 UTC, separate from the 7000/20 development interval of September 2–13. These tests are on the same physical link under a changed frequency, not a new site or link.
+The source throughput export had 570 tests in the later 6475/20 episode; two ERROR tests were excluded, leaving 284 per direction. The registered eight-second TCP/route/power/RF-alignment rules excluded no further later-episode tests. In development, the same rules retained 960 DL and 957 UL tests after excluding failed and longer-duration tests. The later interval was September 21–24, 2026 UTC, separate from the 7000/20 development interval of September 2–13. These tests are on the same physical link under a changed frequency, not a new site or link. Table VII reports the prespecified descriptive endpoints.
+
+**TABLE VII**
+**ANALOG RF-SCORE ASSOCIATION WITH MEASURED TCP GOODPUT**
 
 | Episode and direction | Eligible tests | Spearman analog-score/goodput ρ | Bottom-score median Mbps | Top-score median Mbps |
 |---|---:|---:|---:|---:|
@@ -287,7 +338,10 @@ The prespecified sign/difference consistency rule was met in both directions and
 ## D. Bounded Hidden-Driver Attribution Audit
 The hidden-driver audit is more demanding because the search procedure must choose among competing atmospheric hypotheses. Under 1000 joint circular-shift surrogate trials on the fixed development background, the four-driver library produced a library-wide selection rate of 0.020, with a conditional Wilson 95% Monte Carlo interval [0.0130, 0.0307].
 
-The primary recovery results are shown below.
+The primary recovery results are shown in Table VIII and, for the registered 1.0-SD condition, in Fig. 3.
+
+**TABLE VIII**
+**BOUNDED HIDDEN-DRIVER ATTRIBUTION PERFORMANCE**
 
 | Effect | Lag | Exact driver selected | Unique top-1 correct |
 |---:|---:|---:|---:|
@@ -301,6 +355,10 @@ The primary recovery results are shown below.
 | 1.5 SD | 30 min | 0.9100 | 0.9700 |
 | 1.5 SD | 60 min | 0.2825 | 0.8075 |
 
+![Hidden-driver exact selection and unique top-1 ranking](../Results/scientific_discovery/DISCOVERY-001/v21_end_to_end_audit/figure_hidden_driver_recovery_1sd.png)
+
+**Fig. 3.** Hidden-driver exact selection and unique top-1 ranking at the registered 1.0-SD mathematical telemetry shift. Error bars are conditional Wilson 95% Monte Carlo intervals.
+
 No distractor co-selection was observed in the aggregate injected cells. For an observed 0/400 distractor rate within an effect-lag cell, the conditional Wilson upper 95% Monte Carlo bound is approximately 0.0095; repeated trials share the same physical background and event sets, so this is not a bound on independent field episodes. Co-selection was absent in the registered audit, not impossible.
 
 The difference between exact selection and top-1 ranking is scientifically informative. For example, under the registered 1.0-SD / 60-min condition, the true driver was the unique top-ranked candidate in 59.5% of trials but crossed the full promotion gate in only 21.25%. ASDE therefore often identified the most plausible candidate without treating that ranking as sufficient evidence for promotion.
@@ -312,7 +370,10 @@ The v23 audit compared the four nested selectors under new reserved seeds while 
 
 Under 1000 circular-shift surrogate trials on the same development background, the library-wide selection rate was 0.217 for M0 and 0.017 for M1, M2, and M3. An exhaustive post-audit diagnostic over all 3,132 offsets allowed by the v23 shift rule found rates of 649/3,132 (0.2072) for M0 and 50/3,132 (0.0160) for each of M1–M3, with no M1–M3 selection differences. This diagnostic checks Monte Carlo stability within the specified shift orbit; it does not validate the shift null for nonstationary field data. Thus, the observed null-control improvement occurred when family-wise multiplicity correction was introduced.
 
-For the registered 1.0 robust-SD perturbation, the more informative endpoint is exclusive truth selection because uncorrected testing frequently selected the true driver together with one or more distractors:
+For the registered 1.0 robust-SD perturbation, the more informative endpoint is exclusive truth selection because uncorrected testing frequently selected the true driver together with one or more distractors (Table IX). Fig. 4 shows the corresponding shift-null selection rates.
+
+**TABLE IX**
+**NESTED HIDDEN-DRIVER GATE ABLATION**
 
 | Selector | Shift-null selection rate | Exclusive truth, 15 min | Exclusive truth, 30 min | Exclusive truth, 60 min | Distractor co-selection, 15/30/60 min |
 |---|---:|---:|---:|---:|---:|
@@ -320,6 +381,10 @@ For the registered 1.0 robust-SD perturbation, the more informative endpoint is 
 | M1: Bonferroni | 0.017 | 0.8500 | 0.8175 | 0.2100 | 0 / 0 / 0 |
 | M2: M1 + support | 0.017 | 0.8500 | 0.8175 | 0.2100 | 0 / 0 / 0 |
 | M3: M2 + fold direction | 0.017 | 0.8500 | 0.8175 | 0.2100 | 0 / 0 / 0 |
+
+![Library-wide shift-null selection under nested gates](../Results/scientific_discovery/DISCOVERY-001/v23_hidden_driver_gate_ablation/figure_v23_null_fwer.png)
+
+**Fig. 4.** Library-wide circular-shift surrogate-null selection under nested gates. M1–M3 are identical in all registered v23 null trials; the dashed line marks 0.05 as a visual reference, not a demonstrated field-wide error guarantee.
 
 M0 retained high raw truth-detection rates at 1.0 SD, but that apparent sensitivity was frequently accompanied by distractor selection. M1 converted much of this behavior into either exclusive correct selection or abstention. At 15 and 30 min, exclusive truth selection increased from 42.5% to 85.0% and from 24.0% to 81.75%, respectively; at 60 min it increased from 9.25% to 21.0%.
 
@@ -330,7 +395,10 @@ The M3 results also remained consistent with the earlier v21 audit under new sim
 A further **post-audit** observability diagnostic identified a methodological sensitivity. The three-bin RF-drop difference was calculable in 2,753/3,276 grid bins. Requiring all detector-difference bins to be observed on both sides of each atmospheric event retained only 3–21 of the original 23–28 driver events per driver/horizon; 11/12 natural-background driver–horizon cells then had fewer than eight discordant events. M1/M3 surrogate selections over the historical 3,132 circular offsets changed from 50 to 4 offsets under this strict eligibility rule, with only two selected offsets shared. The reduction coincides with substantial loss of effective event support and cannot be interpreted as better Type-I control. A separately frozen paired-offset rule retained 20–28 driver events per driver/horizon, and M1/M3 selected at 47/3,132 historical shifts versus 50/3,132 originally; only 22 offsets were selected by both rules. Reused-seed 1.0-unit planted-truth selection fell from 0.850/0.8175/0.210 to 0.8075/0.745/0.095 at 15/30/60 min. This restores much of the observation support while revealing a power cost, especially at longer lag. Neither post-audit rule is independently calibrated as a field null or replaces v23.
 
 ## F. Driver-Specific Heterogeneity and Background Hardness
-Aggregate end-to-end recovery conceals substantial driver heterogeneity. At 1.0 robust SD, exact-driver selection by truth driver was:
+Aggregate end-to-end recovery conceals substantial driver heterogeneity. At 1.0 robust SD, exact-driver selection by truth driver is reported in Table X and visualized in Fig. 5.
+
+**TABLE X**
+**EXACT-DRIVER SELECTION BY HIDDEN-TRUTH DRIVER AT 1.0 ROBUST SD**
 
 | Hidden truth driver | 15 min | 30 min | 60 min |
 |---|---:|---:|---:|
@@ -338,6 +406,10 @@ Aggregate end-to-end recovery conceals substantial driver heterogeneity. At 1.0 
 | SJ01 temperature fall | 1.00 | 0.99 | 0.25 |
 | SJ01 humidity fall | 0.99 | 0.98 | 0.07 |
 | SJ01 pressure rise | 0.42 | 0.19 | 0.07 |
+
+![Driver-specific exact selection at 1.0 robust SD](../Results/scientific_discovery/DISCOVERY-001/v21_end_to_end_audit/figure_hidden_driver_per_driver_1sd.png)
+
+**Fig. 5.** Driver-specific exact selection at 1.0 robust SD. Heterogeneity reflects the joint influence of the planted perturbation, detector, selection rule, and structured RF background.
 
 A post-audit diagnostic showed that this heterogeneity is partly attributable to the unmodified real RF background around each atmospheric event family. Before any synthetic injection, CU01 temperature-rise events already exhibited a favorable post-versus-pre RF asymmetry within the short response horizon, whereas SJ01 pressure-rise events exhibited an adverse pre/post asymmetry. The benchmark therefore measures detection on a realistic structured background rather than homogeneous abstract noise.
 
@@ -423,20 +495,30 @@ Fifth, the primary RF outcome is a composite of RSSI, SNR, and encoded MCS. Its 
 
 Sixth, the 1,000 circular-shift trials sample a finite orbit of 3,132 admissible offsets on a 3,276-bin development grid with 418 bins missing at least one required variable. The post-audit exhaustive orbit check confirms the Monte Carlo estimate within this scheme but cannot establish stationarity, exchangeability, or valid binomial event-level p-values. A further observability diagnostic found incomplete or asymmetric RF ascertainment around many driver events; strict complete-window eligibility changed orbit selections while leaving too few discordant events in most original natural driver/horizon cells. A paired-offset sensitivity retains event support but changes individual shift-orbit decisions and weakens 60-min recovery. Thus event support, missingness policy and directional-test calibration remain coupled unresolved issues. Wilson intervals quantify simulation variation conditional on one background, not physical-sampling uncertainty. Null families based on independently adjudicated stable field episodes and dependence-aware surrogates are needed before asserting general Type-I error control; they must be specified without tuning to these results.
 
-Seventh, D_validation remains analytically embargoed from scientific analysis and candidate evaluation because no natural candidate met the freeze gate. This preserves the registered protection against post-selection bias but means that the present paper does not report an independently confirmed natural atmospheric–RF hypothesis.
+Seventh, the prospective v24 N1 calibration has not been completed. Accordingly, the manuscript reports conditional historical operating characteristics only and makes no claim of field-wide Type-I error or family-wise error control. Completing v24 or an equivalent independently specified calibration would materially strengthen the statistical evidence but is not used as a premise for the bounded Methods conclusions reported here.
 
-Eighth, one registered alternate configuration (6475/20) was used for a prospectively specified post-audit functional corroboration on the same link. This is not a new-link replication, a natural weather-hypothesis confirmation, or validation of the six-field encoded-MCS benchmark. Other configuration cohorts and cross-link replication remain future tests of generality.
+Eighth, D_validation remains analytically embargoed from scientific analysis and candidate evaluation because no natural candidate met the freeze gate. This preserves the registered protection against post-selection bias but means that the present paper does not report an independently confirmed natural atmospheric–RF hypothesis.
 
-Ninth, the constrained-AI pilot supports only a safety/feasibility claim in the current manuscript. Although automated safety checks passed, the A1-vs-B0 utility comparison has unequal output opportunity and is not sufficient for title-level AI attribution. A stronger utility claim would require a new matched-budget prospective comparison.
+Ninth, one registered alternate configuration (6475/20) was used for a prospectively specified post-audit functional corroboration on the same link. This is not a new-link replication, a natural weather-hypothesis confirmation, or validation of the six-field encoded-MCS benchmark. Other configuration cohorts and cross-link replication remain future tests of generality.
 
-Tenth, the v23 gate ablation found no incremental selection difference among M1, M2, and M3. Therefore, the current benchmark does not establish that minimum-support or fold-direction gates are necessary once multiplicity correction is applied. Their continued inclusion should be justified by natural-data validity concerns or by future benchmarks that demonstrate incremental benefit.
+Tenth, the constrained-AI pilot supports only a safety/feasibility claim in the current manuscript. Although automated safety checks passed, the A1-vs-B0 utility comparison has unequal output opportunity and is not sufficient for title-level AI attribution. A stronger utility claim would require a new matched-budget prospective comparison.
+
+Eleventh, the v23 gate ablation found no incremental selection difference among M1, M2, and M3. Therefore, the current benchmark does not establish that minimum-support or fold-direction gates are necessary once multiplicity correction is applied. Their continued inclusion should be justified by natural-data validity concerns or by future benchmarks that demonstrate incremental benefit.
 
 # IX. Conclusion
 ASDE addresses a methodological problem that becomes more important as automated systems make scientific candidate generation cheaper: plausible patterns can be generated faster than they can be screened rigorously. The workflow therefore treats candidate generation, falsification, bounded attribution, and hypothesis promotion as distinct operations rather than collapsing them into a ranking problem.
 
 On a real rural high-altitude 6 GHz measurement background, six natural atmospheric–RF candidates were screened out before confirmatory validation. A known-driver audit quantified the behavior of the statistical gate, while a bounded hidden-driver attribution audit quantified recovery when the generating atmospheric hypothesis was concealed within a competing finite library. A separately frozen gate ablation showed that multiplicity correction accounted for the observed reduction in hidden-driver false selection, while the additional support and fold-direction gates made no further decisions in that benchmark. The results therefore show both useful recovery and substantial limits, including longer-lag sensitivity loss, structured-background effects, and gate components whose incremental value remains unproven in the audited finite library.
 
-The central methodological lesson is that an auditable hypothesis-screening workflow should make candidate generation inexpensive but promotion evidentially demanding. A constrained language model may assist formulation and criticism, but the present results do not require or establish incremental AI utility. Scientific status remains tied to deterministic evidence, explicit multiplicity and temporal controls, protected validation data, reproducible provenance, and human scientific responsibility.
+The central methodological lesson is that an auditable hypothesis-screening workflow should make candidate generation inexpensive but promotion evidentially demanding. A constrained language model may assist formulation and criticism, but the present results do not require or establish incremental AI utility. Scientific status remains tied to deterministic evidence, explicit multiplicity and temporal controls, protected validation data, reproducible provenance, and human scientific responsibility. The next evidential steps are prospective N1 calibration under the frozen v24 design, evaluation on independently adjudicated field episodes, and cross-link replication.
+
+# Data and Code Availability
+The version-controlled research package contains the frozen protocols, source-snapshot hashes, audit scripts, raw Monte Carlo trial tables, figure-generation scripts, claim checks, and reconstruction tools used for the reported benchmark results. A DOI-bearing immutable archive and manuscript-matched release tag will be created before submission. The analytically protected D_validation block was not used as evidence in this study and is not included as a reported result. Any restrictions on releasing operational field telemetry will be stated explicitly in the archived data-access record.
+
+# Acknowledgment and Generative-AI Disclosure
+Generative AI systems, including OpenAI ChatGPT, were used for code assistance, structured scientific criticism, candidate-interpretation drafting, literature-search support, and language/manuscript editing across the article. AI-generated suggestions did not determine statistical thresholds, alter protected-data boundaries, promote scientific candidates, or replace author review. All analyses, numerical results, citations, code changes, and manuscript claims included in the article were reviewed and accepted by the human authors. The exact disclosure wording and model citations will be rechecked against the IEEE Access policy in force at submission.
+
+> **Submission metadata still requiring author confirmation:** funding statement, conflict-of-interest declaration, final CRediT contributor roles, DOI/archive identifier, and the completed structured novelty search with version/retraction checks.
 
 # Working Reference Key Map
 The citation keys in Draft v2 are placeholders tied to verified sources. They will be converted to IEEE numbered references only after bibliographic metadata are independently checked.
