@@ -3,7 +3,7 @@ from pathlib import Path
 import re, sys
 
 ROOT=Path("/home/carlos/Proyectos/EstacionMeteorologica")
-DRAFT=ROOT/"docs/IEEE_ASDE_FULL_DRAFT_V0.md"
+DRAFT=Path(sys.argv[1]).resolve() if len(sys.argv)>1 else ROOT/"docs/IEEE_ASDE_FULL_DRAFT_V0.md"
 BIB=ROOT/"docs/IEEE_ASDE_REFERENCES_WORKING.bib"
 
 draft=DRAFT.read_text()
