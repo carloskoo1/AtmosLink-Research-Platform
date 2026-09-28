@@ -226,3 +226,24 @@ in the observed window. It does not prove Missing Completely At Random,
 does not cover unrepresented 3x2 scenarios, and does not resolve the
 physical root cause. FF64 observations remain ineligible for scientific
 reconstruction.
+
+
+---
+
+### 16. CP2102 USB packet-size observation
+
+A read-only USB descriptor inspection on SJ01 identified the production
+CP2102 bulk endpoints as:
+
+- endpoint `0x81`: EP 1 IN;
+- endpoint `0x01`: EP 1 OUT;
+- `wMaxPacketSize = 0x0040 = 64 bytes` for both endpoints.
+
+The exact FF64 prefix length therefore equals the CP2102 USB bulk endpoint
+maximum packet size.
+
+This alignment is technically significant as a localization clue, but is
+not causal proof. A 64-byte FF block could still be generated upstream or
+through another mechanism. The observation strengthens the value of the
+planned passive ESP32-TX capture because that experiment samples the signal
+before the CP2102/USB packetization boundary.

@@ -153,3 +153,11 @@ causal direction, unless required for site safety or loss of service.
 The experiment is successful when at least one production FF64 minute has
 a simultaneous passive-TX classification sufficient to distinguish Case A
 from Case B, preferably with multiple repeated coincidences.
+
+
+### Additional localization clue
+
+Read-only `lsusb -v` inspection of the production CP2102 shows bulk IN and
+OUT endpoints with `wMaxPacketSize = 64 bytes`. This is exactly the length
+of the observed FF prefix. Treat this as a structural clue only, not as
+proof that the CP2102 or USB layer is the source.
