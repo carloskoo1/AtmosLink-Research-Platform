@@ -677,3 +677,48 @@ B. buffered frame becomes valid or the phase changes:
 The serial descriptor will remain open throughout. No DTR/RTS transition,
 service restart, firmware reset, USB rebind or database modification is
 planned.
+
+
+---
+
+### 24. No-reopen susceptible-phase pause result
+
+The running logger process (PID 203614) was suspended with SIGSTOP at
+20:12:56, approximately two seconds before the predicted susceptible
+20:12:58 emission. The serial file descriptor remained open; no service
+restart, DTR/RTS transition, USB rebind, or ESP32 reset occurred.
+
+The process was resumed with SIGCONT at 20:13:16.
+
+Immediately on resume, the frame that had arrived while user-space Python
+was stopped was read and classified as FF64:
+
+- 64 leading `0xFF` bytes;
+- intact structured suffix;
+- CRLF preserved.
+
+The next normal emission at 20:13:59 was valid with `t_s=542`, confirming
+that the ESP32 emission sequence remained continuous across the pause.
+
+This demonstrates that FF64 does not require the Python process to be
+actively calling `readline()` at the instant of transmission. The
+corrupted byte sequence was already present in the lower acquisition path
+while user-space execution was stopped.
+
+This materially weakens user-space read timing, Python parser behavior, and
+application scheduling as causal candidates.
+
+### 25. Pre-registered safe-phase pause control
+
+A matched control will suspend the same already-running logger process
+across one predicted safe-phase emission for approximately 20 seconds,
+again without closing the serial descriptor.
+
+Expected control result:
+
+- buffered safe-phase emission remains a valid 17-field frame after
+  SIGCONT.
+
+If observed, this will show that SIGSTOP/SIGCONT itself does not generate
+FF64 and that the effect remains phase-specific while the user-space reader
+is paused.
