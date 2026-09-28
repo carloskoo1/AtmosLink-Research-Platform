@@ -553,3 +553,49 @@ RF experiments:
 For hourly-scale analyses, retained SJ01 sampling remains dense. For
 minute-scale or transient analyses, the explicit FF64/missing-slot QC mask
 must be preserved.
+
+
+---
+
+### 21. Pre-registered remote phase-perturbation experiment
+
+A minimal controlled intervention is authorized to discriminate between
+reader/host phase state and an upstream emission/transport phase without
+changing RF configuration, firmware, SQLite contents, or station wiring.
+
+Intervention:
+
+- restart only `weather-logger-sj01.service`;
+- execute immediately after a known phase-A valid emission;
+- leave ESP32 power, USB topology, radio, watchdog and synchronization
+  services unchanged.
+
+Pre-intervention safeguards:
+
+- the on-disk logger file has modification time 12 Sep 2026;
+- the currently running logger process started 19 Sep 2026;
+- therefore a logger restart reloads the same already-running diagnostic
+  code, not a newer untested file;
+- the service currently uses strict UTF-8 rejection and preserves FF64
+  evidence in the journal.
+
+Primary outcomes:
+
+A. `t_s` remains continuous and the susceptible A/B phase remains tied to
+   the same ESP32 emission phase:
+   supports an origin upstream of logger process state.
+
+B. `t_s` remains continuous but the susceptible A/B phase flips or
+   reinitializes relative to the emission sequence:
+   supports a host-reader/CP2102-open-state mechanism.
+
+C. `t_s` resets:
+   opening/restarting the serial path caused an ESP32 reset; the post-reset
+   phase relationship must then be analyzed separately.
+
+D. FF64 disappears for a sustained observation window:
+   the restart itself altered the fault state; this becomes a causal clue
+   but does not establish a component without further perturbation.
+
+No historical records will be reconstructed. Any acquisition gap caused by
+the controlled restart will remain explicitly visible in QC.
