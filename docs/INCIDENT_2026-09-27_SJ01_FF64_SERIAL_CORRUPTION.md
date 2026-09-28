@@ -439,3 +439,117 @@ merely being replaced one-for-one.
 
 Root cause therefore remains open, but the search space is substantially
 narrower than before.
+
+
+---
+
+### 19. Historical reconstruction from SJ01 SQLite
+
+Because retained systemd journal evidence begins only on 21 September, the
+local SJ01 SQLite history was analyzed read-only to determine whether the
+60/120-second acquisition signature predates the current journal and the
+3x2 campaign.
+
+The database currently spans:
+
+- first row: `2026-08-04T04:23:59-05:00`;
+- latest row at analysis time: `2026-09-27T19:51:30-05:00`;
+- total rows: 45,968.
+
+The accepted-observation cadence already contained 120-second intervals on
+4 August. On that first day, among the principal interval classes there
+were 470 intervals of 60/61 s and 219 intervals of 120/121 s, plus 71
+longer gaps.
+
+From 17 August the cadence became markedly cleaner and strongly dominated
+by 60/120-second intervals. Examples:
+
+- 17 Aug: 426 intervals of 60/61 s, 507 of 120/121 s, no >=180 s gaps;
+- 18 Aug: 466 of 60/61 s, 487 of 120/121 s, no >=180 s gaps;
+- 19 Aug: 468 of 60/61 s, 486 of 120/121 s, no >=180 s gaps;
+- 31 Aug: 192 of 60/61 s, 192 of 120/121 s, no >=180 s gaps;
+- 1 Sep: 462 of 60/61 s, 489 of 120/121 s, no >=180 s gaps;
+- 2 Sep: 462 of 60/61 s, 489 of 120/121 s, no >=180 s gaps.
+
+Therefore the later FF64-associated 60/120-second missing-slot signature
+clearly predates the retained September journal and predates the active
+3x2 RF scenario sequence.
+
+#### 19.1 Reconstructed alternating phase before retained FF64 logs
+
+Continuous SQLite segments were reconstructed from `t_s` using nominal
+60-second emission slots. For long stable segments, inferred missing slots
+were overwhelmingly confined to one alternating phase.
+
+Examples:
+
+- 17 Aug 00:01 to 22 Aug 09:57:
+  - phase A missing slots: 0;
+  - phase B missing slots: 2,687.
+- 31 Aug 14:22 to 3 Sep 14:38:
+  - phase A missing slots: 0;
+  - phase B missing slots: 1,464.
+- 4 Sep 16:44 to 11 Sep 23:14:
+  - phase A missing slots: 1;
+  - phase B missing slots: 3,503.
+- 12 Sep 11:16 to 19 Sep 13:36:
+  - phase A missing slots: 0;
+  - phase B missing slots: 3,464.
+
+Across usable reconstructed segments from 17 August onward, 93.55% of
+inferred missing nominal slots fell in the dominant phase. The residual
+opposite-phase losses are concentrated in periods containing larger
+operational gaps and restarts; they are not evidence that the later FF64
+signature itself occurs on both phases.
+
+This historical reconstruction strongly supports that the current
+two-phase acquisition defect is longstanding and is not a consequence of
+the September 3x2 RF configuration changes.
+
+#### 19.2 16 August operational transition
+
+The SJ01 freshness-watchdog files show filesystem creation/modification at
+approximately 14:02 local time on 16 August.
+
+SQLite cadence around that transition was:
+
+- before 14:02:
+  - 365 intervals of 60/61 s;
+  - 95 intervals of 120/121 s;
+  - 73 intervals >=180 s;
+  - 120/121 fraction among the two principal classes: 20.65%.
+- after 14:02 through end of 16 Aug:
+  - 192 intervals of 60/61 s;
+  - 182 intervals of 120/121 s;
+  - 10 intervals >=180 s;
+  - 120/121 fraction: 48.66%.
+- 17 Aug:
+  - 426 intervals of 60/61 s;
+  - 507 intervals of 120/121 s;
+  - zero intervals >=180 s.
+
+An ESP32 `t_s` reset is visible at 16 Aug 15:49:23, after which the
+60/120-second cadence continues.
+
+The temporal coincidence is important for reconstruction of system history,
+but it does not establish that the watchdog caused FF64. In the retained
+September window, direct timing tests show no association between watchdog
+executions and FF64 occurrence. A more conservative interpretation is that
+the 16 August recovery/watchdog intervention reduced longer outages and
+made the underlying alternating acquisition defect more clearly observable.
+
+### 20. Research-impact refinement
+
+The historical evidence further separates the acquisition defect from the
+RF experiments:
+
+- the 60/120-second signature exists before the September 3x2 sequence;
+- it persists across multiple RF configurations;
+- later missingness-bias testing found no strong association with observed
+  RF or meteorological covariates;
+- the defect is therefore treated as an SJ01 acquisition-integrity problem,
+  not as a radio-propagation response.
+
+For hourly-scale analyses, retained SJ01 sampling remains dense. For
+minute-scale or transient analyses, the explicit FF64/missing-slot QC mask
+must be preserved.
