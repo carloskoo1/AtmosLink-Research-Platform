@@ -247,3 +247,59 @@ not causal proof. A 64-byte FF block could still be generated upstream or
 through another mechanism. The observation strengthens the value of the
 planned passive ESP32-TX capture because that experiment samples the signal
 before the CP2102/USB packetization boundary.
+
+
+---
+
+### 17. Two-phase periodicity discovered remotely
+
+A follow-up read-only analysis of 8,643 classified minute slots revealed a
+strong deterministic temporal structure that was not captured by the
+hour-of-day aggregation used in Missingness Bias Audit v1.
+
+Results:
+
+- even local minutes: 0 FF64 of 4,322 slots (0.00%);
+- odd local minutes: 2,934 FF64 of 4,321 slots (67.90%);
+- every FF64 run length observed: exactly 1 minute;
+- FF64 -> FF64 transitions: 0;
+- lag-1 FF64 autocorrelation: approximately -0.514;
+- lag-2 FF64 autocorrelation: approximately +0.508.
+
+Using the first valid observation as a slot-phase anchor and a nominal
+60-second emission interval, the two alternating 120-second phases contain:
+
+- phase A: 4,322 valid, 0 FF64;
+- phase B: 1,387 valid, 2,934 FF64.
+
+Thus FF64 is confined to one of the two alternating emission phases in the
+retained window. Missingness must therefore not be described as MCAR or as
+unstructured random loss.
+
+This does not contradict the v1 result that no strong association was found
+with day, hour-of-day, represented RF scenario, CU01 weather, available NASA
+POWER covariates, or matched RF metrics. It refines that interpretation:
+the loss is strongly acquisition-phase selective, while no weather- or
+RF-selective mechanism has been demonstrated.
+
+Hourly coverage remains dense despite the phase-selective loss. Across 143
+complete analyzed hours, valid minute observations per hour were:
+
+- minimum: 33;
+- median: 40;
+- maximum: 49.
+
+No complete analyzed hour contained fewer than 30 valid SJ01 observations.
+
+The only local systemd timer with a nominal two-minute cadence is
+`atmoslink-weather-watchdog-sj01.timer`. Its execution phase drifts across
+even and odd wall-clock minutes. Direct comparison over the retained journal
+gave FF64 rates of approximately 34.30% in minutes without a watchdog
+execution and 33.55% in minutes with one; chi-square p approximately 0.477.
+The watchdog is therefore not supported as the explanation for the
+alternating FF64 phase.
+
+The deterministic two-phase structure materially strengthens the hypothesis
+of a stateful acquisition/transport mechanism (for example a buffer/bank
+cycle), but does not identify a specific component. Physical root cause
+remains open.
