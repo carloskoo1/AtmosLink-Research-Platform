@@ -303,3 +303,139 @@ The deterministic two-phase structure materially strengthens the hypothesis
 of a stateful acquisition/transport mechanism (for example a buffer/bank
 cycle), but does not identify a specific component. Physical root cause
 remains open.
+
+
+---
+
+### 18. A/B frame-forensics refinement
+
+A deeper read-only reconstruction of the complete retained logger journal
+was performed after the two-phase periodicity finding.
+
+The analyzed journal contained 8,680 classified emissions:
+
+- 5,733 valid 17-field frames;
+- 2,947 FF64 frames.
+
+Every one of the 2,947 FF64 frames had exactly 12 comma-separated ASCII
+fields after the 64-byte FF prefix.
+
+For all 2,947 FF64 tails:
+
+- the third surviving token was pressure-like and within the expected
+  high-Andean pressure range used by the station;
+- the final BME/rain validity flags were structurally valid;
+- rain pulse fields were structurally valid.
+
+This confirms that the surviving ASCII region is a stable suffix of the
+meteorological record, not arbitrary printable noise.
+
+#### 18.1 Exact 32-byte prefix clue
+
+Inspection of valid 17-field frames shows that byte offset 32 always lands
+inside field 5 (`hum_min_pct`) over the retained window.
+
+The observed FF64 tail begins in the same semantic position: a truncated
+humidity-minimum token, followed by complete humidity-maximum, pressure,
+dew-point, vapor-pressure, rainfall, pulse and validity fields.
+
+For isolated FF64 frames, comparison of malformed total length with the
+immediately adjacent valid frame gave:
+
+- FF64 length minus previous valid length = +32 bytes in 2,853 of 2,947
+  cases;
+- FF64 length minus next valid length = +32 bytes in 2,824 of 2,947 cases.
+
+The remaining differences were within a few bytes and are compatible with
+normal changes in printed numeric field widths between adjacent minutes.
+
+The observed structure is therefore strongly consistent with:
+
+1. loss/replacement of approximately the first 32 bytes of the nominal
+   ASCII weather record; and
+2. insertion/presence of exactly 64 bytes of `0xFF`;
+3. preservation of the record suffix and CRLF terminator.
+
+This explains why malformed frames are approximately 32 bytes longer than
+neighboring valid records despite containing a 64-byte FF prefix.
+
+This is a structural reconstruction, not permission to reconstruct missing
+scientific fields.
+
+#### 18.2 Alternating phase remains exact
+
+In sequential emission order:
+
+- phase A: 4,340 valid, 0 FF64;
+- phase B: 1,393 valid, 2,947 FF64.
+
+No FF64-to-FF64 consecutive transition was observed.
+
+For adjacent valid frames, ESP32 `t_s` increments were 60 s in 2,781
+cases and 61 s in 4 cases.
+
+For `VALID -> FF64 -> VALID` triplets, surrounding `t_s` increments were
+120 s in 2,934 cases and 121 s in 13 cases.
+
+The one-second deviations are consistent with long-run scheduling drift;
+the two-phase emission structure remains intact.
+
+#### 18.3 Central two-minute synchronization ruled out as phase driver
+
+Because the controller remote-sync service also runs approximately every
+two minutes, its timing was tested explicitly against FF64 occurrence.
+
+Across the retained overlap:
+
+- FF64 rate in minutes without a same-minute remote-sync start: 34.214%;
+- FF64 rate in minutes with a same-minute remote-sync start: 33.670%;
+- chi-square p = 0.609.
+
+Remote-sync starts were nearly evenly distributed across wall-clock minute
+parity:
+
+- even minute starts: 2,160;
+- odd minute starts: 2,126.
+
+The emission-to-sync-start timing distribution was also essentially the
+same for valid and FF64 observations.
+
+The controller remote synchronization timer is therefore not supported as
+the source of the deterministic A/B FF64 phase.
+
+The local SJ01 freshness watchdog had previously also shown no significant
+association with FF64 occurrence.
+
+#### 18.4 Linux TTY error-marker mechanism not supported
+
+Read-only inspection of the active `/dev/ttyUSB1` termios state showed:
+
+- 115200 baud;
+- 8 data bits;
+- no parity;
+- one stop bit;
+- `PARMRK` disabled;
+- `INPCK` disabled;
+- software and hardware flow control disabled.
+
+The Linux TTY is therefore not configured to synthesize parity/framing
+error marker sequences into the received stream. This further narrows the
+fault boundary toward the ESP32/UART/CP2102/USB transfer path rather than
+a terminal-line-discipline transformation.
+
+#### 18.5 Current causal interpretation
+
+The strongest current signature is now:
+
+`nominal prefix ~32 bytes -> replaced/absent + 64 FF bytes -> intact suffix`
+
+combined with a deterministic two-phase emission dependency.
+
+The exact 64-byte FF block remains notable because the production CP2102
+USB bulk endpoint reports a 64-byte maximum packet size. However, packet
+size equality alone is not causal proof, and the 32-byte nominal-prefix
+displacement prevents a simple claim that a normal 64-byte USB packet is
+merely being replaced one-for-one.
+
+Root cause therefore remains open, but the search space is substantially
+narrower than before.
