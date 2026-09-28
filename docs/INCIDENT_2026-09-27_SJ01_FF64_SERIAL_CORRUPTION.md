@@ -599,3 +599,81 @@ D. FF64 disappears for a sustained observation window:
 
 No historical records will be reconstructed. Any acquisition gap caused by
 the controlled restart will remain explicitly visible in QC.
+
+
+---
+
+### 22. Logger-restart phase perturbation result
+
+The pre-registered logger-only restart was executed immediately after the
+valid phase-A emission at 20:04:30 local time.
+
+Pre-restart state:
+
+- logger PID: 4362;
+- last valid observation: 20:04:30;
+- `t_s = 704065`;
+- service had been continuously active since 19 Sep.
+
+Intervention:
+
+- `weather-logger-sj01.service` restarted at 20:04:56;
+- no radio, database, watchdog, synchronization or firmware configuration
+  was modified.
+
+Outcome C occurred: reopening the production CP2102 serial path reset the
+ESP32.
+
+The first post-restart valid frame arrived at 20:05:58 with:
+
+- `t_s = 62`;
+- rain total reset to 0;
+- pulse total reset to 0.
+
+This is direct evidence that the serial-port reopen/control-line sequence
+causes a board reset despite the logger subsequently deasserting DTR/RTS.
+
+Post-reset emissions initially observed:
+
+- 20:05:58, `t_s=62`: valid;
+- 20:06:58, `t_s=122`: valid;
+- 20:07:58, `t_s=182`: valid;
+- 20:08:58, inferred `t_s=242`: FF64;
+- 20:09:58, `t_s=302`: valid;
+- 20:10:58, inferred `t_s=362`: FF64.
+
+Thus the FF64 susceptibility phase re-established after the ESP32 reset,
+but its wall-clock parity changed: before restart FF64 was confined to the
+opposite wall-clock minute parity; after restart the first two FF64 events
+occurred on even wall-clock minutes.
+
+The post-reset phase is tied to the restarted emission sequence rather than
+to absolute wall-clock minute parity. This rules strongly against an
+external even/odd wall-clock scheduler as the driver.
+
+Because the restart simultaneously reinitialized the ESP32 and reopened
+the CP2102 path, this experiment does not by itself distinguish ESP32
+firmware/UART state from CP2102/serial-transport state.
+
+### 23. Pre-registered no-reopen reader-timing perturbation
+
+To isolate Python reader timing without closing the serial device or
+resetting the ESP32, the next intervention will temporarily suspend the
+existing logger process with SIGSTOP across one predicted susceptible
+emission, then resume it with SIGCONT.
+
+Planned duration: approximately 20 seconds, centered on one susceptible
+emission.
+
+Expected interpretation:
+
+A. buffered frame is FF64 immediately after resume:
+   corruption occurred before the user-space `readline()` timing and
+   survived while Python was not reading.
+
+B. buffered frame becomes valid or the phase changes:
+   user-space read timing becomes a stronger candidate.
+
+The serial descriptor will remain open throughout. No DTR/RTS transition,
+service restart, firmware reset, USB rebind or database modification is
+planned.
