@@ -782,3 +782,123 @@ B. CP2102 bulk-IN payload contains clean ASCII while tty/pyserial later
 Loading usbmon and reading its diagnostic interface does not rebind,
 disconnect or reset the USB device. No firmware, database or RF
 configuration change is planned.
+
+
+---
+
+### 28. USB-level capture localizes FF64 upstream of Linux cp210x/TTY
+
+Linux `usbmon` was loaded temporarily and two independent production
+capture windows were recorded from USB bus 1 without stopping or rebinding
+the CP2102.
+
+The CP2102 is USB device `1:4`; its weather-data bulk-IN endpoint appears
+in usbmon as `1:4:1`.
+
+#### 28.1 First matched valid/FF64 pair
+
+At 20:23:59 the logger accepted a valid 17-field frame with `t_s=1142`.
+
+usbmon recorded the CP2102 bulk-IN data as three completions:
+
+- 32 bytes beginning with:
+  `1142,7.10,7.09,7.11,89.00,88.50,`
+- 32 bytes continuing with:
+  `89.62,665.56,5.41,8.97,0.00,0.00`
+- 15 bytes ending with:
+  `,0.00,0,0,1,1\r\n`
+
+Total valid frame length at the USB boundary: 79 bytes.
+
+At 20:24:59 the logger recorded FF64 with raw length 111 bytes.
+
+usbmon independently recorded the corresponding CP2102 bulk-IN traffic as:
+
+- one 96-byte completion whose first 64 bytes were exactly `0xFF`,
+  followed by 32 bytes of structured ASCII:
+  `88.54,665.57,5.36,8.94,0.00,0.00`
+- one 15-byte completion ending with:
+  `,0.00,0,0,1,1\r\n`
+
+Total malformed frame length at the USB boundary: 111 bytes.
+
+Thus the exact FF64 sequence was already present in data delivered by the
+CP2102 over USB before the Linux cp210x driver, TTY layer, pyserial, UTF-8
+decoder, parser or SQLite could transform it.
+
+#### 28.2 Independent replication
+
+A second usbmon capture reproduced the same structure.
+
+Valid emission at 20:27:59, `t_s=1382`:
+
+- 32-byte bulk-IN completion;
+- 32-byte bulk-IN completion;
+- 15-byte bulk-IN completion.
+
+FF64 emission at 20:28:59:
+
+- 96-byte bulk-IN completion:
+  - first 64 bytes = `0xFF`;
+  - next 32 bytes = structured ASCII suffix
+    `89.02,665.62,5.40,8.97,0.00,0.00`;
+- 15-byte final bulk-IN completion preserving
+  `,0.00,0,0,1,1\r\n`.
+
+The USB-level transformation therefore replicated exactly across two
+independent matched valid/FF64 pairs.
+
+#### 28.3 Exact transport transformation
+
+The observed production transformation is now:
+
+Valid:
+
+`[32-byte prefix] + [32-byte middle] + [15-byte suffix] = 79 bytes`
+
+FF64:
+
+`[64 x FF] + [32-byte middle] + [15-byte suffix] = 111 bytes`
+
+Therefore the malformed transfer is consistent with the first 32 bytes of
+the nominal record being absent/replaced while a 64-byte FF block is
+present, with the remaining 47 bytes preserved.
+
+The CP2102 endpoint reports `wMaxPacketSize=64`. usbmon reports the corrupt
+device-to-host completion as 96 bytes; this is an URB completion and must not
+be described as a single 96-byte USB packet. The exact 64-byte FF prefix
+nonetheless coincides with one full endpoint-size unit.
+
+#### 28.4 Updated causal boundary
+
+The following components are now strongly excluded as generators of FF64:
+
+- Python application scheduling;
+- `ser.readline()` timing;
+- UTF-8 decoding;
+- weather parser;
+- SQLite;
+- Linux TTY line discipline;
+- cp210x processing after the USB bulk-IN payload has reached the host.
+
+The unresolved boundary is now substantially narrower:
+
+`ESP32 TX / UART electrical path / CP2102 UART receiver or internal buffer -> CP2102 USB bulk-IN`
+
+Without an independent observation of the UART signal before the CP2102,
+the current remote evidence cannot distinguish whether the 64 FF bytes are
+already present on the UART wire or are generated/introduced inside the
+CP2102 before USB delivery.
+
+#### 28.5 Forensic artifacts
+
+The raw captures and extracted key packets are preserved under:
+
+`Results/sj01_ff64_usbmon_20260927/`
+
+SHA-256:
+
+- `sj01_ff64_usbmon_window.pcap`:
+  `233d6d6395f4b840194cab626751b789797a87f82ded27031053dec3d962d619`
+- `sj01_ff64_usbmon_window2.pcap`:
+  `6a3efedad28b238ead0cd59c124ad8b07807acc0bc28ea345425ecfe807c253c`
