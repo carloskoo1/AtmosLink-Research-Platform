@@ -1,0 +1,92 @@
+{
+  "audit_version": "v1",
+  "events_raw": 8643,
+  "exclusive_minutes": 8643,
+  "ambiguous_minutes": 0,
+  "ff64_minutes": 2934,
+  "valid_minutes": 5709,
+  "ff64_pct": 33.946546338077056,
+  "first_event_utc": "2026-09-22 00:04:00+00:00",
+  "last_event_utc": "2026-09-28 00:06:00+00:00",
+  "complete_days": [
+    {
+      "date_local": "2026-09-22",
+      "valid": 950,
+      "ff64": 490,
+      "total": 1440,
+      "ff64_pct": 34.02777777777778
+    },
+    {
+      "date_local": "2026-09-23",
+      "valid": 969,
+      "ff64": 471,
+      "total": 1440,
+      "ff64_pct": 32.708333333333336
+    },
+    {
+      "date_local": "2026-09-24",
+      "valid": 965,
+      "ff64": 475,
+      "total": 1440,
+      "ff64_pct": 32.986111111111114
+    },
+    {
+      "date_local": "2026-09-25",
+      "valid": 929,
+      "ff64": 511,
+      "total": 1440,
+      "ff64_pct": 35.486111111111114
+    },
+    {
+      "date_local": "2026-09-26",
+      "valid": 948,
+      "ff64": 492,
+      "total": 1440,
+      "ff64_pct": 34.166666666666664
+    }
+  ],
+  "tests": {
+    "day": {
+      "cramers_v": 0.020821001464788443,
+      "chi2_p": 0.5377350377261122
+    },
+    "hour": {
+      "cramers_v": 0.03666607774333587,
+      "chi2_p": 0.975929343707946
+    },
+    "scenario": {
+      "cramers_v": 0.011438834300627247,
+      "chi2_p": 0.570112173694465
+    }
+  },
+  "max_abs_smd": 0.03044667642121094,
+  "hour_ff64_rate_spread_pp": 5.555555555555554,
+  "scenario_ff64_rate_spread_pp": 1.5334521096356042,
+  "matched_nonnull": {
+    "temp_avg_C": 8469,
+    "hum_avg_pct": 8469,
+    "pres_avg_hPa": 8469,
+    "rain_1min_mm": 8469,
+    "rain_1h_mm": 8469,
+    "nasa_sj_temp_c": 5762,
+    "nasa_sj_dewpoint_c": 5762,
+    "nasa_sj_rh_pct": 5762,
+    "nasa_sj_precip_mm": 5762,
+    "nasa_sj_press_hpa": 5762,
+    "nasa_sj_wind10m_ms": 5762,
+    "snr_dl": 8632,
+    "snr_ul": 8632,
+    "sta_dl_rssi": 8632,
+    "mcs_dl": 8632,
+    "mcs_ul": 8632,
+    "dl_rate": 8632,
+    "ul_rate": 0,
+    "dl_rssi_dbm": 8589,
+    "dl_snr_db": 8589,
+    "dl_mcs": 8589,
+    "ul_mcs": 8589,
+    "tx_quality_pct": 8589,
+    "tx_capacity_pct": 8589
+  },
+  "interpretation_guardrail": "This audit can detect associations between FF64 missingness and observed covariates; it cannot prove MCAR or identify the physical root cause."
+}

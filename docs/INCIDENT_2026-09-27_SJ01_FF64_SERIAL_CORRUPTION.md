@@ -182,3 +182,47 @@ The FF64 signature is persistent and reproducible, with isolated-slot
 placement verified in 121/121 triplets and approximately 33–35% FF64 on
 complete analyzed days. Database corruption was not observed. Central
 synchronization was resolved separately. FF64 root cause remains open.
+
+
+---
+
+### 15. Missingness Bias Audit v1
+
+A reproducible read-only audit was executed with:
+
+`scripts/audit_sj01_ff64_missingness_v1.py`
+
+Outputs are stored in:
+
+`Results/sj01_ff64_missingness_v1/`
+
+The audit classified 8,643 exclusive minute events from the retained
+journal window, with 5,709 valid observations and 2,934 FF64 events
+(33.95%). No ambiguous minutes were found.
+
+For the five complete days 22–26 September, the FF64 fraction remained
+between 32.71% and 35.49%. Association with complete day was weak
+(Cramer's V = 0.0208; chi-square p = 0.538), and association with
+hour-of-day was also weak (Cramer's V = 0.0367; p = 0.976).
+
+The retained journal window includes three RF scenarios:
+`6475/20`, `6655/40`, and `6475/40`. Their FF64 rates differed by
+only 1.53 percentage points overall; the scenario association was weak
+(Cramer's V = 0.0114; p = 0.570).
+
+Matched independent covariates included CU01 local weather, NASA POWER
+conditions for `SM_SAN_JOSE`, and RF telemetry. Across the tested
+continuous covariates, the maximum absolute standardized mean difference
+between valid and FF64 minutes was 0.0304.
+
+Within this observable window there is therefore no evidence of a strong
+differential FF64 association with day, hour, the three represented RF
+scenarios, observed CU01 weather, available NASA POWER SJ01-area
+conditions, or matched RF metrics.
+
+This result supports treating FF64 primarily as loss of eligible SJ01
+observations rather than demonstrated weather- or RF-selective missingness
+in the observed window. It does not prove Missing Completely At Random,
+does not cover unrepresented 3x2 scenarios, and does not resolve the
+physical root cause. FF64 observations remain ineligible for scientific
+reconstruction.
