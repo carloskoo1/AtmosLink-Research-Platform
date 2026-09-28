@@ -722,3 +722,63 @@ Expected control result:
 If observed, this will show that SIGSTOP/SIGCONT itself does not generate
 FF64 and that the effect remains phase-specific while the user-space reader
 is paused.
+
+
+---
+
+### 26. Matched safe-phase pause control result
+
+The matched SIGSTOP/SIGCONT control was executed across a predicted
+safe-phase emission while keeping the serial descriptor open.
+
+- logger PID remained 203614;
+- SIGSTOP at 20:15:56;
+- SIGCONT at 20:16:16;
+- no service restart or ESP32 reset occurred.
+
+The buffered frame delivered immediately after resume was a valid 17-field
+weather frame with `t_s=662`.
+
+Because the entire Python process was paused, the wind sampler also lacked a
+fresh sample for this one stored record. The row correctly reports
+`wind_ok=0` and null wind fields. This is an explicit QC consequence of
+the controlled experiment, not a hidden data repair.
+
+The next predicted susceptible emission at 20:16:59 again produced FF64.
+
+Matched interpretation:
+
+- susceptible phase paused across transmission -> buffered FF64 after resume;
+- safe phase paused across transmission -> buffered valid 17-field frame;
+- next susceptible phase -> FF64 again.
+
+Therefore SIGSTOP/SIGCONT itself does not generate FF64. The corruption is
+phase-specific and is already present below the active user-space reader.
+
+This substantially excludes Python read timing and application scheduling
+as root causes.
+
+### 27. Pre-registered USB-level observation
+
+The next non-destructive remote experiment will observe USB traffic on the
+existing production bus using Linux usbmon while leaving the CP2102,
+ESP32, logger and radio in operation.
+
+Goal:
+
+determine whether the 64-byte FF sequence is visible in CP2102 bulk-IN USB
+traffic before the cp210x/TTY/pyserial stack processes it.
+
+Interpretation:
+
+A. FF64 visible in CP2102 bulk-IN URB payload:
+   fault boundary moves upstream of the Linux cp210x/TTY layer, toward
+   CP2102/UART/ESP32.
+
+B. CP2102 bulk-IN payload contains clean ASCII while tty/pyserial later
+   receives FF64:
+   Linux USB-serial/TTY transformation becomes a stronger candidate.
+
+Loading usbmon and reading its diagnostic interface does not rebind,
+disconnect or reset the USB device. No firmware, database or RF
+configuration change is planned.
