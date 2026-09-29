@@ -1,17 +1,11 @@
 # Legacy ePMP cron snapshot — 2026-09-29
 
-This directory preserves exact source snapshots for legacy ePMP shell components found on CU01/Controlador during the AtmosLink provenance audit.
+This directory preserves source snapshots for legacy ePMP components found on CU01/Controlador during the AtmosLink provenance audit.
 
-Captured exact scripts:
-- `/home/carlos/epmp_logs/ap_snr_agg.sh`
-- `/home/carlos/epmp_logs/housekeeping.sh`
-- `/home/carlos/epmp_logs/poll_epmp.sh`
-- `/home/carlos/epmp_logs/poll_epmp_agg.sh`
-- `/home/carlos/epmp_logs/watchdog_poll.sh`
-- `/home/carlos/epmp_monitor/bin/alert_epmp.sh`
+The `epmp_logs/` directory contains exact safe snapshots of the legacy RF polling scripts. The `epmp_monitor/` directory contains the sanitized current monitoring scripts and a safe `epmp.conf` snapshot; password files themselves are never included.
 
-The active user crontab contains duplicate entries for `poll_epmp.sh` and `poll_epmp_agg.sh`; this audit records the condition but does not alter the crontab.
+The active user crontab contains duplicate entries for `poll_epmp.sh` and `poll_epmp_agg.sh`. The audit records this condition but does not alter the crontab.
 
-`/home/carlos/epmp_monitor/bin/auto_csv_pipeline.sh` is active in cron but is deliberately not copied verbatim into Git because the deployed file contains literal database-password material. `alertas_automaticas.py` is also withheld from normal Git because the audit detected a possible literal token. Their production hashes remain recorded in `provenance/legacy_cron_CU01_20260929.csv`.
+Credential-bearing ePMP monitor scripts were sanitized on 2026-09-29. Database and Telegram secrets now reside in separate protected files under `/home/carlos/.config/atmoslink/`, each mode `0600`. The repository stores only placeholder environment examples.
 
-Those secret-bearing components require a separate credential-extraction/refactor before source versioning. No credential value is recorded here.
+Original pre-sanitization source copies and their hashes remain in a protected local provenance directory outside Git. See `docs/provenance/CREDENTIAL_SANITIZATION_20260929.md` and `provenance/credential_sanitization_CU01_20260929.csv`.
