@@ -1,0 +1,14 @@
+metric,before,after,unit,notes
+remote_sync_cadence,120,120,seconds,raw SJ01 transfer unchanged
+remote_sync_full_rebuild,every cycle,fallback only,text,scheduler is primary builder
+scheduler_builder_check_interval,900,60,seconds,old runtime vs reconciled config
+full_rebuild_minimum_interval,none,300,seconds,global successful-build guard
+remote_sync_effective_minimum_interval,none,300,seconds,same global successful-build guard as scheduler
+remote_sync_cpu_example,33.335,1.271,seconds,17:55 full rebuild vs 17:57 skipped rebuild
+remote_sync_cpu_second_example,33.335,1.376,seconds,17:55 full rebuild vs 17:59 skipped rebuild
+remote_sync_memory_peak_example,~1.3,0.0096,GiB,17:55 full rebuild vs 17:59 skipped rebuild
+scheduler_full_rebuild_duration,,29.048,seconds,18:01:39 to 18:02:08
+raw_sj01_rows_ignored_observed,0,0,rows,observed verification cycles
+derived_master_lag_verified,,4,minutes,18:04 raw station observations vs 18:00 derived master
+scheduler_yaml_sha256,5a6d9923d0b7e80bc74e62d6884f3a3af59e4ee87eef70cc07094567496fc865,bce8d2bac7e2f44d7a6899e6f93b2b103938c5ce88a24c20c7af17ba19e69953,sha256,
+builder_sha256,b08f471842be5cf5d63f688c6aa99f208bfcf9a4ad8707aeb6ada36e2a1fc6b2,8697ae5f46f9c76d893725671926698f4c5c749f17933aac9457a6dd2a09ca15,sha256,

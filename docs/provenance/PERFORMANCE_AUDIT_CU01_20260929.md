@@ -96,3 +96,7 @@ A safe implementation should also reconcile the scheduler YAML before any schedu
 The dashboard query/index issue is the second priority. Any index change must be implemented in the builder itself because the builder recreates the multistation table; manually created indexes would otherwise disappear on the next rebuild.
 
 No production service was restarted as part of this audit.
+
+## Follow-up implemented
+
+The highest-priority optimization above was implemented later the same day. See `docs/provenance/PERFORMANCE_OPTIMIZATION_MULTISTATION_20260929.md` for the verified scheduler reconciliation, rebuild guard, concurrency lock, fallback behavior and before/after runtime measurements.

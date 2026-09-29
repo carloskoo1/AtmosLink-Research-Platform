@@ -40,9 +40,14 @@ asigna telemetría RF de CU01 a las estaciones remotas.
 
 from __future__ import annotations
 
+import fcntl
+import json
 import math
+import os
 import sqlite3
 import sys
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -70,6 +75,12 @@ OUTPUT_CSV = (
     / "exports"
     / "master_observations_multistation.csv"
 )
+
+RUNTIME_DIR = PROJECT_ROOT / "runtime"
+BUILD_STATE_FILE = RUNTIME_DIR / "multistation_build_state.json"
+BUILD_LOCK_FILE = RUNTIME_DIR / "multistation_build.lock"
+DEFAULT_MIN_BUILD_INTERVAL_SECONDS = 300
+DEFAULT_REMOTE_SYNC_FALLBACK_SECONDS = 300
 
 
 # ==========================================================
@@ -1269,10 +1280,222 @@ def build_multistation_master() -> int:
     return 0
 
 
+def _minimum_build_interval_seconds() -> int:
+    raw = os.getenv(
+        "ATMOSLINK_MULTISTATION_MIN_INTERVAL_SECONDS",
+        str(DEFAULT_MIN_BUILD_INTERVAL_SECONDS),
+    )
+
+    try:
+        return max(int(raw), 0)
+    except (TypeError, ValueError):
+        return DEFAULT_MIN_BUILD_INTERVAL_SECONDS
+
+
+def _remote_sync_fallback_seconds() -> int:
+    raw = os.getenv(
+        "ATMOSLINK_MULTISTATION_REMOTE_SYNC_FALLBACK_SECONDS",
+        str(DEFAULT_REMOTE_SYNC_FALLBACK_SECONDS),
+    )
+
+    try:
+        return max(int(raw), 0)
+    except (TypeError, ValueError):
+        return DEFAULT_REMOTE_SYNC_FALLBACK_SECONDS
+
+
+def _invocation_context() -> str:
+    try:
+        cgroup = Path("/proc/self/cgroup").read_text(
+            encoding="utf-8"
+        )
+    except OSError:
+        return "manual_or_other"
+
+    if "atmoslink-remote-sync.service" in cgroup:
+        return "remote_sync"
+
+    if "atmoslink-scheduler.service" in cgroup:
+        return "scheduler"
+
+    return "manual_or_other"
+
+
+def _last_success_epoch() -> tuple[float | None, str]:
+    try:
+        payload = json.loads(
+            BUILD_STATE_FILE.read_text(
+                encoding="utf-8"
+            )
+        )
+        value = payload.get("last_success_epoch")
+
+        if value is not None:
+            return float(value), "state_file"
+
+    except Exception:
+        pass
+
+    if OUTPUT_CSV.exists():
+        try:
+            return (
+                OUTPUT_CSV.stat().st_mtime,
+                "output_csv_mtime",
+            )
+        except OSError:
+            pass
+
+    return None, "none"
+
+
+def _write_build_state(
+    completed_epoch: float,
+    minimum_interval_seconds: int,
+    invocation_context: str,
+) -> None:
+    RUNTIME_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    payload = {
+        "last_success_epoch": completed_epoch,
+        "last_success_utc": datetime.fromtimestamp(
+            completed_epoch,
+            tz=timezone.utc,
+        ).isoformat(),
+        "minimum_interval_seconds": (
+            minimum_interval_seconds
+        ),
+        "invocation_context": invocation_context,
+        "output_table": OUTPUT_TABLE,
+        "output_csv": str(OUTPUT_CSV),
+    }
+
+    temporary = BUILD_STATE_FILE.with_suffix(
+        ".json.tmp"
+    )
+
+    temporary.write_text(
+        json.dumps(
+            payload,
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    temporary.replace(BUILD_STATE_FILE)
+
+
+def run_build_if_due() -> int:
+    """
+    Ejecuta el rebuild completo con una cadencia global controlada.
+
+    El scheduler comprueba cada minuto y remote-sync mantiene su
+    invocación posterior a la transferencia, pero ambos respetan el mismo
+    mínimo global de 300 s entre rebuilds completos. El primer proceso
+    elegible obtiene el flock y los demás salen sin reconstruir.
+    """
+    RUNTIME_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    lock_handle = BUILD_LOCK_FILE.open(
+        "a+",
+        encoding="utf-8",
+    )
+
+    try:
+        try:
+            fcntl.flock(
+                lock_handle.fileno(),
+                fcntl.LOCK_EX | fcntl.LOCK_NB,
+            )
+        except BlockingIOError:
+            print(
+                "SKIP: multistation build already running"
+            )
+            return 0
+
+        minimum_interval_seconds = (
+            _minimum_build_interval_seconds()
+        )
+
+        invocation_context = (
+            _invocation_context()
+        )
+
+        if invocation_context == "remote_sync":
+            # Prefer a post-sync rebuild roughly every second raw-sync
+            # cycle so the derived master includes the newest SJ01 rows.
+            # The scheduler keeps the longer 300 s fallback cadence.
+            minimum_interval_seconds = (
+                _remote_sync_fallback_seconds()
+            )
+
+        force = os.getenv(
+            "ATMOSLINK_MULTISTATION_FORCE",
+            "0",
+        ).strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }
+
+        last_success, source = (
+            _last_success_epoch()
+        )
+
+        if (
+            not force
+            and minimum_interval_seconds > 0
+            and last_success is not None
+        ):
+            age_seconds = max(
+                time.time() - last_success,
+                0.0,
+            )
+
+            if age_seconds < minimum_interval_seconds:
+                print(
+                    "SKIP: multistation master fresh | "
+                    f"age={age_seconds:.1f}s | "
+                    f"minimum={minimum_interval_seconds}s | "
+                    f"context={invocation_context} | "
+                    f"source={source}"
+                )
+                return 0
+
+        result = build_multistation_master()
+
+        if result == 0:
+            _write_build_state(
+                time.time(),
+                minimum_interval_seconds,
+                invocation_context,
+            )
+
+        return result
+
+    finally:
+        try:
+            fcntl.flock(
+                lock_handle.fileno(),
+                fcntl.LOCK_UN,
+            )
+        except OSError:
+            pass
+
+        lock_handle.close()
+
+
 if __name__ == "__main__":
     try:
         sys.exit(
-            build_multistation_master()
+            run_build_if_due()
         )
 
     except Exception as exc:

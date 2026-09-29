@@ -79,8 +79,10 @@ tasks:
     - python3
     - -m
     - weather_station.backup.remote_backup
+  # Superseded by atmoslink-remote-sync.timer; keep disabled to avoid
+  # a second independent synchronization path.
   station_sync:
-    enabled: true
+    enabled: false
     interval_seconds: 300
     command:
     - python3
@@ -149,6 +151,26 @@ tasks:
     - python3
     - -m
     - weather_station.analytics.atmospheric_corridor
+  # Preserve the hourly 6 GHz scientific product previously active in production.
+  scientific_hourly_6g:
+    enabled: true
+    interval_seconds: 3600
+    command:
+    - /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python
+    - -m
+    - weather_station.analytics.scientific_hourly_6g
+    timeout_seconds: 300
+  # Check the derived multistation master every minute. The builder
+  # itself enforces a 300-second minimum between successful full rebuilds,
+  # so the scheduler is the primary cadence source without rebuilding on
+  # every two-minute raw SJ01 synchronization cycle.
+  build_multistation_master:
+    enabled: true
+    interval_seconds: 60
+    command:
+    - python3
+    - -m
+    - weather_station.sync.build_multistation_master
   scientific_campaign_export:
     enabled: true
     interval_seconds: 3600
