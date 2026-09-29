@@ -16,6 +16,6 @@ The provenance audit found legacy ePMP scripts with embedded database credential
 
 ## Verification
 
-Shell syntax checks and Python compilation passed. A read-only PostgreSQL `SELECT 1` succeeded using the protected database environment. The active cron pipeline completed normally at 2026-09-29 14:55 local time under `set -e`, including the model, prediction, database, predictive-database, and operator steps.
+Shell syntax checks and Python compilation passed. A read-only PostgreSQL `SELECT 1` succeeded using the protected database environment. The active cron pipeline completed normally at 2026-09-29 15:05 local time under `set -e`, after the database and Telegram secrets had been separated into least-privilege files. The model, prediction, database, predictive-database, and operator steps all advanced normally.
 
 No secret value is intentionally stored in this repository. The repository contains only placeholder environment examples.
