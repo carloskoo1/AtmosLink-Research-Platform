@@ -1,0 +1,12 @@
+[Unit]
+Description=AtmosLink SJ01 Weather Watchdog Timer
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=2min
+AccuracySec=15s
+Persistent=true
+Unit=atmoslink-weather-watchdog-sj01.service
+
+[Install]
+WantedBy=timers.target

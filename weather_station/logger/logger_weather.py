@@ -538,9 +538,34 @@ def run_logger():
                             "utf-8",
                             errors="strict",
                         ).strip()
-                    except UnicodeDecodeError:
+                    except UnicodeDecodeError as exc:
+                        # Diagnóstico controlado: conserva una muestra hexadecimal
+                        # acotada de la trama corrupta sin intentar interpretarla.
+                        raw_hex = raw[:64].hex()
+                        raw_full_hex = raw.hex()
+                        raw_tail_hex = raw[-32:].hex()
+                        ends_crlf = raw.endswith(b"\r\n")
+                        ends_lf = raw.endswith(b"\n")
+
+                        leading_ff = 0
+                        for byte in raw:
+                            if byte != 0xFF:
+                                break
+                            leading_ff += 1
+
+                        transition_start = max(0, leading_ff - 8)
+                        transition_end = min(len(raw), leading_ff + 24)
+                        transition_hex = raw[transition_start:transition_end].hex()
+
                         warn_serial_once(
-                            "fragmento no UTF-8 descartado"
+                            f"fragmento no UTF-8 descartado | len={len(raw)} | "
+                            f"start={exc.start} | reason={exc.reason} | "
+                            f"leading_ff={leading_ff} | "
+                            f"transition_offset={transition_start} | "
+                            f"transition={transition_hex} | "
+                            f"full={raw_full_hex} | "
+                            f"head={raw_hex} | tail={raw_tail_hex} | "
+                            f"ends_crlf={int(ends_crlf)} | ends_lf={int(ends_lf)}"
                         )
                         continue
 

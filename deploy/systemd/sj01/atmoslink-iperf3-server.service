@@ -1,0 +1,21 @@
+[Unit]
+Description=AtmosLink iperf3 Server - SJ01 6 GHz Link
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ckoo
+Group=ckoo
+ExecStart=/usr/bin/iperf3 \
+  --server \
+  --bind 192.168.1.4 \
+  --port 5201 \
+  --one-off
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

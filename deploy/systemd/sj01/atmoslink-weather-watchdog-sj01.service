@@ -1,0 +1,12 @@
+[Unit]
+Description=AtmosLink SJ01 Weather Freshness Watchdog
+After=weather-logger-sj01.service
+Wants=weather-logger-sj01.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/ckoo/Proyectos/EstacionMeteorologica/venv/bin/python /usr/local/sbin/atmoslink-weather-watchdog-sj01.py
+User=root
+Group=root
+TimeoutStartSec=45
+Nice=10
