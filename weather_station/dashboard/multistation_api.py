@@ -1934,21 +1934,73 @@ def api_scientific_hourly():
         ), 400
 
     if station_id == "SJ01":
+        # Query only the scientific columns needed by the selected
+        # variable and restrict the scan to the field-deployment window.
+        # The variable mapping is an internal allow-list, not user SQL.
+        field_start_utc = pd.Timestamp(
+            "2026-08-31T21:00:00Z"
+        )
+
+        selected_columns = [
+            "bucket_hour",
+            variable["observed"],
+            variable["era5"],
+            variable["nasa"],
+        ]
+
         conn = get_connection()
 
         try:
+            table_columns = {
+                row["name"]
+                for row in conn.execute(
+                    f"PRAGMA table_info({MULTISTATION_TABLE})"
+                ).fetchall()
+            }
+
+            if "bucket_hour" not in table_columns:
+                return jsonify(
+                    {
+                        "status": "error",
+                        "station_id": "SJ01",
+                        "error": (
+                            "La tabla multistación "
+                            "no contiene bucket_hour."
+                        ),
+                    }
+                ), 500
+
+            select_expressions = []
+
+            for column in selected_columns:
+                if column in table_columns:
+                    select_expressions.append(
+                        f'"{column}"'
+                    )
+                else:
+                    # Preserve the historical endpoint behavior:
+                    # unavailable scientific fields are returned as
+                    # null instead of making the request fail.
+                    select_expressions.append(
+                        f'NULL AS "{column}"'
+                    )
+
             dataframe = pd.read_sql_query(
                 f"""
-                SELECT *
+                SELECT {", ".join(select_expressions)}
                 FROM {MULTISTATION_TABLE}
                 WHERE station_id = ?
                   AND local_temp_avg_c
                       IS NOT NULL
+                  AND bucket_hour >= ?
                 ORDER BY bucket_hour,
                          bucket_minute
                 """,
                 conn,
-                params=("SJ01",),
+                params=(
+                    "SJ01",
+                    field_start_utc.isoformat(),
+                ),
             )
         finally:
             conn.close()
@@ -1985,10 +2037,6 @@ def api_scientific_hourly():
                     errors="coerce",
                     utc=True,
                 )
-            )
-
-            field_start_utc = pd.Timestamp(
-                "2026-08-31T21:00:00Z"
             )
 
             dataframe = dataframe[

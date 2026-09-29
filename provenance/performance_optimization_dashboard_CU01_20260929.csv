@@ -1,0 +1,17 @@
+metric,before,after,unit,notes
+sj01_hourly_temperature_latency,2.109,0.308,seconds,after value representative of 3-run median
+sj01_history_120_latency,0.430,0.067,seconds,after value representative of 3-run median
+sj01_latest_latency,0.241,0.055,seconds,after value representative of 3-run median
+sj01_hourly_source_rows,47810,27435,rows,field-period SQL filter
+sj01_hourly_selected_columns,~82,4,columns,wide SELECT star replaced by mapped scientific columns
+direct_sql_latest,,0.0002,seconds,indexed derived table
+direct_sql_history_120,,0.0017,seconds,indexed derived table
+direct_sql_hourly_source,,0.0551,seconds,indexed narrowed query
+hourly_variables_equivalence_failures,,0,count,6 variables tested
+hourly_variables_http_200,,6,count,6 variables tested
+dashboard_memory_current_before,1156,,MiB,long-running service before reload
+dashboard_swap_before,250,,MiB,long-running service before reload
+dashboard_memory_after_stress,,182,MiB,after clean reload and 66 representative requests
+dashboard_swap_after_stress,,0,MiB,after clean reload and 66 representative requests
+multistation_rows_indexed,,169847,rows,natural builder run
+indexed_rebuild_duration,,29.4,seconds,18:35:42 to 18:36:12

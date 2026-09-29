@@ -82,6 +82,41 @@ BUILD_LOCK_FILE = RUNTIME_DIR / "multistation_build.lock"
 DEFAULT_MIN_BUILD_INTERVAL_SECONDS = 300
 DEFAULT_REMOTE_SYNC_FALLBACK_SECONDS = 300
 
+OUTPUT_INDEX_DEFINITIONS = (
+    (
+        "idx_mom_station_minute_valid",
+        f"""
+        CREATE INDEX idx_mom_station_minute_valid
+        ON {OUTPUT_TABLE}(
+            station_id,
+            bucket_minute DESC
+        )
+        WHERE local_temp_avg_c IS NOT NULL
+        """,
+    ),
+    (
+        "idx_mom_station_hour_minute_valid",
+        f"""
+        CREATE INDEX idx_mom_station_hour_minute_valid
+        ON {OUTPUT_TABLE}(
+            station_id,
+            bucket_hour,
+            bucket_minute
+        )
+        WHERE local_temp_avg_c IS NOT NULL
+        """,
+    ),
+)
+
+
+def create_output_indexes(
+    connection: sqlite3.Connection,
+) -> None:
+    """Create the indexes required by the dashboard hot paths."""
+    for index_name, statement in OUTPUT_INDEX_DEFINITIONS:
+        connection.execute(statement)
+        print(f"Índice creado: {index_name}")
+
 
 # ==========================================================
 # MAPEO CIENTÍFICO ESTACIÓN -> PUNTO ATMOSFÉRICO
@@ -1202,6 +1237,13 @@ def build_multistation_master() -> int:
             connection.execute(
                 f'DROP TABLE IF EXISTS '
                 f'"{previous_table}"'
+            )
+
+            # The active table is replaced atomically on every rebuild,
+            # so dashboard indexes must be recreated after the previous
+            # table (and its index names) has been dropped.
+            create_output_indexes(
+                connection
             )
 
             connection.commit()
