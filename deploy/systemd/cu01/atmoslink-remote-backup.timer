@@ -1,0 +1,12 @@
+[Unit]
+Description=AtmosLink Daily Independent Remote Backup Timer
+
+[Timer]
+OnCalendar=*-*-* 02:30:00
+RandomizedDelaySec=15min
+Persistent=true
+AccuracySec=1min
+Unit=atmoslink-remote-backup.service
+
+[Install]
+WantedBy=timers.target

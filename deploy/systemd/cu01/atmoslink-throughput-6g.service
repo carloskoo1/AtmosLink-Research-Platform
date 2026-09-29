@@ -1,0 +1,23 @@
+[Unit]
+Description=AtmosLink Active Bidirectional Throughput Measurement - 6 GHz
+After=network-online.target atmoslink-radio-config-6g.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=carlos
+Group=carlos
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.telemetry.active_throughput_6g --database SQLite/CU01/weather_local.db --output-csv Data/exports/active_throughput_6g.csv --direction BOTH
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=6
+TimeoutStartSec=120
+NoNewPrivileges=true
+AmbientCapabilities=CAP_NET_RAW
+CapabilityBoundingSet=CAP_NET_RAW
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

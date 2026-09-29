@@ -1,0 +1,26 @@
+[Unit]
+Description=AtmosLink Independent Remote Backup
+Wants=network-online.target
+After=network-online.target tailscaled.service
+ConditionPathExists=/home/carlos/Proyectos/EstacionMeteorologica
+
+[Service]
+Type=oneshot
+User=carlos
+Group=carlos
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+
+Environment=ATMOSLINK_STATION=CU01
+Environment=PYTHONUNBUFFERED=1
+Environment=PATH=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.backup.remote_backup
+
+TimeoutStartSec=45min
+Nice=15
+IOSchedulingClass=idle
+CPUWeight=20
+IOWeight=20
+
+StandardOutput=journal
+StandardError=journal

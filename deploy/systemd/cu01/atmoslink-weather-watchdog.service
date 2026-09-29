@@ -1,0 +1,14 @@
+[Unit]
+Description=AtmosLink Weather Logger Freshness Watchdog
+After=weather-logger.service
+Wants=weather-logger.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python /usr/local/sbin/atmoslink-weather-watchdog.py
+
+User=root
+Group=root
+
+TimeoutStartSec=45
+Nice=10

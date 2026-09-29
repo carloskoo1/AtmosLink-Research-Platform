@@ -1,0 +1,26 @@
+[Unit]
+Description=AtmosLink Remote Weather Station Synchronizer
+Documentation=https://github.com/carloskoo/AtmosLink-Research-Platform
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=carlos
+Group=carlos
+
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+
+Environment=ATMOSLINK_STATION=CU01
+Environment=PYTHONUNBUFFERED=1
+Environment=PATH=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+ExecStart=/usr/bin/flock -n /run/user/1000/atmoslink-remote-sync.lock /home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -u -m weather_station.sync.remote_station_sync
+
+ExecStartPost=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -u -m weather_station.sync.build_multistation_master
+
+StandardOutput=journal
+StandardError=journal
+
+TimeoutStartSec=55
+Nice=5

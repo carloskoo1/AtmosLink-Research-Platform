@@ -1,0 +1,36 @@
+[Unit]
+Description=AtmosLink Automatic Operational Event Monitor
+After=network-online.target atmoslink-dashboard.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=carlos
+Group=carlos
+
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+
+Environment=PYTHONUNBUFFERED=1
+Environment=ATMOSLINK_STATION=CU01
+Environment=ATMOSLINK_BASE_URL=http://127.0.0.1:5000
+
+Environment=ATMOSLINK_EVENT_POLL_SECONDS=60
+Environment=ATMOSLINK_LOCAL_MAX_AGE_SECONDS=600
+Environment=ATMOSLINK_ERA5_MAX_AGE_SECONDS=21600
+Environment=ATMOSLINK_NASA_MAX_AGE_SECONDS=172800
+
+Environment=ATMOSLINK_FAILURE_CONFIRMATIONS=2
+Environment=ATMOSLINK_DEGRADED_CONFIRMATIONS=2
+Environment=ATMOSLINK_STALE_CONFIRMATIONS=2
+Environment=ATMOSLINK_MISSING_CONFIRMATIONS=3
+
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python3 /home/carlos/Proyectos/EstacionMeteorologica/scripts/monitor_operational_events.py
+
+Restart=always
+RestartSec=10
+
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

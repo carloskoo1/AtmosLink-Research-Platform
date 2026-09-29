@@ -1,0 +1,15 @@
+[Unit]
+Description=AtmosLink Central Scheduler
+After=network.target weather-logger.service
+
+[Service]
+Type=simple
+User=carlos
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+Environment="PATH=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.scheduler.atmoslink_scheduler
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

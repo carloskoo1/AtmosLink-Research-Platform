@@ -1,0 +1,19 @@
+[Unit]
+Description=AtmosLink Force 4600C 6 GHz configuration collector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=carlos
+Group=carlos
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+Environment=PYTHONUNBUFFERED=1
+Environment=ATMOSLINK_STATION=CU01
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.telemetry.radio_config_6g_collector
+Restart=on-failure
+RestartSec=15
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

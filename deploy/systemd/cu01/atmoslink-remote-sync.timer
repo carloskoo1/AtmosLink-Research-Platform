@@ -1,0 +1,12 @@
+[Unit]
+Description=Run AtmosLink Remote Station Synchronization Every Two Minutes
+
+[Timer]
+OnBootSec=45s
+OnUnitActiveSec=120s
+AccuracySec=5s
+Persistent=true
+Unit=atmoslink-remote-sync.service
+
+[Install]
+WantedBy=timers.target

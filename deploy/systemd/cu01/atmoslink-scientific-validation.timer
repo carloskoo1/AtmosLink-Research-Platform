@@ -1,0 +1,13 @@
+[Unit]
+Description=Update AtmosLink Scientific Validation Every Hour
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=1h
+AccuracySec=30s
+Persistent=true
+
+Unit=atmoslink-scientific-validation.service
+
+[Install]
+WantedBy=timers.target

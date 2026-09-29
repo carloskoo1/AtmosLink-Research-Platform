@@ -1,0 +1,12 @@
+[Unit]
+Description=AtmosLink Weather Logger Watchdog Timer
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=2min
+AccuracySec=15s
+Persistent=true
+Unit=atmoslink-weather-watchdog.service
+
+[Install]
+WantedBy=timers.target

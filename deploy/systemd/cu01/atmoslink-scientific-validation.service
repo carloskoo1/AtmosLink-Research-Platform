@@ -1,0 +1,21 @@
+[Unit]
+Description=AtmosLink Scientific Validation Engine - CU01 and SJ01
+Documentation=https://github.com/carloskoo/AtmosLink-Research-Platform
+After=network-online.target atmoslink-remote-sync.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=carlos
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+
+Environment=PYTHONUNBUFFERED=1
+
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -u -m weather_station.analytics.scientific_validation_all
+
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+
+StandardOutput=journal
+StandardError=journal

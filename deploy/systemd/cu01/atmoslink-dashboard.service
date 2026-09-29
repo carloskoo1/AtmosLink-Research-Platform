@@ -1,0 +1,16 @@
+[Unit]
+Description=AtmosLink Scientific Dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=carlos
+WorkingDirectory=/home/carlos/Proyectos/EstacionMeteorologica
+Environment=ATMOSLINK_STATION=CU01
+ExecStart=/home/carlos/Proyectos/EstacionMeteorologica/venv/bin/python -m weather_station.dashboard.app
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
