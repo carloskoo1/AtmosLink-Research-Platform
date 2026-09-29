@@ -1,0 +1,27 @@
+metric,value,unit,notes
+host_logical_cpus,4,count,Intel Core i5-5200U
+host_ram,7.7,GiB,
+initial_load_1m,1.26,load,
+dashboard_memory_current,1.0-1.15,GiB,systemd cgroup
+dashboard_swap_current,~250,MiB,systemd cgroup
+dashboard_worker_2031_pss,~436,MiB,
+dashboard_worker_2032_pss,~543,MiB,
+dashboard_cpu_sample,~26,percent_of_one_core,60-second cgroup sample
+scheduler_cpu_cumulative,187465,seconds,about 9.3 days uptime
+scheduler_avg_cpu,~23,percent_of_one_core,cumulative estimate
+remote_sync_recent_cpu,28-31,seconds_per_run,includes full multistation builder
+remote_sync_recent_peak_memory,1.2-1.4,GiB,systemd peak
+builder_measured_elapsed,11.83,seconds,one observed invocation
+builder_measured_cpu,10.16,seconds,one observed invocation
+builder_measured_peak_rss,1237,MiB,one observed invocation
+builder_measured_write_bytes,353.72,MiB,one observed invocation
+multistation_rows,~169700,rows,
+wal_physical_size,~1.29,GiB,physical reusable WAL file
+wal_current_mxframe,30,frames,read from WAL-index header
+dashboard_history_requests_20m,78,requests,
+dashboard_hourly_requests_20m,38,requests,
+sj01_hourly_latency,2.109,seconds,local curl
+cu01_hourly_latency,0.022,seconds,local curl
+sj01_history_latency,0.430,seconds,local curl
+cu01_history_latency,0.850,seconds,local curl
+idle_repl_rss_removed,~52,MiB,6 abandoned non-production REPLs terminated
