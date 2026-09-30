@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import sqlite3
 from pathlib import Path
@@ -15,6 +16,58 @@ FREQUENCY_BAND = "6_GHZ"
 OBS_TABLE = "scientific_campaign_observations"
 LINK_TABLE = "scientific_campaign_6g_integrated"
 
+CLASSIFICATION_PREFIX_COLUMNS = [
+    "campaign_id",
+    "campaign_start_local",
+    "deployment_phase",
+    "field_analysis_valid",
+    "deployment_note",
+]
+
+WEATHER_MATCH_COLUMNS = [
+    "bucket_minute",
+    "weather_timestamp_utc",
+    "weather_timestamp_local",
+    "local_temp_avg_c",
+    "local_temp_min_c",
+    "local_temp_max_c",
+    "local_hum_avg_pct",
+    "local_hum_min_pct",
+    "local_hum_max_pct",
+    "local_press_hpa",
+    "local_dew_point_c",
+    "local_vapor_pressure_hpa",
+    "local_rain_1min_mm",
+    "local_rain_1h_mm",
+    "local_rain_total_mm",
+    "local_pulses_delta",
+    "local_pulses_total",
+    "local_wind_speed_ms",
+    "local_wind_direction_deg",
+    "local_wind_gust_ms",
+    "local_wind_ok",
+    "local_bme_ok",
+    "local_rain_ok",
+    "era5_timestamp_utc",
+    "era5_timestamp_local",
+    "era5_site_tag",
+    "era5_temp_c",
+    "era5_dewpoint_c",
+    "era5_rh_pct",
+    "era5_precip_mm",
+    "era5_press_hpa",
+    "era5_wind_ms",
+    "nasa_timestamp_utc",
+    "nasa_timestamp_local",
+    "nasa_site_tag",
+    "nasa_temp_c",
+    "nasa_dewpoint_c",
+    "nasa_rh_pct",
+    "nasa_precip_mm",
+    "nasa_press_hpa",
+    "nasa_wind10m_ms",
+]
+
 
 def table_exists(connection: sqlite3.Connection, table_name: str) -> bool:
     return connection.execute(
@@ -27,6 +80,290 @@ def read_table(connection: sqlite3.Connection, table_name: str) -> pd.DataFrame:
     if not table_exists(connection, table_name):
         raise RuntimeError(f"No existe la tabla obligatoria: {table_name}")
     return pd.read_sql_query(f'SELECT * FROM "{table_name}"', connection)
+
+
+def quote_identifier(name: str) -> str:
+    return '"' + name.replace('"', '""') + '"'
+
+
+def table_columns(
+    connection: sqlite3.Connection,
+    table_name: str,
+) -> list[str]:
+    return [
+        row[1]
+        for row in connection.execute(
+            f"PRAGMA table_info({quote_identifier(table_name)})"
+        ).fetchall()
+    ]
+
+
+def campaign_classification_select(
+    connection: sqlite3.Connection,
+) -> tuple[str, tuple[object, ...], list[str]]:
+    source_columns = table_columns(
+        connection,
+        "master_observations_multistation",
+    )
+
+    if not source_columns:
+        raise RuntimeError(
+            "No existe la tabla obligatoria: "
+            "master_observations_multistation"
+        )
+
+    source_projection = ",\n        ".join(
+        f"m.{quote_identifier(column)}"
+        for column in source_columns
+    )
+
+    cutoff_utc = (
+        CAMPAIGN_START_LOCAL
+        .tz_convert("UTC")
+        .isoformat()
+    )
+
+    valid_timestamp = (
+        "julianday(m.bucket_minute) "
+        "IS NOT NULL"
+    )
+
+    sql = f"""
+    SELECT
+        ? AS campaign_id,
+        ? AS campaign_start_local,
+        CASE
+            WHEN {valid_timestamp}
+             AND UPPER(COALESCE(m.station_id, '')) = 'CU01'
+             AND m.bucket_minute < ?
+            THEN 'FIELD_BASELINE_CU01'
+            WHEN {valid_timestamp}
+             AND UPPER(COALESCE(m.station_id, '')) = 'SJ01'
+             AND m.bucket_minute < ?
+            THEN 'LABORATORY_TEST'
+            WHEN {valid_timestamp}
+             AND UPPER(COALESCE(m.station_id, ''))
+                 IN ('CU01', 'SJ01')
+             AND m.bucket_minute >= ?
+            THEN 'FIELD_OPERATION'
+            ELSE 'UNCLASSIFIED'
+        END AS deployment_phase,
+        CASE
+            WHEN {valid_timestamp}
+             AND UPPER(COALESCE(m.station_id, ''))
+                 IN ('CU01', 'SJ01')
+             AND m.bucket_minute >= ?
+            THEN 1
+            ELSE 0
+        END AS field_analysis_valid,
+        CASE
+            WHEN {valid_timestamp}
+             AND UPPER(COALESCE(m.station_id, '')) = 'CU01'
+             AND m.bucket_minute < ?
+            THEN 'Medición real de Cuñacales anterior a la campaña integrada de 6 GHz.'
+            WHEN {valid_timestamp}
+             AND UPPER(COALESCE(m.station_id, '')) = 'SJ01'
+             AND m.bucket_minute < ?
+            THEN 'Prueba de laboratorio de SJ01; no representa Cerro San José.'
+            WHEN {valid_timestamp}
+             AND UPPER(COALESCE(m.station_id, ''))
+                 IN ('CU01', 'SJ01')
+             AND m.bucket_minute >= ?
+            THEN 'Medición de campo posterior al despliegue definitivo de SJ01.'
+            ELSE 'Registro fuera de las reglas conocidas de campaña.'
+        END AS deployment_note,
+        {source_projection},
+        CASE
+            WHEN {valid_timestamp}
+            THEN m.bucket_minute
+            ELSE NULL
+        END AS campaign_timestamp_utc
+    FROM master_observations_multistation AS m
+    ORDER BY m.rowid
+    """
+
+    params = (
+        CAMPAIGN_ID,
+        CAMPAIGN_START_LOCAL.isoformat(),
+        cutoff_utc,
+        cutoff_utc,
+        cutoff_utc,
+        cutoff_utc,
+        cutoff_utc,
+        cutoff_utc,
+        cutoff_utc,
+    )
+
+    expected_columns = (
+        CLASSIFICATION_PREFIX_COLUMNS
+        + source_columns
+        + ["campaign_timestamp_utc"]
+    )
+
+    return sql, params, expected_columns
+
+
+def publish_classified_observations_sql(
+    connection: sqlite3.Connection,
+) -> None:
+    sql, params, expected_columns = (
+        campaign_classification_select(
+            connection
+        )
+    )
+
+    if not table_exists(
+        connection,
+        OBS_TABLE,
+    ):
+        connection.execute(
+            f"CREATE TABLE "
+            f"{quote_identifier(OBS_TABLE)} "
+            f"AS {sql}",
+            params,
+        )
+        connection.commit()
+        return
+
+    current_columns = table_columns(
+        connection,
+        OBS_TABLE,
+    )
+
+    if current_columns != expected_columns:
+        raise RuntimeError(
+            "Schema mismatch publishing "
+            f"{OBS_TABLE}: "
+            f"current={current_columns}, "
+            f"expected={expected_columns}"
+        )
+
+    quoted_columns = ", ".join(
+        quote_identifier(column)
+        for column in current_columns
+    )
+
+    try:
+        connection.execute(
+            "BEGIN IMMEDIATE"
+        )
+
+        connection.execute(
+            f"DELETE FROM "
+            f"{quote_identifier(OBS_TABLE)}"
+        )
+
+        connection.execute(
+            f"INSERT INTO "
+            f"{quote_identifier(OBS_TABLE)} "
+            f"({quoted_columns}) "
+            f"{sql}",
+            params,
+        )
+
+        connection.commit()
+
+    except Exception:
+        if connection.in_transaction:
+            connection.rollback()
+        raise
+
+
+def read_campaign_weather(
+    connection: sqlite3.Connection,
+) -> pd.DataFrame:
+    available = set(
+        table_columns(
+            connection,
+            "master_observations_multistation",
+        )
+    )
+
+    selected = [
+        "station_id",
+        *[
+            column
+            for column in WEATHER_MATCH_COLUMNS
+            if column in available
+        ],
+    ]
+
+    cutoff_utc = (
+        CAMPAIGN_START_LOCAL
+        .tz_convert("UTC")
+        - pd.Timedelta(minutes=2)
+    ).isoformat()
+
+    projection = ", ".join(
+        quote_identifier(column)
+        for column in selected
+    )
+
+    return pd.read_sql_query(
+        f"""
+        SELECT {projection}
+        FROM master_observations_multistation
+        WHERE UPPER(COALESCE(station_id, ''))
+            IN ('CU01', 'SJ01')
+          AND julianday(bucket_minute)
+            IS NOT NULL
+          AND bucket_minute >= ?
+        ORDER BY station_id, bucket_minute
+        """,
+        connection,
+        params=(cutoff_utc,),
+    )
+
+
+def write_atomic_table_csv(
+    connection: sqlite3.Connection,
+    table_name: str,
+    destination: Path,
+    fetch_size: int = 2000,
+) -> None:
+    destination.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    temporary = destination.with_suffix(
+        destination.suffix + ".tmp"
+    )
+
+    cursor = connection.execute(
+        f"SELECT * FROM "
+        f"{quote_identifier(table_name)} "
+        "ORDER BY rowid"
+    )
+
+    columns = [
+        item[0]
+        for item in cursor.description
+    ]
+
+    with temporary.open(
+        "w",
+        encoding="utf-8",
+        newline="",
+    ) as handle:
+        writer = csv.writer(
+            handle,
+            lineterminator="\n",
+        )
+
+        writer.writerow(columns)
+
+        while True:
+            rows = cursor.fetchmany(
+                fetch_size
+            )
+
+            if not rows:
+                break
+
+            writer.writerows(rows)
+
+    temporary.replace(destination)
 
 
 def parse_utc(values: pd.Series) -> pd.Series:
@@ -300,41 +637,161 @@ def write_atomic_csv(dataframe: pd.DataFrame, destination: Path) -> None:
 
 
 def build(database: Path, output_dir: Path) -> dict[str, object]:
-    connection = sqlite3.connect(database, timeout=60)
-    connection.execute("PRAGMA busy_timeout=60000")
+    connection = sqlite3.connect(
+        database,
+        timeout=60,
+    )
+
+    connection.execute(
+        "PRAGMA busy_timeout=60000"
+    )
+
+    observations_csv = (
+        output_dir
+        / "scientific_campaign_observations.csv"
+    )
+
+    integrated_csv = (
+        output_dir
+        / "scientific_campaign_6g_integrated.csv"
+    )
+
     try:
-        observations = read_table(connection, "master_observations_multistation")
-        telemetry = read_table(connection, "radio_link_config_telemetry")
-        classified = serializable(add_campaign_classification(observations))
-        integrated = serializable(build_integrated_link(observations, telemetry))
-        atomic_publish_table(connection, OBS_TABLE, classified)
-        atomic_publish_table(connection, LINK_TABLE, integrated)
+        # The classified observation product is a deterministic
+        # transformation of the wide multistation master. Perform
+        # that transformation inside SQLite so ~170k x 82 values do
+        # not need to make a Python/pandas round trip.
+        publish_classified_observations_sql(
+            connection
+        )
+
+        # The RF integration only needs field-period weather columns.
+        # Keep the wide raw RF telemetry because it is part of the
+        # historical integrated-product schema.
+        observations = read_campaign_weather(
+            connection
+        )
+
+        telemetry = read_table(
+            connection,
+            "radio_link_config_telemetry",
+        )
+
+        integrated = serializable(
+            build_integrated_link(
+                observations,
+                telemetry,
+            )
+        )
+
+        atomic_publish_table(
+            connection,
+            LINK_TABLE,
+            integrated,
+        )
+
+        # Stream stable SQLite products directly to atomic CSV files.
+        # This preserves CSV content while avoiding two additional
+        # hundreds-of-megabytes pandas copies.
+        write_atomic_table_csv(
+            connection,
+            OBS_TABLE,
+            observations_csv,
+        )
+
+        write_atomic_table_csv(
+            connection,
+            LINK_TABLE,
+            integrated_csv,
+        )
+
+        classified_rows = connection.execute(
+            f"SELECT COUNT(*) FROM "
+            f"{quote_identifier(OBS_TABLE)}"
+        ).fetchone()[0]
+
+        field_rows = connection.execute(
+            f"SELECT COUNT(*) FROM "
+            f"{quote_identifier(OBS_TABLE)} "
+            "WHERE field_analysis_valid = 1"
+        ).fetchone()[0]
+
+        laboratory_sj01_rows = (
+            connection.execute(
+                f"SELECT COUNT(*) FROM "
+                f"{quote_identifier(OBS_TABLE)} "
+                "WHERE station_id = 'SJ01' "
+                "AND deployment_phase = "
+                "'LABORATORY_TEST'"
+            ).fetchone()[0]
+        )
+
+        integrated_6g_rows = (
+            connection.execute(
+                f"SELECT COUNT(*) FROM "
+                f"{quote_identifier(LINK_TABLE)}"
+            ).fetchone()[0]
+        )
+
+        both_weather_matched = (
+            connection.execute(
+                f"SELECT COALESCE("
+                "SUM(both_weather_stations_matched), "
+                "0) FROM "
+                f"{quote_identifier(LINK_TABLE)}"
+            ).fetchone()[0]
+        )
+
+        ul_link_rate_available = (
+            connection.execute(
+                f"SELECT COALESCE("
+                "SUM(ul_link_rate_available), "
+                "0) FROM "
+                f"{quote_identifier(LINK_TABLE)}"
+            ).fetchone()[0]
+        )
+
     finally:
         connection.close()
 
-    observations_csv = output_dir / "scientific_campaign_observations.csv"
-    integrated_csv = output_dir / "scientific_campaign_6g_integrated.csv"
-    write_atomic_csv(classified, observations_csv)
-    write_atomic_csv(integrated, integrated_csv)
-
     summary = {
         "campaign_id": CAMPAIGN_ID,
-        "campaign_start_local": CAMPAIGN_START_LOCAL.isoformat(),
-        "classified_rows": len(classified),
-        "integrated_6g_rows": len(integrated),
-        "field_rows": int((classified["field_analysis_valid"] == 1).sum()),
-        "laboratory_sj01_rows": int(
-            (
-                (classified["station_id"] == "SJ01")
-                & (classified["deployment_phase"] == "LABORATORY_TEST")
-            ).sum()
+        "campaign_start_local": (
+            CAMPAIGN_START_LOCAL.isoformat()
         ),
-        "both_weather_matched": int(integrated["both_weather_stations_matched"].sum()),
-        "ul_link_rate_available": int(integrated["ul_link_rate_available"].sum()),
+        "classified_rows": int(
+            classified_rows
+        ),
+        "integrated_6g_rows": int(
+            integrated_6g_rows
+        ),
+        "field_rows": int(
+            field_rows
+        ),
+        "laboratory_sj01_rows": int(
+            laboratory_sj01_rows
+        ),
+        "both_weather_matched": int(
+            both_weather_matched
+        ),
+        "ul_link_rate_available": int(
+            ul_link_rate_available
+        ),
         "active_throughput_measured": False,
-        "outputs": [str(observations_csv), str(integrated_csv)],
+        "outputs": [
+            str(observations_csv),
+            str(integrated_csv),
+        ],
     }
-    print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+    print(
+        json.dumps(
+            summary,
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+
     return summary
 
 

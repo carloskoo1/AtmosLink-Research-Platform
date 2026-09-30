@@ -1,0 +1,20 @@
+metric,before,after,unit,notes
+scheduler_elapsed,55.087,24.12,seconds,immediately preceding scheduler run vs full optimized manual production run
+speedup,,2.28,x,
+elapsed_reduction,,56.2,percent,
+historical_stage_peak_rss,1187796,,KiB,read-only old read/classify/integrate profile before publication
+optimized_full_peak_rss,,392472,KiB,full optimized production-equivalent run including publication
+historical_master_pandas_memory,371.2,,MiB,170324 rows x full wide schema
+optimized_weather_input_memory,,58.4,MiB,67185 field-period weather rows
+classification_mismatches,0,0,count,old stable classification vs SQL classification on common snapshot rows
+stream_observations_csv_hash_equal,,1,boolean,byte-identical before deployment
+stream_integrated_csv_hash_equal,,1,boolean,byte-identical before deployment
+classified_rows,,170342,rows,optimized manual run
+integrated_6g_rows,,7920,rows,optimized manual run
+field_rows,,67190,rows,optimized manual run
+laboratory_sj01_rows,,20375,rows,optimized manual run
+both_weather_matched,,7733,rows,optimized manual run
+ul_link_rate_available,,0,rows,optimized manual run
+dependent_view_rows,,7920,rows,scientific_campaign_6g_analysis_qc
+sqlite_quick_check,,ok,text,
+source_sha256,6baf3977f2039da8eff0504131bd3b9aa8522b8b9419d92a59132c8e848fe178,ea39052a83561ea13ecdbd1a3c27ef5658d3f6f1dc50e5dc0cc90b623fee399a,sha256,
