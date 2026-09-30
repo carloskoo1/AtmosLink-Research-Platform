@@ -1,0 +1,28 @@
+metric,value,unit,notes
+profile_samples,60,count,
+profile_duration,301.35,seconds,
+system_cpu_busy_mean,14.376,percent_total_4_logical_cpus,
+system_cpu_busy_median,10.088,percent_total_4_logical_cpus,
+system_cpu_busy_max,38.808,percent_total_4_logical_cpus,
+load1_mean,0.757,load,
+load1_max,1.39,load,
+memory_available_mean,6363.4,MiB,
+memory_available_min,5125.6,MiB,
+swap_used,496.1,MiB,constant through all samples
+scheduler_cpu_mean,14.194,percent_one_core,
+scheduler_cpu_max,100.327,percent_one_core,
+scheduler_memory_current_max,1131.7,MiB,cgroup includes file cache
+dashboard_cpu_mean,3.816,percent_one_core,
+dashboard_memory,169.0,MiB,stable
+dashboard_swap,0,MiB,
+weather_logger_cpu_mean,0.294,percent_one_core,
+weather_logger_memory,20.1,MiB,
+remote_sync_full_rebuild_cpu,28.048,seconds,one invocation in profile window
+remote_sync_skip_cpu,~1.3,seconds_per_cycle,two observed skip cycles
+multistation_rows_after_rebuild,170373,rows,
+observed_builder_rss,~1269,MiB,process RSS spot observation during full rebuild
+enrich_scheduler_duration,25.088,seconds,natural cycle during profile
+qc_scheduler_duration,2.767,seconds,natural cycle during profile
+build_station_observations_duration,6.977,seconds,natural cycle during profile
+scientific_comparison_duration,4.222,seconds,natural cycle during profile
+epmp_cron_correlated_system_busy,36.409,percent_total_4_logical_cpus,correlation at 23:50:05 not process-level attribution
