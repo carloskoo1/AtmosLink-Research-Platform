@@ -18,3 +18,10 @@ ul_link_rate_available,,0,rows,optimized manual run
 dependent_view_rows,,7920,rows,scientific_campaign_6g_analysis_qc
 sqlite_quick_check,,ok,text,
 source_sha256,6baf3977f2039da8eff0504131bd3b9aa8522b8b9419d92a59132c8e848fe178,ea39052a83561ea13ecdbd1a3c27ef5658d3f6f1dc50e5dc0cc90b623fee399a,sha256,
+repeat_full_elapsed,,22.35,seconds,second complete optimized execution
+repeat_full_peak_rss,,392428,KiB,second complete optimized execution
+current_classification_rows_compared,,170342,rows,post-commit semantic regression
+current_classification_cell_mismatches,,0,count,post-commit semantic regression
+current_integrated_rows_compared,,7920,rows,post-commit semantic regression
+current_integrated_bad_columns,,0,count,post-commit semantic regression
+current_integrated_bad_cells,,0,count,post-commit semantic regression

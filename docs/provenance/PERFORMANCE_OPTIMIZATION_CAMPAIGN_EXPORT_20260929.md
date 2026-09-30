@@ -118,3 +118,25 @@ Post-change source SHA-256:
 Protected pre-change source and pre-change output hashes are stored outside Git under:
 
 `/home/carlos/.config/atmoslink/provenance_backups/20260929_campaign_export_optimization/`
+
+
+## Post-commit confirmation
+
+After the initial optimization commit, a second complete execution at 23:37:33 local time was run to confirm repeatability:
+
+- elapsed: 22.35 s;
+- user CPU: 17.22 s;
+- system CPU: 2.60 s;
+- peak RSS: 392,428 KiB;
+- classified rows: 170,342;
+- integrated rows: 7,920.
+
+A full current-state semantic regression was then executed against the optimized published tables:
+
+- classification rows compared: 170,342;
+- classification cell mismatches: 0;
+- integrated rows compared: 7,920;
+- integrated columns with any mismatch: 0;
+- integrated mismatched cells: 0.
+
+This confirms that, on the current source snapshot, the optimized exporter reproduces the existing campaign-classification and RF-weather integration semantics exactly while reducing elapsed time and memory pressure.
