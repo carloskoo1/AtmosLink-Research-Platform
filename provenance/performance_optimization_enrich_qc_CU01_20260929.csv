@@ -1,0 +1,20 @@
+metric,before,after,unit,notes
+enrich_scheduler_runtime,35.087,15.213,seconds,observed adjacent production scheduler runs
+enrich_runtime_reduction,,56.6,percent,from observed scheduler pair
+enrich_profile_runtime,72.810,,seconds,cProfile baseline; instrumentation overhead means not used as direct speedup denominator
+vector_math_stage,,0.04,seconds,approximately 122k rows
+enrich_equivalence_rows,122302,122302,rows,initial controlled comparison
+enrich_equivalence_mismatches,,0,count,7 derived variables
+enrich_equivalence_max_abs_diff,,0.0,numeric,all seven derived variables
+production_equivalence_rows,,122308,rows,later verification after scheduled optimized run
+production_equivalence_mismatches,,0,count,all seven derived variables
+qc_controlled_runtime,16.080,2.692,seconds,same-snapshot manual comparison
+qc_runtime_reduction,,83.3,percent,controlled comparison
+qc_speedup,,5.97,x,controlled comparison
+qc_issue_count,3760,3760,rows,controlled same-snapshot comparison
+qc_csv_sha256_before,3e16937051670ff8cac2b765117b694f3265c961adddecd3fc879662a7db2976,3e16937051670ff8cac2b765117b694f3265c961adddecd3fc879662a7db2976,sha256,byte-identical old/new controlled outputs
+qc_scheduled_runtime,,2.439,seconds,first observed scheduled optimized run
+scheduler_interval_enrich,300,300,seconds,unchanged
+scheduler_interval_qc,300,300,seconds,unchanged
+enrich_source_sha256,6c5775428d8cb66cf5868ef6996b7b8eb74955eb6783ee985c1f72cb6ebdfd90,bdea1adb935cffb8cf12eaa9041820ecc5f0756df08924137bc34b7353daf1ea,sha256,
+qc_source_sha256,f1719a35ebb7dddcca53e9de18184e882e66fc2285e403d85b534c3b6397e24f,9b3b930663070ad60402702fda1ea4a2dca453cd67e814b4ca1916ca88a0ad6e,sha256,
