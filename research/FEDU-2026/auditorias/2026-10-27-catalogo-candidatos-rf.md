@@ -30,7 +30,7 @@
 
 1. Establecer un desenlace futuro explícito **independiente de los predictores**: caída de servicio, indisponibilidad o degradación sostenida de una medición operativa independiente (no inferirla del código `ERROR` ni de RSSI que también se introduce en X).
 2. Identificar el instante de inicio como intervalo entre última prueba sana y primera prueba anómala, si la cadencia es discreta; auditar inicio, recuperación, dirección y estado RF.
-3. Exigir corroboración de bitácoras independientes (dispositivo y energía, red, servicio, mantenimiento) y asignar causa: RF posible, transporte/ruta, instrumentación, corte de alimentación, transición experimental, indeterminada.
+3. Buscar corroboración en bitácoras de los equipos AP/SM, gestión cnMaestro y servicios de conectividad **del mismo radioenlace**. Clasificar, según evidencia, RF posible, transporte/ruta, instrumentación, transición experimental o indeterminada. Fuentes ajenas al enlace quedan excluidas.
 4. Mantener categoría **indeterminada** en ventanas con datos ausentes o cortes instrumentales; no tratarlas como clase negativa.
 5. Revisión técnica registrada con evidencia de cada caso y fecha; el revisor no debe conocer la predicción del modelo.
 6. Congelar reglas, horizonte y elegibilidad **ANTES** de abrir prueba prospectiva.
@@ -39,4 +39,4 @@
 
 La hipótesis general de anticipación de degradaciones **NO PUEDE CONTRASTARSE todavía** con estos datos sin validación independiente de episodios. La auditoría no justifica declarar ninguna victoria o fracaso de ML. El pronóstico de throughput medido es una tarea alternativa cuantitativamente viable, pero la persistencia superó a Ridge y boosting en MAE retrospectivo. Una eventual sustitución formal de la tarea primaria requiere actualizar pregunta, objetivo, hipótesis, variable independiente/dependiente, indicadores, técnicas e instrumentos en el cuerpo, y matrices de consistencia/operacionalización en anexos A/B, antes del test.
 
-**Pendientes**: completar fichas I4 de los grupos más plausibles; revisar fuentes eléctricas y gestión de red sin intervenciones sobre radios; delimitar un bloque prospectivo realmente independiente; registrar `first_seen_at` de datos entrantes para reducir fuga temporal. 
+**Pendientes**: completar fichas I4 de los grupos más plausibles con registros AP/SM, cnMaestro y conectividad propios del radioenlace; delimitar un bloque prospectivo independiente; registrar `first_seen_at` de datos entrantes para reducir fuga temporal. No incluir sistemas externos al enlace. 
