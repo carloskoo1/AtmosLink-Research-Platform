@@ -8,7 +8,7 @@
 
 ## 1. Testimonio del responsable de campo
 
-El responsable recuerda que, **pocos días después de comenzar la experimentación de septiembre de 2026**, se desconectó del switch un **cable UTP/PoE correspondiente al AP del radioenlace de 6 GHz**, tras lo cual perdió acceso remoto. **Aclaración explícita del operador del 27-oct-2026:** el cable estaba conectado al **AP de 6 GHz**, no al Controlador ni a Starlink. En la declaración inicial consideraba posible que no se hubiera perdido el enlace, pero esa impresión no está sustentada por una comprobación local registrada del AP y SM durante la interrupción.
+Según la cronología informada previamente por el responsable, **el enlace de 6 GHz comenzó a funcionar el 31-ago-2026 alrededor de las 16:00**. El responsable precisa ahora que, **unos días después de la puesta en operación del enlace, no de comenzar la campaña factorial 3×2**, se desconectó del switch un **cable UTP/PoE correspondiente al AP del radioenlace de 6 GHz**, tras lo cual perdió acceso remoto. **Aclaración explícita del operador del 27-oct-2026:** el cable estaba conectado al **AP de 6 GHz**, no al Controlador ni a Starlink. En la declaración inicial consideraba posible que no se hubiera perdido el enlace, pero esa impresión no está sustentada por una comprobación local registrada del AP y SM durante la interrupción.
 
 **Queda confirmado por testimonio qué equipo estaba al extremo del cable: el AP de 6 GHz.** No se conoce todavía la fecha exacta, el puerto preciso, la duración ni si la desconexión interrumpió la alimentación PoE del AP. Si esa era su única alimentación y el cable fue físicamente retirado, el AP habría quedado sin energía, por lo que **la continuidad física del enlace AP–SM sería muy improbable**. No convertir esta consecuencia condicionada en hecho observado sin comprobar eventos del switch, uptime y asociación del SM.
 
@@ -17,7 +17,7 @@ El responsable recuerda que, **pocos días después de comenzar la experimentaci
 - **15-sep:** una transición a F6655_B20 falló y hubo pérdida de acceso al extremo remoto; se realizó **un ciclo PoE intencional** en puerto 6 del cnMatrix (AP 6 GHz), como recuperación. Eso **no es evidencia de un cable UTP accidentalmente desenchufado**.
 - **19-sep ~13:34 a 20-sep ~09:19:** incidente documentado de pérdida de controlador de CU01 por interrupción de energía; los informes de campaña indican continuidad física RF y adquisición local SJ01. **No describen desconexión UTP**. Candidato a explorar por coincidencia temporal y de síntoma de inaccesibilidad, sin igualarlo al testimonio.
 - **20-sep:** cnMatrix `Offline` en cnMaestro debido a problemas del plano de gestión IPv4/ruta, mientras LAN, PoE y radios seguían operativos. **No se documenta retirada de un cable**. Otro candidato contextual, no equivalente.
-- No asignar este testimonio a ninguno de los ocho I4 C001, C002, C003, C011, C016, C020, C022 o C024. Corresponden a otros días y no existe correspondencia individual acreditada.
+- **Reabrir cotejo temporal de C001 y C002 (04-sep), y solo secundariamente C003 (10-sep),** porque ahora sabemos que el incidente recordado se produjo «unos días» después de inaugurar el enlace el 31-ago; no significa que ninguno corresponda al mismo evento. No asignar identificación causal ni nueva etiqueta sin cotejar puerto del switch, telemetría AP/SM y registro de la intervención. C011, C016, C020, C022 y C024 ocurren en octubre y no son candidatos plausibles para el hecho recordado.
 
 Referencias locales bajo el controlador:
 - `Andean-6GHz-Link-Experiment/INCIDENT_2026-09-15.md`
@@ -58,3 +58,11 @@ Para FEDU, este episodio sería especialmente útil como **control negativo** de
 El operador precisó inequívocamente: «al AP de 6GHZ». En consecuencia, se **descarta como hipótesis principal** que se tratara del cable del Controlador o del uplink Starlink. En este caso, el foco es identificar **qué puerto del switch alimentaba/comunicaba al AP 6 GHz**, registrar si hubo `PoE off`/ausencia de alimentación, y determinar cuánto tiempo el SM estuvo desasociado, si ocurrió. El incidente de ciclo PoE intencional del 15-sep sigue siendo **otro evento documentado, no necesariamente el mismo**.
 
 La clase preliminar se refina a `AP_6GHZ_UTP_DISCONNECTED_OPERATOR_REPORTED`. **No asignar todavía `RF_LINK_DOWN` confirmado ni usar el episodio como control negativo de caída RF.** Para evaluar predicción de este hecho, distinguir el corte **exógeno abrupto** (probablemente no anticipable por una serie RF) de su **detección** mediante evidencia del switch, AP y SM.
+
+## 7. Rectificación cronológica, 27-oct-2026 (declaración más reciente)
+
+**Cronología de instalación recuperada:** enlace 6 GHz CU01–SJ01 instalado y operativo **31-ago-2026, aproximadamente 16:00 hora Perú**; primeros registros RF SJ01 alrededor de las 15:53, y telemetría detallada de configuración desde el 01-sep ~13:30. La campaña factorial 3×2 ocurrió después y **no es el punto de referencia del recuerdo**.
+
+**Declaración del operador:** «fue unos días después de iniciar el enlace de 6 GHz». No se conoce día ni hora exactos de la retirada del cable. El intervalo de búsqueda prioritario es **los primeros días de septiembre**, sin cerrar de modo arbitrario una fecha final.
+
+**Cambio metodológico relevante:** los grupos I4 del **04-sep (C001 y C002)** ahora merecen cotejo temporal prioritario, **sin equipararlos** a la desconexión solo por proximidad. El grupo C003 del 10-sep es una segunda comprobación posible si el recuerdo temporal fuese impreciso. Correlacionar exclusivamente con eventos del mismo AP, puerto físico del switch, pérdida/restauración PoE y asociatividad SM; cada caso conserva estado **INDETERMINADO**. Los reportes del 15, 19 y 20-sep no se identifican como el hecho relatado.
