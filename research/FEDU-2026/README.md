@@ -20,6 +20,7 @@ Desarrollar y validar sobre AtmosLink una capa predictiva que estime, con datos 
 - [Matriz de consistencia — Anexo A](anexos/matriz-consistencia.md)
 - [Operacionalización de variables — Anexo B](anexos/operacionalizacion-variables.md)
 - [Plan de datos y validación](plan-de-datos-y-validacion.md)
+- [Protocolo complementario de pronóstico de throughput activo](protocolo-pronostico-throughput.md)
 - [Formato de informe final FEDU y estado](informe-final-fedu.md)
 - [Bitácora de decisiones y pendientes](bitacora.md)
 
@@ -30,3 +31,7 @@ Este directorio versiona el protocolo, matrices, definiciones y futuros resultad
 
 ## Referencia maestra
 La versión editable del proyecto FEDU se mantiene separada de esta representación Markdown. Al aprobar cambios, reconciliar ambos documentos; el título es inmutable.
+
+## Avance analítico del 26 de octubre de 2026
+
+Se verificaron 9 709 pruebas activas, 9 428 con estado OK; 9 367 tenían configuración RF completa y el intervalo mediano por dirección/régimen fue de 15 minutos. Se ha pre-registrado un **pronóstico complementario** de throughput medido a H=60 min (H=15 secundario), comparando contra persistencia. La auditoría de episodios continúa abierta; no hay todavía resultados de un modelo FEDU validado.
