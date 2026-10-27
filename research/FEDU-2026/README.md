@@ -23,6 +23,8 @@ Desarrollar y validar sobre AtmosLink una capa predictiva que estime, con datos 
 - [Protocolo complementario de pronóstico de throughput activo](protocolo-pronostico-throughput.md)
 - [Auditoría 003 — elegibilidad retrospectiva a 60 minutos](auditorias/2026-10-26-elegibilidad-pronostico-h60.md)
 - [Script de auditoría 003 — solo lectura](scripts/auditar_pares_causales_h60.py)
+- [Auditoría 004 — dataset retrospectivo privado congelado](auditorias/2026-10-26-construccion-dataset-retrospectivo-h60.md)
+- [Generador de pares X/y privados](scripts/construir_pares_privados_h60.py)
 - [Formato de informe final FEDU y estado](informe-final-fedu.md)
 - [Bitácora de decisiones y pendientes](bitacora.md)
 
@@ -37,3 +39,7 @@ La versión editable del proyecto FEDU se mantiene separada de esta representaci
 ## Avance analítico del 26 de octubre de 2026
 
 Se verificaron 9 709 pruebas activas, 9 428 con estado OK; 9 367 tenían configuración RF completa y el intervalo mediano por dirección/régimen fue de 15 minutos. Se ha pre-registrado un **pronóstico complementario** de throughput medido a H=60 min (H=15 secundario), comparando contra persistencia. La auditoría de episodios continúa abierta; no hay todavía resultados de un modelo FEDU validado.
+
+### Dataset retrospectivo con corte del 26-10-2026 a las 22:10 (Perú)
+
+Se generaron 8 441 pares privados X/y, con 7 955 pares RF compatibles y 7 000 pares RF+meteorología. Archivos preservados en el controlador en carpeta privada y fuera de este repositorio. No hay verificación de `available_at` ni prueba predictiva prospectiva; no declarar superioridad de ML.
