@@ -59,3 +59,7 @@ Se rectifica expresamente la inclusión exploratoria del dispositivo remoto `pan
 - Revisados individualmente C001, C002, C003, C011, C016, C020, C022 y C024 mediante el snapshot local íntegro (tablas TCP activo y telemetría RF); resultado **8 indeterminados / 0 RF corroborados**.
 - Confirmados 0 datos RF operativos válidos alrededor de C020; en C002 y C003 predominan errores de extracción de telemetría. No imputar pérdida de radio a partir del colector, errores TCP ni medición eléctrica ajena.
 - [Informe técnico 008](auditorias/2026-10-27-i4-alcance-y-ocho-casos.md). No se abrió prueba de hipótesis ni se cambiaron equipos o procesos.
+
+## 2026-10-27 — Auditoría 012: incidente del cable AP6 (01-sep)
+
+Se comprobaron en el snapshot 12 muestras RF completas de la hora anterior a la pérdida de acceso del AP. RSSI y SNR estaban estables, sin precursor gradual evidente. En 39/39 pares locales CU01 y SJ01 coincidían estado, error, MCS y SNR: esas filas no son dos fuentes independientes. La primera prueba activa throughput del día ocurrió a las 21:40:56, después del incidente. Documento: [Auditoría 012](auditorias/2026-10-27-auditoria-012-precursores-independencia-UTP.md). Sigue pendiente confirmar PoE y eventos de firmware; no se cambió producción ni se etiquetó una caída RF confirmada.
