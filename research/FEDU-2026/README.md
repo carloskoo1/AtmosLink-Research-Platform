@@ -79,3 +79,7 @@ Se cotejaron las ocho fichas I4 con los documentos de incidencias internas dispo
 ### Taxonomía de causas y alcance predictivo (27-oct-2026)
 
 [Propuesta controlada de clasificación de incidentes y predictibilidad](protocolo-taxonomia-fallos-y-predicibilidad.md). Los reportes de campo incluyen fallos de la propia alimentación, alineación infrecuente en 6 GHz, enlace Ethernet AP-switch y fallos de Starlink. Estos antecedentes se documentan como **testimonio por corroborar**, no como nuevas etiquetas del dataset. Se distingue riesgo RF futuro de detección de cortes abruptos, gestión y WAN. La hipótesis aprobada y el título no se han modificado; el cotejo de las ocho fichas I4 permanece abierto.
+
+### AOP-UTP-SEP-001: pérdida de acceso remoto por UTP/PoE, septiembre (pendiente)
+
+Se documentó el [testimonio y la confrontación cronológica](https://github.com/carloskoo1/AtmosLink-Research-Platform/blob/research/fedu-2026-protocolo/research/FEDU-2026/auditorias/2026-10-27-antecedente-utp-poe-septiembre.md) de un cable asociado al switch que habría sido desconectado pocos días después de iniciarse la campaña. El operador recuerda pérdida de acceso remoto y posible continuidad RF, pero no están confirmados puerto, fecha, cable ni estado AP/SM. Los incidentes documentados de 15, 19 y 20 de septiembre son **contexto**, no se identifican como el mismo hecho. No cuenta como evento RF positivo/negativo para ML.
