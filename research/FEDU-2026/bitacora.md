@@ -41,3 +41,10 @@ No declarar como resultado FEDU el desempeño reportado en otros repositorios, t
 - El respaldo ZIP de cierre 3×2 del Drive Koo fue verificado por coincidencia de MD5 local y remoto. El respaldo UNC 2/2 permanece pendiente; la cuota futura del Drive principal es baja.
 - No se entrenaron modelos nuevos ni se abrió prueba independiente FEDU. La tarea predictiva principal por episodios sigue supeditada a verdad-terreno independiente y eventual revisión formal de hipótesis.
 - [Documentación de reinicio](retoma-post-3x2-2026-10-27.md).
+
+## 2026-10-27 — Prueba acotada first_seen y catálogo de incidentes
+
+- 14 sondeos de 25 s completados sin errores, 6 registros RF y 5 TCP nuevos durante ensayo; la captura incremental mostró 9,94–24,94 s de demora observada, no de ingesta certificada. No hubo servicio permanente.
+- Catálogo de 27 grupos derivados de 281 fallos iperf: 3 grupos/208 fallos en periodo previo; 24 grupos/73 fallos durante 3×2. 14 próximos a transiciones, 8 bidireccionales fuera de guarda sin corroboración y 5 errores de prueba restantes.
+- Las señales de ping, colector y RSSI inválido se conservaron como pistas, **no como causalidad ni etiquetas confirmadas**. Pendientes fichas I4 con fuentes independientes y revisión de cambios de régimen.
+- [Informe 007](auditorias/2026-10-27-piloto-firstseen-y-catalogo.md); [catálogo reproducible](scripts/catalogar_candidatos_rf.py). Datos de casos privados. Sin predictor desplegado ni test confirmatorio.
