@@ -51,3 +51,9 @@ Se ejecutaron **dos validaciones cronológicas retrospectivas de desarrollo**, n
 Documentos: [auditoría 005](auditorias/2026-10-26-modelos-dev-retrospectivos.md), [código de desarrollo](scripts/evaluacion_retrospectiva_desarrollo.py), [ablación idéntica](scripts/ablacion_cohorte_comun.py) y [esquema prospectivo sin despliegue](plan-registro-disponibilidad-prospectiva.md).
 
 **No hay predictor FEDU validado ni servicio de inferencia implantado. Los resultados individuales permanecen privados.**
+
+## Retoma FEDU tras la campaña 3×2 — 27 de octubre de 2026
+
+[Informe metodológico de reinicio y primera instrumentación de `first_seen_at`](retoma-post-3x2-2026-10-27.md) · [Código del observador](scripts/first_seen_observer.py).
+
+El equipo volvió a 7000 MHz / 20 MHz y la captura RF y throughput sigue operativa. Se probó el instrumento con una base sintética y se inicializaron cursores de lectura reales en un **registro privado distinto**; **no se activó ningún temporizador del piloto FEDU**. El análisis prospectivo de hipótesis aún no ha comenzado. El ZIP 3×2 del 27-oct fue posteriormente verificado por coincidencia de MD5 local/remoto en Drive Koo; persisten pendientes de redundancia UNC y capacidad futura de Drive.
