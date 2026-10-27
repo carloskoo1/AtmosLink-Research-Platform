@@ -21,3 +21,14 @@
 
 ## Separación de estudios
 No declarar como resultado FEDU el desempeño reportado en otros repositorios, tesis o ASDE. Es posible reutilizar componentes de infraestructura documentando procedencia, cambios y permisos, pero la validación FEDU requiere su propia partición y evidencias.
+
+## 2026-10-27 — Cierre operativo 3×2 y restricción para prueba FEDU
+
+- Campaña 3×2 finalizada programáticamente 27-oct 00:00 (Perú); retorno físico al régimen base 7000 MHz / 20 MHz confirmado mediante `SWITCH_COMMITTED OK` a las **00:02:58**; telemetría posterior coincidió con la base.
+- Backup privado y consistente de SQLite posterior al cierre: **1 773 711 360 bytes**, `PRAGMA quick_check=ok`; SHA-256 y evidencia de transiciones conservadas en un manifiesto privado en el controlador.
+- Balance de la fase factorial: 18 bloques (6 combinaciones × 3 repeticiones), 7143 mediciones activas frente a 8064 nominales (88,58% de cobertura de filas), 7070 OK y 73 ERROR. Los dos primeros bloques tuvieron cobertura del 16,67% y 27,08%.
+- Servicio formal de throughput presentó 472 invocaciones fallidas por argumentos incompatibles; se documenta por separado de las pruebas activas que sí existen.
+- **Backup remoto aún NO verificado:** estado reporta `403 storageQuotaExceeded` para Drive; mantener respaldo local íntegro y no publicar datos crudos.
+- Referencia pública: [acta científica de cierre 3×2](https://github.com/carloskoo1/Andean-6GHz-Link-Experiment/blob/research/cierre-campana-3x2-2026/research/cierre_3x2_2026-10-27.md) y [PR de revisión](https://github.com/carloskoo1/Andean-6GHz-Link-Experiment/pull/1).
+- **Restricción FEDU:** no convertir el tramo 3×2 en test prospectivo intacto. La nueva evaluación exige registro prospectivo de `first_seen_at`, mismo régimen estable, cierre de fuentes e instrumentación previamente verificados, modelos/baselines congelados y periodo independiente sin inspección para ajuste.
+- **No se activó ninguna campaña ASDE ni despliegue de inferencia.** Su transición operativa continúa pendiente de aprobación separada.
