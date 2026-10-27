@@ -32,3 +32,12 @@ No declarar como resultado FEDU el desempeño reportado en otros repositorios, t
 - Referencia pública: [acta científica de cierre 3×2](https://github.com/carloskoo1/Andean-6GHz-Link-Experiment/blob/research/cierre-campana-3x2-2026/research/cierre_3x2_2026-10-27.md) y [PR de revisión](https://github.com/carloskoo1/Andean-6GHz-Link-Experiment/pull/1).
 - **Restricción FEDU:** no convertir el tramo 3×2 en test prospectivo intacto. La nueva evaluación exige registro prospectivo de `first_seen_at`, mismo régimen estable, cierre de fuentes e instrumentación previamente verificados, modelos/baselines congelados y periodo independiente sin inspección para ajuste.
 - **No se activó ninguna campaña ASDE ni despliegue de inferencia.** Su transición operativa continúa pendiente de aprobación separada.
+
+## 2026-10-27 — Piloto first_seen y reanudación FEDU
+
+- Se verificaron el régimen base 7000/20, reloj NTP sincronizado, telemetría operativa y 6 DL + 6 UL con `OK` en tramo poscampaña hasta las 01:30 (hora de Perú).
+- Se desarrolló y probó con SQLite sintético un observador de `first_seen_at`, leyendo fuentes en `mode=ro`; pruebas de `init`, `poll` y no duplicación: PASS.
+- Se inicializaron manualmente cursores reales en una base privada independiente (throughput 9735, RF 15690), sin recuperar retrospectivamente historiales. `poll` inmediato: 0 filas nuevas. Estado: PILOTO LIMITADO, **sin sondeo automático** y sin verificación de `available_at` operacional.
+- El respaldo ZIP de cierre 3×2 del Drive Koo fue verificado por coincidencia de MD5 local y remoto. El respaldo UNC 2/2 permanece pendiente; la cuota futura del Drive principal es baja.
+- No se entrenaron modelos nuevos ni se abrió prueba independiente FEDU. La tarea predictiva principal por episodios sigue supeditada a verdad-terreno independiente y eventual revisión formal de hipótesis.
+- [Documentación de reinicio](retoma-post-3x2-2026-10-27.md).
