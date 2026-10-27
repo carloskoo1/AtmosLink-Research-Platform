@@ -65,3 +65,9 @@ El equipo volvió a 7000 MHz / 20 MHz y la captura RF y throughput sigue operati
 Se ejecutaron 14 sondeos manuales acotados cada 25 s; se capturaron 6 registros RF y 5 TCP posteriores al inicio del ensayo, sin servicio permanente ni intervención de equipo. La primera llegada incremental mostró 9,94–24,94 s entre observación y primera lectura; no equivale a tiempo exacto de ingesta. 
 
 Se reconstruyeron 27 grupos de error: 14 próximos a cambios, 8 candidatos bidireccionales no corroborados, 5 grupos de error de prueba. 208 errores ocurrieron antes de la 3×2 y 73 durante ella. **No se verificó todavía ningún episodio RF de manera independiente**; no se ha abierto test de hipótesis.
+
+## Revisión del alcance FEDU — ocho fichas I4
+
+El análisis de los casos se realiza exclusivamente con **AtmosLink y el radioenlace Cuñacales–San José**. Se regeneraron las ocho fichas I4 privadas como v02 desde `active_throughput_6g` y `radio_link_config_telemetry`, excluyendo referencias a fuentes ajenas al enlace. **Las ocho permanecen indeterminadas**, sin eventos RF corroborados independientemente.
+
+[Auditoría 008 y tabla de casos](auditorias/2026-10-27-i4-alcance-y-ocho-casos.md) · [Generador I4 v02](scripts/generar_fichas_i4_atmoslink.py).
