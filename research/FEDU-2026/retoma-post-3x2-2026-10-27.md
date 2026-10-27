@@ -43,3 +43,9 @@ Importante: `first_seen_at` es la hora en que el lector observa por primera vez 
 5. **Integración en sombra:** solo inferencia y registro; no órdenes al radio ni pruebas activas añadidas. No publicar archivos privados en GitHub.
 
 **Estado actual de FEDU:** desarrollo metodológico y de instrumentación en curso. **No se ha desplegado un predictor validado ni iniciado el ensayo confirmatorio.**
+
+### Comprobación de datos reales posteriores a la inicialización
+
+Una segunda invocación manual de `poll` a las **01:45:27 (hora Perú)** detectó **1 nueva prueba de throughput y 1 nuevo registro RF**, después de inicializar los cursores. Ambos recibieron `first_seen_at_utc = 2026-10-27T06:45:27.890+00:00` y los cursores avanzaron a throughput **9736** y RF **15691**. No se incorporaron registros históricos anteriores.
+
+**Interpretación:** el instrumento captura filas futuras en una lectura real manual, pero **NO existe una secuencia continua y auditada de sondeos**. Esta comprobación no permite estimar la latencia típica de adquisición ni validar `available_at` con precisión operacional. La configuración del radioenlace y los servicios permanecieron sin cambios.
