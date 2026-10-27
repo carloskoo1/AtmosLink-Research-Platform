@@ -46,7 +46,7 @@ La copia del cierre 3×2 fue recorrida por [catalogar_candidatos_rf.py](../scrip
 
 ## C. Implicaciones para la metodología FEDU
 
-El título no cambia. La hipótesis principal sobre anticipación de degradaciones **no se puede someter todavía a contrastación** con un catálogo de errores no verificados. Para avanzar, revisar las fichas I4: evidencia de red independientemente registrada, reloj/inicios intervalocensurados, reinicios/energía, cambios de frecuencia/ancho, fallos iperf y categorización de indeterminados. No usar RSSI/SNR predictor como única prueba de verdad-terreno.
+El título no cambia. La hipótesis principal sobre anticipación de degradaciones **no se puede someter todavía a contrastación** con un catálogo de errores no verificados. Para avanzar, revisar las fichas I4: evidencia de red independientemente registrada, reloj/inicios intervalocensurados, reinicios de AP/SM o del colector propios del radioenlace, cambios de frecuencia/ancho, fallos iperf y categorización de indeterminados. No usar RSSI/SNR predictor como única prueba de verdad-terreno.
 
 Solo después de corroborar un número adecuado de episodios debe congelarse `W/H`, umbrales y presupuesto de falsas alarmas. Si insuficiente, proponer revisión formal de pregunta, objetivo, hipótesis, variables, indicadores e instrumentos hacia pronóstico continuo de throughput y **actualizar anexos A/B antes de abrir test**. La evaluación retrospectiva ya realizada NO favoreció superioridad ML sobre persistencia en MAE; no ocultar ese resultado ni elegir RMSE retroactivamente.
 
