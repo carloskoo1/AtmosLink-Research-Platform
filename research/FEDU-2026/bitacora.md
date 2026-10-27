@@ -52,3 +52,10 @@ No declarar como resultado FEDU el desempeño reportado en otros repositorios, t
 ## 2026-10-27 — Corrección de alcance: exclusión de panel-solar
 
 Se rectifica expresamente la inclusión exploratoria del dispositivo remoto `panel-solar` / inversor Growatt en la revisión FEDU. **No forma parte del caso de estudio, del dataset, de las fuentes I4 admisibles ni de los instrumentos de validación.** No usar sus logs, avisos de conectividad ni registros eléctricos para atribuir causalidad a las incidencias CU01–SJ01. Las fichas I4 fueron elaboradas sobre snapshot de AtmosLink y pruebas TCP/RF, sin registros Growatt. Las causas ajenas al sistema RF solo podrán mencionarse como **desconocidas**, a menos que exista evidencia originada en la propia infraestructura Cuñacales–San José y validada documentalmente. Se conserva una sola unidad física de enlace y dos extremos de observación.
+
+## 2026-10-27 — Fichas I4 v02 exclusivamente AtmosLink
+
+- Corregidas las ocho fichas privadas I4: campos y posibles atribuciones provenientes de fuentes ajenas al radioenlace quedaron excluidos; la v01 se conserva solo como antecedente, marcada como obsoleta.
+- Revisados individualmente C001, C002, C003, C011, C016, C020, C022 y C024 mediante el snapshot local íntegro (tablas TCP activo y telemetría RF); resultado **8 indeterminados / 0 RF corroborados**.
+- Confirmados 0 datos RF operativos válidos alrededor de C020; en C002 y C003 predominan errores de extracción de telemetría. No imputar pérdida de radio a partir del colector, errores TCP ni medición eléctrica ajena.
+- [Informe técnico 008](auditorias/2026-10-27-i4-alcance-y-ocho-casos.md). No se abrió prueba de hipótesis ni se cambiaron equipos o procesos.
