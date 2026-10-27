@@ -8,9 +8,9 @@
 
 ## 1. Testimonio del responsable de campo
 
-El responsable recuerda que, **pocos días después de comenzar la experimentación de septiembre de 2026**, se desconectó **un cable UTP/PoE asociado al switch** y se perdió su acceso remoto. Su recuerdo es que **no debería haberse perdido el radioenlace de 6 GHz**, aunque la continuidad RF no está todavía documentada para el instante. No se conoce hora exacta, puerto físico, extremo del cable, ni si el puerto aportaba alimentación PoE al AP o correspondía a una conexión de gestión/uplink.
+El responsable recuerda que, **pocos días después de comenzar la experimentación de septiembre de 2026**, se desconectó del switch un **cable UTP/PoE correspondiente al AP del radioenlace de 6 GHz**, tras lo cual perdió acceso remoto. **Aclaración explícita del operador del 27-oct-2026:** el cable estaba conectado al **AP de 6 GHz**, no al Controlador ni a Starlink. En la declaración inicial consideraba posible que no se hubiera perdido el enlace, pero esa impresión no está sustentada por una comprobación local registrada del AP y SM durante la interrupción.
 
-**Preservar literalmente la incertidumbre:** este testimonio NO permite afirmar que el cable retirado fuese el alimentador PoE del AP de 6 GHz, ni concluir por sí solo que el AP siguió encendido.
+**Queda confirmado por testimonio qué equipo estaba al extremo del cable: el AP de 6 GHz.** No se conoce todavía la fecha exacta, el puerto preciso, la duración ni si la desconexión interrumpió la alimentación PoE del AP. Si esa era su única alimentación y el cable fue físicamente retirado, el AP habría quedado sin energía, por lo que **la continuidad física del enlace AP–SM sería muy improbable**. No convertir esta consecuencia condicionada en hecho observado sin comprobar eventos del switch, uptime y asociación del SM.
 
 ## 2. Confrontación con registros existentes sin atribución indebida
 
@@ -52,3 +52,9 @@ La afirmación «se perdió mi acceso remoto» demuestra únicamente **pérdida 
 Para FEDU, este episodio sería especialmente útil como **control negativo** de un detector que no deba etiquetar pérdidas de acceso remoto como caídas RF, **si** se acredita que el AP–SM y el servicio local persistieron. Si el cable desconectado alimentaba el AP, podría tratarse de un evento súbito **no anticipable con telemetría RF sola**, separando detección de predicción. No utilizar el testimonio como etiqueta positiva o negativa ni sumar el episodio al número de eventos confirmado.
 
 **Acciones ejecutadas:** auditoría documental. **Sin cambios** en RF, switch, PoE, red, adquisición o campaña.
+
+## 6. Rectificación por declaración del operador (27-oct-2026)
+
+El operador precisó inequívocamente: «al AP de 6GHZ». En consecuencia, se **descarta como hipótesis principal** que se tratara del cable del Controlador o del uplink Starlink. En este caso, el foco es identificar **qué puerto del switch alimentaba/comunicaba al AP 6 GHz**, registrar si hubo `PoE off`/ausencia de alimentación, y determinar cuánto tiempo el SM estuvo desasociado, si ocurrió. El incidente de ciclo PoE intencional del 15-sep sigue siendo **otro evento documentado, no necesariamente el mismo**.
+
+La clase preliminar se refina a `AP_6GHZ_UTP_DISCONNECTED_OPERATOR_REPORTED`. **No asignar todavía `RF_LINK_DOWN` confirmado ni usar el episodio como control negativo de caída RF.** Para evaluar predicción de este hecho, distinguir el corte **exógeno abrupto** (probablemente no anticipable por una serie RF) de su **detección** mediante evidencia del switch, AP y SM.
