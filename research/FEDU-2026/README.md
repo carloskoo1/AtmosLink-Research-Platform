@@ -57,3 +57,11 @@ Documentos: [auditoría 005](auditorias/2026-10-26-modelos-dev-retrospectivos.md
 [Informe metodológico de reinicio y primera instrumentación de `first_seen_at`](retoma-post-3x2-2026-10-27.md) · [Código del observador](scripts/first_seen_observer.py).
 
 El equipo volvió a 7000 MHz / 20 MHz y la captura RF y throughput sigue operativa. Se probó el instrumento con una base sintética y se inicializaron cursores de lectura reales en un **registro privado distinto**; **no se activó ningún temporizador del piloto FEDU**. El análisis prospectivo de hipótesis aún no ha comenzado. El ZIP 3×2 del 27-oct fue posteriormente verificado por coincidencia de MD5 local/remoto en Drive Koo; persisten pendientes de redundancia UNC y capacidad futura de Drive.
+
+## Evidencia FEDU 27-oct-2026 — piloto temporal y candidatos
+
+[Auditoría 007: first_seen y catálogo de candidatos](auditorias/2026-10-27-piloto-firstseen-y-catalogo.md) · [Script de cribado](scripts/catalogar_candidatos_rf.py).
+
+Se ejecutaron 14 sondeos manuales acotados cada 25 s; se capturaron 6 registros RF y 5 TCP posteriores al inicio del ensayo, sin servicio permanente ni intervención de equipo. La primera llegada incremental mostró 9,94–24,94 s entre observación y primera lectura; no equivale a tiempo exacto de ingesta. 
+
+Se reconstruyeron 27 grupos de error: 14 próximos a cambios, 8 candidatos bidireccionales no corroborados, 5 grupos de error de prueba. 208 errores ocurrieron antes de la 3×2 y 73 durante ella. **No se verificó todavía ningún episodio RF de manera independiente**; no se ha abierto test de hipótesis.
