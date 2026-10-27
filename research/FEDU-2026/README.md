@@ -21,6 +21,8 @@ Desarrollar y validar sobre AtmosLink una capa predictiva que estime, con datos 
 - [Operacionalización de variables — Anexo B](anexos/operacionalizacion-variables.md)
 - [Plan de datos y validación](plan-de-datos-y-validacion.md)
 - [Protocolo complementario de pronóstico de throughput activo](protocolo-pronostico-throughput.md)
+- [Auditoría 003 — elegibilidad retrospectiva a 60 minutos](auditorias/2026-10-26-elegibilidad-pronostico-h60.md)
+- [Script de auditoría 003 — solo lectura](scripts/auditar_pares_causales_h60.py)
 - [Formato de informe final FEDU y estado](informe-final-fedu.md)
 - [Bitácora de decisiones y pendientes](bitacora.md)
 
