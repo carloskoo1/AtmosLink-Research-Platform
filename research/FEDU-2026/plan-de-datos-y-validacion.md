@@ -50,3 +50,19 @@ Evaluar baseline de umbrales y ML en el mismo tramo y con igual definición de e
 - [ ] Registro en modo sombra habilitado, con reloj de emisión y calidad de entrada.
 
 **Seguridad:** nunca subir bases de datos crudas no revisadas, .env, APIs, secretos o credenciales.
+
+## 9. Auditoría empírica inicial y regla de decisión (26-10-2026)
+
+Una revisión **de solo lectura** encontró 281 pruebas activas con estado ERROR. El agrupamiento exploratorio con brecha de 35 minutos generó 27 grupos, de los cuales 14 están próximos a operaciones de configuración (guarda de ±65 minutos). En 16 grupos coexistieron errores de colector. La lectura de 0 dB de SNR junto con 0 dBm de RSSI en el mismo registro se debe marcar **dato RF sospechoso/no válido**; no debe convertirse en evento físico ni imputarse como observación cero.
+
+**Decisión:** el conteo de episodios corroborados por evidencia independiente permanece **desconocido**. Las 27 agrupaciones son un cribado, NO son etiquetas positivas para aprendizaje supervisado.
+
+Para la evaluación final se define una puerta de decisión, que debe ejecutarse antes de entrenar y abrir el test:
+1. Auditar eventos por fuente independiente, comienzo, duración, exclusiones, intervalo de incertidumbre, cambios programados y soporte de observación.
+2. Si existe un número suficiente de episodios independientes, mantener contrastación primaria de recall por episodio a igual presupuesto de falsas alarmas.
+3. Si no existe, **no forzar la hipótesis de superioridad en episodios**: reformular antes de analizar el test una tarea primaria de pronóstico de métricas continuas (preferentemente throughput activo medido, por configuración y dirección) y compararla con persistencia y modelos temporales simples usando MAE y RMSE en bloques cronológicos posteriores.
+4. Documentar la regla adoptada con commit y fecha anterior al test, e incluir en el informe FEDU el cambio y su fundamento.
+
+La auditoría previa encontró registros OK de throughput activo medido para cada una de las seis combinaciones de frecuencia/ancho y ambas direcciones, lo que apoya la **factibilidad de analizar el pronóstico continuo**; todavía no demuestra que ML supere las referencias.
+
+**Trazabilidad:** registro complementario en `auditorias/2026-10-26-calidad-etiquetas.md`. No utilizar como desempeño predictivo los agregados descriptivos de esta auditoría.
