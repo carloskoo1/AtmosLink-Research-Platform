@@ -71,3 +71,7 @@ Se reconstruyeron 27 grupos de error: 14 próximos a cambios, 8 candidatos bidir
 El análisis de los casos se realiza exclusivamente con **AtmosLink y el radioenlace Cuñacales–San José**. Se regeneraron las ocho fichas I4 privadas como v02 desde `active_throughput_6g` y `radio_link_config_telemetry`, excluyendo referencias a fuentes ajenas al enlace. **Las ocho permanecen indeterminadas**, sin eventos RF corroborados independientemente.
 
 [Auditoría 008 y tabla de casos](auditorias/2026-10-27-i4-alcance-y-ocho-casos.md) · [Generador I4 v02](scripts/generar_fichas_i4_atmoslink.py).
+
+### Auditoría 009 — cotejo AP/SM y cnMaestro (27-10-2026)
+
+Se cotejaron las ocho fichas I4 con los documentos de incidencias internas disponibles y el registro científico `scientific_events.json`. En C002 se halló alerta de plataforma `UNKNOWN` y datos retrasados a las 10:34 del 4-sep, evidencia de adquisición no de degradación RF. Los incidentes documentados de AP/SM y cnMatrix del 15 y 20-sep **no coinciden con los ocho I4**. Los logs históricos por dispositivo para esas ocho ventanas no se obtuvieron; **0/8 causas RF independientemente corroboradas**. [Acta 009](auditorias/2026-10-27-cotejo-ap-sm-cnmaestro-i4.md).
