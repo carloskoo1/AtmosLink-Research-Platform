@@ -1,5 +1,7 @@
 # FEDU — Registro preliminar de incidente físico UTP/PoE y pérdida de acceso remoto
 
+**ESTADO VIGENTE (Auditoría 011, 27-oct-2026):** el **01-sep-2026 a las 19:59** una comunicación contemporánea aportada por el operador documenta que el cable del **puerto 6 del cnMatrix (AP 6 GHz)** fue encontrado movido y reconectado. La telemetría confirma anomalía de acceso desde ~19:37 y recuperación del enlace observable a ~20:01–20:04. **Esta evidencia sustituye como fecha probable a los recuerdos iniciales del 02/03-sep**, preservados abajo únicamente como historial de razonamiento. **No existe todavía verificación independiente de pérdida PoE ni de la duración de caída RF física.** Consultar [Auditoría 011](2026-10-27-auditoria-011-desconexion-ap-6ghz-septiembre.md).
+
 **Fecha de registro del testimonio:** 27 de octubre de 2026 (Perú).  
 **Código provisional:** AOP-UTP-SEP-001.  
 **Estado:** `OPERADOR_REPORTADO_NO_VERIFICADO`.  
@@ -70,3 +72,7 @@ La clase preliminar se refina a `AP_6GHZ_UTP_DISCONNECTED_OPERATOR_REPORTED`. **
 ## 8. Precisión del operador: 2 o 3 de septiembre de 2026
 
 El operador rectificó su recuerdo a **«creo que fue el 2 o 3 de setiembre»**, después de mencionar octubre por error y corregirse inmediatamente. Es una **fecha probable reportada**, no confirmación documental. Referencia principal: primeras jornadas tras la puesta en marcha del 6 GHz del 31-ago. La verificación debe buscar eventos `link-down/up` y PoE del puerto correspondiente al AP 6 GHz, reboot/uptime AP y asociación SM durante **02–03-sep**; ampliar marginalmente el intervalo para capturar eventos limítrofes. **El 04-sep de C001/C002 no se asume como el mismo incidente, y el 10-sep de C003 no se considera opción prioritaria**. No retroetiquetar ninguna fila hasta corroborar el evento y su tipo.
+
+## 9. Resultado definitivo de la búsqueda cronológica, actualizado el 27-oct-2026
+
+**Fecha del incidente identificado por convergencia de fuentes: 01-sep-2026.** El extracto contemporáneo aportado por el usuario consigna a las **19:57** solicitud de revisión de cable del **puerto 6** y a las **19:59** confirmación de que se había movido y se reconectó. Las capturas RF fallaron entre 19:38 y 19:59; el estado local volvió a `ok` a las **20:01:53** y `LINK_OPERATIONAL_DUAL` a las **20:04:07**. El puerto 3 mencionado antes de la corrección corresponde a un **asunto distinto** y no debe mezclarse. Los días 02 y 03-sep de 18:00 a 20:00 contienen telemetría operativa consistente, por lo que **no son los intervalos principales del episodio**. Ver [Acta técnica 011](2026-10-27-auditoria-011-desconexion-ap-6ghz-septiembre.md). **Reconexión de puerto 6 corroborada por diálogo de campo + telemetría correlativa; pérdida física PoE/RF no verificada aún por log del equipo.**
