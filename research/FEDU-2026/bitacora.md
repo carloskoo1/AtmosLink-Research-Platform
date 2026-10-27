@@ -48,3 +48,7 @@ No declarar como resultado FEDU el desempeño reportado en otros repositorios, t
 - Catálogo de 27 grupos derivados de 281 fallos iperf: 3 grupos/208 fallos en periodo previo; 24 grupos/73 fallos durante 3×2. 14 próximos a transiciones, 8 bidireccionales fuera de guarda sin corroboración y 5 errores de prueba restantes.
 - Las señales de ping, colector y RSSI inválido se conservaron como pistas, **no como causalidad ni etiquetas confirmadas**. Pendientes fichas I4 con fuentes independientes y revisión de cambios de régimen.
 - [Informe 007](auditorias/2026-10-27-piloto-firstseen-y-catalogo.md); [catálogo reproducible](scripts/catalogar_candidatos_rf.py). Datos de casos privados. Sin predictor desplegado ni test confirmatorio.
+
+## 2026-10-27 — Corrección de alcance: exclusión de panel-solar
+
+Se rectifica expresamente la inclusión exploratoria del dispositivo remoto `panel-solar` / inversor Growatt en la revisión FEDU. **No forma parte del caso de estudio, del dataset, de las fuentes I4 admisibles ni de los instrumentos de validación.** No usar sus logs, avisos de conectividad ni registros eléctricos para atribuir causalidad a las incidencias CU01–SJ01. Las fichas I4 fueron elaboradas sobre snapshot de AtmosLink y pruebas TCP/RF, sin registros Growatt. Las causas ajenas al sistema RF solo podrán mencionarse como **desconocidas**, a menos que exista evidencia originada en la propia infraestructura Cuñacales–San José y validada documentalmente. Se conserva una sola unidad física de enlace y dos extremos de observación.
