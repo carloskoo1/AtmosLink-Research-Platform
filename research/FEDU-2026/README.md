@@ -43,3 +43,11 @@ Se verificaron 9 709 pruebas activas, 9 428 con estado OK; 9 367 tenían configu
 ### Dataset retrospectivo con corte del 26-10-2026 a las 22:10 (Perú)
 
 Se generaron 8 441 pares privados X/y, con 7 955 pares RF compatibles y 7 000 pares RF+meteorología. Archivos preservados en el controlador en carpeta privada y fuera de este repositorio. No hay verificación de `available_at` ni prueba predictiva prospectiva; no declarar superioridad de ML.
+
+## Evaluación exploratoria de modelos, 26-10-2026
+
+Se ejecutaron **dos validaciones cronológicas retrospectivas de desarrollo**, no una prueba prospectiva ni una contrastación de la hipótesis principal. En cohorte de historia sola, MAE (persistencia / Ridge / boosting) fue **3,344 / 3,862 / 4,319 Mbps** en el primer periodo y **4,772 / 5,370 / 5,695 Mbps** en el segundo. La persistencia resultó mejor en MAE; Ridge tuvo RMSE menor. La ablación con filas idénticas no demostró valor predictivo robusto de RF o meteorología frente a persistencia.
+
+Documentos: [auditoría 005](auditorias/2026-10-26-modelos-dev-retrospectivos.md), [código de desarrollo](scripts/evaluacion_retrospectiva_desarrollo.py), [ablación idéntica](scripts/ablacion_cohorte_comun.py) y [esquema prospectivo sin despliegue](plan-registro-disponibilidad-prospectiva.md).
+
+**No hay predictor FEDU validado ni servicio de inferencia implantado. Los resultados individuales permanecen privados.**
