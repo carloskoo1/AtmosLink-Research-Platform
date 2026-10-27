@@ -51,3 +51,7 @@ El título no cambia. La hipótesis principal sobre anticipación de degradacion
 Solo después de corroborar un número adecuado de episodios debe congelarse `W/H`, umbrales y presupuesto de falsas alarmas. Si insuficiente, proponer revisión formal de pregunta, objetivo, hipótesis, variables, indicadores e instrumentos hacia pronóstico continuo de throughput y **actualizar anexos A/B antes de abrir test**. La evaluación retrospectiva ya realizada NO favoreció superioridad ML sobre persistencia en MAE; no ocultar ese resultado ni elegir RMSE retroactivamente.
 
 **No se abrió test prospectivo**, no se instaló servicio de predicción y no se activó nueva campaña experimental.
+
+## Nota de alcance: panel-solar excluido
+
+**Rectificación de alcance:** el equipo remoto llamado `panel-solar`, los registros Growatt y sus servicios no intervienen en FEDU y **no se utilizaron en el catálogo derivado de la base SQLite de AtmosLink**. Los candidatos I4 deben revisarse únicamente con observaciones del radioenlace CU01–SJ01, sus radios, telemetría RF, pruebas de red y bitácoras de la propia infraestructura. Los errores TCP y RF siguen **indeterminados**, no atribuidos a energía, radio ni otra causa por extrapolación de sistemas ajenos.
